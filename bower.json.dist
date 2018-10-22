@@ -1,0 +1,15 @@
+{
+  "name": "Extensions",
+  "description": "",
+  "main": "package.js",
+  "authors": [
+    "Takuya Motoshima <https://www.facebook.com/takuya.motoshima.7>"
+  ],
+  "license": "MIT",
+  "homepage": "https://www.facebook.com/takuya.motoshima.7",
+  "private": true,
+  "dependencies": {
+    "jQuery-Validation-Engine": "validationengine#^2.6.4",
+    "material-design-icons": "^3.0.1"
+  }
+}

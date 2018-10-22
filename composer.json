@@ -1,0 +1,43 @@
+{
+    "name": "takuya-motoshima/ci-ex",
+    "description": "Extend CodeIgniter for ease of use",
+    "keywords": [
+        "CodeIgniter",
+        "Composer"
+    ],
+    "type": "library",
+    "require": {
+        "php": "^7.0",
+        "codeigniter/framework": "3.1.*",
+        "twig/twig": "2.*",
+        "hybridauth/hybridauth": "2.*",
+        "aws/aws-sdk-php": "^3.64"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Takuya Motoshima",
+            "email": "takuyamotoshima@gmail.com",
+            "homepage": "https://www.facebook.com/takuya.motoshima.7"
+        }
+    ],
+    "minimum-stability": "stable",
+    "autoload": {
+        "psr-4": {
+            "X\\": "src/X/"
+        },
+        "files": [
+            "./src/X/Constant/HttpStatus.php",
+            "./src/X/Constant/Environment.php",
+            "./src/X/Database/DB.php"
+        ]
+    },
+    "scripts": {
+        "post-create-project-cmd": [
+            "X\\Composer\\Installer::post_install"
+        ]
+    },
+    "require-dev": {
+        "phpunit/phpunit": "@stable"
+    }
+}

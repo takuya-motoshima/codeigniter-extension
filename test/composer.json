@@ -1,0 +1,16 @@
+{
+    "description" : "The CodeIgniter Application with Composer",
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "../"
+        }
+    ],
+    "require": {
+        "php": "^7.0",
+        "takuya-motoshima/ci-ex": "dev-master"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "@stable"
+    }
+}
