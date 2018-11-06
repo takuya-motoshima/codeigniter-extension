@@ -139,6 +139,18 @@ abstract class Controller extends \CI_Controller
     }
 
     /**
+     * Response text
+     *
+     * @param  string $text
+     * @param  string $char
+     * @return void
+     */
+    protected function response_text(string $text, string $char = 'UTF-8')
+    {
+        $this->httpResponse->text($text, $char);
+    }
+
+    /**
      * Response download
      *
      * @param  string $file_name
