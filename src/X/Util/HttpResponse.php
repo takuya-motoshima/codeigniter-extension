@@ -108,47 +108,65 @@ final class HttpResponse
 
     /**
      * 
+     * Response text
+     *
+     * @param  string $code
+     * @param  string $char
+     * @return void
+     */
+    public function text(string $text, string $char = 'UTF-8')
+    {
+        ob_clean();
+        $ci =& \get_instance();
+        $this->set_cors_header($ci);
+        $ci->output
+            ->set_content_type('text/plain', $char)
+            ->set_output($text);
+    }
+
+    /**
+     * 
      * Response download
      *
      * @param  string $filename
      * @param  string $data
-     * @param  bool $set_mime
+     * @param  bool $setMime
      * @return void
      */
-    public function download(string $filename, string $data = '', bool $set_mime = FALSE)
+    public function download(string $filename, string $data = '', bool $setMime = FALSE)
     {
         $ci =& \get_instance();
         $ci->load->helper('download');
         ob_clean();
-        force_download($filename, $data, $set_mime);
+        force_download($filename, $data, $setMime);
     }
 
     /**
      * 
      * Response image
      *
-     * @param  string $image_path
+     * @param  string $imagePath
      * @return void
      */
-    public function image(string $image_path)
+    public function image(string $imagePath)
     {
         $ci =& \get_instance();
         $ci->load->helper('file');
         ob_clean();
         $ci->output
-            ->set_content_type(get_mime_by_extension($image_path))
-            ->set_output(file_get_contents($image_path));
+            ->set_content_type(get_mime_by_extension($imagePath))
+            ->set_output(file_get_contents($imagePath));
     }
 
     /**
      * 
      * Response error
      *
-     * @param  string $errorMessage
+     * @param  string $message
      * @param  int $httStatus
      * @return void
      */
-    public function error(string $errorMessage, int $httStatus = \X\Constant\HTTP_INTERNAL_SERVER_ERROR)
+    public function error(string $message, int $httStatus = \X\Constant\HTTP_INTERNAL_SERVER_ERROR)
     {
         $ci =& \get_instance();
         if ($ci->input->is_ajax_request()) {
@@ -156,10 +174,10 @@ final class HttpResponse
             $this->set_cors_header($ci);
             $ci->output
                 ->set_header('Cache-Control: no-cache, must-revalidate')
-                ->set_status_header($httStatus, rawurlencode($errorMessage))
+                ->set_status_header($httStatus, rawurlencode($message))
                 ->set_content_type('application/json', 'UTF-8');
         } else {
-            show_error($errorMessage, $httStatus);
+            show_error($message, $httStatus);
         }
     }
 
