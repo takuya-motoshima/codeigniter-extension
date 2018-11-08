@@ -186,8 +186,7 @@ abstract class EMail
    */
   public static function attachment_cid($filename)
   {
-    call_user_func_array([self::email(), __FUNCTION__], func_get_args());
-    return __CLASS__;
+    return call_user_func_array([self::email(), __FUNCTION__], func_get_args());
   }
 
   /**
