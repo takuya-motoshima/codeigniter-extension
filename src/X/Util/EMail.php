@@ -162,6 +162,35 @@ abstract class EMail
   }
 
   /**
+   * Assign file attachments
+   *
+   * @param string  $file Can be local path, URL or buffered content
+   * @param string  $disposition = 'attachment'
+   * @param string  $newname = NULL
+   * @param string  $mime = ''
+   * @return  CI_Email
+   */
+  public static function attach($file, $disposition = '', $newname = NULL, $mime = '')
+  {
+    call_user_func_array([self::email(), __FUNCTION__], func_get_args());
+    return __CLASS__;
+  }
+
+  /**
+   * Set and return attachment Content-ID
+   *
+   * Useful for attached inline pictures
+   *
+   * @param string  $filename
+   * @return  string
+   */
+  public static function attachment_cid($filename)
+  {
+    call_user_func_array([self::email(), __FUNCTION__], func_get_args());
+    return __CLASS__;
+  }
+
+  /**
    * Get CI_Email instance
    *
    * @return \CI_Email
