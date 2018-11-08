@@ -8,7 +8,7 @@
     ],
     "require": {
         "php": "^7.0",
-        "takuya-motoshima/ci-ex": "dev-master"
+        "takuya-motoshima/codeigniter-extension": "^1.0"
     },
     "require-dev": {
         "phpunit/phpunit": "@stable"

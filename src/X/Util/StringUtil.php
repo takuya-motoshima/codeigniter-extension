@@ -10,15 +10,15 @@ namespace X\Util;
 final class StringUtil
 {
 
-    /**
-     * Trim
-     *
-     * @param  string $str
-     * @param  string $addReplacement
-     * @return string
-     */
-    public static function trim(string $str):string
-    {
-        return trim($str, " \t\n\r\0\x0B　");
-    }
+  /**
+   * Trim
+   *
+   * @param  string $str
+   * @param  string $addReplacement
+   * @return string
+   */
+  public static function trim(string $str):string
+  {
+    return trim($str, " \t\n\r\0\x0B　");
+  }
 }

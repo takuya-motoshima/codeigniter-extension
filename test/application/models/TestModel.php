@@ -13,32 +13,42 @@ use \X\Util\Logger;
 class TestModel extends \AppModel
 {
 
-    protected $table = 'test';
+  protected $table = 'user';
 
-    /**
-     * 
-     * Transaction test
-     *
-     * @param string $email
-     * @return int
-     */
-    public function transaction()
-    {
-        try {
+  /**
+   * Get data 
+   * @return [type] [description]
+   */
+  public function getItems()
+  {
+    return parent
+      ::from($this->table)
+      ::get()
+      ->result_array();
+  }
 
-            parent::trans_begin();
-            parent::insert($this->table, ['name' => 'foo']);
-            parent::insert($this->table, ['name' => 'bar']);
-            Logger::s('Record before rollback=', parent::get($this->table)->result_array());
-            throw new RuntimeException('Deliberate error');
-            if (!parent::trans_status()) {
-                throw \RuntimeException(parent::error()['message']);
-            }
-            parent::trans_commit();
-        } catch (Throwable $e) {
-            parent::trans_rollback();
-            Logger::s('Record after rollback=', parent::get($this->table)->result_array());
-            throw $e;
-        }
+  /**
+   * 
+   * Transaction test
+   *
+   * @param string $email
+   * @return int
+   */
+  public function transaction()
+  {
+    try {
+
+      parent::trans_begin();
+      parent::insert($this->table, ['name' => 'foo']);
+      parent::insert($this->table, ['name' => 'bar']);
+      if (!parent::trans_status()) {
+        throw \RuntimeException(parent::error()['message']);
+      }
+      parent::trans_commit();
+    } catch (Throwable $e) {
+      parent::trans_rollback();
+      Logger::s('Record after rollback=', parent::get($this->table)->result_array());
+      throw $e;
     }
+  }
 }
