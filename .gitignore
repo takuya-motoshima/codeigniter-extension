@@ -1,34 +1,35 @@
-# ignore all files starting with . or ~
+# Ignore all files starting with . or ~
 .*
 ~*
 
-# ignore node/grunt dependency directories
+# Ignore node/grunt dependency directories
 node_modules/
 
-# ignore composer vendor directory
+# Ignore composer vendor directory
 vendor/
 
-# ignore components loaded via Bower
+# Ignore components loaded via Bower
 bower_components/
 
-# ignore jekyll build directory
+# Ignore jekyll build directory
 /_site
 
-# ignore OS generated files
+# Ignore OS generated files
 ehthumbs.db
 Thumbs.db
 
-# ignore Editor files
+# Ignore Editor files
 *.sublime-project
 *.sublime-workspace
 *.komodoproject
+sftp-config.json
 
-# ignore log files and databases
+# Ignore log files and databases
 *.log
 *.sql
 *.sqlite
 
-# ignore compiled files
+# Ignore compiled files
 *.com
 *.class
 *.dll
@@ -36,7 +37,7 @@ Thumbs.db
 *.o
 *.so
 
-# ignore packaged files
+# Ignore packaged files
 *.7z
 *.dmg
 *.gz
@@ -46,23 +47,33 @@ Thumbs.db
 *.tar
 *.zip
 
-# Codeigniter
-application/session/*
-!application/session
+# Ignore codeIgniter
+*application/logs/*
+!application/logs/index.html
+!application/logs/.htaccess
 application/cache/*
-!application/cache
-application/logs/*
-!application/logs
-test/application/session/*
-!test/application/session
-test/application/cache/*
-!test/application/cache
-test/application/logs/*
-!test/application/logs
+!application/cache/index.html
+!application/cache/.htaccess
+application/session/*
+!application/session/index.html
+!application/session/.htaccess
+user_guide_src/build/*
+user_guide_src/cilexer/build/*
+user_guide_src/cilexer/dist/*
+user_guide_src/cilexer/pycilexer.egg-info/*
 
-# -------------------------
-# BEGIN Whitelisted Files
-# -------------------------
+# Ignore phpstorm
+.idea/
+.idea_modules/
+
+# Ignore webpack
+dist/*
+!dist/
+
+# Ignore my appplication
+
+# Whitelisted files
 !.gitignore
-!.editorconfig
 !.gitkeep
+!.editorconfig
+!.phpcs.xml.dist

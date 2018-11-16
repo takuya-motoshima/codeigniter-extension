@@ -2,7 +2,7 @@
     "description" : "The CodeIgniter Application with Composer",
     "require": {
         "php": "^7.0",
-        "takuya-motoshima/ci-ex": "dev-master"
+        "takuya-motoshima/codeigniter-extension": "dev-master"
     },
     "require-dev": {
         "phpunit/phpunit": "@stable"

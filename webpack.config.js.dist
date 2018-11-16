@@ -1,0 +1,81 @@
+const path = require('path');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+module.exports = {
+  watch: true,
+  mode: 'production',
+  devtool: 'inline-source-map',
+  entry: {
+    app: './src/js/app.js',
+    'app-style': './src/css/app.css'
+  },
+  output: {
+    path: path.join(__dirname, 'dist/'),
+    filename: 'js/[name].bundle.js',
+  },
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, 'src/js')
+    }
+  },
+  plugins: [
+    new MiniCssExtractPlugin({
+      filename: 'css/[name].bundle.css'
+    }),
+    new CopyWebpackPlugin([
+      {
+        from: path.join(__dirname, 'src/img'),
+        to: path.join(__dirname, 'dist/img')
+      },
+    ])
+  ],
+  module: {
+    rules: [
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        loader: 'babel-loader',
+        options: {
+          presets: [
+            ['@babel/preset-env', {
+              modules: false,
+              targets: {node: 'current'}
+            }]
+          ]
+        }
+      },
+      {
+        test: /\.css$/,
+        use: [
+          MiniCssExtractPlugin.loader,
+          {loader: 'css-loader'}
+        ]
+      },
+      {
+        test: /\.(gif|png|jpg|eot|wof|woff|woff2|ttf|svg)$/,
+        loader: 'url-loader'
+      }
+    ]
+  },
+  // optimization: {
+  //   splitChunks: {
+  //     cacheGroups: {
+  //       vendor: {
+  //         test: (function() {
+  //           return new RegExp('node_modules/(' + [
+  //             'jquery\/dist',
+  //             'lodash',
+  //           ].join('|') + ')\/.*\.js$');
+  //         })(),
+  //         name: 'vendor',
+  //         chunks: 'initial',
+  //         enforce: true
+  //       },
+  //     }
+  //   },
+  //   minimizer: [
+  //     new OptimizeCSSAssetsPlugin({})
+  //   ]
+  // },
+  performance: { hints: false }
+}
