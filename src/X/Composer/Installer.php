@@ -32,20 +32,23 @@ final class Installer
 
     $io = $event->getIO();
 
-    // Create application/
+    // Create application
     FileUtil::copy_directory(static::FRAMEWORK_DIR . 'application', 'application');
 
-    // Create Core System Classes
+    // Create core system classes
     FileUtil::copy_directory('core.dist', 'application/core');
 
-    // Create application/session/
+    // Create sample view
+    FileUtil::copy_directory('views.dist', 'application/views');
+
+    // Create session directory
     FileUtil::make_direcoty('application/session');
     touch('application/session/.gitkeep');
 
-    // Create public/index.php
+    // Create index.php
     FileUtil::copy_file(static::FRAMEWORK_DIR . 'index.php', static::DOCUMENT_ROOT . 'index.php');
 
-    // Create public/.htaccess
+    // Create .htaccess
     FileUtil::copy_file('dot.htaccess', static::DOCUMENT_ROOT . '.htaccess');
 
     // Create .gitignore
@@ -54,10 +57,10 @@ final class Installer
     // Create .gitattributes
     FileUtil::copy_file('dot.gitattributes.dist', '.gitattributes');
 
-    // Update public/index.php
+    // Update index.php
     self::update_index($io);
 
-    // Update application/config/config.php
+    // Update config.php
     self::update_config($io);
 
     // Composer update
@@ -195,7 +198,8 @@ final class Installer
       'webpack.config.js.dist',
       'README.md',
       'LICENSE.md',
-      'core.dist'
+      'core.dist',
+      'views.dist'
     );
   }
 }
