@@ -14,7 +14,7 @@ abstract class Model extends \CI_Model
     /**
      * @var string $table
      */
-    protected $table;
+    const TABLE = '';
 
     /**
      * @var string|string[] $model
@@ -97,7 +97,7 @@ abstract class Model extends \CI_Model
     public function insert_on_duplicate_update_batch(string $table = '', $set = null, bool $escape = null, int $batch_size = 100)
     {
         if (!self::db()->isset_qb_from() && empty($table)) {
-            $table = $this->table;
+            $table = static::TABLE;
         }
         return self::db()->insert_on_duplicate_update_batch($table, $set, $escape, $batch_size);
     }
@@ -117,7 +117,7 @@ abstract class Model extends \CI_Model
     public function insert($table = '', $set = null, $escape = null):int
     {
         if (!self::db()->isset_qb_from() && empty($table)) {
-            $table = $this->table;
+            $table = static::TABLE;
         }
         return self::db()->insert($table, $set, $escape);
     }
@@ -155,7 +155,7 @@ abstract class Model extends \CI_Model
     public function update($table = '', $set = null, $where = null, $limit = null)
     {
         if (!self::db()->isset_qb_from() && empty($table)) {
-            $table = $this->table;
+            $table = static::TABLE;
         }
         return self::db()->update($table, $set, $where, $limit);
     }
@@ -676,7 +676,7 @@ abstract class Model extends \CI_Model
     {
 
         if (!self::db()->isset_qb_from() && empty($table)) {
-            $table = $this->table;
+            $table = static::TABLE;
         }
         return self::db()->get_compiled_select($table, $reset);
     }
@@ -695,7 +695,7 @@ abstract class Model extends \CI_Model
     public function get($table = '', $limit = NULL, $offset = NULL)
     {
         if (!self::db()->isset_qb_from() && empty($table)) {
-            $table = $this->table;
+            $table = static::TABLE;
         }
         return self::db()->get($table, $limit, $offset);
     }
@@ -713,7 +713,7 @@ abstract class Model extends \CI_Model
     public function count_all_results($table = '', $reset = TRUE)
     {
         if (!self::db()->isset_qb_from() && empty($table)) {
-            $table = $this->table;
+            $table = static::TABLE;
         }
         return self::db()->count_all_results($table, $reset);
     }
@@ -732,7 +732,7 @@ abstract class Model extends \CI_Model
     public function get_where($table = '', $where = NULL, $limit = NULL, $offset = NULL)
     {
         if (!self::db()->isset_qb_from() && empty($table)) {
-            $table = $this->table;
+            $table = static::TABLE;
         }
         return self::db()->get_where($table, $where, $limit, $offset);
     }
@@ -777,7 +777,7 @@ abstract class Model extends \CI_Model
     public function get_compiled_insert($table = '', $reset = TRUE)
     {
         if (!self::db()->isset_qb_from() && empty($table)) {
-            $table = $this->table;
+            $table = static::TABLE;
         }
         return self::db()->get_compiled_insert($table, $reset);
     }
@@ -808,7 +808,7 @@ abstract class Model extends \CI_Model
     public function replace($table = '', $set = NULL)
     {
         if (!self::db()->isset_qb_from() && empty($table)) {
-            $table = $this->table;
+            $table = static::TABLE;
         }
         return self::db()->replace($table, $set);
     }
@@ -825,7 +825,7 @@ abstract class Model extends \CI_Model
     public function get_compiled_update($table = '', $reset = TRUE)
     {
         if (!self::db()->isset_qb_from() && empty($table)) {
-            $table = $this->table;
+            $table = static::TABLE;
         }
         return self::db()->get_compiled_update($table, $reset);
     }
@@ -884,7 +884,7 @@ abstract class Model extends \CI_Model
     public function empty_table($table = '')
     {
         if (!self::db()->isset_qb_from() && empty($table)) {
-            $table = $this->table;
+            $table = static::TABLE;
         }
         return self::db()->empty_table($table);
     }
@@ -902,7 +902,7 @@ abstract class Model extends \CI_Model
     public function truncate($table = '')
     {
         if (!self::db()->isset_qb_from() && empty($table)) {
-            $table = $this->table;
+            $table = static::TABLE;
         }
         return self::db()->truncate($table);
     }
@@ -919,7 +919,7 @@ abstract class Model extends \CI_Model
     public function get_compiled_delete($table = '', $reset = TRUE)
     {
         if (!self::db()->isset_qb_from() && empty($table)) {
-            $table = $this->table;
+            $table = static::TABLE;
         }
         return self::db()->get_compiled_delete($table, $reset);
     }
@@ -938,7 +938,7 @@ abstract class Model extends \CI_Model
     public function delete($table = '', $where = '', $limit = NULL, $reset_data = TRUE)
     {
         if (!self::db()->isset_qb_from() && empty($table)) {
-            $table = $this->table;
+            $table = static::TABLE;
         }
         return self::db()->delete($table, $where, $limit, $reset_data);
     }
@@ -954,7 +954,7 @@ abstract class Model extends \CI_Model
     public function dbprefix($table = '')
     {
         if (!self::db()->isset_qb_from() && empty($table)) {
-            $table = $this->table;
+            $table = static::TABLE;
         }
         return self::db()->dbprefix($table);
     }
@@ -1150,7 +1150,7 @@ abstract class Model extends \CI_Model
     public function primary($table = null)
     {
         if (empty($table)) {
-            $table = $this->table;
+            $table = static::TABLE;
         }
         return self::db()->primary($table);
     }
@@ -1167,7 +1167,7 @@ abstract class Model extends \CI_Model
     public function count_all($table = '')
     {
         if (empty($table)) {
-            $table = $this->table;
+            $table = static::TABLE;
         }
         return self::db()->count_all($table);
     }
@@ -1192,7 +1192,7 @@ abstract class Model extends \CI_Model
     public function table_exists($table = null)
     {
         if (empty($table)) {
-            $table = $this->table;
+            $table = static::TABLE;
         }
         return self::db()->table_exists($table);
     }
@@ -1206,7 +1206,7 @@ abstract class Model extends \CI_Model
     public function list_fields($table = null)
     {
         if (empty($table)) {
-            $table = $this->table;
+            $table = static::TABLE;
         }
         return self::db()->list_fields($table);
     }
@@ -1221,7 +1221,7 @@ abstract class Model extends \CI_Model
     public function field_exists($field_name, $table = null)
     {
         if (empty($table)) {
-            $table = $this->table;
+            $table = static::TABLE;
         }
         return self::db()->field_exists($field_name, $table);
     }
@@ -1235,7 +1235,7 @@ abstract class Model extends \CI_Model
     public function field_data($table = null)
     {
          if (empty($table)) {
-            $table = $this->table;
+            $table = static::TABLE;
         }
         return self::db()->field_data($table);
     }
