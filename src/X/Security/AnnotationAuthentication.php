@@ -8,16 +8,42 @@
  * @copyright  2018 Takuya Motoshima
  */
 namespace X\Security;
-// use Doctrine\Common\Annotations\AnnotationReader;
-// use Doctrine\Common\Annotations\AnnotationRegistry;
+use Doctrine\Common\Annotations\AnnotationReader;
+use Doctrine\Common\Annotations\AnnotationRegistry;
 final class AnnotationAuthentication
 {
 
-  public static function isAllowMethod(string $class, string $method): bool
+  /**
+   * 
+   * When logging in, you can access if the loggedin property of Security annotation is allow.
+   * When logging off, you can access if the loggedin property of Security annotation is allow.
+   * 
+   * @param  string  $class
+   * @param  string  $method
+   * @param bool $loggedin
+   * @return bool
+   */
+  public static function isAccessible(string $class, string $method, bool $loggedin): bool
   {
     $method = new \ReflectionMethod($class, $method);
-    return preg_match('/@allowLoggedIn/', $method->getDocComment()) === 1;
-    // $reader = new AnnotationReader();
-    // $annotations = $reader->getMethodAnnotations($method);
+    $annotation = self::reader()->getMethodAnnotation($method, 'Security');
+    Logger::d('$annotation=', $annotation);
+    return true;
+  }
+
+  /**
+   * Get annotation leader
+   * 
+   * @return AnnotationReader
+   */
+  private static function reader(): AnnotationReader
+  {
+    static $reader = null;
+    if (isset($reader)) {
+      return $reader;
+    }
+    AnnotationRegistry::registerFile(__DIR__ . '/Annotation/Security.php');
+    $reader = new AnnotationReader();
+    return $reader;
   }
 }

@@ -1381,15 +1381,16 @@
         },
         {
             "name": "takuya-motoshima/codeigniter-extension",
-            "version": "1.0.3",
+            "version": "1.0.9",
             "source": {
                 "type": "git",
                 "url": "../",
-                "reference": "3fa9750907a91b7a407a17b4b71fecdd916c3ced"
+                "reference": "d27cf8b06d659b551e1ff97a208c9c8a38044332"
             },
             "require": {
                 "aws/aws-sdk-php": "^3.64",
                 "codeigniter/framework": "3.1.*",
+                "doctrine/common": "^2.10",
                 "hybridauth/hybridauth": "2.*",
                 "php": "^7.0",
                 "twig/twig": "2.*"
@@ -1428,7 +1429,7 @@
                 "CodeIgniter",
                 "Composer"
             ],
-            "time": "2018-11-06T06:07:50+00:00"
+            "time": "2018-11-29T04:14:55+00:00"
         },
         {
             "name": "twig/twig",
