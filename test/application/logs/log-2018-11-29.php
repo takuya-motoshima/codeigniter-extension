@@ -131,3 +131,39 @@ INFO - 2018-11-29 05:26:48 --> Controller Class Initialized
 INFO - 2018-11-29 05:26:48 --> AppModel class loaded
 INFO - 2018-11-29 05:26:48 --> Model "TestModel" initialized
 ERROR - 2018-11-29 05:26:48 --> Severity: error --> Exception: Class 'X\Security\Logger' not found /var/www/html/codeigniter-extension/test/vendor/takuya-motoshima/codeigniter-extension/src/X/Security/AnnotationAuthentication.php 30
+INFO - 2018-11-29 05:28:28 --> Config Class Initialized
+INFO - 2018-11-29 05:28:28 --> Hooks Class Initialized
+DEBUG - 2018-11-29 05:28:28 --> UTF-8 Support Enabled
+INFO - 2018-11-29 05:28:28 --> Utf8 Class Initialized
+INFO - 2018-11-29 05:28:28 --> URI Class Initialized
+INFO - 2018-11-29 05:28:28 --> Router Class Initialized
+INFO - 2018-11-29 05:28:28 --> Output Class Initialized
+INFO - 2018-11-29 05:28:28 --> Security Class Initialized
+DEBUG - 2018-11-29 05:28:28 --> Global POST, GET and COOKIE data sanitized
+INFO - 2018-11-29 05:28:28 --> Input Class Initialized
+INFO - 2018-11-29 05:28:28 --> Language Class Initialized
+INFO - 2018-11-29 05:28:28 --> Loader Class Initialized
+INFO - 2018-11-29 05:28:28 --> Helper loaded: url_helper
+INFO - 2018-11-29 05:28:28 --> Session: Class initialized using 'files' driver.
+INFO - 2018-11-29 05:28:28 --> Controller Class Initialized
+INFO - 2018-11-29 05:28:28 --> AppModel class loaded
+INFO - 2018-11-29 05:28:28 --> Model "TestModel" initialized
+ERROR - 2018-11-29 05:28:28 --> Severity: error --> Exception: Undefined constant 'X\Security' /var/www/html/codeigniter-extension/test/vendor/takuya-motoshima/codeigniter-extension/src/X/Security/AnnotationAuthentication.php 10
+INFO - 2018-11-29 05:30:22 --> Config Class Initialized
+INFO - 2018-11-29 05:30:22 --> Hooks Class Initialized
+DEBUG - 2018-11-29 05:30:22 --> UTF-8 Support Enabled
+INFO - 2018-11-29 05:30:22 --> Utf8 Class Initialized
+INFO - 2018-11-29 05:30:22 --> URI Class Initialized
+INFO - 2018-11-29 05:30:22 --> Router Class Initialized
+INFO - 2018-11-29 05:30:22 --> Output Class Initialized
+INFO - 2018-11-29 05:30:22 --> Security Class Initialized
+DEBUG - 2018-11-29 05:30:22 --> Global POST, GET and COOKIE data sanitized
+INFO - 2018-11-29 05:30:22 --> Input Class Initialized
+INFO - 2018-11-29 05:30:22 --> Language Class Initialized
+INFO - 2018-11-29 05:30:22 --> Loader Class Initialized
+INFO - 2018-11-29 05:30:22 --> Helper loaded: url_helper
+INFO - 2018-11-29 05:30:22 --> Session: Class initialized using 'files' driver.
+INFO - 2018-11-29 05:30:22 --> Controller Class Initialized
+INFO - 2018-11-29 05:30:22 --> AppModel class loaded
+INFO - 2018-11-29 05:30:22 --> Model "TestModel" initialized
+ERROR - 2018-11-29 05:30:22 --> Severity: error --> Exception: Undefined constant 'X\Security' /var/www/html/codeigniter-extension/test/vendor/takuya-motoshima/codeigniter-extension/src/X/Security/AnnotationAuthentication.php 10
