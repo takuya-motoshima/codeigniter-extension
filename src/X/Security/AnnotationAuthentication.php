@@ -27,8 +27,12 @@ final class AnnotationAuthentication
   public static function isAccessible(string $class, string $method, bool $loggedin): bool
   {
     $method = new \ReflectionMethod($class, $method);
-    $annotation = self::reader()->getMethodAnnotation($method, 'Security');
-    Logger::d('$annotation=', $annotation);
+    $annotations = self::reader()->getMethodAnnotations($method);
+    Logger::d('$annotations=', $annotations);
+
+    // $annotation = self::reader()->getMethodAnnotation($method, 'Security');
+    // Logger::d('$annotation=', $annotation);
+
     return true;
   }
 
@@ -44,6 +48,7 @@ final class AnnotationAuthentication
     if (isset($reader)) {
       return $reader;
     }
+    Logger::d('annotationPath=', __DIR__ . '/Annotation/Security.php');
     AnnotationRegistry::registerFile(__DIR__ . '/Annotation/Security.php');
     $reader = new AnnotationReader();
     return $reader;
