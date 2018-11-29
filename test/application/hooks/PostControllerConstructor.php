@@ -1,7 +1,8 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-use X\Util\Logger;
+use \X\Util\Logger;
+use \X\Security\AnnotationAuthentication;
 class PostControllerConstructor
 {
 
@@ -9,7 +10,7 @@ class PostControllerConstructor
   {
     $ci =& get_instance();
     $method = new \ReflectionMethod($ci->router->class, $ci->router->method);
-    $isAllow = preg_match('/@allowLoggedIn/', $method->getDocComment()) === 1;
-    Logger::d('$isAllow=', $isAllow ? 1111 : 0);
+    $isAccessible = AnnotationAuthentication::isAccessible($ci->router->class, $ci->router->method, true);
+    Logger::d('$isAccessible=', $isAccessible ? 1 : 0);
   }
 }

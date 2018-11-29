@@ -7,10 +7,10 @@
  * @license    MIT License
  * @copyright  2018 Takuya Motoshima
  */
-namespace X\Security;
-use Doctrine\Common\Annotations\AnnotationReader;
-use Doctrine\Common\Annotations\AnnotationRegistry;
-use X\Util\Logger;
+namespace \X\Security;
+use \Doctrine\Common\Annotations\AnnotationReader;
+use \Doctrine\Common\Annotations\AnnotationRegistry;
+use \X\Util\Logger;
 final class AnnotationAuthentication
 {
 
