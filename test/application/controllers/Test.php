@@ -19,7 +19,8 @@ class Test extends AppController
   /**
    * 
    * Index
-   * 
+   *
+   * @allowLoggedIn
    * @return void
    */
   public function index()
@@ -28,7 +29,16 @@ class Test extends AppController
     parent
       ::set('items', $items)
       ::response_template('index');
+  }
 
+  /**
+   * 
+   * Index2
+   *
+   * @return void
+   */
+  public function index2()
+  {
   }
 
   /**

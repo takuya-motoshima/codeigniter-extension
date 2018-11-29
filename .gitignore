@@ -71,6 +71,12 @@ dist/*
 !dist/
 
 # Ignore my appplication
+test/application/logs/*
+!test/application/logs
+test/application/cache/*
+!test/application/cache
+test/application/session/*
+!test/application/session
 
 # Whitelisted files
 !.gitignore
