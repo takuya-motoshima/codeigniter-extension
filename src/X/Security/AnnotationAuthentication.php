@@ -10,6 +10,7 @@
 namespace X\Security;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
+use X\Util\Logger;
 final class AnnotationAuthentication
 {
 
@@ -32,6 +33,7 @@ final class AnnotationAuthentication
   }
 
   /**
+   * 
    * Get annotation leader
    * 
    * @return AnnotationReader
