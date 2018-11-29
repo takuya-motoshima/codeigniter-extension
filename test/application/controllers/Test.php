@@ -20,6 +20,7 @@ class Test extends AppController
    * 
    * Index
    *
+   * @Security(loggedin='allow')
    * @return void
    */
   public function index()
