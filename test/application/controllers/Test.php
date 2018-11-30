@@ -17,36 +17,13 @@ class Test extends AppController
   protected $model = 'TestModel';
 
   /**
-   * 
-   * Index
-   *
-   * @Security(loggedin='allow')
-   * @return void
+   * @Security
    */
   public function index()
   {
-    $items = $this->TestModel->getItems();
-    parent
-      ::set('items', $items)
-      ::response_template('index');
   }
 
-  /**
-   * 
-   * Index2
-   *
-   * @return void
-   */
-  public function index2()
-  {
-  }
 
-  /**
-   * 
-   * Image resize test
-   * 
-   * @return void
-   */
   public function image_resize()
   {
     foreach (glob($image_path = FCPATH . 'img/*') as $image_path) {
@@ -55,12 +32,6 @@ class Test extends AppController
     }
   }
 
-  /**
-   * 
-   * Amazon ses test
-   * 
-   * @return void
-   */
   public function amazon_ses()
   {
     $notification = Loader::config('application', 'notification');
@@ -79,16 +50,10 @@ class Test extends AppController
       ->to('to@example.org')
       ->message_from_xml('email/ja/example')
       ->send();
-   }
+  }
 
- /**
-  * 
-  * Transaction test
-  * 
-  * @return void
-  */
-   public function transaction()
-   {
+  public function transaction()
+  {
     $this->TestModel->transaction();
-   }
+  }
 }

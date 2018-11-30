@@ -14,6 +14,5 @@ use Doctrine\Common\Annotations\Annotation;
 class Security
 {
   public $loggedin;
-
   public $loggedoff;
 }
