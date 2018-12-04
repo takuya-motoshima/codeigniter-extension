@@ -108,7 +108,7 @@ abstract class Controller extends \CI_Controller
    * @param bool $enabled
    * @return void
    */
-  protected function setResponseJsonOption(int $option, bool $enabled)
+  protected function setJsonOption(int $option, bool $enabled)
   {
     $this->httpResponse->jsonOption($option, $enabled);
   }
