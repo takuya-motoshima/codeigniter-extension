@@ -45,7 +45,7 @@ final class HttpResponse
     $option = 0;
     foreach($this->jsonOption as $key => $enabled) {
       if ($enabled) {
-        $otpion = $option || $key;
+        $option = $option || $key;
       }
     }
 
