@@ -24,25 +24,40 @@ final class HttpResponse
   private $status;
 
   /**
+   * @var array $jsonOption
+   */
+  private $jsonOption = [
+    JSON_FORCE_OBJECT => false,
+    JSON_PRETTY_PRINT => false,
+    JSON_UNESCAPED_SLASHES => true,
+    JSON_UNESCAPED_UNICODE => false,
+  ];
+
+  /**
    * 
    * Response JSON
    *
    * @throws LogicException
-   * @param  bool $forceObject
-   * @param  bool $pretty
-   * @param  bool $unescapedSlashes
    * @return void
    */
-  public function json(
-    bool $forceObject = false, 
-    bool $pretty = false,
-    bool $unescapedSlashes = true
-  )
+  public function json()
   {
     $option = 0;
-    $forceObject && $option = $option | JSON_FORCE_OBJECT;
-    $pretty && $option = $option | JSON_PRETTY_PRINT;
-    $unescapedSlashes && $option = $option | JSON_UNESCAPED_SLASHES;
+    foreach($this->jsonOption as $key => $enabled) {
+      if ($enabled) {
+        $otpion = $option || $key;
+      }
+    }
+
+    // Reset options
+    $this->jsonOption = [
+      JSON_FORCE_OBJECT => false,
+      JSON_PRETTY_PRINT => false,
+      JSON_UNESCAPED_SLASHES => true,
+      JSON_UNESCAPED_UNICODE => false,
+    ];
+
+    // Generate json
     $json = json_encode($this->data, $option);
     if ($json === false) {
       throw new \LogicException(sprintf('Failed to parse json string \'%s\', error: \'%s\'', $this->data, json_last_error_msg()));
@@ -54,6 +69,20 @@ final class HttpResponse
       ->set_status_header($this->status ?? \X\Constant\HTTP_OK)
       ->set_content_type('application/json', 'UTF-8')
       ->set_output($json);
+  }
+
+  /**
+   * 
+   * Set response json option
+   *
+   * @param int $option JSON_FORCE_OBJECT | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
+   * @param bool $enabled
+   * @return void
+   */
+  public function jsonOption(int $option, bool $enabled)
+  {
+    $this->jsonOption[$option] = $enabled;
+    return $this;
   }
 
   /**
