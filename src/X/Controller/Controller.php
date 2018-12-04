@@ -106,11 +106,12 @@ abstract class Controller extends \CI_Controller
    * 
    * @param int $option JSON_FORCE_OBJECT | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
    * @param bool $enabled
-   * @return void
+   * @return object
    */
   protected function setJsonOption(int $option, bool $enabled)
   {
     $this->httpResponse->jsonOption($option, $enabled);
+    return $this;
   }
 
   /**
