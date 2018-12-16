@@ -7,6 +7,7 @@
  * @copyright  2017 Takuya Motoshima
  */
 namespace X\Util;
+use X\Util\Logger;
 final class Template
 {
   /**
@@ -41,14 +42,7 @@ final class Template
       ],
     ], $option);
     $this->engine = new \Twig_Environment(new \Twig_Loader_Filesystem($option['paths']), $option['environment']);
-    $baseUrl = \base_url();
-    $this->engine->addGlobal('base_url', $baseUrl);
-    $this->engine->addGlobal('session', $_SESSION ?? null);
-    $ci =& get_instance();
-    $this->engine->addGlobal('action', ($ci->router->directory ?? '') . $ci->router->class . '/' . $ci->router->method);
-    $this->engine->setLexer(new \Twig_Lexer($this->engine, $option['lexer']));
     $this->engine->addFunction(new \Twig_SimpleFunction('cacheBusting',
-
       /**
        * @param $filePath
        * This function generates a new file path with the last date of filechange
@@ -78,10 +72,16 @@ final class Template
           //Fallback if mtime could not be found:
           $modified = mktime(0, 0, 0, date('m'), date('d'), date('Y'));
         }
-        return $filePath . '?' . $modified;
+        return \base_url($filePath) . '?' . $modified;
         // return preg_replace('{\\.([^./]+)$}', ".$modified.\$1", $filePath);
       }
     ));
+    $baseUrl = \base_url();
+    $this->engine->addGlobal('base_url', $baseUrl);
+    $this->engine->addGlobal('session', $_SESSION ?? null);
+    $ci =& get_instance();
+    $this->engine->addGlobal('action', ($ci->router->directory ?? '') . $ci->router->class . '/' . $ci->router->method);
+    $this->engine->setLexer(new \Twig_Lexer($this->engine, $option['lexer']));
   }
 
   /**
