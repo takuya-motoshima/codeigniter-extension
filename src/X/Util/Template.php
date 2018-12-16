@@ -47,7 +47,7 @@ final class Template
     $ci =& get_instance();
     $this->engine->addGlobal('action', ($ci->router->directory ?? '') . $ci->router->class . '/' . $ci->router->method);
     $this->engine->setLexer(new \Twig_Lexer($this->engine, $option['lexer']));
-    $this->addFunction(new \Twig_SimpleFunction('filemtime',
+    $this->engine->addFunction(new \Twig_SimpleFunction('filemtime',
       /**
        * @param $filePath
        * This function generates a new file path with the last date of filechange
