@@ -47,7 +47,8 @@ final class Template
     $ci =& get_instance();
     $this->engine->addGlobal('action', ($ci->router->directory ?? '') . $ci->router->class . '/' . $ci->router->method);
     $this->engine->setLexer(new \Twig_Lexer($this->engine, $option['lexer']));
-    $this->engine->addFunction(new \Twig_SimpleFunction('filemtime',
+    $this->engine->addFunction(new \Twig_SimpleFunction('cacheBusting',
+
       /**
        * @param $filePath
        * This function generates a new file path with the last date of filechange
@@ -59,7 +60,7 @@ final class Template
        * Usage in template files:
        * 
        * i.e:
-       * <link rel="stylesheet" href="{{ filemtime('css/style.css') }}">
+       * <link rel="stylesheet" href="{{ cacheBusting('css/style.css') }}">
        *
        * Apache Rewrite Rule:
        *
