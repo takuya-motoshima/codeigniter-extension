@@ -47,6 +47,40 @@ final class Template
     $ci =& get_instance();
     $this->engine->addGlobal('action', ($ci->router->directory ?? '') . $ci->router->class . '/' . $ci->router->method);
     $this->engine->setLexer(new \Twig_Lexer($this->engine, $option['lexer']));
+    $this->addFunction(new \Twig_SimpleFunction('filemtime',
+      /**
+       * @param $filePath
+       * This function generates a new file path with the last date of filechange
+       * to support better better client caching via Expires header:
+       * i.e:
+       * css/style.css -> css/style.css?1428423235
+       * // css/style.css -> css/style.1428423235.css
+       *
+       * Usage in template files:
+       * 
+       * i.e:
+       * <link rel="stylesheet" href="{{ filemtime('css/style.css') }}">
+       *
+       * Apache Rewrite Rule:
+       *
+       * RewriteCond %{REQUEST_FILENAME} !-f
+       * RewriteCond %{REQUEST_FILENAME} !-d
+       * RewriteRule ^(.*)\.[\d]{10}\.(css|js)$ $1.$2 [NC,L]
+       *
+       * Apache Document Root MUST be configured without the trailing slash!
+       *
+       * @return mixed
+       */
+      function (string $filePath) {
+        $modified = filemtime($_SERVER['DOCUMENT_ROOT'] . '/' . $filePath);
+        if (!$modified) {
+          //Fallback if mtime could not be found:
+          $modified = mktime(0, 0, 0, date('m'), date('d'), date('Y'));
+        }
+        return $filePath . '?' . $modified;
+        // return preg_replace('{\\.([^./]+)$}', ".$modified.\$1", $filePath);
+      }
+    ));
   }
 
   /**
