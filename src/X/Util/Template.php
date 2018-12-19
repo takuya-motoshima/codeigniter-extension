@@ -42,7 +42,7 @@ final class Template
       ],
     ], $option);
     $this->engine = new \Twig_Environment(new \Twig_Loader_Filesystem($option['paths']), $option['environment']);
-    $this->engine->addFunction(new \Twig_SimpleFunction('cacheBusting',
+    $this->engine->addFunction(new \Twig_SimpleFunction('cache_busting',
       /**
        * @param $filePath
        * This function generates a new file path with the last date of filechange
@@ -54,7 +54,7 @@ final class Template
        * Usage in template files:
        * 
        * i.e:
-       * <link rel="stylesheet" href="{{ cacheBusting('css/style.css') }}">
+       * <link rel="stylesheet" href="{{ cache_busting('css/style.css') }}">
        *
        * Apache Rewrite Rule:
        *
