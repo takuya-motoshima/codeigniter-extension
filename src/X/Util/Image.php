@@ -8,8 +8,9 @@
  * @copyright  2017 Takuya Motoshima
  */
 namespace X\Util;
-use X\Util\FileUtil;
-use X\Util\Loader;
+use \X\Util\FileUtil;
+use \X\Util\Loader;
+use \X\Util\Logger;
 final class Image
 {
 

@@ -7,6 +7,7 @@
  * @copyright  2018 Takuya Motoshima
  */
 namespace X\Library;
+use \X\Util\Logger;
 abstract class Input extends \CI_Input
 {
 
@@ -51,14 +52,17 @@ abstract class Input extends \CI_Input
         // match 'name', then everything after 'stream' (optional) except for prepending newlines
         preg_match('/name=\"([^\"]*)\".*stream[\n|\r]+([^\n\r].*)?$/s', $block, $matches);
         $name = $matches[1];
-        $value = $matches[2];
+        $value = $matches[2] ?? null;
         $input['files'][$name] = $value;
       } else {
         // parse all other fields
         // match "name" and optional value in between newline sequences
         preg_match('/name=\"([^\"]*)\"[\n|\r]+([^\n\r].*)?\r$/s', $block, $matches);
+        // if (\ENVIRONMENT !== 'production') {
+        //   Logger::d('$matches=', $matches);
+        // }
         $name = $matches[1];
-        $value = $matches[2];
+        $value = $matches[2] ?? null;
         if ($this->isNestedFormItem($name, $rootKey, $childKeys)) {
           $this->setNestedFormItem($input, $value, $rootKey, $childKeys);
         } else {
