@@ -23,6 +23,10 @@ final class Image
    */
   public static function put_image_blob(string $imageBlob, string $imagePath)
   {
+    if (\ENVIRONMENT !== 'production') {
+      Logger::d('$imageBlob=', $imageBlob);
+      Logger::d('$imagePath=', $imagePath);
+    }
     FileUtil::make_direcoty(dirname($imagePath));
     file_put_contents($imagePath, $imageBlob);
   }
