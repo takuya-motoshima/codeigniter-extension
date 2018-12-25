@@ -50,17 +50,19 @@ abstract class Input extends \CI_Input
       if (strpos($block, 'application/octet-stream') !== FALSE) {
         // match 'name', then everything after 'stream' (optional) except for prepending newlines
         preg_match('/name=\"([^\"]*)\".*stream[\n|\r]+([^\n\r].*)?$/s', $block, $matches);
-        $input['files'][$matches[1]] = $matches[2];
+        $name = $matches[1];
+        $value = $matches[2];
+        $input['files'][$name] = $value;
       } else {
         // parse all other fields
         // match "name" and optional value in between newline sequences
         preg_match('/name=\"([^\"]*)\"[\n|\r]+([^\n\r].*)?\r$/s', $block, $matches);
-        $nameAttr = $matches[1];
-        $valueAttr = $matches[2];
-        if ($this->isNestedFormItem($nameAttr, $rootKey, $childKeys)) {
-          $this->setNestedFormItem($input, $rootKey, $childKeys);
+        $name = $matches[1];
+        $value = $matches[2];
+        if ($this->isNestedFormItem($name, $rootKey, $childKeys)) {
+          $this->setNestedFormItem($input, $value, $rootKey, $childKeys);
         } else {
-          $input[$nameAttr] = $valueAttr;
+          $input[$name] = $value;
         }
       }
     }
@@ -82,12 +84,12 @@ abstract class Input extends \CI_Input
 
 
   private function isNestedFormItem(
-    string $nameAttr, 
+    string $name, 
     ?string &$rootKey = null, 
     ?string &$childKeys = null
   ): bool
   {
-    if (!preg_match('/^([a-z0-9\-_:\.]+)(\[..*)$/i', $nameAttr, $matches)) {
+    if (!preg_match('/^([a-z0-9\-_:\.]+)(\[..*)$/i', $name, $matches)) {
       return false;
     }
     $rootKey = $matches[1];
@@ -97,6 +99,7 @@ abstract class Input extends \CI_Input
 
   private function setNestedFormItem(
     array &$input, 
+    ?string $value,
     string $rootKey, 
     string $childKeys
   )
@@ -112,7 +115,7 @@ abstract class Input extends \CI_Input
       if (count($keys) > 0) {
         $tmp = &$tmp[$key];
       } else {
-        $tmp[$key] = true;
+        $tmp[$key] = $value;
       }
     }
   }
