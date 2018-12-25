@@ -55,7 +55,13 @@ abstract class Input extends \CI_Input
         // parse all other fields
         // match "name" and optional value in between newline sequences
         preg_match('/name=\"([^\"]*)\"[\n|\r]+([^\n\r].*)?\r$/s', $block, $matches);
-        $input[$matches[1]] = $matches[2];
+        $nameAttr = $matches[1];
+        $valueAttr = $matches[2];
+        if ($this->isNestedFormItem($nameAttr, $rootKey, $childKeys)) {
+          $this->setNestedFormItem($input, $rootKey, $childKeys);
+        } else {
+          $input[$nameAttr] = $valueAttr;
+        }
       }
     }
     return $input;
@@ -72,5 +78,42 @@ abstract class Input extends \CI_Input
   public function delete($index = NULL, $xss_clean = NULL)
   {
     return parent::input_stream($index, $xss_clean);
+  }
+
+
+  private function isNestedFormItem(
+    string $nameAttr, 
+    ?string &$rootKey = null, 
+    ?string &$childKeys = null
+  ): bool
+  {
+    if (!preg_match('/^([a-z0-9\-_:\.]+)(\[..*)$/i', $nameAttr, $matches)) {
+      return false;
+    }
+    $rootKey = $matches[1];
+    $childKeys = $matches[2];
+    return true;
+  }
+
+  private function setNestedFormItem(
+    array &$input, 
+    string $rootKey, 
+    string $childKeys
+  )
+  {
+    preg_match_all('/\[([a-z0-9\-_:\.]*)\]/i', $childKeys, $matches);
+    $keys = $matches[1];
+    array_unshift($keys, $rootKey);
+    $tmp = &$input;
+    while(($key = array_shift($keys)) !== null) {
+      if (!array_key_exists($key, $tmp)) {
+        $tmp[$key] = [];
+      }
+      if (count($keys) > 0) {
+        $tmp = &$tmp[$key];
+      } else {
+        $tmp[$key] = true;
+      }
+    }
   }
 }
