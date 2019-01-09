@@ -269,4 +269,21 @@ final class FileUtil
     }
     return !empty($lines) ? $lines : null;
   }
+
+
+  /**
+   * 
+   * Find file
+   * 
+   * @param  string $path
+   * @return array
+   */
+  public static function findFile(string $path): array
+  {
+    $files = [];
+    foreach (glob(FCPATH . 'dist/audio/beep/*.mp3') as $filePath) {
+      $files[] = basename($filePath);
+    }
+    return $files;
+  }
 }
