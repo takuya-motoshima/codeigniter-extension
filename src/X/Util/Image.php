@@ -16,33 +16,106 @@ final class Image
 
   /**
    * 
-   * Put image blob
+   * Put base64 image.
    *
-   * @param string $imageBlob
-   * @param string $imagePath
+   * @param string $base64
+   * @param string $dirPath
+   * @return array
+   */
+  public static function putBase64(string $base64, string $dirPath, string $fileName): array
+  {
+    $info = self::base64_to_byte($base64);
+    $baseName = $fileName . '.' . $info['extension'];
+    FileUtil::make_direcoty($dirPath);
+    file_put_contents(rtrim($dirPath, '/')  . '/' . $baseName, $info['source']);
+    return [
+      'extension' => $info['extension'],
+      'file_name' => $fileName,
+      'base_name' => $baseName,
+    ];
+  }
+
+  /**
+   * 
+   * Put blob image
+   *
+   * @param string $blob
+   * @param string $filePath
    * @return void
    */
-  public static function put_image_blob(string $imageBlob, string $imagePath)
+  public static function putBlob(string $blob, string $filePath)
   {
     if (\ENVIRONMENT !== 'production') {
-      Logger::d('$imageBlob=', $imageBlob);
-      Logger::d('$imagePath=', $imagePath);
+      Logger::d('$blob=', $blob);
+      Logger::d('$filePath=', $filePath);
     }
-    FileUtil::make_direcoty(dirname($imagePath));
-    file_put_contents($imagePath, $imageBlob);
+    FileUtil::make_direcoty(dirname($filePath));
+    file_put_contents($filePath, $blob);
+  }
+
+  /**
+   * 
+   * Copy image.
+   *
+   * @param string $orgFilePath
+   * @param string $dirPath
+   * @param string $replacementFileName
+   * @return string
+   */
+  public static function copy(string $orgFilePath, string $dirPath, string $replacementFileName = null): string
+  {
+    self::make_direcoty($dirPath);
+    $copyFileName = basename($orgFilePath);
+    if (!empty($replacementFileName)) {
+      $copyFileName = preg_replace('/..*(\...*)$/', $replacementFileName . '$1', $copyFileName);
+    }
+    file_put_contents(
+      rtrim($dirPath, '/')  . '/' . $copyFileName, 
+      file_get_contents($orgFilePath)
+    );
+    return $copyFileName;
+  }
+
+
+  /**
+   * 
+   * @deprecated Please use Image :: putBase64
+   */
+  public static function put_image_blob(string $blob, string $filePath)
+  {
+    self::putBlob($blob, $filePath);
+  }
+
+  /**
+   * 
+   * Read image
+   *
+   * @param string $filePath
+   * @return string
+   */
+  public static function read(string $filePath): string
+  {
+    if (!file_exists($filePath)) {
+      throw new \RuntimeException('Image file does not exist. image_path=' . $filePath);
+    }
+    $fp = fopen($filePath, 'r');
+    $image = fread($fp, filesize($filePath));
+    fclose($fp);
+    return $image;
   }
 
   /**
    * 
    * Resize
    *
-   * @param  string $str
-   * @param  string $addReplacement
-   * @return string Filename of thumbnail
+   * @param  string $filePath
+   * @param  int $newWidth
+   * @param  string $prefix
+   * @return string
    */
-  public static function resize(string $imagePath, int $newWidth, string $prefix = "-thumb"): string
+  public static function resize(string $filePath, int $newWidth, string $prefix = "-thumb"): string
   {
-    list($orgWidth, $orgHeight, $type) = \getimagesize($imagePath);
+    list($orgWidth, $orgHeight, $type) = \getimagesize($filePath);
     $newHeight = round($orgHeight * $newWidth / $orgWidth);
     $tmpImage = \imagecreatetruecolor($newWidth, $newHeight);
     if ($tmpImage === FALSE) {
@@ -50,19 +123,19 @@ final class Image
     }
     switch($type){
     case IMAGETYPE_JPEG:
-      $newImage = \imagecreatefromjpeg($imagePath);
+      $newImage = \imagecreatefromjpeg($filePath);
       break;
     case IMAGETYPE_GIF:
-      $newImage = \imagecreatefromgif($imagePath);
+      $newImage = \imagecreatefromgif($filePath);
       break;
     case IMAGETYPE_PNG:
       imagealphablending($tmpImage, false);
       imagesavealpha($tmpImage, true);
-      $newImage = \imagecreatefrompng($imagePath);
+      $newImage = \imagecreatefrompng($filePath);
       break;
     // case IMAGETYPE_BMP:
-    //     // $newImage = \imagecreatefrombmp($imagePath);
-    //     $newImage = \imagecreatefromwbmp($imagePath);
+    //     // $newImage = \imagecreatefrombmp($filePath);
+    //     $newImage = \imagecreatefromwbmp($filePath);
     //     break;
     }
     \imagecopyresampled(
@@ -77,8 +150,8 @@ final class Image
       $orgWidth,
       $orgHeight
     );
-    $newImageName = pathinfo($imagePath, PATHINFO_FILENAME) . $prefix . '.' . pathinfo($imagePath, PATHINFO_EXTENSION);
-    $newImagePath = rtrim(pathinfo($imagePath, PATHINFO_DIRNAME), '/') . '/' . $newImageName;
+    $newImageName = pathinfo($filePath, PATHINFO_FILENAME) . $prefix . '.' . pathinfo($filePath, PATHINFO_EXTENSION);
+    $newImagePath = rtrim(pathinfo($filePath, PATHINFO_DIRNAME), '/') . '/' . $newImageName;
     $quality = 100;
     switch($type){
     case IMAGETYPE_JPEG:
@@ -108,22 +181,22 @@ final class Image
    * 
    * Base64 to byte
    *
-   * @param string $imageBase64
+   * @param string $base64
    * @return array
    */
-  public static function base64_to_byte(string $imageBase64): array
+  public static function base64_to_byte(string $base64): array
   {
-    if (!preg_match('/^data:image\/(\w+);base64,/', $imageBase64, $extension)) {
+    if (!preg_match('/^data:image\/(\w+);base64,/', $base64, $extension)) {
       throw new \RuntimeException('Did not match data URI with image data');
     }
     $extension = strtolower($extension[1]);
-    $source = base64_decode(substr($imageBase64, strpos($imageBase64, ',') + 1));
-    if ($source === false) {
+    $blob = base64_decode(substr($base64, strpos($base64, ',') + 1));
+    if ($blob === false) {
       throw new \RuntimeException('Base64 decode failed');
     }
     return [
       'extension' => $extension,
-      'source' => $source
+      'source' => $blob
     ];
   }
 }

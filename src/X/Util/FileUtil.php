@@ -158,61 +158,29 @@ final class FileUtil
 
   /**
    * 
-   * Put image.
-   *
-   * @param string $url
-   * @param string $path
-   * @param string $replacementFilename
-   * @return string
+   * @deprecated Please use Image::copy
    */
-  public static function put_image(string $url, string $path, string $replacementFilename = null): string
+  public static function put_image(string $orgFilePath, string $dirPath, string $replacementFileName = null): string
   {
-    $fileName = basename($url);
-    if (!empty($replacementFilename)) {
-      $fileName = preg_replace('/..*(\...*)$/', $replacementFilename . '$1', $fileName);
-    }
-    self::make_direcoty($path);
-    file_put_contents(rtrim($path, '/')  . '/' . $fileName, file_get_contents($url));
-    return $fileName;
+    return Image::copy($orgFilePath, $dirPath, $replacementFileName);
   }
 
   /**
-   * 
-   * Put base64 image.
    *
-   * @param string $imageBase64
-   * @param string $dirPath
-   * @return array
+   * @deprecated Please use Image::putBase64
    */
   public static function put_base64_image(string $imageBase64, string $dirPath, string $fileName): array
   {
-    $blobInfo = Image::base64_to_byte($imageBase64);
-    $baseName = $fileName . '.' . $blobInfo['extension'];
-    self::make_direcoty($dirPath);
-    file_put_contents(rtrim($dirPath, '/')  . '/' . $baseName, $blobInfo['source']);
-    return [
-      'extension' => $blobInfo['extension'],
-      'file_name' => $fileName,
-      'base_name' => $baseName,
-    ];
+    return Image::putBase64($imageBase64, $dirPath, $fileName);
   }
 
   /**
-   * 
-   * Read image
    *
-   * @param string $imagePath
-   * @return string
+   * @deprecated Please use Image::read
    */
   public static function read_image(string $imagePath): string
   {
-    if (!file_exists($imagePath)) {
-      throw new \RuntimeException('Image file does not exist. image_path=' . $imagePath);
-    }
-    $fp = fopen($imagePath, 'r');
-    $image = fread($fp, filesize($imagePath));
-    fclose($fp);
-    return $image;
+    return Image::read($imagePath);
   }
 
   /**
