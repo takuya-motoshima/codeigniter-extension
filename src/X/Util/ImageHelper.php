@@ -24,12 +24,11 @@ final class ImageHelper
   public static function putBase64(string $base64, string $dirPath, string $fileName): \stdClass
   {
     $blobInfo = self::base64ToBlob($base64);
-    $baseName = $fileName . '.' . $blobInfo->extension;
+    $baseName = $fileName . '.' . $blobInfo['mime'];
     FileHelper::makeDirecoty($dirPath);
-    file_put_contents(rtrim($dirPath, '/')  . '/' . $baseName, $blobInfo->blob);
+    file_put_contents(rtrim($dirPath, '/')  . '/' . $baseName, $blobInfo['blob']);
     return json_decode(json_encode([
-      'extension' => $blobInfo->extension,
-      'fileName' => $fileName,
+      'mime' => $blobInfo['mime'],
       'baseName' => $baseName,
     ]));
   }
@@ -163,19 +162,19 @@ final class ImageHelper
    * @param string $base64
    * @return \stdClass
    */
-  public static function base64ToBlob(string $base64): \stdClass
+  public static function base64ToBlob(string $base64): array
   {
-    if (!preg_match('/^data:image\/(\w+);base64,/', $base64, $extension)) {
+    if (!preg_match('/^data:image\/(\w+);base64,/', $base64, $mime)) {
       throw new \RuntimeException('Did not match data URI with image data');
     }
-    $extension = strtolower($extension[1]);
+    $mime = strtolower($mime[1]);
     $blob = base64_decode(substr($base64, strpos($base64, ',') + 1));
     if ($blob === false) {
       throw new \RuntimeException('Base64 decode failed');
     }
-    return json_decode(json_encode([
+    return [
       'blob' => $blob,
-      'extension' => $extension, 
-    ]));
+      'mime' => $mime, 
+    ];
   }
 }
