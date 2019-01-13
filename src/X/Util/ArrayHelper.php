@@ -1,13 +1,13 @@
 <?php
 /**
- * Array util class
+ * Array helper class
  *
  * @author     Takuya Motoshima <https://www.facebook.com/takuya.motoshima.7>
  * @license    MIT License
  * @copyright  2018 Takuya Motoshima
  */
 namespace X\Util;
-final class ArrayUtil
+final class ArrayHelper
 {
 
   /**
@@ -17,7 +17,7 @@ final class ArrayUtil
    * @param  array $allowed
    * @return array
    */
-  public static function filter_key(array $arr, ...$allowed):array
+  public static function filterKey(array $arr, ...$allowed):array
   {
     return array_filter($arr, function ($key) use ($allowed) {
       return in_array($key, $allowed);
@@ -30,7 +30,7 @@ final class ArrayUtil
    * @param  array $arr
    * @return array
    */
-  public static function reset_key(array $arr):array
+  public static function resetKey(array $arr):array
   {
     return array_values($arr);
   }

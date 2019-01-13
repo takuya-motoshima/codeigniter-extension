@@ -9,7 +9,7 @@
 namespace X\Composer;
 use Composer\Script\Event;
 use Composer\IO\ConsoleIO;
-use X\Util\FileUtil;
+use X\Util\FileHelper;
 final class Installer
 {
   /**
@@ -33,29 +33,29 @@ final class Installer
     $io = $event->getIO();
 
     // Create application
-    FileUtil::copy_directory(static::FRAMEWORK_DIR . 'application', 'application');
+    FileHelper::copyDirectory(static::FRAMEWORK_DIR . 'application', 'application');
 
     // Create core system classes
-    FileUtil::copy_directory('core.dist', 'application/core');
+    FileHelper::copyDirectory('core.dist', 'application/core');
 
     // Create sample view
-    FileUtil::copy_directory('views.dist', 'application/views');
+    FileHelper::copyDirectory('views.dist', 'application/views');
 
     // Create session directory
-    FileUtil::make_direcoty('application/session');
+    FileHelper::makeDirecoty('application/session');
     touch('application/session/.gitkeep');
 
     // Create index.php
-    FileUtil::copy_file(static::FRAMEWORK_DIR . 'index.php', static::DOCUMENT_ROOT . 'index.php');
+    FileHelper::copyFile(static::FRAMEWORK_DIR . 'index.php', static::DOCUMENT_ROOT . 'index.php');
 
     // Create .htaccess
-    FileUtil::copy_file('dot.htaccess', static::DOCUMENT_ROOT . '.htaccess');
+    FileHelper::copyFile('dot.htaccess', static::DOCUMENT_ROOT . '.htaccess');
 
     // Create .gitignore
-    FileUtil::copy_file('dot.gitignore.dist', '.gitignore');
+    FileHelper::copyFile('dot.gitignore.dist', '.gitignore');
 
     // Create .gitattributes
-    FileUtil::copy_file('dot.gitattributes.dist', '.gitattributes');
+    FileHelper::copyFile('dot.gitattributes.dist', '.gitattributes');
 
     // Update index.php
     self::update_index($io);
@@ -86,7 +86,7 @@ final class Installer
   {
     $io->write('==================================================');
     $io->write('<info>Update public/index.php is running');
-    FileUtil::replace(static::DOCUMENT_ROOT . 'index.php', [
+    FileHelper::replace(static::DOCUMENT_ROOT . 'index.php', [
       '$system_path = \'system\';' => '$system_path = \'../' . static::FRAMEWORK_DIR . 'system\';',
       '$application_folder = \'application\';' => '$application_folder = \'../application\';',
     ]);
@@ -104,7 +104,7 @@ final class Installer
   {
     $io->write('==================================================');
     $io->write('<info>Update application/config/config.php is running');
-    FileUtil::replace('application/config/config.php', [
+    FileHelper::replace('application/config/config.php', [
       // Base Site URL
       '$config[\'base_url\'] = \'\';' => 'if (!empty($_SERVER[\'HTTP_HOST\'])) {$config[\'base_url\'] = "//".$_SERVER[\'HTTP_HOST\'] . str_replace(basename($_SERVER[\'SCRIPT_NAME\']),"",$_SERVER[\'SCRIPT_NAME\']);}',
       // Enable/Disable System Hooks
@@ -122,7 +122,7 @@ final class Installer
       // Class Extension Prefix
       '$config[\'subclass_prefix\'] = \'MY_\';' => '$config[\'subclass_prefix\'] = \'App\';',
     ]);
-    FileUtil::replace('application/config/autoload.php', [
+    FileHelper::replace('application/config/autoload.php', [
       // Auto-load Helper Files
       '$autoload[\'helper\'] = array();' => '$autoload[\'helper\'] = array(\'url\');',
     ]);
@@ -140,7 +140,7 @@ final class Installer
   {
     $io->write('==================================================');
     $io->write('<info>Composer update is running');
-    FileUtil::copy_file('composer.json.dist', 'composer.json');
+    FileHelper::copyFile('composer.json.dist', 'composer.json');
     passthru('composer update');
     $io->write('<info>Composer update is succeeded');
     $io->write('==================================================');
@@ -156,8 +156,8 @@ final class Installer
   {
     $io->write('==================================================');
     $io->write('<info>NPM install is running');
-    FileUtil::copy_file('package.json.dist', static::DOCUMENT_ROOT . 'package.json');
-    FileUtil::copy_file('webpack.config.js.dist', static::DOCUMENT_ROOT . 'webpack.config.js');
+    FileHelper::copyFile('package.json.dist', static::DOCUMENT_ROOT . 'package.json');
+    FileHelper::copyFile('webpack.config.js.dist', static::DOCUMENT_ROOT . 'webpack.config.js');
     $curDit = getcwd();
     chdir(static::DOCUMENT_ROOT);
     passthru('npm install');
@@ -187,7 +187,7 @@ final class Installer
    */
   private static function delete_self()
   {
-    FileUtil::delete(
+    FileHelper::delete(
       'src',
       'test',
       'composer.json.dist',

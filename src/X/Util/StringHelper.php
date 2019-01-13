@@ -1,13 +1,13 @@
 <?php
 /**
- * String util class
+ * String helper class
  *
  * @author     Takuya Motoshima <https://www.facebook.com/takuya.motoshima.7>
  * @license    MIT License
  * @copyright  2017 Takuya Motoshima
  */
 namespace X\Util;
-final class StringUtil
+final class StringHelper
 {
 
   /**

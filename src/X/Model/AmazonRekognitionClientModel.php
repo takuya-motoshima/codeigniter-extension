@@ -9,7 +9,7 @@
  */
 namespace X\Model;
 use \X\Util\Loader;
-use \X\Util\FileUtil;
+use \X\Util\FileHelper;
 use \X\Util\Logger;
 use \Aws\Rekognition\RekognitionClient;
 use \Aws\Rekognition\Exception\RekognitionException;
@@ -76,8 +76,8 @@ class AmazonRekognitionClientModel extends Model
     ): bool
     {
         return $this->compare_face(
-            FileUtil::read_image($sourceImagePath),
-            FileUtil::read_image($targetImagePath),
+            FileHelper::read_image($sourceImagePath),
+            FileHelper::read_image($targetImagePath),
             $similarityThreshold
         );
     }
@@ -113,7 +113,7 @@ class AmazonRekognitionClientModel extends Model
      */
     public function is_face_by_path(string $imagePath): bool
     {
-        $this->is_face(FileUtil::read_image($imagePath));
+        $this->is_face(FileHelper::read_image($imagePath));
     }
 
 
@@ -143,7 +143,6 @@ class AmazonRekognitionClientModel extends Model
             throw $e;
         }
     }
-
 
     /**
      * 

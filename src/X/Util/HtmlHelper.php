@@ -1,13 +1,13 @@
 <?php
 /**
- * String util class
+ * String helper class
  *
  * @author     Takuya Motoshima <https://www.facebook.com/takuya.motoshima.7>
  * @license    MIT License
  * @copyright  2017 Takuya Motoshima
  */
 namespace X\Util;
-final class HtmlUtil
+final class HtmlHelper
 {
 
   /**
@@ -17,7 +17,7 @@ final class HtmlUtil
    * @param  string $userIdentify
    * @return string
    */
-  public static function get_embed_contents(string $url):string
+  public static function getEmbedContents(string $url):string
   {
     $ch = curl_init($url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -29,8 +29,8 @@ final class HtmlUtil
     if ($status >= 400 || $status < 200) {
       return '';
     }
-    $contents = self::append_basetag($contents, $url);
-    $charset = self::get_charset($contents);
+    $contents = self::appendBaseTag($contents, $url);
+    $charset = self::getCharset($contents);
     return [
       'contents' => $contents,
       'charset' => $charset
@@ -43,7 +43,7 @@ final class HtmlUtil
    * @param string $contents
    * @return string
    */
-  public static function get_charset(string $contents): string
+  public static function getCharset(string $contents): string
   {
     if (preg_match('/<meta..*?charset=[\'"]?([\w-]+).*?>/is', $contents, $matches)) {
       return $matches[1];
@@ -58,10 +58,10 @@ final class HtmlUtil
    * @param string $url
    * @return string
    */
-  public static function append_basetag(string $contents, string $url): string
+  public static function appendBaseTag(string $contents, string $url): string
   {
     // Remove comment
-    $tmp = self::remove_comment($contents);
+    $tmp = self::removeComment($contents);
 
     // Remove invalid basetag
     if (preg_match_all('/<base.*?>/is', $tmp, $matches)) {
@@ -85,7 +85,7 @@ final class HtmlUtil
    * @param string $contents
    * @return string
    */
-  public static function remove_comment(string $contents): string
+  public static function removeComment(string $contents): string
   {
     return preg_replace('/<!--.*?-->/s', '', $contents);
   }
