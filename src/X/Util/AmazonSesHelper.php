@@ -11,7 +11,7 @@ use \X\Util\Template;
  * @copyright  2017 Takuya Motoshima
  */
 namespace X\Util;
-class EMailAmazonSes
+class AmazonSesHelper
 {
   /** @var array */
   private $option = null;
@@ -64,9 +64,9 @@ class EMailAmazonSes
    * Set charset
    * 
    * @param  string $charset
-   * @return EMailAmazonSES
+   * @return AmazonSesHelper
    */
-  public function charset(string $charset): EMailAmazonSES
+  public function charset(string $charset): AmazonSesHelper
   {
     $this->charset = $charset;
     return $this;
@@ -78,9 +78,9 @@ class EMailAmazonSes
    * 
    * @param  string $from
    * @param  string $from_name
-   * @return EMailAmazonSES
+   * @return AmazonSesHelper
    */
-  public function from(string $from, string $from_name = null): EMailAmazonSES
+  public function from(string $from, string $from_name = null): AmazonSesHelper
   {
     $this->from = $from;
     $this->from_name = $from_name;
@@ -92,9 +92,9 @@ class EMailAmazonSes
    * Set destination
    *
    * @param string|array $to
-   * @return EMailAmazonSES
+   * @return AmazonSesHelper
    */
-  public function to($to): EMailAmazonSES
+  public function to($to): AmazonSesHelper
   {
     $this->to = $to;
     return $this;
@@ -105,9 +105,9 @@ class EMailAmazonSes
    * Set destination
    *
    * @param string|array $bcc
-   * @return EMailAmazonSES
+   * @return AmazonSesHelper
    */
-  public function bcc($bcc): EMailAmazonSES
+  public function bcc($bcc): AmazonSesHelper
   {
     $this->bcc = $bcc;
     return $this;
@@ -118,9 +118,9 @@ class EMailAmazonSes
    * Set destination
    *
    * @param string|array $cc
-   * @return EMailAmazonSES
+   * @return AmazonSesHelper
    */
-  public function cc($cc): EMailAmazonSES
+  public function cc($cc): AmazonSesHelper
   {
     $this->cc = $cc;
     return $this;
@@ -131,9 +131,9 @@ class EMailAmazonSes
    * Set up outgoing subject
    *
    * @param string $subject
-   * @return EMailAmazonSES
+   * @return AmazonSesHelper
    */
-  public function subject(string $subject): EMailAmazonSES
+  public function subject(string $subject): AmazonSesHelper
   {
     $this->subject = $subject;
     return $this;
@@ -144,9 +144,9 @@ class EMailAmazonSes
    * Set up outgoing messages
    *
    * @param string $message
-   * @return EMailAmazonSES
+   * @return AmazonSesHelper
    */
-  public function message(string $message): EMailAmazonSES
+  public function message(string $message): AmazonSesHelper
   {
     $this->message = $message;
     return $this;
@@ -159,7 +159,7 @@ class EMailAmazonSes
    * @param   array
    * @return  string
    */
-  public function message_from_xml(string $path, array $vars = []): EMailAmazonSES
+  public function messageFromXml(string $path, array $vars = []): AmazonSesHelper
   {
     static $template;
     if (!isset($template)) {

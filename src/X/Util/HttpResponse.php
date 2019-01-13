@@ -64,7 +64,7 @@ final class HttpResponse
     }
     ob_clean();
     $ci =& \get_instance();
-    $this->set_cors_header($ci);
+    $this->setCorsHeader($ci);
     $ci->output
       ->set_status_header($this->status ?? \X\Constant\HTTP_OK)
       ->set_content_type('application/json', 'UTF-8')
@@ -89,57 +89,57 @@ final class HttpResponse
    * 
    * Response HTML
    *
-   * @param  string  $html
+   * @param  string  $source
    * @param  string $char
    * @return void
    */
-  public function html(string $html, string $char = 'UTF-8')
+  public function html(string $source, string $char = 'UTF-8')
   {
     $ci =& \get_instance();
-    $this->set_cors_header($ci);
+    $this->setCorsHeader($ci);
     $ci->output
       ->set_content_type('text/html', $char)
-      ->set_output($html);
+      ->set_output($source);
   }
 
   /**
    * 
    * Response HTML for template
    *
-   * @param  string $teamplatePath
+   * @param  string $filePath
    * @param  string $char
    * @return void
    */
-  public function template(string $templatePath, string $char = 'UTF-8')
+  public function template(string $filePath, string $char = 'UTF-8')
   {
     static $template;
     $template = $template ?? new \X\Util\Template();
-    self::html($template->load($templatePath, $this->data));
+    self::html($template->load($filePath, $this->data));
   }
 
   /**
    * 
    * Response javascript
    *
-   * @param  string $code
+   * @param  string $source
    * @param  string $char
    * @return void
    */
-  public function javascript(string $code, string $char = 'UTF-8')
+  public function javascript(string $source, string $char = 'UTF-8')
   {
     ob_clean();
     $ci =& \get_instance();
-    $this->set_cors_header($ci);
+    $this->setCorsHeader($ci);
     $ci->output
       ->set_content_type('application/javascript', $char)
-      ->set_output($code);
+      ->set_output($source);
   }
 
   /**
    * 
    * Response text
    *
-   * @param  string $code
+   * @param  string $text
    * @param  string $char
    * @return void
    */
@@ -147,7 +147,7 @@ final class HttpResponse
   {
     ob_clean();
     $ci =& \get_instance();
-    $this->set_cors_header($ci);
+    $this->setCorsHeader($ci);
     $ci->output
       ->set_content_type('text/plain', $char)
       ->set_output($text);
@@ -200,7 +200,7 @@ final class HttpResponse
     $ci =& \get_instance();
     if ($ci->input->is_ajax_request()) {
       ob_clean();
-      $this->set_cors_header($ci);
+      $this->setCorsHeader($ci);
       $ci->output
         ->set_header('Cache-Control: no-cache, must-revalidate')
         ->set_status_header($httStatus, rawurlencode($message))
@@ -217,7 +217,7 @@ final class HttpResponse
    * @param  int $status
    * @return object
    */
-  public function set_status(int $status)
+  public function status(int $status)
   {
     $this->status = $status;
     return $this;
@@ -261,7 +261,7 @@ final class HttpResponse
    *
    * @param
    */
-  public function set_cors_header(\CI_Controller &$ci)
+  public function setCorsHeader(\CI_Controller &$ci)
   {
     $http_origin = $_SERVER['HTTP_ORIGIN'] ?? '*';
     $ci->output

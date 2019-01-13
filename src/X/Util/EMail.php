@@ -127,7 +127,7 @@ abstract class EMail
    * @param   array
    * @return  string
    */
-  public static function message_from_template(string $path, array $vars = []): string
+  public static function messageFromTemplate(string $path, array $vars = []): string
   {
     self::message(self::template()->load($path, $vars));
     return __CLASS__;
@@ -140,7 +140,7 @@ abstract class EMail
    * @param   array
    * @return  string
    */
-  public static function message_from_xml(string $path, array $vars = []): string
+  public static function messageFromXml(string $path, array $vars = []): string
   {
     $xml = new \SimpleXMLElement(self::template()->load($path, $vars, 'xml'));
     self
@@ -150,12 +150,12 @@ abstract class EMail
   }
 
   /**
-   * Set Mailtype
+   * Set mail type
    *
    * @param   string
    * @return  string
    */
-  public static function set_mailtype($type = 'text'): string
+  public static function mailType($type = 'text'): string
   {
     call_user_func_array([self::email(), __FUNCTION__], func_get_args());
     return __CLASS__;
@@ -184,7 +184,7 @@ abstract class EMail
    * @param string  $filename
    * @return  string
    */
-  public static function attachment_cid($filename)
+  public static function attachmentCid($filename)
   {
     return call_user_func_array([self::email(), __FUNCTION__], func_get_args());
   }

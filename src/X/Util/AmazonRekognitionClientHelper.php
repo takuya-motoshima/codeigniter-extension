@@ -12,7 +12,7 @@ use \X\Util\FileHelper;
 use \X\Util\Logger;
 use \Aws\Rekognition\RekognitionClient;
 use \Aws\Rekognition\Exception\RekognitionException;
-class AmazonRekognitionClient 
+class AmazonRekognitionClientHelper
 {
   protected $client;
 
@@ -44,7 +44,7 @@ class AmazonRekognitionClient
    * @param  int $similarityThreshold
    * @return bool
    */
-  public function compare_face(
+  public function compareFace(
     string $sourceImageBinary, 
     string $targetImageBinary, 
     int $similarityThreshold = 80
@@ -67,13 +67,13 @@ class AmazonRekognitionClient
    * @param  int $similarityThreshold
    * @return bool
    */
-  public function compare_face_by_path(
+  public function compareFaceByPath(
     string $sourceImagePath, 
     string $targetImagePath, 
     int $similarityThreshold = 80
   ): bool
   {
-    return $this->compare_face(
+    return $this->compareFace(
       FileHelper::read_image($sourceImagePath),
       FileHelper::read_image($targetImagePath),
       $similarityThreshold
@@ -87,7 +87,7 @@ class AmazonRekognitionClient
    * @param string $imageBinary Image binary data
    * @return bool
    */
-  public function is_face(string $imageBinary): bool
+  public function isFace(string $imageBinary): bool
   {
     try {
       $response = $this->client->DetectFaces([
@@ -109,9 +109,9 @@ class AmazonRekognitionClient
    * @param string $imagePath Image path
    * @return bool
    */
-  public function is_face_by_path(string $imagePath): bool
+  public function isFaceByPath(string $imagePath): bool
   {
-    $this->is_face(FileHelper::read_image($imagePath));
+    $this->isFace(FileHelper::read_image($imagePath));
   }
 
 
@@ -122,7 +122,7 @@ class AmazonRekognitionClient
    * @param string $collectionId
    * @return void
    */
-  public function add_collection(string $collectionId)
+  public function addCollection(string $collectionId)
   {
     try {
       $response = $this->client->createCollection([
@@ -152,7 +152,7 @@ class AmazonRekognitionClient
    * @param string $imageBinary  Image binary data
    * @return bool
    */
-  public function add_face_to_collection(
+  public function addFaceToCollection(
     string $collectionId, 
     string $imageBinary
   ): array
@@ -191,7 +191,7 @@ class AmazonRekognitionClient
    * @param string $collectionId
    * @return bool
    */
-  public function get_faces_from_collection(string $collectionId): array
+  public function getFacesFromCollection(string $collectionId): array
   {
     try {
       $response = $this->client->listFaces([
@@ -212,7 +212,7 @@ class AmazonRekognitionClient
    * @param string $collectionId
    * @return void
    */
-  public function delete_collection(string $collectionId)
+  public function deleteCollection(string $collectionId)
   {
     try {
       $response = $this->client->deleteCollection([
@@ -238,7 +238,7 @@ class AmazonRekognitionClient
    * @param  string $imageId
    * @return void
    */
-  public function delete_face_from_collection(string $collectionId, string $imageId)
+  public function deleteFaceFromCollection(string $collectionId, string $imageId)
   {
     try {
       $images = $this->get_collection_image($collectionId);
@@ -273,7 +273,7 @@ class AmazonRekognitionClient
    * @param  string $imageBinary
    * @return array Matched image ID
    */
-  public function match_faces_from_collection(
+  public function matchFacesFromCollection(
     string $collectionId,
     string $imageBinary,
     int $faceMatchThreshold = 70

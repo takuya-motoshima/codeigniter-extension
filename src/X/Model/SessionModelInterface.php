@@ -43,6 +43,5 @@ interface SessionModelInterface
      * 
      * @return stdClass|string
      */
-    public static function get(string $column = null);
-    // public static function get(string $column = null): ?\stdClass;
+    public static function get(string $field = null);
 }

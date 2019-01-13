@@ -23,15 +23,10 @@ abstract class Controller extends \CI_Controller
   protected $library;
 
   /**
-   * HttpResponse $httpResponse
+   * HttpResponse $response
    * @var [type]
    */
-  private $httpResponse;
-
-  /**
-   * @var array $data
-   */
-  private $data = [];
+  private $response;
 
   /**
    * construct
@@ -41,7 +36,7 @@ abstract class Controller extends \CI_Controller
     parent::__construct();
     Loader::model($this->model);
     Loader::library($this->library);
-    $this->httpResponse = new HttpResponse();
+    $this->response = new HttpResponse();
   }
 
   /**
@@ -50,14 +45,14 @@ abstract class Controller extends \CI_Controller
    * @param  int $status
    * @return object
    */
-  protected function set_status(int $status)
+  protected function status(int $status)
   {
-    $this->httpResponse->set_status($status);
+    $this->response->status($status);
     return $this;
   }
 
   /**
-   * Set response data
+   * Set response
    *
    * @param  mixed $key
    * @param  mixed $value
@@ -66,19 +61,19 @@ abstract class Controller extends \CI_Controller
   protected function set($key, $value = null)
   {
     func_num_args() === 1 
-      ? $this->httpResponse->set($key)
-      : $this->httpResponse->set($key, $value);
+      ? $this->response->set($key)
+      : $this->response->set($key, $value);
     return $this;
   }
 
   /**
-   * Clear response data
+   * Clear response
    *
    * @return object
    */
   protected function clear()
   {
-    $this->httpResponse->clear($key, $value);
+    $this->response->clear($key, $value);
     return $this;
   }
 
@@ -92,12 +87,10 @@ abstract class Controller extends \CI_Controller
    * @param  bool $pretty
    * @return void
    */
-  protected function response_json()
-  // protected function response_json(bool $forceObject = false, bool $pretty = false, bool $unescapedSlashes = true, bool $unescapedUnicode = false)
+  protected function responseJson()
   {
-    $this->before_response_json();
-    $this->httpResponse->json();
-    // $this->httpResponse->json($forceObject, $pretty, $unescapedSlashes, $unescapedUnicode);
+    $this->beforeResponseJson();
+    $this->response->json();
   }
 
   /**
@@ -110,20 +103,20 @@ abstract class Controller extends \CI_Controller
    */
   protected function setJsonOption(int $option, bool $enabled)
   {
-    $this->httpResponse->jsonOption($option, $enabled);
+    $this->response->jsonOption($option, $enabled);
     return $this;
   }
 
   /**
    * Response HTML
    *
-   * @param  string  $html
+   * @param  string  $source
    * @param  string $char
    * @return void
    */
-  protected function response_html(string $html, string $char = 'utf-8')
+  protected function responseHtml(string $source, string $char = 'utf-8')
   {
-    $this->httpResponse->html($html, $char);
+    $this->response->html($source, $char);
   }
 
   /**
@@ -136,22 +129,22 @@ abstract class Controller extends \CI_Controller
    * @param  string $char
    * @return void
    */
-  protected function response_template(string $templatePath, string $char = 'utf-8')
+  protected function responseTemplate(string $filePath, string $char = 'utf-8')
   {
-    $this->before_response_template($templatePath);
-    $this->httpResponse->template($templatePath, $char);
+    $this->beforeResponseTemplate($filePath);
+    $this->response->template($filePath, $char);
   }
 
   /**
    * Response javascript
    *
-   * @param  string $code
+   * @param  string $source
    * @param  string $char
    * @return void
    */
-  protected function response_javascript(string $code, string $char = 'UTF-8')
+  protected function responseJavascript(string $source, string $char = 'UTF-8')
   {
-    $this->httpResponse->javascript($code, $char);
+    $this->response->javascript($source, $char);
   }
 
   /**
@@ -161,33 +154,33 @@ abstract class Controller extends \CI_Controller
    * @param  string $char
    * @return void
    */
-  protected function response_text(string $text, string $char = 'UTF-8')
+  protected function responseText(string $text, string $char = 'UTF-8')
   {
-    $this->httpResponse->text($text, $char);
+    $this->response->text($text, $char);
   }
 
   /**
    * Response download
    *
-   * @param  string $file_name
+   * @param  string $fileMame
    * @param  string $data
-   * @param  bool $set_mime
+   * @param  bool $mime
    * @return void
    */
-  protected function response_download(string $file_name, string $data = '', bool $set_mime = FALSE)
+  protected function responseDownload(string $fileMame, string $data = '', bool $mime = FALSE)
   {
-    $this->httpResponse->download($file_name, $data, $set_mime);
+    $this->response->download($fileMame, $data, $mime);
   }
 
   /**
    * Response image
    *
-   * @param  string $image_path
+   * @param  string $filePath
    * @return void
    */
-  protected function response_image(string $image_path)
+  protected function responseImage(string $filePath)
   {
-    $this->httpResponse->image($image_path);
+    $this->response->image($filePath);
   }
 
   /**
@@ -197,9 +190,9 @@ abstract class Controller extends \CI_Controller
    * @param  int $httStatus
    * @return void
    */
-  protected function response_error(string $errorMessage, int $httStatus = \X\Constant\HTTP_INTERNAL_SERVER_ERROR)
+  protected function responseError(string $errorMessage, int $httStatus = \X\Constant\HTTP_INTERNAL_SERVER_ERROR)
   {
-    $this->httpResponse->error($errorMessage, $httStatus);
+    $this->response->error($errorMessage, $httStatus);
   }
 
   /**
@@ -208,7 +201,7 @@ abstract class Controller extends \CI_Controller
    * @param  int $responseType
    * @return void
    */
-  protected function before_response_json() {}
+  protected function beforeResponseJson() {}
 
   /**
    * Before response template
@@ -216,5 +209,5 @@ abstract class Controller extends \CI_Controller
    * @param  int $responseType
    * @return void
    */
-  protected function before_response_template(string $templatePath) {}
+  protected function beforeResponseTemplate(string $filePath) {}
 }

@@ -9,8 +9,7 @@
  */
 namespace X\Model;
 use X\Util\Loader;
-abstract class Model extends \CI_Model
-{
+abstract class Model extends \CI_Model {
     /**
      * @var string $table
      */
