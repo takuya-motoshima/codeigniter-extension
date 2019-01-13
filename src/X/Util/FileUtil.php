@@ -275,14 +275,14 @@ final class FileUtil
    * 
    * Find file
    * 
-   * @param  string $path
+   * @param  string $pattern
    * @return array
    */
-  public static function findFile(string $path): array
+  public static function find(string $pattern): array
   {
     $files = [];
-    foreach (glob(FCPATH . 'dist/audio/beep/*.mp3') as $filePath) {
-      $files[] = basename($filePath);
+    foreach (glob($pattern) as $file) {
+      $files[] = basename($file);
     }
     return $files;
   }
