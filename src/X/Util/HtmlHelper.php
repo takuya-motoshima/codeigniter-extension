@@ -15,9 +15,9 @@ final class HtmlHelper
    *
    * @param  string $url
    * @param  string $userIdentify
-   * @return string
+   * @return \stdClass
    */
-  public static function getEmbedContents(string $url):string
+  public static function getEmbedContents(string $url): ?\stdClass
   {
     $ch = curl_init($url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -31,10 +31,10 @@ final class HtmlHelper
     }
     $contents = self::appendBaseTag($contents, $url);
     $charset = self::getCharset($contents);
-    return [
+    return json_decode(json_encode([
       'contents' => $contents,
       'charset' => $charset
-    ];
+    ]));
   }
 
   /**
