@@ -19,9 +19,9 @@ final class ImageHelper
    *
    * @param string $base64
    * @param string $dirPath
-   * @return stdClass
+   * @return \stdClass
    */
-  public static function putBase64(string $base64, string $dirPath, string $fileName): stdClass
+  public static function putBase64(string $base64, string $dirPath, string $fileName): \stdClass
   {
     $blobInfo = self::base64ToBlob($base64);
     $baseName = $fileName . '.' . $blobInfo->extension;
@@ -161,9 +161,9 @@ final class ImageHelper
    * Base64 to blob
    *
    * @param string $base64
-   * @return stdClass
+   * @return \stdClass
    */
-  public static function base64ToBlob(string $base64): stdClass
+  public static function base64ToBlob(string $base64): \stdClass
   {
     if (!preg_match('/^data:image\/(\w+);base64,/', $base64, $extension)) {
       throw new \RuntimeException('Did not match data URI with image data');
