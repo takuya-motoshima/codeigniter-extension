@@ -64,7 +64,7 @@ final class Image
    */
   public static function copy(string $orgFilePath, string $dirPath, string $replacementFileName = null): string
   {
-    self::make_direcoty($dirPath);
+    FileUtil::make_direcoty($dirPath);
     $copyFileName = basename($orgFilePath);
     if (!empty($replacementFileName)) {
       $copyFileName = preg_replace('/..*(\...*)$/', $replacementFileName . '$1', $copyFileName);
