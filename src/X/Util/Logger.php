@@ -18,7 +18,7 @@ final class Logger
    */
   public static function d(...$params)
   {
-    log_message('debug', self::get_log_string($params, debug_backtrace()));
+    log_message('debug', self::getLogString($params, debug_backtrace()));
   }
 
   /**
@@ -29,7 +29,7 @@ final class Logger
    */
   public static function i(...$params)
   {
-    log_message('info', self::get_log_string($params, debug_backtrace()));
+    log_message('info', self::getLogString($params, debug_backtrace()));
   }
 
 
@@ -44,7 +44,7 @@ final class Logger
     if ($params[0] instanceof \Exception) {
       log_message('error', $params[0]->getMessage() . PHP_EOL . $params[0]->getTraceAsString());
     } else {
-      log_message('error', self::get_log_string($params, debug_backtrace()));
+      log_message('error', self::getLogString($params, debug_backtrace()));
     }
   }
 
@@ -75,15 +75,7 @@ final class Logger
    */
   public static function c(...$params)
   {
-    $message = '';
-    foreach ($params as $param) {
-      if (is_array($param) || is_object($param)) {
-        $message .= print_r($param, true);
-      } else {
-        $message .= $param;
-      }
-    }
-    echo $message . PHP_EOL;
+    echo self::getLogString($params, debug_backtrace()) . PHP_EOL;
   }
 
   /**
@@ -93,17 +85,16 @@ final class Logger
    * @param  array $trace
    * @return string
    */
-  private static function get_log_string(array $params, array $trace):string
+  private static function getLogString(array $params, array $trace):string
   {
-    $app_dir = realpath(\FCPATH . '../') . '/';
-    $message = str_replace($app_dir, '', $trace[0]['file']) . '(' . $trace[0]['line'] . ')';
+    $message = str_replace(realpath(\FCPATH . '../') . '/', '', $trace[0]['file']) . '(' . $trace[0]['line'] . ')';
     if (isset($trace[1]['class'])) {
       $message .= ' ' . $trace[1]['class'] . '.' . $trace[1]['function'];
     } else if (isset($trace[1]['function'])) {
       $message .= ' ' . $trace[1]['function'];
     }
     if (!empty($params)) {
-      $message .= ': ';
+      $message .= ':';
       foreach ($params as $param) {
         if (is_array($param) || is_object($param)) {
           $message .= print_r($param, true);
