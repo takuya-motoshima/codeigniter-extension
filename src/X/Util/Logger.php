@@ -49,7 +49,7 @@ final class Logger
   }
 
   /**
-   * Display log
+   * Display log in browser
    *
    * @param mixed[] $params
    * @return void
@@ -67,6 +67,24 @@ final class Logger
     echo '<div style="border-bottom:1px solid #efefef;padding:4px;">' . $message . '</div>';
   }
 
+  /**
+   * Display log in console
+   *
+   * @param mixed[] $params
+   * @return void
+   */
+  public static function c(...$params)
+  {
+    $message = '';
+    foreach ($params as $param) {
+      if (is_array($param) || is_object($param)) {
+        $message .= print_r($param, true);
+      } else {
+        $message .= $param;
+      }
+    }
+    echo $message . PHP_EOL;
+  }
 
   /**
    * Get log string

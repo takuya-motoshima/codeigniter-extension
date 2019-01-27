@@ -1,14 +1,14 @@
 <?php
 
 /**
- * Itertools class
+ * Iterator class
  *
  * @author     Takuya Motoshima <https://www.facebook.com/takuya.motoshima.7>
  * @license    MIT License
  * @copyright  2019 Takuya Motoshima
  */
 namespace X\Util;
-final class Itertools
+final class Iterator
 {
  
   /**
@@ -17,7 +17,7 @@ final class Itertools
    * 2.取り出した順番は、意味を成す(組を構成する要素が同じでも、順番が違えば別のものとして扱う)
    * 
    * i.e:
-   *    > \X\Util\Itertools::duplicatePermutation('abc', 2, '', $result);
+   *    > \X\Util\Iterator::duplicatePermutation('abc', 2, '', $result);
    *    > var_export($result);
    *    array (
    *      0 => 'aa',
@@ -53,7 +53,7 @@ final class Itertools
    * 2.取り出した順番は、意味を成す(組を構成する要素が同じでも、順番が違えば別のものとして扱う)
    * 
    * i.e:
-   *    > \X\Util\Itertools::unDuplicatePermutation('abc', 2, '', $result);
+   *    > \X\Util\Iterator::unDuplicatePermutation('abc', 2, '', $result);
    *    > var_export($result);
    *    array (
    *      0 => 'ab',
@@ -89,7 +89,7 @@ final class Itertools
    * 2.取り出した順番は、意味を成さない(組を構成する要素が同じならば、順番が違っても同じものとして扱う)
    * 
    * i.e:
-   *    > \X\Util\Itertools::duplicateCombinations('abc', 2, 0, '', $result);
+   *    > \X\Util\Iterator::duplicateCombinations('abc', 2, 0, '', $result);
    *    > var_export($result);
    *    array (
    *      0 => 'aa',
@@ -122,7 +122,7 @@ final class Itertools
    * 2.取り出した順番は、意味を成さない(組を構成する要素が同じならば、順番が違っても同じものとして扱う)
    * 
    * i.e:
-   *    > \X\Util\Itertools::unDuplicateCombinations('abc', 2, 0, '', $result);
+   *    > \X\Util\Iterator::unDuplicateCombinations('abc', 2, 0, '', $result);
    *    > var_export($result);
    *    array (
    *      0 => 'ab',
