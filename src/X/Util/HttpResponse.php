@@ -19,9 +19,9 @@ final class HttpResponse
   private $data = [];
 
   /**
-   * @var int $status
+   * @var int $statusCode
    */
-  private $status;
+  private $statusCode;
 
   /**
    * @var array $jsonOption
@@ -66,7 +66,7 @@ final class HttpResponse
     $ci =& \get_instance();
     $this->setCorsHeader($ci);
     $ci->output
-      ->set_status_header($this->status ?? \X\Constant\HTTP_OK)
+      ->set_status_header($this->statusCode ?? \X\Constant\HTTP_OK)
       ->set_content_type('application/json', 'UTF-8')
       ->set_output($json);
   }
@@ -89,50 +89,50 @@ final class HttpResponse
    * 
    * Response HTML
    *
-   * @param  string  $source
+   * @param  string  $htmlCode
    * @param  string $char
    * @return void
    */
-  public function html(string $source, string $char = 'UTF-8')
+  public function html(string $htmlCode, string $char = 'UTF-8')
   {
     $ci =& \get_instance();
     $this->setCorsHeader($ci);
     $ci->output
       ->set_content_type('text/html', $char)
-      ->set_output($source);
+      ->set_output($htmlCode);
   }
 
   /**
    * 
    * Response HTML for template
    *
-   * @param  string $filePath
+   * @param  string $templatePath
    * @param  string $char
    * @return void
    */
-  public function template(string $filePath, string $char = 'UTF-8')
+  public function template(string $templatePath, string $char = 'UTF-8')
   {
     static $template;
     $template = $template ?? new \X\Util\Template();
-    self::html($template->load($filePath, $this->data));
+    self::html($template->load($templatePath, $this->data));
   }
 
   /**
    * 
    * Response javascript
    *
-   * @param  string $source
+   * @param  string $scriptCode
    * @param  string $char
    * @return void
    */
-  public function javascript(string $source, string $char = 'UTF-8')
+  public function javascript(string $scriptCode, string $char = 'UTF-8')
   {
     ob_clean();
     $ci =& \get_instance();
     $this->setCorsHeader($ci);
     $ci->output
       ->set_content_type('application/javascript', $char)
-      ->set_output($source);
+      ->set_output($scriptCode);
   }
 
   /**
@@ -192,10 +192,10 @@ final class HttpResponse
    * Response error
    *
    * @param  string $message
-   * @param  int $httStatus
+   * @param  int $statusCode
    * @return void
    */
-  public function error(string $message, int $httStatus = \X\Constant\HTTP_INTERNAL_SERVER_ERROR)
+  public function error(string $message, int $statusCode = \X\Constant\HTTP_INTERNAL_SERVER_ERROR)
   {
     $ci =& \get_instance();
     if ($ci->input->is_ajax_request()) {
@@ -203,10 +203,10 @@ final class HttpResponse
       $this->setCorsHeader($ci);
       $ci->output
         ->set_header('Cache-Control: no-cache, must-revalidate')
-        ->set_status_header($httStatus, rawurlencode($message))
+        ->set_status_header($statusCode, rawurlencode($message))
         ->set_content_type('application/json', 'UTF-8');
     } else {
-      show_error($message, $httStatus);
+      show_error($message, $statusCode);
     }
   }
 
@@ -214,12 +214,12 @@ final class HttpResponse
    * 
    * Set http status
    *
-   * @param  int $status
+   * @param  int $statusCode
    * @return object
    */
-  public function status(int $status)
+  public function status(int $statusCode)
   {
-    $this->status = $status;
+    $this->statusCode = $statusCode;
     return $this;
   }
 

@@ -1381,11 +1381,11 @@
         },
         {
             "name": "takuya-motoshima/codeigniter-extension",
-            "version": "1.1.5",
+            "version": "1.3.7",
             "source": {
                 "type": "git",
                 "url": "../",
-                "reference": "ca1626c4cf86a414f06a190b62c4ca80880f83de"
+                "reference": "d3eee271bb093798d1d80189d9d8007145500ebb"
             },
             "require": {
                 "aws/aws-sdk-php": "^3.64",
@@ -1429,7 +1429,7 @@
                 "CodeIgniter",
                 "Composer"
             ],
-            "time": "2018-11-29T05:40:41+00:00"
+            "time": "2019-01-13T04:52:09+00:00"
         },
         {
             "name": "twig/twig",

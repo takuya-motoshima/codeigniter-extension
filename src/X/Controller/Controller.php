@@ -42,12 +42,12 @@ abstract class Controller extends \CI_Controller
   /**
    * Set http status
    *
-   * @param  int $status
+   * @param  int $statusCode
    * @return object
    */
-  protected function status(int $status)
+  protected function status(int $statusCode)
   {
-    $this->response->status($status);
+    $this->response->status($statusCode);
     return $this;
   }
 
@@ -90,6 +90,7 @@ abstract class Controller extends \CI_Controller
   protected function responseJson()
   {
     $this->beforeResponseJson();
+    $this->before_response_json();
     $this->response->json();
   }
 
@@ -110,13 +111,13 @@ abstract class Controller extends \CI_Controller
   /**
    * Response HTML
    *
-   * @param  string  $source
+   * @param  string  $htmlCode
    * @param  string $char
    * @return void
    */
-  protected function responseHtml(string $source, string $char = 'utf-8')
+  protected function responseHtml(string $htmlCode, string $char = 'utf-8')
   {
-    $this->response->html($source, $char);
+    $this->response->html($htmlCode, $char);
   }
 
   /**
@@ -125,26 +126,27 @@ abstract class Controller extends \CI_Controller
    * Set the following variable to 'environment'
    *     baseUrl
    *
-   * @param  string $teamplatePath
+   * @param  string $templatePath
    * @param  string $char
    * @return void
    */
-  protected function responseTemplate(string $filePath, string $char = 'utf-8')
+  protected function responseTemplate(string $templatePath, string $char = 'utf-8')
   {
-    $this->beforeResponseTemplate($filePath);
-    $this->response->template($filePath, $char);
+    $this->beforeResponseTemplate($templatePath);
+    $this->before_response_template($templatePath);
+    $this->response->template($templatePath, $char);
   }
 
   /**
    * Response javascript
    *
-   * @param  string $source
+   * @param  string $scriptCode
    * @param  string $char
    * @return void
    */
-  protected function responseJavascript(string $source, string $char = 'UTF-8')
+  protected function responseJavascript(string $scriptCode, string $char = 'UTF-8')
   {
-    $this->response->javascript($source, $char);
+    $this->response->javascript($scriptCode, $char);
   }
 
   /**
@@ -175,24 +177,24 @@ abstract class Controller extends \CI_Controller
   /**
    * Response image
    *
-   * @param  string $filePath
+   * @param  string $imagePath
    * @return void
    */
-  protected function responseImage(string $filePath)
+  protected function responseImage(string $imagePath)
   {
-    $this->response->image($filePath);
+    $this->response->image($imagePath);
   }
 
   /**
    * Response error
    *
    * @param  string $errorMessage
-   * @param  int $httStatus
+   * @param  int $statusCode
    * @return void
    */
-  protected function responseError(string $errorMessage, int $httStatus = \X\Constant\HTTP_INTERNAL_SERVER_ERROR)
+  protected function responseError(string $errorMessage, int $statusCode = \X\Constant\HTTP_INTERNAL_SERVER_ERROR)
   {
-    $this->response->error($errorMessage, $httStatus);
+    $this->response->error($errorMessage, $statusCode);
   }
 
   /**
@@ -206,8 +208,93 @@ abstract class Controller extends \CI_Controller
   /**
    * Before response template
    *
-   * @param  int $responseType
+   * @param  string $templatePath
    * @return void
    */
-  protected function beforeResponseTemplate(string $filePath) {}
+  protected function beforeResponseTemplate(string $templatePath) {}
+
+
+  // ----------------------------------------------------------------
+  // Deprecated
+  /**
+   * @deprecated Not recommended. It is obsolete in version 3.0.0 or later.
+   */
+  protected function response_json()
+  {
+    $this->responseJson();
+  }
+
+  /**
+   * @deprecated Not recommended. It is obsolete in version 3.0.0 or later.
+   */
+  protected function set_status(int $status)
+  {
+    return $this->status($status);
+  }
+
+  /**
+   * @deprecated Not recommended. It is obsolete in version 3.0.0 or later.
+   */
+  protected function response_html(string $htmlCode, string $char = 'utf-8')
+  {
+    $this->responseHtml($htmlCode, $char);
+  }
+
+  /**
+   * @deprecated Not recommended. It is obsolete in version 3.0.0 or later.
+   */
+  protected function response_template(string $templatePath, string $char = 'utf-8')
+  {
+    $this->responseTemplate($templatePath, $char);
+  }
+
+  /**
+   * @deprecated Not recommended. It is obsolete in version 3.0.0 or later.
+   */
+  protected function response_javascript(string $scriptCode, string $char = 'UTF-8')
+  {
+    $this->responseJavascript($scriptCode, $char);
+  }
+
+  /**
+   * @deprecated Not recommended. It is obsolete in version 3.0.0 or later.
+   */
+  protected function response_text(string $text, string $char = 'UTF-8')
+  {
+    $this->responseText($text, $char);
+  }
+
+  /**
+   * @deprecated Not recommended. It is obsolete in version 3.0.0 or later.
+   */
+  protected function response_download(string $fileMame, string $data = '', bool $mime = FALSE)
+  {
+    $this->responseDownload($fileMame, $data, $mime);
+  }
+
+  /**
+   * @deprecated Not recommended. It is obsolete in version 3.0.0 or later.
+   */
+  protected function response_image(string $imagePath)
+  {
+    $this->responseImage($imagePath);
+  }
+
+  /**
+   * @deprecated Not recommended. It is obsolete in version 3.0.0 or later.
+   */
+  protected function response_error(string $errorMessage, int $statusCode = \X\Constant\HTTP_INTERNAL_SERVER_ERROR)
+  {
+    $this->responseError($errorMessage, $statusCode);
+  }
+
+  /**
+   * @deprecated Not recommended. It is obsolete in version 3.0.0 or later.
+   */
+  protected function before_response_json() {}
+
+  /**
+   * @deprecated Not recommended. It is obsolete in version 3.0.0 or later.
+   */
+  protected function before_response_template(string $templatePath) {}
 }

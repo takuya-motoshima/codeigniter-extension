@@ -123,26 +123,26 @@ abstract class EMail
   /**
    * Set Body
    *
-   * @param   string
-   * @param   array
+   * @param   string $templatePath
+   * @param   array $templateVars
    * @return  string
    */
-  public static function messageFromTemplate(string $path, array $vars = []): string
+  public static function messageFromTemplate(string $templatePath, array $templateVars = []): string
   {
-    self::message(self::template()->load($path, $vars));
+    self::message(self::template()->load($templatePath, $templateVars));
     return __CLASS__;
   }
 
   /**
    * Set Body
    *
-   * @param   string
-   * @param   array
+   * @param   string $xmlPath
+   * @param   array $xmlVars
    * @return  string
    */
-  public static function messageFromXml(string $path, array $vars = []): string
+  public static function messageFromXml(string $xmlPath, array $xmlVars = []): string
   {
-    $xml = new \SimpleXMLElement(self::template()->load($path, $vars, 'xml'));
+    $xml = new \SimpleXMLElement(self::template()->load($xmlPath, $xmlVars, 'xml'));
     self
       ::subject((string) $xml->subject)
       ::message(preg_replace('/^(\r\n|\n|\r)|(\r\n|\n|\r)$/', '', (string) $xml->message));
@@ -155,9 +155,9 @@ abstract class EMail
    * @param   string
    * @return  string
    */
-  public static function mailType($type = 'text'): string
+  public static function setMailType($type = 'text'): string
   {
-    call_user_func_array([self::email(), __FUNCTION__], func_get_args());
+    call_user_func_array([self::email(), 'set_mailtype'], func_get_args());
     return __CLASS__;
   }
 
@@ -181,12 +181,12 @@ abstract class EMail
    *
    * Useful for attached inline pictures
    *
-   * @param string  $filename
+   * @param string  $fileName
    * @return  string
    */
-  public static function attachmentCid($filename)
+  public static function attachmentCid($fileName)
   {
-    return call_user_func_array([self::email(), __FUNCTION__], func_get_args());
+    return call_user_func_array([self::email(), 'attachment_cid'], func_get_args());
   }
 
   /**
@@ -214,5 +214,39 @@ abstract class EMail
   {
     static $template;
     return $template ?? new \X\Util\Template();
+  }
+
+  // ----------------------------------------------------------------
+  // Deprecated
+  /**
+   * @deprecated Not recommended. It is obsolete in version 3.0.0 or later.
+   */
+  public static function message_from_template(string $templatePath, array $templateVars = []): string
+  {
+    return self::messageFromTemplate($templatePath, $templateVars);
+  }
+
+  /**
+   * @deprecated Not recommended. It is obsolete in version 3.0.0 or later.
+   */
+  public static function message_from_xml(string $xmlPath, array $xmlVars = []): string
+  {
+    return self::messageFromXml($xmlPath, $xmlVars);
+  }
+
+  /**
+   * @deprecated Not recommended. It is obsolete in version 3.0.0 or later.
+   */
+  public static function set_mailtype($type = 'text'): string
+  {
+    return self::mailType($type);
+  }
+
+  /**
+   * @deprecated Not recommended. It is obsolete in version 3.0.0 or later.
+   */
+  public static function attachment_cid($fileName)
+  {
+    return self::attachmentCid($fileName);
   }
 }
