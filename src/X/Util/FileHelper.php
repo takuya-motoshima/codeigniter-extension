@@ -34,19 +34,36 @@ final class FileHelper
 
   /**
    * 
-   * Rename
+   * Move
    * 
+   * e.g:
+   *  // /tmp/old.txt -> /home/new.txt
+   *  \X\Util\FileHelper::move('/tmp/old.txt', '/home/new.txt');
+   *
+   *  // /tmp/old.txt -> ./tmp/new.txt
+   *  \X\Util\FileHelper::move('/tmp/old.txt', 'new.txt');
+   *  
+   *  // /tmp/old.txt -> ./tmp/new.txt
+   *  \X\Util\FileHelper::move('/tmp/old.txt', 'new');
+   *  
    * @throws RuntimeException
    * @param string $srcFilePath
    * @param string $dstFilePath
    * @return void
    */
-  public static function rename(string $srcFilePath, string $dstFilePath)
+  public static function move(string $srcFilePath, string $dstFilePath)
   {
     if (!file_exists($srcFilePath)) {
       throw new \RuntimeException('Not found file ' . $srcFilePath);
     }
-    self::makeDirecoty(dirname($dstFilePath));
+    if (strpos($dstFilePath, '/') === false) {
+      if (strpos($dstFilePath, '.') === false) {
+        $dstFilePath = $dstFilePath . '.' . pathinfo($srcFilePath, PATHINFO_EXTENSION);
+      }
+      $dstFilePath = pathinfo($srcFilePath, PATHINFO_DIRNAME) . '/' . $dstFilePath;
+    } else {
+      self::makeDirecoty(dirname($dstFilePath));;
+    }
     if (rename($srcFilePath, $dstFilePath) === false) {
       throw new \RuntimeException('Can not rename from ' . $srcFilePath . ' to ' . $dstFilePath);
     }

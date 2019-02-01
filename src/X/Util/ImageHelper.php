@@ -55,6 +55,13 @@ final class ImageHelper
    * 
    * Copy image.
    *
+   * e.g:
+   *  // /tmp/example.png -> /home/example.png
+   *  \X\Util\ImageHelper::copy('/tmp/example.png', '/home');
+   *
+   *  // /tmp/old.png -> /home/new.png
+   *  \X\Util\ImageHelper::copy('/tmp/old.png', '/home', 'new');
+   *  
    * @param string $srcFilePath
    * @param string $dstDirPath
    * @param string $replacementFileName
@@ -63,10 +70,9 @@ final class ImageHelper
   public static function copy(string $srcFilePath, string $dstDirPath, string $replacementFileName = null): string
   {
     FileHelper::makeDirecoty($dstDirPath);
-    $dstFileName = basename($srcFilePath);
-    if (!empty($replacementFileName)) {
-      $dstFileName = preg_replace('/..*(\...*)$/', $replacementFileName . '$1', $dstFileName);
-    }
+    $dstFileName = empty($replacementFileName) 
+      ? basename($srcFilePath) : 
+      $replacementFileName . '.' . pathinfo($srcFilePath, PATHINFO_EXTENSION);
     file_put_contents(
       rtrim($dstDirPath, '/')  . '/' . $dstFileName, 
       file_get_contents($srcFilePath)
