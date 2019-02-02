@@ -26,7 +26,7 @@ final class ImageHelper
     $blobInfo = self::base64ToBlob($base64);
     $baseName = $fileName . '.' . $blobInfo['mime'];
     FileHelper::makeDirecoty($dirPath);
-    file_put_contents(rtrim($dirPath, '/')  . '/' . $baseName, $blobInfo['blob']);
+    file_put_contents(rtrim($dirPath, '/')  . '/' . $baseName, $blobInfo['blob'], LOCK_EX);
     return json_decode(json_encode([
       'mime' => $blobInfo['mime'],
       'baseName' => $baseName,
@@ -48,7 +48,7 @@ final class ImageHelper
       Logger::d('$filePath=', $filePath);
     }
     FileHelper::makeDirecoty(dirname($filePath));
-    file_put_contents($filePath, $blob);
+    file_put_contents($filePath, $blob, LOCK_EX);
   }
 
   /**
@@ -73,10 +73,7 @@ final class ImageHelper
     $dstFileName = empty($replacementFileName) 
       ? basename($srcFilePath) : 
       $replacementFileName . '.' . pathinfo($srcFilePath, PATHINFO_EXTENSION);
-    file_put_contents(
-      rtrim($dstDirPath, '/')  . '/' . $dstFileName, 
-      file_get_contents($srcFilePath)
-    );
+    file_put_contents(rtrim($dstDirPath, '/')  . '/' . $dstFileName, file_get_contents($srcFilePath), LOCK_EX);
     return $dstFileName;
   }
 

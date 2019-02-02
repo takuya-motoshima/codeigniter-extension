@@ -169,7 +169,7 @@ final class FileHelper
   {
     $content = file_get_contents($path);
     $content = str_replace(array_keys($replace), array_values($replace), $content);
-    file_put_contents($path, $content);
+    file_put_contents($path, $content, LOCK_EX);
   }
 
   /**
