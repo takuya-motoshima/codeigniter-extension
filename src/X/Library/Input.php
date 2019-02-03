@@ -58,9 +58,6 @@ abstract class Input extends \CI_Input
         // parse all other fields
         // match "name" and optional value in between newline sequences
         preg_match('/name=\"([^\"]*)\"[\n|\r]+([^\n\r].*)?\r$/s', $block, $matches);
-        // if (\ENVIRONMENT !== 'production') {
-        //   Logger::d('$matches=', $matches);
-        // }
         $name = $matches[1];
         $value = $matches[2] ?? null;
         if ($this->isNestedFormItem($name, $rootKey, $childKeys)) {
@@ -70,7 +67,7 @@ abstract class Input extends \CI_Input
         }
       }
     }
-    return $input;
+    return empty($index) ? $input : $input[$index];
     // return parent::input_stream($index, $xss_clean);
   }
 
@@ -86,12 +83,15 @@ abstract class Input extends \CI_Input
     return parent::input_stream($index, $xss_clean);
   }
 
-
-  private function isNestedFormItem(
-    string $name, 
-    ?string &$rootKey = null, 
-    ?string &$childKeys = null
-  ): bool
+  /**
+   *  Is nested form item
+   * 
+   * @param  string $name
+   * @param  string|null &$rootKey
+   * @param  string|null &$childKeys
+   * @return bool
+   */
+  private function isNestedFormItem(string $name, ?string &$rootKey = null, ?string &$childKeys = null): bool
   {
     if (!preg_match('/^([a-z0-9\-_:\.]+)(\[..*)$/i', $name, $matches)) {
       return false;
@@ -101,12 +101,15 @@ abstract class Input extends \CI_Input
     return true;
   }
 
-  private function setNestedFormItem(
-    array &$input, 
-    ?string $value,
-    string $rootKey, 
-    string $childKeys
-  )
+  /**
+   *  Set nested form item
+   * 
+   * @param  string $name
+   * @param  string|null &$rootKey
+   * @param  string|null &$childKeys
+   * @return bool
+   */
+  private function setNestedFormItem(array &$input, ?string $value, string $rootKey, string $childKeys)
   {
     preg_match_all('/\[([a-z0-9\-_:\.]*)\]/i', $childKeys, $matches);
     $keys = $matches[1];
