@@ -67,7 +67,7 @@ abstract class Input extends \CI_Input
         }
       }
     }
-    return !empty($index) ? $input : $input[$index];
+    return empty($index) ? $input : ($input[$index] ?? '');
     // return parent::input_stream($index, $xss_clean);
   }
 
