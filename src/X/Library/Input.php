@@ -41,7 +41,7 @@ abstract class Input extends \CI_Input
 
     // loop data blocks
     $input = [];
-    foreach ($blocks as $id => $block) {
+    foreach ($blocks as $block) {
       if (empty($block)) {
         continue;
       }
@@ -60,14 +60,14 @@ abstract class Input extends \CI_Input
         preg_match('/name=\"([^\"]*)\"[\n|\r]+([^\n\r].*)?\r$/s', $block, $matches);
         $name = $matches[1];
         $value = $matches[2] ?? null;
-        if ($this->isNestedFormItem($name, $rootKey, $childKeys)) {
-          $this->setNestedFormItem($input, $value, $rootKey, $childKeys);
+        if ($this->isNestedNode($name, $parentName, $childNames)) {
+          $this->setNestedNode($input, $value, $parentName, $childNames);
         } else {
           $input[$name] = $value;
         }
       }
     }
-    return empty($index) ? $input : $input[$index];
+    return !empty($index) ? $input : $input[$index];
     // return parent::input_stream($index, $xss_clean);
   }
 
@@ -84,45 +84,45 @@ abstract class Input extends \CI_Input
   }
 
   /**
-   *  Is nested form item
+   *  Is nested node
    * 
    * @param  string $name
-   * @param  string|null &$rootKey
-   * @param  string|null &$childKeys
+   * @param  string|null &$parentName
+   * @param  string|null &$childNames
    * @return bool
    */
-  private function isNestedFormItem(string $name, ?string &$rootKey = null, ?string &$childKeys = null): bool
+  private function isNestedNode(string $name, ?string &$parentName = null, ?string &$childNames = null): bool
   {
     if (!preg_match('/^([a-z0-9\-_:\.]+)(\[..*)$/i', $name, $matches)) {
       return false;
     }
-    $rootKey = $matches[1];
-    $childKeys = $matches[2];
+    $parentName = $matches[1];
+    $childNames = $matches[2];
     return true;
   }
 
   /**
-   *  Set nested form item
+   *  Set nested node
    * 
    * @param  string $name
-   * @param  string|null &$rootKey
-   * @param  string|null &$childKeys
+   * @param  string|null &$parentName
+   * @param  string|null &$childNames
    * @return bool
    */
-  private function setNestedFormItem(array &$input, ?string $value, string $rootKey, string $childKeys)
+  private function setNestedNode(array &$input, ?string $value, string $parentName, string $childNames)
   {
-    preg_match_all('/\[([a-z0-9\-_:\.]*)\]/i', $childKeys, $matches);
-    $keys = $matches[1];
-    array_unshift($keys, $rootKey);
-    $tmp = &$input;
-    while(($key = array_shift($keys)) !== null) {
-      if (!array_key_exists($key, $tmp)) {
-        $tmp[$key] = [];
+    preg_match_all('/\[([a-z0-9\-_:\.]*)\]/i', $childNames, $matches);
+    $names = $matches[1];
+    array_unshift($names, $parentName);
+    $refInput = &$input;
+    while(($name = array_shift($names)) !== null) {
+      if (!array_key_exists($name, $refInput)) {
+        $refInput[$name] = [];
       }
-      if (count($keys) > 0) {
-        $tmp = &$tmp[$key];
+      if (count($names) > 0) {
+        $refInput = &$refInput[$name];
       } else {
-        $tmp[$key] = $value;
+        $refInput[$name] = $value;
       }
     }
   }
