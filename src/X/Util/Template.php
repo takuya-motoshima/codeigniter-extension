@@ -67,6 +67,9 @@ final class Template
        * @return mixed
        */
       function (string $filePath) {
+        if (!file_exists(FCPATH . $filePath)) {
+          return \base_url($filePath);
+        }
         $modified = filemtime($_SERVER['DOCUMENT_ROOT'] . '/' . $filePath);
         if (!$modified) {
           //Fallback if mtime could not be found:
@@ -77,7 +80,7 @@ final class Template
       }
     ));
     $baseUrl = \base_url();
-    $this->engine->addGlobal('base_url', $baseUrl);
+    $this->engine->addGlobal('baseUrl', $baseUrl);
     $this->engine->addGlobal('session', $_SESSION ?? null);
     $ci =& get_instance();
     $this->engine->addGlobal('action', ($ci->router->directory ?? '') . $ci->router->class . '/' . $ci->router->method);
