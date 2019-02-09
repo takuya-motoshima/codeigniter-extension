@@ -4,15 +4,15 @@ use \Doctrine\Common\Annotations\Annotation;
 
 /**
  *
- * Security annotation
+ * AccessControl annotation
  *
  * @Annotation
  * @author     Takuya Motoshima <https://www.facebook.com/takuya.motoshima.7>
  * @license    MIT License
  * @copyright  2018 Takuya Motoshima
  */
-class Security
+class AccessControl
 {
-  public $loggedin;
-  public $loggedoff;
+  // public $loggedin;
+  // public $loggedoff;
 }

@@ -1385,7 +1385,7 @@
             "source": {
                 "type": "git",
                 "url": "../",
-                "reference": "5dd297777bcaae442ae34eb1dc4629772e5620e6"
+                "reference": "2fa6899152576fa6e4ce69a706c154b764776532"
             },
             "require": {
                 "aws/aws-sdk-php": "^3.64",
@@ -1429,7 +1429,7 @@
                 "CodeIgniter",
                 "Composer"
             ],
-            "time": "2019-02-09T09:01:37+00:00"
+            "time": "2019-02-09T09:05:59+00:00"
         },
         {
             "name": "twig/twig",

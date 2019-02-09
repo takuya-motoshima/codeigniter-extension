@@ -3,6 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 use \X\Util\Logger;
 use \X\Util\Image;
+use \X\Annotation\AccessControl;
 
 /**
  * Test
@@ -17,10 +18,11 @@ class Test extends AppController
   protected $model = 'TestModel';
 
   /**
-   * @Security
+   * @AccessControl
    */
   public function index()
   {
+    parent::responseTemplate('index');
   }
 
 
