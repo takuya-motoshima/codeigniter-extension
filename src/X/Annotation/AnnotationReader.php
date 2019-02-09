@@ -20,8 +20,7 @@ final class AnnotationReader
    */
   public static function accessControl(string $class, string $method): bool
   {
-    $method = new \ReflectionMethod($class, $method);
-    $annotations = self::reader()->getMethodAnnotations($method);
+    $annotations = self::reader()->getMethodAnnotations(new \ReflectionMethod($class, $method));
     Logger::d('$annotations=', $annotations);
     return true;
   }
