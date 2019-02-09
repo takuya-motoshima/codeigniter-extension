@@ -1,6 +1,6 @@
 <?php
-namespace X\Security\Annotation;
-use Doctrine\Common\Annotations\Annotation;
+namespace \X\Security\Annotation;
+use \Doctrine\Common\Annotations\Annotation;
 
 /**
  *
