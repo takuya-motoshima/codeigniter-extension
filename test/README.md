@@ -2,9 +2,9 @@
 
 ## DB
 ```
-mysql -u root -proot -D codeigniterExtensionTest;
-CREATE SCHEMA IF NOT EXISTS `codeigniterExtensionTest` DEFAULT CHARACTER SET utf8mb4;
-CREATE TABLE `codeigniterExtensionTest`.`user` (
+mysql -u root -proot -D ciexTest;
+CREATE SCHEMA IF NOT EXISTS `ciexTest` DEFAULT CHARACTER SET utf8mb4;
+CREATE TABLE `ciexTest`.`user` (
     `id` int unsigned NOT NULL AUTO_INCREMENT,
     `name` text NOT NULL,
     `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
