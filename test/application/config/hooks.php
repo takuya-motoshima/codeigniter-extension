@@ -11,11 +11,17 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 |	https://codeigniter.com/user_guide/general/hooks.html
 |
 */
-$hook =[
-  'post_controller_constructor' => [
-    'class' => 'PostControllerConstructor',
-    'function' => 'run',
-    'filename' => 'PostControllerConstructor.php',
-    'filepath' => 'hooks',
-  ],
-];
+use \X\Annotation\AnnotationReader;
+use \X\Util\Logger;
+$hook['post_controller_constructor'] = function() {
+  $ci =& get_instance();
+  $accessControl = AnnotationReader::getMethodAccessControl($ci->router->class, $ci->router->method);
+  $loggedin = !empty($_SESSION['user']);
+  if ($loggedin && !$accessControl->allowLoggedin) {
+    // In case of an action that the logged-in user can not access
+    redirect('/dashboard');
+  } else if (!$loggedin && !$accessControl->allowLoggedoff) {
+    // In case of an action that can not be accessed by the user who is logging off
+    redirect('/login');
+  }
+};

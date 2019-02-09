@@ -13,6 +13,6 @@ use \Doctrine\Common\Annotations\Annotation;
  */
 class AccessControl
 {
-  // public $loggedin;
-  // public $loggedoff;
+  public $allowLoggedin = true;
+  public $allowLoggedoff = true;
 }

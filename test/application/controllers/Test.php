@@ -18,9 +18,14 @@ class Test extends AppController
   protected $model = 'TestModel';
 
   /**
-   * @AccessControl
+   * @AccessControl(allowLoggedin=true, allowLoggedoff=true)
    */
   public function index()
+  {
+    parent::responseTemplate('index');
+  }
+
+  public function index2()
   {
     parent::responseTemplate('index');
   }
