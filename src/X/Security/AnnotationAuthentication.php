@@ -28,6 +28,7 @@ final class AnnotationAuthentication
   public static function isAccessible(string $class, string $method, bool $loggedin): bool
   {
     $method = new \ReflectionMethod($class, $method);
+    Logger::d('$method=', $method);
     $annotations = self::reader()->getMethodAnnotations($method);
     Logger::d('$annotations=', $annotations);
 
