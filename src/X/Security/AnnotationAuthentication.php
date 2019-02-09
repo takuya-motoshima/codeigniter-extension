@@ -22,19 +22,18 @@ final class AnnotationAuthentication
    * 
    * @param  string  $class
    * @param  string  $method
-   * @param bool $loggedin
    * @return bool
    */
-  public static function isAccessible(string $class, string $method, bool $loggedin): bool
+  public static function isAccessible(string $class, string $method): bool
   {
+    Logger::d('$class=', $class);
+    Logger::d('$method=', $method);
     $method = new \ReflectionMethod($class, $method);
     Logger::d('$method=', $method);
     $annotations = self::reader()->getMethodAnnotations($method);
     Logger::d('$annotations=', $annotations);
-
     // $annotation = self::reader()->getMethodAnnotation($method, 'Security');
     // Logger::d('$annotation=', $annotation);
-
     return true;
   }
 
