@@ -12,9 +12,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 |
 */
 use \X\Annotation\AnnotationReader;
+use \X\Util\Logger;
 $hook['post_controller_constructor'] = function() {
   $ci =& get_instance();
   $accessControl = AnnotationReader::getMethodAccessControl($ci->router->class, $ci->router->method);
+  Logger::d('$ci->router->class=', $ci->router->class);
+  Logger::d('$ci->router->method=', $ci->router->method);
+  Logger::d('$accessControl=', $accessControl);
   $loggedin = !empty($_SESSION['user']);
   if ($loggedin && !$accessControl->allowLoggedin) {
     // In case of an action that the logged-in user can not access
