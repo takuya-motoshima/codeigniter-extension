@@ -7,7 +7,7 @@
  * @license    MIT License
  * @copyright  2018 Takuya Motoshima
  */
-namespace \X\Security;
+namespace X\Security;
 use \Doctrine\Common\Annotations\AnnotationReader;
 use \Doctrine\Common\Annotations\AnnotationRegistry;
 use \X\Security\Annotation\Security;

@@ -1,5 +1,5 @@
 <?php
-namespace \X\Security\Annotation;
+namespace X\Security\Annotation;
 use \Doctrine\Common\Annotations\Annotation;
 
 /**
