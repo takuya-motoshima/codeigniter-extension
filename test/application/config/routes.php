@@ -49,11 +49,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | Examples:	my-controller/index	-> my_controller/index
 |		my-controller/my-method	-> my_controller/my_method
 */
-$route['default_controller'] = 'test';
+$route['default_controller'] = 'login';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
-$route['api/(:any)/(:any)']['GET'] = 'api/$1/get/$2';
-$route['api/(:any)']['GET'] = 'api/$1/query';
-$route['api/(:any)']['POST'] = 'api/$1/post';
-$route['api/(:any)/(:any)']['PUT'] = 'api/$1/put/$2';
-$route['api/(:any)/(:any)']['DELETE'] = 'api/$1/delete/$2';
+
+// RESTful basic rules
+$route['^api/(:any)/(:any)$']['GET'] = 'api/$1/get/$2';
+$route['^api/(:any)[^\?]?/(:any)$']['GET'] = 'api/$1/get/$2';
+$route['^api/(:any)\??']['GET'] = 'api/$1/query';
+$route['^api/(:any)$']['POST'] = 'api/$1/post';
+$route['^api/(:any)/(:any)$']['PUT'] = 'api/$1/put/$2';
+$route['^api/(:any)/([^/,]+(,[^/,]+)*)$']['DELETE'] = 'api/$1/delete/$2';

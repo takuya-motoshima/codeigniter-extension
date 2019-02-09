@@ -12,7 +12,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 |
 */
 use \X\Annotation\AnnotationReader;
-use \X\Util\Logger;
 $hook['post_controller_constructor'] = function() {
   $ci =& get_instance();
   $accessControl = AnnotationReader::getMethodAccessControl($ci->router->class, $ci->router->method);

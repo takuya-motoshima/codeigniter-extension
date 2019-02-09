@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <title>CodeIgniterExtensionTest - {{ (block('title')) ?? '' }}</title>
+  <meta charset="utf-8" />
+  <meta http-equiv="x-ua-compatible" content="ie=edge" />
+  <meta http-equiv="expires" content="0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <meta name="format-detection" content="telephone=no" />
+  <link rel="dns-prefetch" href="" />
+  <link href='https://fonts.googleapis.com/css?family=M+PLUS+Rounded+1c' rel='stylesheet' type='text/css'>
+  <link href='https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css' rel='stylesheet' type='text/css'>
+  <link href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" rel='stylesheet' type='text/css'>
+  {% block style %}{% endblock %}
+</head>
+<body>
+  <nav class="navbar navbar-light bg-light">
+    <div class="container">
+      <a class="navbar-brand">CodeIgniterExtensionTest - {{ (block('title')) ?? '' }}</a>
+      {% if user is not empty %}
+        <a href="{{ baseUrl }}logout" class="btn btn-outline-success my-2 my-sm-0">Logout</a>
+      {% endif %}
+    </div>
+  </nav>
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+  <script>(() => window.baseUrl='{{ baseUrl }}')();</script>
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"></script>
+  {% block script %}{% endblock %}
+</body>
+</html>
