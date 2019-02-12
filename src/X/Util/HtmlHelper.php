@@ -114,9 +114,9 @@ final class HtmlHelper
    * @param string $url
    * @return \DOMElement
    */
-  public static function getBodyNode(string $url): \DOMElement
+  public static function getBodyNode(\DOMDocument &$dom): \DOMElement
   {
-    return self::getDomDocument($url)->getElementsByTagName('body')->item(0);
+    return $dom->getElementsByTagName('body')->item(0);
   }
 
   /**
@@ -125,9 +125,9 @@ final class HtmlHelper
    * @param string $url
    * @return \DOMElement
    */
-  public static function getHeaderNode(string $url): \DOMElement
+  public static function getHeaderNode(\DOMDocument &$dom): \DOMElement
   {
-    return self::getDomDocument($url)->getElementsByTagName('header')->item(0);
+    return $dom->getElementsByTagName('header')->item(0);
   }
 
   /**
@@ -136,7 +136,7 @@ final class HtmlHelper
    * @param string $url
    * @return \DOMDocument
    */
-  private static function getDomDocument(string $url): \DOMDocument
+  public static function getDomDocument(string $url): \DOMDocument
   {
     $dom = new \DOMDocument();
     libxml_use_internal_errors(true);
