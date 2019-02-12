@@ -116,8 +116,7 @@ final class HtmlHelper
    */
   public static function getBodyNode(string $url): \DOMElement
   {
-    $dom = self::getDomDocument($url);
-    return $dom->getElementsByTagName('body')->item(0);
+    return self::getDomDocument($url)->getElementsByTagName('body')->item(0);
   }
 
   /**
@@ -126,10 +125,9 @@ final class HtmlHelper
    * @param string $url
    * @return \DOMElement
    */
-  public static function getBodyNode(string $url): \DOMElement
+  public static function getHeaderNode(string $url): \DOMElement
   {
-    $dom = self::getDomDocument($url);
-    return $dom->getElementsByTagName('header')->item(0);
+    return self::getDomDocument($url)->getElementsByTagName('header')->item(0);
   }
 
   /**
