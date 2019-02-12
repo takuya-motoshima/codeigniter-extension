@@ -134,22 +134,18 @@ final class HtmlHelper
    * @param string $url
    * @return \DOMDocument
    */
-  public static function &getDomDocument(string $url): ?\DOMDocument
+  public static function &getDomDocument(string $url): \DOMDocument
   {
-    $content = file_get_contents($url, false, stream_context_create([
-      'http' => ['ignore_errors' => true]
-    ]));
-    if (strpos($http_response_header[0], '200') === false) {
-      return null;
-    }
     $dom = new \DOMDocument();
     libxml_use_internal_errors(true);
     $dom->preserveWhiteSpace = false;
     $dom->formatOutput = true;
-    $dom->loadHTML('<?xml encoding="UTF-8">' . $content);
+    $dom->loadHTML('<?xml encoding="UTF-8">' . file_get_contents($url));
     // $dom->loadHTML(mb_convert_encoding($html, 'HTML-ENTITIES', 'utf-8'));
     // $dom->loadHTML(file_get_contents($url));
     libxml_clear_errors(); 
     return $dom;
   }
+
+
 }
