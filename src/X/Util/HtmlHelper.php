@@ -11,13 +11,13 @@ final class HtmlHelper
 {
 
   /**
-   * Get embed contents
+   * Get content for IFrame
    *
    * @param  string $url
    * @param  string $userIdentify
    * @return \stdClass
    */
-  public static function getEmbedContents(string $url): ?\stdClass
+  public static function getContentForIframe(string $url): ?\stdClass
   {
     $ch = curl_init($url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -29,8 +29,8 @@ final class HtmlHelper
     if ($status >= 400 || $status < 200) {
       return '';
     }
-    $contents = self::appendBaseTag($contents, $url);
-    $charset = self::getCharset($contents);
+    $contents = self::appendHeadBaseTag($contents, $url);
+    $charset = self::getContentCharset($contents);
     return json_decode(json_encode([
       'contents' => $contents,
       'charset' => $charset
@@ -43,7 +43,7 @@ final class HtmlHelper
    * @param string $contents
    * @return string
    */
-  public static function getCharset(string $contents): string
+  public static function getContentCharset(string $contents): string
   {
     if (preg_match('/<meta..*?charset=[\'"]?([\w-]+).*?>/is', $contents, $matches)) {
       return $matches[1];
@@ -58,10 +58,10 @@ final class HtmlHelper
    * @param string $url
    * @return string
    */
-  public static function appendBaseTag(string $contents, string $url): string
+  public static function appendHeadBaseTag(string $contents, string $url): string
   {
     // Remove comment
-    $tmp = self::removeComment($contents);
+    $tmp = self::removeHtmlComment($contents);
 
     // Remove invalid basetag
     if (preg_match_all('/<base.*?>/is', $tmp, $matches)) {
@@ -85,7 +85,7 @@ final class HtmlHelper
    * @param string $contents
    * @return string
    */
-  public static function removeComment(string $contents): string
+  public static function removeHtmlComment(string $contents): string
   {
     return preg_replace('/<!--.*?-->/s', '', $contents);
   }
@@ -102,14 +102,25 @@ final class HtmlHelper
   }
 
   /**
-   * Get header node
+   * Get head node
    *
    * @param string $url
    * @return \DOMElement
    */
-  public static function getHeaderNode(\DOMDocument &$dom): \DOMElement
+  public static function getHeadNode(\DOMDocument &$dom): \DOMElement
   {
-    return $dom->getElementsByTagName('header')->item(0);
+    return $dom->getElementsByTagName('head')->item(0);
+  }
+
+  /**
+   * Get title
+   *
+   * @param string $url
+   * @return \DOMElement
+   */
+  public static function getHeadNode(\DOMDocument &$dom): \DOMElement
+  {
+    return $dom->getElementsByTagName('head')->item(0);
   }
 
   /**
