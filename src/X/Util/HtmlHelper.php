@@ -91,6 +91,22 @@ final class HtmlHelper
   }
 
   /**
+   * Get title
+   *
+   * @param string $url
+   * @return \DOMElement
+   */
+  public static function getTitle(\DOMDocument &$dom): ?string
+  {
+    $head = self::getHeadNode($dom);
+    $title = $head->getElementsByTagName('title');
+    if ($title->length === 0) {
+      return null;
+    }
+    return $title->item(0)->textContent;
+  }
+
+  /**
    * Get body node
    *
    * @param string $url
@@ -103,17 +119,6 @@ final class HtmlHelper
 
   /**
    * Get head node
-   *
-   * @param string $url
-   * @return \DOMElement
-   */
-  public static function getHeadNode(\DOMDocument &$dom): \DOMElement
-  {
-    return $dom->getElementsByTagName('head')->item(0);
-  }
-
-  /**
-   * Get title
    *
    * @param string $url
    * @return \DOMElement
