@@ -89,4 +89,67 @@ final class HtmlHelper
   {
     return preg_replace('/<!--.*?-->/s', '', $contents);
   }
+
+  /**
+   * Get body node
+   * 
+   * @return \DOMElement
+   */
+  public static function getBodyNode(string $url): \DOMElement
+  {
+    $dom = new \DOMDocument();
+    libxml_use_internal_errors(true);
+    $dom->preserveWhiteSpace = false;
+    $dom->formatOutput = true;
+    $dom->loadHTML('<?xml encoding="UTF-8">' . file_get_contents($url));
+    // $dom->loadHTML(mb_convert_encoding($html, 'HTML-ENTITIES', 'utf-8'));
+    // $dom->loadHTML(file_get_contents($url));
+    libxml_clear_errors(); 
+    return $dom->getElementsByTagName('body')->item(0);
+  }
+
+  /**
+   * Get body node
+   *
+   * @param string $url
+   * @return \DOMElement
+   */
+  public static function getBodyNode(string $url): \DOMElement
+  {
+    $dom = self::getDomDocument($url);
+    return $dom->getElementsByTagName('body')->item(0);
+  }
+
+  /**
+   * Get header node
+   *
+   * @param string $url
+   * @return \DOMElement
+   */
+  public static function getBodyNode(string $url): \DOMElement
+  {
+    $dom = self::getDomDocument($url);
+    return $dom->getElementsByTagName('header')->item(0);
+  }
+
+  /**
+   * Get dom document
+   *
+   * @param string $url
+   * @return \DOMDocument
+   */
+  private static function getDomDocument(string $url): \DOMDocument
+  {
+    $dom = new \DOMDocument();
+    libxml_use_internal_errors(true);
+    $dom->preserveWhiteSpace = false;
+    $dom->formatOutput = true;
+    $dom->loadHTML('<?xml encoding="UTF-8">' . file_get_contents($url));
+    // $dom->loadHTML(mb_convert_encoding($html, 'HTML-ENTITIES', 'utf-8'));
+    // $dom->loadHTML(file_get_contents($url));
+    libxml_clear_errors(); 
+    return $dom;
+  }
+
+
 }
