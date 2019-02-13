@@ -45,7 +45,6 @@ abstract class Input extends \CI_Input
       if (empty($part)) {
         continue;
       }
-
       // you'll have to var_dump $part to understand this and maybe replace \n or \r with a visibile char
       // parse uploaded files
       if (strpos($part, 'application/octet-stream') !== FALSE) {
@@ -60,11 +59,7 @@ abstract class Input extends \CI_Input
         preg_match('/name=\"([^\"]*)\"[\n|\r]+([^\n\r].*)?\r$/s', $part, $matches);
         $name = $matches[1];
         $value = $matches[2] ?? null;
-        $isNestedNode = $this->isNestedNode($name, $parentName, $childNames);
-        // Logger::d('$name=', $name);
-        // Logger::d('$value=', $value);
-        // Logger::d('$isNestedNode=', $isNestedNode ? 1 : 0);
-        if ($isNestedNode) {
+        if ($this->isNestedNode($name, $parentName, $childNames)) {
           $this->setNestedNode($data, $value, $parentName, $childNames);
         } else {
           $data[$name] = $value;
@@ -115,35 +110,19 @@ abstract class Input extends \CI_Input
    */
   private function setNestedNode(array &$data, ?string $value, string $parentName, string $childNames)
   {
-    // Logger::d('$parentName=', $parentName);
-    // Logger::d('$childNames=', $childNames);
     preg_match_all('/\[([a-z0-9\-_:\.]*)\]/i', $childNames, $matches);
     $names = $matches[1];
     array_unshift($names, $parentName);
     $refData = &$data;
     while(($name = array_shift($names)) !== null) {
-      // Logger::d('$name=', $name);
-      if (!empty($name) && !array_key_exists($name, $refData)) {
+      if (!array_key_exists($name, $refData)) {
         $refData[$name] = [];
       }
       if (count($names) > 0) {
         $refData = &$refData[$name];
-        continue;
-      }
-      if (!empty($name)) {
-        $refData[$name] = $value;
       } else {
-        $refData[] = $value;
+        $refData[$name] = $value;
       }
-      break;
-      // if (!array_key_exists($name, $refData)) {
-      //   $refData[$name] = [];
-      // }
-      // if (count($names) > 0) {
-      //   $refData = &$refData[$name];
-      // } else {
-      //   $refData[$name] = $value;
-      // }
     }
   }
 }
