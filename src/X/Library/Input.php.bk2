@@ -115,11 +115,12 @@ abstract class Input extends \CI_Input
    */
   private function setNestedNode(array &$data, ?string $value, string $parentName, string $childNames)
   {
+    // Logger::d('$parentName=', $parentName);
+    // Logger::d('$childNames=', $childNames);
     preg_match_all('/\[([a-z0-9\-_:\.]*)\]/i', $childNames, $matches);
     $names = $matches[1];
     array_unshift($names, $parentName);
     $refData = &$data;
-    // Logger::d('$names=', $names);
     while(($name = array_shift($names)) !== null) {
       // Logger::d('$name=', $name);
       if (!empty($name) && !array_key_exists($name, $refData)) {
@@ -129,7 +130,7 @@ abstract class Input extends \CI_Input
         $refData = &$refData[$name];
         continue;
       }
-      if (!empty($name) || $name === 0 || $name === '0') {
+      if (!empty($name)) {
         $refData[$name] = $value;
       } else {
         $refData[] = $value;
