@@ -6,6 +6,7 @@
  * @license    MIT License
  * @copyright  2017 Takuya Motoshima
  */
+use \X\Util\Logger;
 namespace X\Util;
 final class HtmlHelper
 {
@@ -132,15 +133,21 @@ final class HtmlHelper
    * Get dom document
    *
    * @param string $url
-   * @return \DOMDocument
+   * @param \DOMDocument $dom
+   * @return Void
    */
-  public static function &getDomDocument(string $url): ?\DOMDocument
+  public static function getDomDocument(string $url, &$dom)
   {
-    $content = file_get_contents($url, false, stream_context_create([
-      'http' => ['ignore_errors' => true]
+    $content = @file_get_contents($url, false, stream_context_create([
+      'http' => [
+        'ignore_errors' => true
+      ]
     ]));
-    if (strpos($http_response_header[0], '200') === false) {
-      return null;
+    Logger::d('$http_response_header[0]=', $http_response_header[0]);
+    if (strpos($http_response_header[0], '200') === false 
+      && strpos($http_response_header[0], '301') === false
+    ) {
+      return;
     }
     $dom = new \DOMDocument();
     libxml_use_internal_errors(true);
@@ -150,6 +157,5 @@ final class HtmlHelper
     // $dom->loadHTML(mb_convert_encoding($html, 'HTML-ENTITIES', 'utf-8'));
     // $dom->loadHTML(file_get_contents($url));
     libxml_clear_errors(); 
-    return $dom;
   }
 }
