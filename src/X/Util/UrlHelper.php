@@ -32,12 +32,11 @@ final class UrlHelper
    * @param  string $url
    * @return string
    */
-  function getUrlWithoutFileName(string $url): string
+  public static function getUrlWithoutFileName(string $url): string
   {
     $url = rtrim(strtok($url, '?'), '/');
     $urlInfo = parse_url($url);
     $scheme = !empty($urlInfo['scheme']) ? $urlInfo['scheme'] . '://' : '//';
-    $host = $urlInfo['host'];
     $path = $urlInfo['path'] ?? '';
     if (!empty($path)) {
       $pathInfo = pathinfo($path);
@@ -45,6 +44,36 @@ final class UrlHelper
         $path = rtrim(str_replace($pathInfo['filename'] . '.' . $pathInfo['extension'], '', $path), '/');
       }
     }
-    return $scheme . $host . $path;
+    return $scheme . $urlInfo['host'] . $path;
+  }
+
+  /**
+   * URL home url
+   * 
+   * e.g:
+   *   https://example.com                        -> https://example.com
+   *   https://example.com?key=123                -> https://example.com
+   *   https://example.com/abc.html               -> https://example.com
+   *   https://example.com/abc.html?key=123       -> https://example.com
+   *   https://example.com/abc/xyz.html           -> https://example.com
+   *   https://example.com/abc/xyz.html?key=123   -> http://example.com
+   *   //example.com                             -> //example.com
+   *   //example.com/                            -> //example.com
+   *   //example.com/abc.html                    -> //example.com
+   *   //example.com/abc/xyz.html                -> //example.com
+   *   //example.com?key=123                     -> //example.com
+   *   //example.com/?key=123                    -> //example.com
+   *   //example.com/abc.html?key=123            -> //example.com
+   *   //example.com/abc/xyz.html?key=123        -> //example.com
+   *   
+   * @param  string $url
+   * @return string
+   */
+  public static function getHomeUrl(string $url): string
+  {
+    $url = rtrim(strtok($url, '?'), '/');
+    $urlInfo = parse_url($url);
+    $scheme = !empty($urlInfo['scheme']) ? $urlInfo['scheme'] . '://' : '//';
+    return $scheme . $urlInfo['host'];
   }
 }
