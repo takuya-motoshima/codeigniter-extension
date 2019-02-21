@@ -73,7 +73,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 $active_group = 'default';
 $query_builder = TRUE;
 
-$database = 'codeigniterExtensionTest';
+$database = 'ciex';
 $db['default'] = array(
 	'dsn'	=> '',
 	'hostname' => 'localhost',
