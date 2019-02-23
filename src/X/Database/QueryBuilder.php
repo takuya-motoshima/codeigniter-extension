@@ -17,7 +17,7 @@ abstract class QueryBuilder extends \CI_DB_query_builder
      *
      * @var bool
      */
-    public $query_debug  = true;
+    // public $query_debug  = true;
 
     /**
      * construct
@@ -196,7 +196,7 @@ abstract class QueryBuilder extends \CI_DB_query_builder
     // public function query(string $sql, $binds = false, $return_object = null)
     {
         $result = parent::query($sql, $binds, $return_object);
-        $this->query_debug === true && log_message('debug', parent::last_query());
+        // $this->query_debug === true && log_message('debug', parent::last_query());
         if ($result === false) {
             $error = parent::error();
             throw new \RuntimeException($error['message'], $error['code']);
