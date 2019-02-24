@@ -187,4 +187,18 @@ final class FileHelper
     }
     return $files;
   }
+
+  /**
+   * 
+   * Find random file name
+   * 
+   * @param  string $pattern
+   * @return array
+   */
+  public static function findRandomFileName(string $pattern): string
+  {
+    $files = self::find($pattern);
+    $key = array_rand($files, 1);
+    return $files[$key];
+  }
 }
