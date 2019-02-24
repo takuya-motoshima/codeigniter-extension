@@ -37,4 +37,21 @@ final class ArrayHelper
   {
     return array_values($arr);
   }
+
+  /**
+   * Get random unique value
+   *
+   * @param  array $arr
+   * @return mixed
+   */
+  public static function getRandomUniqueValue(array &$arr)
+  {
+    if (empty($arr)) {
+      throw new \RuntimeException('Elements can not be taken from an empty array');
+    }
+    $key = array_rand($arr, 1);
+    $value = $arr[$key];
+    unset($arr[$key]);
+    return $value;
+  }
 }
