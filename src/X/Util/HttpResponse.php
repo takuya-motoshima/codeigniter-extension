@@ -263,11 +263,17 @@ final class HttpResponse
    */
   public function setCorsHeader(\CI_Controller &$ci)
   {
-    $http_origin = $_SERVER['HTTP_ORIGIN'] ?? '*';
+    $allowOrigin = '*';
+    if (!empty($_SERVER['HTTP_ORIGIN'])) {
+      $allowOrigin = $_SERVER['HTTP_ORIGIN'];
+    } else if (!empty($_SERVER['HTTP_REFERER'])) {
+      $allowOrigin = parse_url($_SERVER['HTTP_REFERER'], PHP_URL_SCHEME) . '://' . parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST);
+    }
+    // $allowOrigin = $_SERVER['HTTP_ORIGIN'] ?? '*';
     $ci->output
       ->set_header('Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Authorization')
       ->set_header('Access-Control-Allow-Methods: GET, POST, OPTIONS')
       ->set_header('Access-Control-Allow-Credentials: true')
-      ->set_header('Access-Control-Allow-Origin: ' . $http_origin);
+      ->set_header('Access-Control-Allow-Origin: ' . $allowOrigin);
   }
 }
