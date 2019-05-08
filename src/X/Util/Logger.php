@@ -75,7 +75,9 @@ final class Logger
    */
   public static function c(...$params)
   {
-    echo self::getLogString($params, debug_backtrace()) . PHP_EOL;
+    $message = self::getLogString($params, debug_backtrace());
+    echo $message . PHP_EOL;
+    self::d($message);
   }
 
   /**
