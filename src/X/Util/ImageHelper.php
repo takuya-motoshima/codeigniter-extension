@@ -34,6 +34,7 @@ final class ImageHelper
       $baseName = $fileName . '.' . $blobInfo['mime'];
     } else {
       $baseName = $fileName;
+      $blobInfo['mime'] = $extension
     }
     FileHelper::makeDirecoty($dirPath);
     file_put_contents($dirPath . $baseName, $blobInfo['blob'], LOCK_EX);
