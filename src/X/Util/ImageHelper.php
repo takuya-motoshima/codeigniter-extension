@@ -21,12 +21,22 @@ final class ImageHelper
    * @param string $dirPath
    * @return \stdClass
    */
-  public static function putBase64(string $base64, string $dirPath, string $fileName): \stdClass
+  public static function putBase64(string $base64, string $dirPath, ?string $fileName = null): \stdClass
   {
+    if (empty($fileName)) {
+      $fileName = pathinfo($dirPath, PATHINFO_BASENAME);
+      $dirPath =  pathinfo($dirPath, PATHINFO_DIRNAME);
+    }
+    $dirPath = rtrim($dirPath, '/')  . '/';
     $blobInfo = self::base64ToBlob($base64);
-    $baseName = $fileName . '.' . $blobInfo['mime'];
+    $extension = pathinfo($fileName, PATHINFO_EXTENSION);
+    if (empty($extension)) {
+      $baseName = $fileName . '.' . $blobInfo['mime'];
+    } else {
+      $baseName = $fileName;
+    }
     FileHelper::makeDirecoty($dirPath);
-    file_put_contents(rtrim($dirPath, '/')  . '/' . $baseName, $blobInfo['blob'], LOCK_EX);
+    file_put_contents($dirPath . $baseName, $blobInfo['blob'], LOCK_EX);
     return json_decode(json_encode([
       'mime' => $blobInfo['mime'],
       'baseName' => $baseName,
