@@ -106,7 +106,7 @@ class AmazonRekognitionClientHelper
    */
   public function isFaceByPath(string $imagePath): bool
   {
-    $this->isFace(ImageHelper::read($imagePath));
+    return $this->isFace(ImageHelper::read($imagePath));
   }
 
 
