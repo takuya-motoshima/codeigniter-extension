@@ -172,3 +172,7 @@ class Example extends AppController
  public function dashboard() {}
 }
 ```
+
+
+## Author
+[Takuya Motoshima](https://github.com/takuya-motoshima)
