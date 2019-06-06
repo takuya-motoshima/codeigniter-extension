@@ -11,7 +11,7 @@ use \X\Util\Template;
  * @copyright  2017 Takuya Motoshima
  */
 namespace X\Util;
-class AmazonSesHelper
+class AmazonSesClient
 {
   /** @var array */
   private $option = null;
@@ -64,9 +64,9 @@ class AmazonSesHelper
    * Set charset
    * 
    * @param  string $charset
-   * @return AmazonSesHelper
+   * @return AmazonSesClient
    */
-  public function charset(string $charset): AmazonSesHelper
+  public function charset(string $charset): AmazonSesClient
   {
     $this->charset = $charset;
     return $this;
@@ -78,9 +78,9 @@ class AmazonSesHelper
    * 
    * @param  string $from
    * @param  string $from_name
-   * @return AmazonSesHelper
+   * @return AmazonSesClient
    */
-  public function from(string $from, string $from_name = null): AmazonSesHelper
+  public function from(string $from, string $from_name = null): AmazonSesClient
   {
     $this->from = $from;
     $this->from_name = $from_name;
@@ -92,9 +92,9 @@ class AmazonSesHelper
    * Set destination
    *
    * @param string|array $to
-   * @return AmazonSesHelper
+   * @return AmazonSesClient
    */
-  public function to($to): AmazonSesHelper
+  public function to($to): AmazonSesClient
   {
     $this->to = $to;
     return $this;
@@ -105,9 +105,9 @@ class AmazonSesHelper
    * Set destination
    *
    * @param string|array $bcc
-   * @return AmazonSesHelper
+   * @return AmazonSesClient
    */
-  public function bcc($bcc): AmazonSesHelper
+  public function bcc($bcc): AmazonSesClient
   {
     $this->bcc = $bcc;
     return $this;
@@ -118,9 +118,9 @@ class AmazonSesHelper
    * Set destination
    *
    * @param string|array $cc
-   * @return AmazonSesHelper
+   * @return AmazonSesClient
    */
-  public function cc($cc): AmazonSesHelper
+  public function cc($cc): AmazonSesClient
   {
     $this->cc = $cc;
     return $this;
@@ -131,9 +131,9 @@ class AmazonSesHelper
    * Set up outgoing subject
    *
    * @param string $subject
-   * @return AmazonSesHelper
+   * @return AmazonSesClient
    */
-  public function subject(string $subject): AmazonSesHelper
+  public function subject(string $subject): AmazonSesClient
   {
     $this->subject = $subject;
     return $this;
@@ -144,9 +144,9 @@ class AmazonSesHelper
    * Set up outgoing messages
    *
    * @param string $message
-   * @return AmazonSesHelper
+   * @return AmazonSesClient
    */
-  public function message(string $message): AmazonSesHelper
+  public function message(string $message): AmazonSesClient
   {
     $this->message = $message;
     return $this;
@@ -159,7 +159,7 @@ class AmazonSesHelper
    * @param   array
    * @return  string
    */
-  public function messageFromXml(string $path, array $vars = []): AmazonSesHelper
+  public function messageFromXml(string $path, array $vars = []): AmazonSesClient
   {
     static $template;
     if (!isset($template)) {
