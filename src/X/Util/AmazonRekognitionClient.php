@@ -166,7 +166,19 @@ class AmazonRekognitionClient
   public function countFace(string $imgBlob): int
   {
     $faces = $this->detectFace($imgBlob);
-    // Logger::d('$faces=', $faces);
+    return count($faces);
+  }
+
+  /**
+   * 
+   * Count face by path
+   *
+   * @param string $imgPath Image path
+   * @return int
+   */
+  public function countFaceByPath(string $imgPath): int
+  {
+    $faces = $this->detectFaceByPath($imgPath);
     return count($faces);
   }
 
