@@ -28,18 +28,18 @@ final class ImageHelper
       $dirPath =  pathinfo($dirPath, PATHINFO_DIRNAME);
     }
     $dirPath = rtrim($dirPath, '/')  . '/';
-    $blobInfo = self::base64ToBlob($base64);
+    $blob = self::convertBase64ToBlob($base64, $mime);
     $extension = pathinfo($fileName, PATHINFO_EXTENSION);
     if (empty($extension)) {
-      $baseName = $fileName . '.' . $blobInfo['mime'];
+      $baseName = $fileName . '.' . $mime;
     } else {
       $baseName = $fileName;
-      $blobInfo['mime'] = $extension;
+      $mime = $extension;
     }
     FileHelper::makeDirecoty($dirPath);
-    file_put_contents($dirPath . $baseName, $blobInfo['blob'], LOCK_EX);
+    file_put_contents($dirPath . $baseName, $blob, LOCK_EX);
     return json_decode(json_encode([
-      'mime' => $blobInfo['mime'],
+      'mime' => $mime,
       'baseName' => $baseName,
     ]));
   }
@@ -54,10 +54,6 @@ final class ImageHelper
    */
   public static function putBlob(string $blob, string $filePath)
   {
-    if (\ENVIRONMENT !== 'production') {
-      Logger::d('$blob=', $blob);
-      Logger::d('$filePath=', $filePath);
-    }
     FileHelper::makeDirecoty(dirname($filePath));
     file_put_contents($filePath, $blob, LOCK_EX);
   }
@@ -73,19 +69,19 @@ final class ImageHelper
    *  // /tmp/old.png -> /home/new.png
    *  \X\Util\ImageHelper::copy('/tmp/old.png', '/home', 'new');
    *  
-   * @param string $srcFilePath
+   * @param string $srcImgPath
    * @param string $dstDirPath
-   * @param string $replacementFileName
+   * @param string $replacementImgName
    * @return string
    */
-  public static function copy(string $srcFilePath, string $dstDirPath, string $replacementFileName = null): string
+  public static function copy(string $srcImgPath, string $dstDirPath, string $replacementImgName = null): string
   {
     FileHelper::makeDirecoty($dstDirPath);
-    $dstFileName = empty($replacementFileName) 
-      ? basename($srcFilePath) : 
-      $replacementFileName . '.' . pathinfo($srcFilePath, PATHINFO_EXTENSION);
-    file_put_contents(rtrim($dstDirPath, '/')  . '/' . $dstFileName, file_get_contents($srcFilePath), LOCK_EX);
-    return $dstFileName;
+    $dstImgName = empty($replacementImgName) 
+      ? basename($srcImgPath) : 
+      $replacementImgName . '.' . pathinfo($srcImgPath, PATHINFO_EXTENSION);
+    file_put_contents(rtrim($dstDirPath, '/')  . '/' . $dstImgName, file_get_contents($srcImgPath), LOCK_EX);
+    return $dstImgName;
   }
 
   /**
@@ -111,34 +107,34 @@ final class ImageHelper
    * 
    * Resize
    *
-   * @param  string $srcFilePath
+   * @param  string $srcImgPath
    * @param  int $dstWidth
    * @param  string $dstFilePrefix
    * @return string
    */
-  public static function resize(string $srcFilePath, int $dstWidth, string $dstFilePrefix = "-thumb"): string
+  public static function resize(string $srcImgPath, int $dstWidth, string $dstFilePrefix = "-thumb"): string
   {
-    list($srcWidth, $srcHeight, $fileType) = \getimagesize($srcFilePath);
+    list($srcWidth, $srcHeight, $type) = \getimagesize($srcImgPath);
     $dstHeight = round($srcHeight * $dstWidth / $srcWidth);
-    $tmpImage = \imagecreatetruecolor($dstWidth, $dstHeight);
-    if ($tmpImage === FALSE) {
+    $tmpImg = \imagecreatetruecolor($dstWidth, $dstHeight);
+    if ($tmpImg === FALSE) {
       throw new \RuntimeException('TrueColor image creation failed');
     }
-    if ($fileType == IMAGETYPE_JPEG) {
-      $dstImage = \imagecreatefromjpeg($srcFilePath);
-    } else if ($fileType == IMAGETYPE_GIF) {
-      $dstImage = \imagecreatefromgif($srcFilePath);
-    } else if ($fileType == IMAGETYPE_PNG) {
-      imagealphablending($tmpImage, false);
-      imagesavealpha($tmpImage, true);
-      $dstImage = \imagecreatefrompng($srcFilePath);
+    if ($type == IMAGETYPE_JPEG) {
+      $dstImg = \imagecreatefromjpeg($srcImgPath);
+    } else if ($type == IMAGETYPE_GIF) {
+      $dstImg = \imagecreatefromgif($srcImgPath);
+    } else if ($type == IMAGETYPE_PNG) {
+      imagealphablending($tmpImg, false);
+      imagesavealpha($tmpImg, true);
+      $dstImg = \imagecreatefrompng($srcImgPath);
     }
-    // else if ($fileType == IMAGETYPE_BMP) {
-    //   $dstImage = \imagecreatefromwbmp($srcFilePath);
+    // else if ($type == IMAGETYPE_BMP) {
+    //   $dstImg = \imagecreatefromwbmp($srcImgPath);
     // }
     \imagecopyresampled(
-      $tmpImage,
-      $dstImage,
+      $tmpImg,
+      $dstImg,
       0,
       0,
       0,
@@ -148,47 +144,62 @@ final class ImageHelper
       $srcWidth,
       $srcHeight
     );
-    $dstFileName = pathinfo($srcFilePath, PATHINFO_FILENAME) . $dstFilePrefix . '.' . pathinfo($srcFilePath, PATHINFO_EXTENSION);
-    $dstFilePath = rtrim(pathinfo($srcFilePath, PATHINFO_DIRNAME), '/') . '/' . $dstFileName;
+    $dstImgName = pathinfo($srcImgPath, PATHINFO_FILENAME) . $dstFilePrefix . '.' . pathinfo($srcImgPath, PATHINFO_EXTENSION);
+    $dstImgPath = rtrim(pathinfo($srcImgPath, PATHINFO_DIRNAME), '/') . '/' . $dstImgName;
     $quality = 100;
-    if ($fileType == IMAGETYPE_JPEG) {
-      \imagejpeg($tmpImage, $dstFilePath, $quality);
-    } else if ($fileType == IMAGETYPE_GIF) {
-      $bg_color = \imagecolorallocatealpha($dstImage,0,0,0,127);
-      \imagefill($tmpImage, 0, 0, $bg_color);
-      \imagecolortransparent($tmpImage, $bg_color);
-      \imagegif($tmpImage, $dstFilePath);
-    } else if ($fileType == IMAGETYPE_PNG) {
-      \imagepng($tmpImage, $dstFilePath, $quality * (9 / 100));
+    if ($type == IMAGETYPE_JPEG) {
+      \imagejpeg($tmpImg, $dstImgPath, $quality);
+    } else if ($type == IMAGETYPE_GIF) {
+      $bgColor = \imagecolorallocatealpha($dstImg,0,0,0,127);
+      \imagefill($tmpImg, 0, 0, $bgColor);
+      \imagecolortransparent($tmpImg, $bgColor);
+      \imagegif($tmpImg, $dstImgPath);
+    } else if ($type == IMAGETYPE_PNG) {
+      \imagepng($tmpImg, $dstImgPath, $quality * (9 / 100));
     }
-    // else if ($fileType == IMAGETYPE_BMP:
-    //   \imagewbmp($tmpImage, $dstFilePath);
+    // else if ($type == IMAGETYPE_BMP:
+    //   \imagewbmp($tmpImg, $dstImgPath);
     // }
-    imagedestroy($tmpImage);
-    imagedestroy($dstImage);
-    return $dstFileName;
+    imagedestroy($tmpImg);
+    imagedestroy($dstImg);
+    return $dstImgName;
   }
 
   /**
    * 
-   * Base64 to blob
+   * Is Base64
    *
    * @param string $base64
+   * @param string &$mime
    * @return \stdClass
    */
-  public static function base64ToBlob(string $base64): array
+  public static function isBase64(string $base64, &$mime = null): bool
   {
-    if (!preg_match('/^data:image\/(\w+);base64,/', $base64, $mime)) {
+    if (!preg_match('/^data:image\/(\w+);base64,/', $base64, $matches)) {
+      return false;
+    }
+    $mime = strtolower($matches[1]);
+    return true;
+  }
+
+
+  /**
+   * 
+   * Convert Base64 to blob
+   *
+   * @param string $base64
+   * @param string &$mime
+   * @return \stdClass
+   */
+  public static function convertBase64ToBlob(string $base64, &$mime = null): string
+  {
+    if (!self::isBase64($base64, $mime)) {
       throw new \RuntimeException('Did not match data URI with image data');
     }
-    $mime = strtolower($mime[1]);
     $blob = base64_decode(substr($base64, strpos($base64, ',') + 1));
     if ($blob === false) {
       throw new \RuntimeException('Base64 decode failed');
     }
-    return [
-      'blob' => $blob,
-      'mime' => $mime, 
-    ];
+    return $blob;
   }
 }
