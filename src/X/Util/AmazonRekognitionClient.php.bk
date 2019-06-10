@@ -111,10 +111,9 @@ class AmazonRekognitionClient
    * Detect face
    *
    * @param string $imgBlob Image binary data
-   * @param int $faceThreshold
    * @return array
    */
-  public function detectFace(string $imgBlob, int $faceThreshold = 90): array
+  public function detectFace(string $imgBlob): array
   {
 
     try {
@@ -137,17 +136,7 @@ class AmazonRekognitionClient
       if ($status !== 200) {
         throw new \RuntimeException('Face detection error');
       }
-
-      // 
-      if (empty($res['FaceDetails'])) {
-        return [];
-      }
-
-      // 
-      $faces = $res['FaceDetails'];
-      return array_filter($res['FaceDetails'], function(array $face) use($faceThreshold) {
-        return $face['Confidence'] >= $faceThreshold;
-      });
+      return !empty($res['FaceDetails']) ? $res['FaceDetails'] : [];
     } catch (Throwable $e) {
       Logger::e($e);
       throw $e;
@@ -159,12 +148,11 @@ class AmazonRekognitionClient
    * Is face by path
    *
    * @param string $imgPath Image path
-   * @param int $faceThreshold
    * @return array
    */
-  public function detectFaceByPath(string $imgPath, int $faceThreshold = 90): array
+  public function detectFaceByPath(string $imgPath): array
   {
-    return $this->detectFace(ImageHelper::read($imgPath), $faceThreshold);
+    return $this->detectFace(ImageHelper::read($imgPath));
   }
 
 
@@ -173,12 +161,11 @@ class AmazonRekognitionClient
    * Count face
    *
    * @param string $imgBlob Image binary data
-   * @param int $faceThreshold
    * @return int
    */
-  public function countFace(string $imgBlob, int $faceThreshold): int
+  public function countFace(string $imgBlob): int
   {
-    $faces = $this->detectFace($imgBlob, $faceThreshold);
+    $faces = $this->detectFace($imgBlob);
     return count($faces);
   }
 
@@ -192,7 +179,6 @@ class AmazonRekognitionClient
   public function countFaceByPath(string $imgPath): int
   {
     $faces = $this->detectFaceByPath($imgPath);
-    // Logger::d('$faces=', $faces);
     return count($faces);
   }
 
