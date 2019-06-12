@@ -176,7 +176,7 @@ class AmazonRekognitionClient
    * @param int $faceThreshold
    * @return int
    */
-  public function countFace(string $imgBlob, int $faceThreshold = 90): int
+  public function countFace(string $imgBlob, int $faceThreshold): int
   {
     $faces = $this->detectFace($imgBlob, $faceThreshold);
     return count($faces);
@@ -187,12 +187,11 @@ class AmazonRekognitionClient
    * Count face by path
    *
    * @param string $imgPath Image path
-   * @param int $faceThreshold
    * @return int
    */
-  public function countFaceByPath(string $imgPath, int $faceThreshold = 90): int
+  public function countFaceByPath(string $imgPath): int
   {
-    $faces = $this->detectFaceByPath($imgPath, $faceThreshold);
+    $faces = $this->detectFaceByPath($imgPath);
     // Logger::d('$faces=', $faces);
     return count($faces);
   }
