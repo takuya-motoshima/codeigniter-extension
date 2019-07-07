@@ -23,10 +23,7 @@ final class Template {
    */
   public function __construct(array $option = []) {
     $option = array_merge([
-      'paths' => [
-        \VIEWPATH,
-        realpath(__DIR__ . '/../') . '/Template',
-      ],
+      'paths' => [\VIEWPATH],
       'environment' => [
         // 'cache' => false,
         'cache' => \APPPATH . 'cache',
