@@ -7,8 +7,7 @@
  * @copyright  2017 Takuya Motoshima
  */
 namespace X\Util;
-final class UrlHelper
-{
+final class UrlHelper {
 
   /**
    * URL Without FileName
@@ -32,8 +31,7 @@ final class UrlHelper
    * @param  string $url
    * @return string
    */
-  public static function getUrlWithoutFileName(string $url): string
-  {
+  public static function getUrlWithoutFileName(string $url): string {
     $url = rtrim(strtok($url, '?'), '/');
     $urlInfo = parse_url($url);
     $scheme = !empty($urlInfo['scheme']) ? $urlInfo['scheme'] . '://' : '//';
@@ -69,8 +67,7 @@ final class UrlHelper
    * @param  string $url
    * @return string
    */
-  public static function getHomeUrl(string $url): string
-  {
+  public static function getHomeUrl(string $url): string {
     $url = rtrim(strtok($url, '?'), '/');
     $urlInfo = parse_url($url);
     $scheme = !empty($urlInfo['scheme']) ? $urlInfo['scheme'] . '://' : '//';

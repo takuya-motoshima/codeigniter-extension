@@ -8,8 +8,7 @@
  * @property CI_DB_query_builder $db
  */
 namespace X\Model;
-interface SessionModelInterface
-{
+interface SessionModelInterface {
 
     /**
      *

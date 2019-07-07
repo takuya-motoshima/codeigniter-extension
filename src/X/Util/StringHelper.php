@@ -7,8 +7,7 @@
  * @copyright  2017 Takuya Motoshima
  */
 namespace X\Util;
-final class StringHelper
-{
+final class StringHelper {
 
   /**
    * Trim
@@ -17,8 +16,7 @@ final class StringHelper
    * @param  string $addReplacement
    * @return string
    */
-  public static function trim(string $str):string
-  {
+  public static function trim(string $str):string {
     return trim($str, " \t\n\r\0\x0B　");
   }
 }

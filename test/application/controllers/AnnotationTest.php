@@ -7,7 +7,7 @@ class AnnotationTest extends AppController
 {
 
   /**
-   * @AccessControl(allowLoggedin=false)
+   * @AccessControl(allow_login_user=false)
    */
   public function index()
   {

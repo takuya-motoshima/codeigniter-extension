@@ -15,8 +15,7 @@ class AddressModel extends Model {
    *
    * @return array
    */
-  public function getAddressByPostCode(string $postCode):array
-  {
+  public function getAddressByPostCode(string $postCode):array {
     if (!preg_match('/^\d{3}-?\d{4}$/', $postCode)) {
       return '';
     }

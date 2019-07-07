@@ -10,10 +10,10 @@
  *        $ci =& get_instance();
  *        $accessControl = AnnotationReader::getMethodAccessControl($ci->router->class, $ci->router->method);
  *        $loggedin = !empty($_SESSION['user']);
- *        if ($loggedin && !$accessControl->allowLoggedin) {
+ *        if ($loggedin && !$accessControl->allow_login_user) {
  *          // In case of an action that the logged-in user can not access
  *          redirect('/dashboard');
- *        } else if (!$loggedin && !$accessControl->allowLoggedoff) {
+ *        } else if (!$loggedin && !$accessControl->allow_logoff_user) {
  *          // In case of an action that can not be accessed by the user who is logging off
  *          redirect('/login');
  *        }
@@ -24,12 +24,12 @@
  *      class Example extends AppController
  *      {
  *        \/**
- *         * @AccessControl(allowLoggedin=false, allowLoggedoff=true)
+ *         * @AccessControl(allow_login_user=false, allow_logoff_user=true)
  *         *\/
  *        public function login() {}
  *      
  *        \/**
- *         * @AccessControl(allowLoggedin=true, allowLoggedoff=false)
+ *         * @AccessControl(allow_login_user=true, allow_logoff_user=false)
  *         *\/
  *        public function dashboard() {}
  *      }
@@ -40,8 +40,7 @@
  */
 namespace X\Annotation;
 use \X\Annotation\AccessControl;
-final class AnnotationReader
-{
+final class AnnotationReader {
 
   /**
    *  Get method access control
@@ -50,8 +49,7 @@ final class AnnotationReader
    * @param  string  $method
    * @return object
    */
-  public static function getMethodAccessControl(string $class, string $method): object
-  {
+  public static function getMethodAccessControl(string $class, string $method): object {
     $annotation = self::getMethodAnnotations($class, $method, 'AccessControl');
     if (empty($annotation)) {
       return json_decode(json_encode(new AccessControl()));
@@ -68,8 +66,7 @@ final class AnnotationReader
    * @param  string  $name
    * @return object|array
    */
-  private static function getMethodAnnotations(string $class, string $method, string $name = null)
-  {
+  private static function getMethodAnnotations(string $class, string $method, string $name = null) {
     $objects = self::reader()->getMethodAnnotations(new \ReflectionMethod(ucfirst($class), $method));
     if (empty($objects)) {
       return null;
@@ -91,8 +88,7 @@ final class AnnotationReader
    * 
    * @return \Doctrine\Common\Annotations\AnnotationReader
    */
-  private static function reader(): \Doctrine\Common\Annotations\AnnotationReader
-  {
+  private static function reader(): \Doctrine\Common\Annotations\AnnotationReader {
     static $reader = null;
     if (isset($reader)) {
       return $reader;

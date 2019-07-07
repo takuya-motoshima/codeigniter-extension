@@ -8,8 +8,7 @@
  * @copyright  2019 Takuya Motoshima
  */
 namespace X\Util;
-final class Iterator
-{
+final class Iterator {
  
   /**
    * 重複あり順列
@@ -35,8 +34,7 @@ final class Iterator
    * @param      string $progress
    * @param      ?array $result
    */
-  public static function duplicatePermutation(string $data, int $r, string $progress='', ?array &$result = [])
-  {
+  public static function duplicatePermutation(string $data, int $r, string $progress='', ?array &$result = []) {
     if ($r === 0) {
       $result[] = $progress;
       return;

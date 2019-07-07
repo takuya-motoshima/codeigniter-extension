@@ -7,8 +7,7 @@
  * @copyright  2017 Takuya Motoshima
  */
 namespace X\Util;
-final class Logger
-{
+final class Logger {
 
   /**
    * Print debug log
@@ -16,9 +15,8 @@ final class Logger
    * @param mixed[] $params
    * @return void
    */
-  public static function d(...$params)
-  {
-    log_message('debug', self::getLogString($params, debug_backtrace()));
+  public static function d(...$params) {
+    log_message('debug', self::getMessage($params, debug_backtrace()));
   }
 
   /**
@@ -27,11 +25,9 @@ final class Logger
    * @param mixed[] $params
    * @return void
    */
-  public static function i(...$params)
-  {
-    log_message('info', self::getLogString($params, debug_backtrace()));
+  public static function i(...$params) {
+    log_message('info', self::getMessage($params, debug_backtrace()));
   }
-
 
   /**
    * Print error log
@@ -39,12 +35,11 @@ final class Logger
    * @param mixed[] $params
    * @return void
    */
-  public static function e(...$params)
-  {
+  public static function e(...$params) {
     if ($params[0] instanceof \Exception) {
       log_message('error', $params[0]->getMessage() . PHP_EOL . $params[0]->getTraceAsString());
     } else {
-      log_message('error', self::getLogString($params, debug_backtrace()));
+      log_message('error', self::getMessage($params, debug_backtrace()));
     }
   }
 
@@ -54,8 +49,7 @@ final class Logger
    * @param mixed[] $params
    * @return void
    */
-  public static function s(...$params)
-  {
+  public static function s(...$params) {
     $message = '';
     foreach ($params as $param) {
       if (is_array($param) || is_object($param)) {
@@ -73,9 +67,8 @@ final class Logger
    * @param mixed[] $params
    * @return void
    */
-  public static function c(...$params)
-  {
-    $message = self::getLogString($params, debug_backtrace());
+  public static function c(...$params) {
+    $message = self::getMessage($params, debug_backtrace());
     echo $message . PHP_EOL;
     self::d($message);
   }
@@ -87,8 +80,7 @@ final class Logger
    * @param  array $trace
    * @return string
    */
-  private static function getLogString(array $params, array $trace):string
-  {
+  private static function getMessage(array $params, array $trace): string {
     $message = str_replace(realpath(\FCPATH . '../') . '/', '', $trace[0]['file']) . '(' . $trace[0]['line'] . ')';
     if (isset($trace[1]['class'])) {
       $message .= ' ' . $trace[1]['class'] . '.' . $trace[1]['function'];

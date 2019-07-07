@@ -7,7 +7,7 @@ class Login extends AppController
 {
 
   /**
-   * @AccessControl(allowLoggedin=false, allowLoggedoff=true)
+   * @AccessControl(allow_login_user=false, allow_logoff_user=true)
    */
   public function index()
   {
@@ -15,7 +15,7 @@ class Login extends AppController
   }
 
   /**
-   * @AccessControl(allowLoggedin=false, allowLoggedoff=true)
+   * @AccessControl(allow_login_user=false, allow_logoff_user=true)
    */
   public function do_login() 
   {

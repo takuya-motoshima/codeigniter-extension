@@ -11,8 +11,8 @@ use \Doctrine\Common\Annotations\Annotation;
  * @license    MIT License
  * @copyright  2018 Takuya Motoshima
  */
-class AccessControl
-{
-  public $allowLoggedin = true;
-  public $allowLoggedoff = true;
+class AccessControl {
+  public $allow_login_user = true;
+  public $allow_logoff_user = true;
+  public $allow_role = '';
 }

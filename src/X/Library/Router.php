@@ -7,8 +7,7 @@
  * @copyright  2018 Takuya Motoshima
  */
 namespace X\Library;
-abstract class Router extends \CI_Router
-{
+abstract class Router extends \CI_Router {
 
   // /**
   //  * Set request route

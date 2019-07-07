@@ -8,8 +8,8 @@
  */
 namespace X\Util;
 use X\Util\Logger;
-final class Template
-{
+final class Template {
+
   /**
    * @var Twig_Environment
    */
@@ -21,8 +21,7 @@ final class Template
    *
    * @param array $option
    */
-  public function __construct(array $option = [])
-  {
+  public function __construct(array $option = []) {
     $option = array_merge([
       'paths' => [
         \VIEWPATH,
@@ -94,8 +93,7 @@ final class Template
    * @param  array  $vars
    * @return string
    */
-  public function load(string $path, array $vars = [], string $extension = 'html'):string
-  {
+  public function load(string $path, array $vars = [], string $extension = 'html'):string {
     return $this->engine->render($path . '.' . $extension, $vars);
   }
 }

@@ -7,16 +7,14 @@
  * @copyright  2017 Takuya Motoshima
  */
 namespace X\Util;
-final class Loader
-{
+final class Loader {
   /**
    * Load model
    *
    * @param  string|array $models
    * @return void
    */
-  public static function model($models)
-  {
+  public static function model($models) {
     if (empty($models)) {
       return;
     }
@@ -35,8 +33,7 @@ final class Loader
    * @param  string|array $models
    * @return void
    */
-  public static function library($libraries)
-  {
+  public static function library($libraries) {
     if (empty($libraries)) {
       return;
     }
@@ -57,8 +54,7 @@ final class Loader
    * @param   null|bool $queryBuilder
    * @return  object|null
    */
-  public static function database($config = '', bool $return = false, $queryBuilder = null)
-  {
+  public static function database($config = '', bool $return = false, $queryBuilder = null) {
     $ci =& \get_instance();
     if ($return === false && $queryBuilder === null && isset($ci->db) && is_object($ci->db) && !empty($ci->db->conn_id)) {
       return;
@@ -77,8 +73,7 @@ final class Loader
    * @param   string $item
    * @return  array
    */
-  public static function config(string $file, string $item = null)
-  {
+  public static function config(string $file, string $item = null) {
     static $config;
     if (isset($config[$file])) {
       if (empty($item)) {

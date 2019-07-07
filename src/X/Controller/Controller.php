@@ -9,8 +9,7 @@
 namespace X\Controller;
 use X\Util\HttpResponse;
 use X\Util\Loader;
-abstract class Controller extends \CI_Controller
-{
+abstract class Controller extends \CI_Controller {
 
   /**
    * @var string|string[] $model
@@ -23,32 +22,18 @@ abstract class Controller extends \CI_Controller
   protected $library;
 
   /**
-   * HttpResponse $response
-   * @var [type]
+   * @var HttpResponse $httpResponse
    */
-  private $response;
+  protected $httpResponse;
 
   /**
-   * construct
+   * Construct
    */
-  public function __construct()
-  {
+  public function __construct() {
     parent::__construct();
     Loader::model($this->model);
     Loader::library($this->library);
-    $this->response = new HttpResponse();
-  }
-
-  /**
-   * Set http status
-   *
-   * @param  int $statusCode
-   * @return object
-   */
-  protected function status(int $statusCode)
-  {
-    $this->response->status($statusCode);
-    return $this;
+    $this->httpResponse = new HttpResponse();
   }
 
   /**
@@ -58,11 +43,8 @@ abstract class Controller extends \CI_Controller
    * @param  mixed $value
    * @return object
    */
-  protected function set($key, $value = null)
-  {
-    func_num_args() === 1 
-      ? $this->response->set($key)
-      : $this->response->set($key, $value);
+  protected function set($key, $value = null) {
+    func_num_args() === 1 ? $this->httpResponse->set($key) : $this->httpResponse->set($key, $value);
     return $this;
   }
 
@@ -71,130 +53,107 @@ abstract class Controller extends \CI_Controller
    *
    * @return object
    */
-  protected function clear()
-  {
-    $this->response->clear($key, $value);
+  protected function clear() {
+    $this->httpResponse->clear($key, $value);
+    return $this;
+  }
+
+
+  /**
+   * Set status
+   *
+   * @param  int $status
+   * @return object
+   */
+  protected function status(int $status) {
+    $this->httpResponse->status($status);
     return $this;
   }
 
   /**
    * Response JSON
    *
-   * Set the following variable to 'environment'
-   *     baseUrl
-   *
    * @param  bool $forceObject
    * @param  bool $pretty
    * @return void
    */
-  protected function responseJson()
-  {
-    $this->beforeResponseJson();
-    $this->before_response_json();
-    $this->response->json();
-  }
-
-  /**
-   * 
-   * Set response json option
-   * 
-   * @param int $option JSON_FORCE_OBJECT | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
-   * @param bool $enabled
-   * @return object
-   */
-  protected function setJsonOption(int $option, bool $enabled)
-  {
-    $this->response->jsonOption($option, $enabled);
-    return $this;
+  protected function json(bool $forceObject = false, bool $prettyrint = false) {
+    $this->beforeJson();
+    $this->httpResponse->json($forceObject, $prettyrint);
   }
 
   /**
    * Response HTML
    *
-   * @param  string  $htmlCode
-   * @param  string $char
+   * @param  string  $html
    * @return void
    */
-  protected function responseHtml(string $htmlCode, string $char = 'utf-8')
-  {
-    $this->response->html($htmlCode, $char);
+  protected function html(string $html) {
+    $this->httpResponse->html($html);
   }
 
   /**
-   * Response HTML for template
+   * Response template
    *
-   * Set the following variable to 'environment'
-   *     baseUrl
-   *
-   * @param  string $templatePath
-   * @param  string $char
+   * @param  string $path
    * @return void
    */
-  protected function responseTemplate(string $templatePath, string $char = 'utf-8')
-  {
-    $this->beforeResponseTemplate($templatePath);
-    $this->before_response_template($templatePath);
-    $this->response->template($templatePath, $char);
+  protected function view(string $path) {
+    $this->beforeView($path);
+    $this->httpResponse->view($path);
   }
 
   /**
-   * Response javascript
+   * Response js
    *
-   * @param  string $scriptCode
-   * @param  string $char
+   * @param  string $js
    * @return void
    */
-  protected function responseJavascript(string $scriptCode, string $char = 'UTF-8')
-  {
-    $this->response->javascript($scriptCode, $char);
+  protected function js(string $js) {
+    $this->httpResponse->javascript($js);
   }
 
   /**
    * Response text
    *
    * @param  string $text
-   * @param  string $char
    * @return void
    */
-  protected function responseText(string $text, string $char = 'UTF-8')
-  {
-    $this->response->text($text, $char);
+  protected function text(string $text) {
+    $this->httpResponse->text($text);
   }
 
   /**
    * Response download
    *
-   * @param  string $fileMame
+   * @param  string $file
    * @param  string $data
    * @param  bool $mime
    * @return void
    */
-  protected function responseDownload(string $fileMame, string $data = '', bool $mime = FALSE)
-  {
-    $this->response->download($fileMame, $data, $mime);
+  protected function download(string $file, string $data = '', bool $mime = FALSE) {
+    $this->httpResponse->download($file, $data, $mime);
   }
 
   /**
    * Response image
    *
-   * @param  string $imagePath
+   * @param  string $path
    * @return void
    */
-  protected function responseImage(string $imagePath)
-  {
-    $this->response->image($imagePath);
+  protected function image(string $path) {
+    $this->httpResponse->image($path);
   }
 
   /**
    * Response error
    *
    * @param  string $errorMessage
-   * @param  int $statusCode
+   * @param  int $status
    * @return void
    */
-  protected function responseError(string $errorMessage, int $statusCode = \X\Constant\HTTP_INTERNAL_SERVER_ERROR)
-  {
-    $this->response->error($errorMessage, $statusCode);
+  protected function error(string $message, int $status = \X\Constant\HTTP_INTERNAL_SERVER_ERROR) {
+    $this->httpResponse->error($message, $status);
   }
 
   /**
@@ -203,7 +162,7 @@ abstract class Controller extends \CI_Controller
    * @param  int $responseType
    * @return void
    */
-  protected function beforeResponseJson() {}
+  protected function beforeJson() {}
 
   /**
    * Before response template
@@ -211,90 +170,5 @@ abstract class Controller extends \CI_Controller
    * @param  string $templatePath
    * @return void
    */
-  protected function beforeResponseTemplate(string $templatePath) {}
-
-
-  // ----------------------------------------------------------------
-  // Deprecated
-  /**
-   * @deprecated Not recommended. It is obsolete in version 3.0.0 or later.
-   */
-  protected function response_json()
-  {
-    $this->responseJson();
-  }
-
-  /**
-   * @deprecated Not recommended. It is obsolete in version 3.0.0 or later.
-   */
-  protected function set_status(int $status)
-  {
-    return $this->status($status);
-  }
-
-  /**
-   * @deprecated Not recommended. It is obsolete in version 3.0.0 or later.
-   */
-  protected function response_html(string $htmlCode, string $char = 'utf-8')
-  {
-    $this->responseHtml($htmlCode, $char);
-  }
-
-  /**
-   * @deprecated Not recommended. It is obsolete in version 3.0.0 or later.
-   */
-  protected function response_template(string $templatePath, string $char = 'utf-8')
-  {
-    $this->responseTemplate($templatePath, $char);
-  }
-
-  /**
-   * @deprecated Not recommended. It is obsolete in version 3.0.0 or later.
-   */
-  protected function response_javascript(string $scriptCode, string $char = 'UTF-8')
-  {
-    $this->responseJavascript($scriptCode, $char);
-  }
-
-  /**
-   * @deprecated Not recommended. It is obsolete in version 3.0.0 or later.
-   */
-  protected function response_text(string $text, string $char = 'UTF-8')
-  {
-    $this->responseText($text, $char);
-  }
-
-  /**
-   * @deprecated Not recommended. It is obsolete in version 3.0.0 or later.
-   */
-  protected function response_download(string $fileMame, string $data = '', bool $mime = FALSE)
-  {
-    $this->responseDownload($fileMame, $data, $mime);
-  }
-
-  /**
-   * @deprecated Not recommended. It is obsolete in version 3.0.0 or later.
-   */
-  protected function response_image(string $imagePath)
-  {
-    $this->responseImage($imagePath);
-  }
-
-  /**
-   * @deprecated Not recommended. It is obsolete in version 3.0.0 or later.
-   */
-  protected function response_error(string $errorMessage, int $statusCode = \X\Constant\HTTP_INTERNAL_SERVER_ERROR)
-  {
-    $this->responseError($errorMessage, $statusCode);
-  }
-
-  /**
-   * @deprecated Not recommended. It is obsolete in version 3.0.0 or later.
-   */
-  protected function before_response_json() {}
-
-  /**
-   * @deprecated Not recommended. It is obsolete in version 3.0.0 or later.
-   */
-  protected function before_response_template(string $templatePath) {}
+  protected function beforeView(string $templatePath) {}
 }

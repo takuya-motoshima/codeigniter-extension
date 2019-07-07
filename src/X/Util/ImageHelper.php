@@ -10,8 +10,7 @@
 namespace X\Util;
 use \X\Util\FileHelper;
 use \X\Util\Logger;
-final class ImageHelper
-{
+final class ImageHelper {
 
   /**
    * 
@@ -21,8 +20,7 @@ final class ImageHelper
    * @param string $dirPath
    * @return \stdClass
    */
-  public static function putBase64(string $base64, string $dirPath, ?string $fileName = null): \stdClass
-  {
+  public static function putBase64(string $base64, string $dirPath, ?string $fileName = null): \stdClass {
     if (empty($fileName)) {
       $fileName = pathinfo($dirPath, PATHINFO_BASENAME);
       $dirPath =  pathinfo($dirPath, PATHINFO_DIRNAME);
@@ -52,8 +50,7 @@ final class ImageHelper
    * @param string $filePath
    * @return Void
    */
-  public static function putBlob(string $blob, string $filePath)
-  {
+  public static function putBlob(string $blob, string $filePath) {
     FileHelper::makeDirecoty(dirname($filePath));
     file_put_contents($filePath, $blob, LOCK_EX);
   }
@@ -74,8 +71,7 @@ final class ImageHelper
    * @param string $replacementImgName
    * @return string
    */
-  public static function copy(string $srcImgPath, string $dstDirPath, string $replacementImgName = null): string
-  {
+  public static function copy(string $srcImgPath, string $dstDirPath, string $replacementImgName = null): string {
     FileHelper::makeDirecoty($dstDirPath);
     $dstImgName = empty($replacementImgName) 
       ? basename($srcImgPath) : 
@@ -91,8 +87,7 @@ final class ImageHelper
    * @param string $filePath
    * @return string
    */
-  public static function read(string $filePath): string
-  {
+  public static function read(string $filePath): string {
     if (!file_exists($filePath)) {
       throw new \RuntimeException('Image file does not exist. Path=' . $filePath);
     }
@@ -112,8 +107,7 @@ final class ImageHelper
    * @param  string $dstFilePrefix
    * @return string
    */
-  public static function resize(string $srcImgPath, int $dstWidth, string $dstFilePrefix = "-thumb"): string
-  {
+  public static function resize(string $srcImgPath, int $dstWidth, string $dstFilePrefix = "-thumb"): string {
     list($srcWidth, $srcHeight, $type) = \getimagesize($srcImgPath);
     $dstHeight = round($srcHeight * $dstWidth / $srcWidth);
     $tmpImg = \imagecreatetruecolor($dstWidth, $dstHeight);
@@ -173,8 +167,7 @@ final class ImageHelper
    * @param string &$mime
    * @return \stdClass
    */
-  public static function isBase64(string $base64, &$mime = null): bool
-  {
+  public static function isBase64(string $base64, &$mime = null): bool {
     if (!preg_match('/^data:image\/(\w+);base64,/', $base64, $matches)) {
       return false;
     }
@@ -191,8 +184,7 @@ final class ImageHelper
    * @param string &$mime
    * @return \stdClass
    */
-  public static function convertBase64ToBlob(string $base64, &$mime = null): string
-  {
+  public static function convertBase64ToBlob(string $base64, &$mime = null): string {
     if (!self::isBase64($base64, $mime)) {
       throw new \RuntimeException('Did not match data URI with image data');
     }

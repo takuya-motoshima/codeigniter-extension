@@ -7,8 +7,7 @@
  * @copyright  2018 Takuya Motoshima
  */
 namespace X\Util;
-final class DateHelper
-{
+final class DateHelper {
 
   /**
    * 
@@ -20,13 +19,7 @@ final class DateHelper
    * @param bool $startMonday 月曜始まりとしたい場合はtrue
    * @return array
    */
-  public static function getWeekPeriod(
-    string $ym, 
-    int $nthWeek, 
-    bool $aroundMonth = false,
-    bool $startMonday = true
-  ): array
-  {
+  public static function getWeekPeriod(string $ym, int $nthWeek, bool $aroundMonth = false, bool $startMonday = true): array {
     // 第1週最終曜日の計算用。デフォルトは土曜、月曜始まりの場合は日曜。
     $weekEnd = 6;
     if ($startMonday === true) {

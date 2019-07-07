@@ -10,8 +10,7 @@ namespace X\Composer;
 use Composer\Script\Event;
 use Composer\IO\ConsoleIO;
 use X\Util\FileHelper;
-final class Installer
-{
+final class Installer {
   /**
    * @var string DOCUMENT_ROOT
    */
@@ -27,8 +26,7 @@ final class Installer
    *
    * @param Event $event
    */
-  public static function post_install(Event $event)
-  {
+  public static function post_install(Event $event) {
 
     $io = $event->getIO();
 
@@ -67,7 +65,7 @@ final class Installer
     self::composer_update($io);
 
     // NPM install
-    self::npm_install($io);
+    // self::npm_install($io);
 
     // Show complete message
     self::show_message($io);
@@ -82,8 +80,7 @@ final class Installer
    * @param ConsoleIO $io
    * @return void
    */
-  private static function update_index(ConsoleIO $io)
-  {
+  private static function update_index(ConsoleIO $io) {
     $io->write('==================================================');
     $io->write('<info>Update public/index.php is running');
     FileHelper::replace(static::DOCUMENT_ROOT . 'index.php', [
@@ -100,8 +97,7 @@ final class Installer
    * @param ConsoleIO $io
    * @return void
    */
-  private static function update_config(ConsoleIO $io)
-  {
+  private static function update_config(ConsoleIO $io) {
     $io->write('==================================================');
     $io->write('<info>Update application/config/config.php is running');
     FileHelper::replace('application/config/config.php', [
@@ -136,8 +132,7 @@ final class Installer
    * @param ConsoleIO $io
    * @return void
    */
-  private static function composer_update(ConsoleIO $io)
-  {
+  private static function composer_update(ConsoleIO $io) {
     $io->write('==================================================');
     $io->write('<info>Composer update is running');
     FileHelper::copyFile('composer.json.dist', 'composer.json');
@@ -152,8 +147,7 @@ final class Installer
    * @param ConsoleIO $io
    * @return void
    */
-  private static function npm_install(ConsoleIO $io)
-  {
+  private static function npm_install(ConsoleIO $io) {
     $io->write('==================================================');
     $io->write('<info>NPM install is running');
     FileHelper::copyFile('package.json.dist', static::DOCUMENT_ROOT . 'package.json');
@@ -172,8 +166,7 @@ final class Installer
    * @param ConsoleIO $io
    * @return void
    */
-  private static function show_message(ConsoleIO $io)
-  {
+  private static function show_message(ConsoleIO $io) {
     $io->write('==================================================');
     $io->write('<info>`public/.htaccess` was installed. If you don\'t need it, please remove it.</info>');
     $io->write('See <https://packagist.org/packages/takuya-motoshima/codeigniter-extensions> for details');
@@ -185,8 +178,7 @@ final class Installer
    *
    * @return void
    */
-  private static function delete_self()
-  {
+  private static function delete_self() {
     FileHelper::delete(
       'src',
       'test',

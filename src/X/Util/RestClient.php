@@ -7,8 +7,7 @@
  * @copyright  2018 Takuya Motoshima
  */
 namespace X\Util;
-class RestClient
-{
+class RestClient {
 
   public $option;
 
@@ -36,8 +35,7 @@ class RestClient
    * @param array $option
    * @return void
    */
-  public function __construct(array $option = [])
-  {
+  public function __construct(array $option = []) {
     $defaultOption = [
       'headers' => [],
       'parameters' => [],
@@ -69,8 +67,7 @@ class RestClient
    * @param  array  $headers
    * @return RestClient
    */
-  public function get(string $url, $parameters = [], array $headers = []): RestClient
-  {
+  public function get(string $url, $parameters = [], array $headers = []): RestClient {
     return $this->execute($url, 'GET', $parameters, $headers);
   }
 
@@ -82,8 +79,7 @@ class RestClient
    * @param  array  $headers
    * @return RestClient
    */
-  public function post(string $url, $parameters = [], array $headers = []): RestClient
-  {
+  public function post(string $url, $parameters = [], array $headers = []): RestClient {
     return $this->execute($url, 'POST', $parameters, $headers);
   }
 
@@ -95,8 +91,7 @@ class RestClient
    * @param  array  $headers
    * @return RestClient
    */
-  public function put(string $url, $parameters = [], array $headers = []): RestClient
-  {
+  public function put(string $url, $parameters = [], array $headers = []): RestClient {
     return $this->execute($url, 'PUT', $parameters, $headers);
   }
 
@@ -108,8 +103,7 @@ class RestClient
    * @param  array  $headers
    * @return RestClient
    */
-  public function delete(string $url, $parameters = [], array $headers = []): RestClient
-  {
+  public function delete(string $url, $parameters = [], array $headers = []): RestClient {
     return $this->execute($url, 'DELETE', $parameters, $headers);
   }
 
@@ -121,8 +115,7 @@ class RestClient
    * @param  array  $headers
    * @return RestClient
    */
-  private function execute(string $url, string $method, $parameters = [], array $headers = []): RestClient
-  {
+  private function execute(string $url, string $method, $parameters = [], array $headers = []): RestClient {
     $client = clone $this;
     $client->url = $url;
     $curl = curl_init();
@@ -211,8 +204,7 @@ class RestClient
    * @param  string $response
    * @return void
    */
-  private function parse(string $response)
-  {
+  private function parse(string $response) {
     $this->response = null;
     $this->response_source = null;
     $this->headers = [];

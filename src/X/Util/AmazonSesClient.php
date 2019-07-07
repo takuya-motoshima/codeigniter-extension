@@ -11,8 +11,7 @@ use \X\Util\Template;
  * @copyright  2017 Takuya Motoshima
  */
 namespace X\Util;
-class AmazonSesClient
-{
+class AmazonSesClient {
   /** @var array */
   private $option = null;
 
@@ -46,8 +45,7 @@ class AmazonSesClient
    *
    * @param array $option
    */
-  public function __construct(array $option = [])
-  {
+  public function __construct(array $option = []) {
     $this->option = array_replace_recursive([
       'credentials' => [
         'key' => null,
@@ -66,8 +64,7 @@ class AmazonSesClient
    * @param  string $charset
    * @return AmazonSesClient
    */
-  public function charset(string $charset): AmazonSesClient
-  {
+  public function charset(string $charset): AmazonSesClient {
     $this->charset = $charset;
     return $this;
   }
@@ -80,8 +77,7 @@ class AmazonSesClient
    * @param  string $from_name
    * @return AmazonSesClient
    */
-  public function from(string $from, string $from_name = null): AmazonSesClient
-  {
+  public function from(string $from, string $from_name = null): AmazonSesClient {
     $this->from = $from;
     $this->from_name = $from_name;
     return $this;
@@ -94,8 +90,7 @@ class AmazonSesClient
    * @param string|array $to
    * @return AmazonSesClient
    */
-  public function to($to): AmazonSesClient
-  {
+  public function to($to): AmazonSesClient {
     $this->to = $to;
     return $this;
   }
@@ -107,8 +102,7 @@ class AmazonSesClient
    * @param string|array $bcc
    * @return AmazonSesClient
    */
-  public function bcc($bcc): AmazonSesClient
-  {
+  public function bcc($bcc): AmazonSesClient {
     $this->bcc = $bcc;
     return $this;
   }
@@ -120,8 +114,7 @@ class AmazonSesClient
    * @param string|array $cc
    * @return AmazonSesClient
    */
-  public function cc($cc): AmazonSesClient
-  {
+  public function cc($cc): AmazonSesClient {
     $this->cc = $cc;
     return $this;
   }
@@ -133,8 +126,7 @@ class AmazonSesClient
    * @param string $subject
    * @return AmazonSesClient
    */
-  public function subject(string $subject): AmazonSesClient
-  {
+  public function subject(string $subject): AmazonSesClient {
     $this->subject = $subject;
     return $this;
   }
@@ -146,8 +138,7 @@ class AmazonSesClient
    * @param string $message
    * @return AmazonSesClient
    */
-  public function message(string $message): AmazonSesClient
-  {
+  public function message(string $message): AmazonSesClient {
     $this->message = $message;
     return $this;
   }
@@ -159,8 +150,7 @@ class AmazonSesClient
    * @param   array
    * @return  string
    */
-  public function messageFromXml(string $path, array $vars = []): AmazonSesClient
-  {
+  public function messageFromXml(string $path, array $vars = []): AmazonSesClient {
     static $template;
     if (!isset($template)) {
       $template = new Template();
@@ -178,8 +168,7 @@ class AmazonSesClient
    *
    * @return void
    */
-  public function send()
-  {
+  public function send() {
     try {
       
       $ci =& get_instance();
@@ -228,8 +217,7 @@ class AmazonSesClient
    *
    * @return \Aws\Ses\SesClient
    */
-  private function client(): \Aws\Ses\SesClient
-  {
+  private function client(): \Aws\Ses\SesClient {
     static $client;
     if (!isset($client)) {
       $client = new \Aws\Ses\SesClient([
@@ -247,8 +235,7 @@ class AmazonSesClient
    *
    * @return void
    */
-  private function reset()
-  {
+  private function reset() {
     $this->charset = 'UTF-8';
     $this->from = null;
     $this->from_name = null;

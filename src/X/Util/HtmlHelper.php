@@ -8,8 +8,7 @@
  */
 use \X\Util\Logger;
 namespace X\Util;
-final class HtmlHelper
-{
+final class HtmlHelper {
 
   /**
    * Get content for IFrame
@@ -18,8 +17,7 @@ final class HtmlHelper
    * @param  string $userIdentify
    * @return \stdClass
    */
-  public static function getContentForIframe(string $url): ?\stdClass
-  {
+  public static function getContentForIframe(string $url): ?\stdClass {
     $ch = curl_init($url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_BINARYTRANSFER, true);
@@ -44,8 +42,7 @@ final class HtmlHelper
    * @param string $contents
    * @return string
    */
-  public static function getContentCharset(string $contents): string
-  {
+  public static function getContentCharset(string $contents): string {
     if (preg_match('/<meta..*?charset=[\'"]?([\w-]+).*?>/is', $contents, $matches)) {
       return $matches[1];
     }
@@ -59,8 +56,7 @@ final class HtmlHelper
    * @param string $url
    * @return string
    */
-  public static function appendHeadBaseTag(string $contents, string $url): string
-  {
+  public static function appendHeadBaseTag(string $contents, string $url): string {
     // Remove comment
     $tmp = self::removeHtmlComment($contents);
 
@@ -86,8 +82,7 @@ final class HtmlHelper
    * @param string $contents
    * @return string
    */
-  public static function removeHtmlComment(string $contents): string
-  {
+  public static function removeHtmlComment(string $contents): string {
     return preg_replace('/<!--.*?-->/s', '', $contents);
   }
 
@@ -97,8 +92,7 @@ final class HtmlHelper
    * @param string $url
    * @return \DOMElement
    */
-  public static function getTitle(\DOMDocument &$dom): ?string
-  {
+  public static function getTitle(\DOMDocument &$dom): ?string {
     $head = self::getHeadNode($dom);
     $title = $head->getElementsByTagName('title');
     if ($title->length === 0) {
@@ -113,8 +107,7 @@ final class HtmlHelper
    * @param string $url
    * @return \DOMElement
    */
-  public static function getBodyNode(\DOMDocument &$dom): \DOMElement
-  {
+  public static function getBodyNode(\DOMDocument &$dom): \DOMElement {
     return $dom->getElementsByTagName('body')->item(0);
   }
 
@@ -124,8 +117,7 @@ final class HtmlHelper
    * @param string $url
    * @return \DOMElement
    */
-  public static function getHeadNode(\DOMDocument &$dom): \DOMElement
-  {
+  public static function getHeadNode(\DOMDocument &$dom): \DOMElement {
     return $dom->getElementsByTagName('head')->item(0);
   }
 
@@ -136,8 +128,7 @@ final class HtmlHelper
    * @param \DOMDocument $dom
    * @return Void
    */
-  public static function getDomDocument(string $url, &$dom)
-  {
+  public static function getDomDocument(string $url, &$dom) {
     $content = @file_get_contents($url, false, stream_context_create([
       'http' => [
         'ignore_errors' => true

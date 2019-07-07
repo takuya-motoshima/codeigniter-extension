@@ -10,8 +10,7 @@ use \X\Util\Logger;
  * @copyright  2017 Takuya Motoshima
  */
 namespace X\Util;
-final class CsvHelper
-{
+final class CsvHelper {
 
   /**
    * Put a line in csv
@@ -20,8 +19,7 @@ final class CsvHelper
    * @param  array $line
    * @return void
    */
-  public static function putRow(string $path, array $line)
-  {
+  public static function putRow(string $path, array $line) {
     if (empty($line)) {
         return;
     }
@@ -41,8 +39,7 @@ final class CsvHelper
    * @return callable $callback
    * @return array
    */
-  public static function read(string $path, callable $callback = null)
-  {
+  public static function read(string $path, callable $callback = null) {
     if (!file_exists($path)) {
       return null;
     }

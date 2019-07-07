@@ -11,8 +11,8 @@ use \X\Util\ImageHelper;
 use \X\Util\Logger;
 use \Aws\Rekognition\RekognitionClient;
 use \Aws\Rekognition\Exception\RekognitionException;
-class AmazonRekognitionClient
-{
+class AmazonRekognitionClient {
+
   protected $client;
 
   /**
@@ -21,8 +21,7 @@ class AmazonRekognitionClient
    *
    * @param array $config
    */
-  public function __construct(array $config = [])
-  {
+  public function __construct(array $config = []) {
     $config = array_replace_recursive([
       'region'      => 'ap-northeast-1',
       'version'     => 'latest',
@@ -48,8 +47,7 @@ class AmazonRekognitionClient
    * @param  int $similarityThreshold
    * @return bool
    */
-  public function compareFace(string $sourceImgBlob, string $targetImgBlob, int $similarityThreshold = 80): bool
-  {
+  public function compareFace(string $sourceImgBlob, string $targetImgBlob, int $similarityThreshold = 80): bool {
     try {
 
       //s
@@ -97,8 +95,7 @@ class AmazonRekognitionClient
    * @param  int $similarityThreshold
    * @return bool
    */
-  public function compareFaceByPath(string $sourceImgPath, string $targetImgPath, int $similarityThreshold = 80): bool
-  {
+  public function compareFaceByPath(string $sourceImgPath, string $targetImgPath, int $similarityThreshold = 80): bool {
     return $this->compareFace(
       ImageHelper::read($sourceImgPath),
       ImageHelper::read($targetImgPath),
@@ -114,8 +111,7 @@ class AmazonRekognitionClient
    * @param int $faceThreshold
    * @return array
    */
-  public function detectFace(string $imgBlob, int $faceThreshold = 90): array
-  {
+  public function detectFace(string $imgBlob, int $faceThreshold = 90): array {
 
     try {
 
@@ -162,8 +158,7 @@ class AmazonRekognitionClient
    * @param int $faceThreshold
    * @return array
    */
-  public function detectFaceByPath(string $imgPath, int $faceThreshold = 90): array
-  {
+  public function detectFaceByPath(string $imgPath, int $faceThreshold = 90): array {
     return $this->detectFace(ImageHelper::read($imgPath), $faceThreshold);
   }
 
@@ -176,8 +171,7 @@ class AmazonRekognitionClient
    * @param int $faceThreshold
    * @return int
    */
-  public function countFace(string $imgBlob, int $faceThreshold = 90): int
-  {
+  public function countFace(string $imgBlob, int $faceThreshold = 90): int {
     $faces = $this->detectFace($imgBlob, $faceThreshold);
     return count($faces);
   }
@@ -190,8 +184,7 @@ class AmazonRekognitionClient
    * @param int $faceThreshold
    * @return int
    */
-  public function countFaceByPath(string $imgPath, int $faceThreshold = 90): int
-  {
+  public function countFaceByPath(string $imgPath, int $faceThreshold = 90): int {
     $faces = $this->detectFaceByPath($imgPath, $faceThreshold);
     // Logger::d('$faces=', $faces);
     return count($faces);
@@ -207,8 +200,7 @@ class AmazonRekognitionClient
    * @param string $collectionId
    * @return void
    */
-  public function addCollection(string $collectionId)
-  {
+  public function addCollection(string $collectionId) {
     try {
 
       //
@@ -238,8 +230,7 @@ class AmazonRekognitionClient
    * @param string $collectionId
    * @return void
    */
-  public function getCollection(string $collectionId): ?array
-  {
+  public function getCollection(string $collectionId): ?array {
 
     try {
 
@@ -279,8 +270,7 @@ class AmazonRekognitionClient
    * @param string $collectionId
    * @return void
    */
-  public function deleteCollection(string $collectionId)
-  {
+  public function deleteCollection(string $collectionId) {
     try {
 
       //
@@ -309,8 +299,7 @@ class AmazonRekognitionClient
    * @param string $collectionId
    * @return void
    */
-  public function existsCollection(string $collectionId): bool
-  {
+  public function existsCollection(string $collectionId): bool {
     $res = $this->getCollection($collectionId);
     // Logger::d('$res=', $res);
     return !empty($res);
@@ -328,8 +317,7 @@ class AmazonRekognitionClient
    * @param string $imgBlob  Image binary data
    * @return bool
    */
-  public function addFaceToCollection(string $collectionId, string $imgBlob): string
-  {
+  public function addFaceToCollection(string $collectionId, string $imgBlob): string {
 
     try {
 
@@ -379,8 +367,7 @@ class AmazonRekognitionClient
    * @param string $collectionId
    * @return bool
    */
-  public function getFacesFromCollection(string $collectionId): array
-  {
+  public function getFacesFromCollection(string $collectionId): array {
 
     try {
 
@@ -411,8 +398,7 @@ class AmazonRekognitionClient
    * @param  string $imgBlob
    * @return bool
    */
-  public function matchFaceFromCollection(string $collectionId, string $imgBlob, ?string &$faceId = null, int $faceMatchThreshold = 95): bool
-  {
+  public function matchFaceFromCollection(string $collectionId, string $imgBlob, ?string &$faceId = null, int $faceMatchThreshold = 95): bool {
 
     try {
 
@@ -464,8 +450,7 @@ class AmazonRekognitionClient
    * @param  string $faceId
    * @return void
    */
-  public function deleteFaceFromCollection(string $collectionId, string $faceId): bool
-  {
+  public function deleteFaceFromCollection(string $collectionId, string $faceId): bool {
 
     try {
 

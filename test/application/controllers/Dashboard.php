@@ -6,7 +6,7 @@ class Dashboard extends AppController
 {
 
   /**
-   * @AccessControl(allowLoggedin=true, allowLoggedoff=false)
+   * @AccessControl(allow_login_user=true, allow_logoff_user=false)
    */
   public function index()
   {

@@ -29,8 +29,7 @@ abstract class SessionModel implements SessionModelInterface {
    * @param mixed $value
    * @return string
    */
-  public final static function set(string $id, $value = null): string
-  {
+  public final static function set(string $id, $value = null): string {
     if (count(func_get_args()) === 1) {
       $_SESSION[self::SESSION_NAME] = static::getUser($id);
     } else {
@@ -49,8 +48,7 @@ abstract class SessionModel implements SessionModelInterface {
    * 
    * @return string
    */
-  public final static function unset(): string
-  {
+  public final static function unset(): string {
     unset($_SESSION[self::SESSION_NAME]);
     return get_called_class();
   }
@@ -61,8 +59,7 @@ abstract class SessionModel implements SessionModelInterface {
    * 
    * @return void
    */
-  public final static function isset(): bool
-  {
+  public final static function isset(): bool {
     return isset($_SESSION[self::SESSION_NAME]);
   }
 
@@ -72,8 +69,7 @@ abstract class SessionModel implements SessionModelInterface {
    * 
    * @return stdClass|string
    */
-  public final static function get(string $field = null)
-  {
+  public final static function get(string $field = null) {
     if (!self::isset()) {
       return null;
     }

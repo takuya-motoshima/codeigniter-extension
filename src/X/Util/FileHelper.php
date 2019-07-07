@@ -10,8 +10,7 @@ use \X\Util\Logger;
  * @copyright  2017 Takuya Motoshima
  */
 namespace X\Util;
-final class FileHelper
-{
+final class FileHelper {
 
   /**
    * 
@@ -22,8 +21,7 @@ final class FileHelper
    * @param int $mode
    * @return void
    */
-  public static function makeDirecoty(string $dirPath, int $mode = 0755)
-  {
+  public static function makeDirecoty(string $dirPath, int $mode = 0755) {
     if (file_exists($dirPath)) {
       return;
     }
@@ -51,8 +49,7 @@ final class FileHelper
    * @param string $dstFilePath
    * @return void
    */
-  public static function move(string $srcFilePath, string $dstFilePath)
-  {
+  public static function move(string $srcFilePath, string $dstFilePath) {
     if (!file_exists($srcFilePath)) {
       throw new \RuntimeException('Not found file ' . $srcFilePath);
     }
@@ -78,8 +75,7 @@ final class FileHelper
    * @param string $dstFilePath
    * @return void
    */
-  public static function copyFile(string $srcFilePath, string $dstFilePath)
-  {
+  public static function copyFile(string $srcFilePath, string $dstFilePath) {
     if (!file_exists($srcFilePath)) {
       throw new \RuntimeException('Not found file ' . $srcFilePath);
     } else if (!is_file($srcFilePath)) {
@@ -100,8 +96,7 @@ final class FileHelper
    * @param string $dstDirPath
    * @return void
    */
-  public static function copyDirectory(string $srcDirPath, string $dstDirPath)
-  {
+  public static function copyDirectory(string $srcDirPath, string $dstDirPath) {
     if (!file_exists($srcDirPath)) {
       throw new \RuntimeException('Not found directory ' . $srcDirPath);
     } else if (!is_dir($srcDirPath)) {
@@ -128,9 +123,7 @@ final class FileHelper
    * @param string[] $paths
    * @param bool $isRemoveRootDir
    */
-  public static function delete(...$paths)
-  // public static function delete(string ...$paths)
-  {
+  public static function delete(...$paths) {
     $isRemoveRootDir = true;
     if (is_bool(end($paths))) {
       $isRemoveRootDir = end($paths);
@@ -165,8 +158,7 @@ final class FileHelper
    * @param string $path
    * @return  void
    */
-  public static function replace(string $path, array $replace)
-  {
+  public static function replace(string $path, array $replace) {
     $content = file_get_contents($path);
     $content = str_replace(array_keys($replace), array_values($replace), $content);
     file_put_contents($path, $content, LOCK_EX);
@@ -179,8 +171,7 @@ final class FileHelper
    * @param  string $pattern
    * @return array
    */
-  public static function find(string $pattern): array
-  {
+  public static function find(string $pattern): array {
     $files = [];
     foreach (glob($pattern) as $file) {
       $files[] = basename($file);
@@ -195,8 +186,7 @@ final class FileHelper
    * @param  string $pattern
    * @return array
    */
-  public static function findRandomFileName(string $pattern): string
-  {
+  public static function findRandomFileName(string $pattern): string {
     $files = self::find($pattern);
     $key = array_rand($files, 1);
     return $files[$key];

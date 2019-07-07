@@ -7,6 +7,4 @@
  * @copyright  2018 Takuya Motoshima
  */
 namespace X\Exception;
-class RestClientException extends \Exception
-{
-}
+class RestClientException extends \Exception {}

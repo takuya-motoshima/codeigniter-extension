@@ -7,8 +7,7 @@
  * @copyright  2018 Takuya Motoshima
  */
 namespace X\Util;
-final class ArrayHelper
-{
+final class ArrayHelper {
 
   /**
    * Filter key
@@ -17,8 +16,7 @@ final class ArrayHelper
    * @param  array $allowed
    * @return array
    */
-  public static function filterKey(array $arr, ...$allowed):array
-  {
+  public static function filterKey(array $arr, ...$allowed):array {
     if (is_array($allowed[0])) {
       $allowed = $allowed[0];
     }
@@ -33,8 +31,7 @@ final class ArrayHelper
    * @param  array $arr
    * @return array
    */
-  public static function resetKey(array $arr):array
-  {
+  public static function resetKey(array $arr):array {
     return array_values($arr);
   }
 
@@ -44,8 +41,7 @@ final class ArrayHelper
    * @param  array $arr
    * @return mixed
    */
-  public static function getRandomUniqueValue(array &$arr)
-  {
+  public static function getRandomUniqueValue(array &$arr) {
     if (empty($arr)) {
       throw new \RuntimeException('Elements can not be taken from an empty array');
     }
