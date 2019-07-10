@@ -1,8 +1,13 @@
 {% extends 'common/base.html' %}
 {% block title %}Dashboard{% endblock %}
-{% block style %}<link rel="stylesheet" href="{{ cache_busting('css/login.css') }}" />{% endblock %}
-{% block script %}<script src="{{ cache_busting('js/login.js') }}"></script>{% endblock %}
+{% block style %}<link rel="stylesheet" href="{{ cache_busting('src/dashboard.css') }}" />{% endblock %}
+{% block script %}<script src="{{ cache_busting('src/dashboard.js') }}"></script>{% endblock %}
 {% block content %}
   <div class="container">
+    <h1>Dashboard</h1>
+    <ul class="list-group">
+      <li class="list-group-item"><a href="{{ baseUrl }}adminOnly">Admin only</a></li>
+      <li class="list-group-item"><a href="{{ baseUrl }}generalOnly">General only</a></li>
+    </ul>
   </div>
 {% endblock %}

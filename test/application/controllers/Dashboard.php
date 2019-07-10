@@ -1,15 +1,12 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
-
-use \X\Annotation\AccessControl;
-class Dashboard extends AppController
-{
+use \X\Annotation\Access;
+class Dashboard extends AppController {
 
   /**
-   * @AccessControl(allow_login_user=true, allow_logoff_user=false)
+   * @Access(allow_login=true, allow_logoff=false)
    */
-  public function index()
-  {
-    parent::responseTemplate('dashboard');
+  public function index() {
+    parent::view('dashboard');
   }
 }

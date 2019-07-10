@@ -2,12 +2,17 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 use \X\Annotation\Access;
 use \X\Util\Logger;
-class Login extends AppController {
+class DoLogin extends AppController {
 
   /**
    * @Access(allow_login=false, allow_logoff=true)
    */
   public function index() {
-    parent::view('login');
+    $_SESSION['user'] = [
+      'id' => $this->input->get('id'),
+      'role' => $this->input->get('role')
+    ];
+    Logger::d('$_SESSION=', $_SESSION);
+    redirect('/');
   }
 }

@@ -1,7 +1,7 @@
 {% extends 'common/base.html' %}
 {% block title %}Login{% endblock %}
-{% block style %}<link rel="stylesheet" href="{{ cache_busting('css/login.css') }}" />{% endblock %}
-{% block script %}<script src="{{ cache_busting('js/login.js') }}"></script>{% endblock %}
+{% block style %}<link rel="stylesheet" href="{{ cache_busting('src/login.css') }}" />{% endblock %}
+{% block script %}<script src="{{ cache_busting('src/login.js') }}"></script>{% endblock %}
 {% block content %}
   <div class="container">
     <div class="row">
@@ -9,16 +9,23 @@
         <div class="card my-5">
           <div class="card-body">
             <h5 class="card-title text-center">Login</h5>
-            <form action="{{ baseUrl }}login/do_login">
+            <form action="{{ baseUrl }}doLogin">
               <div class="form-group">
-                <label>Username</label>
-                <input name="username" type="text" class="form-control" required />
+                <label for="role">Role</label>
+                <select name="role" class="form-control" id="role">
+                  <option value="general">general</option>
+                  <option value="admin">admin</option>
+                </select>
               </div>
               <div class="form-group">
-                <label>Password</label>
-                <input name="password" type="password" class="form-control" required />
+                <label for="id">LoginID</label>
+                <input name="id" type="text" class="form-control" required id="id" />
               </div>
-              <button class="btn btn-primary" type="submit">Login</button>
+              <div class="form-group">
+                <label for="password">Password</label>
+                <input name="password" type="password" class="form-control" id="password" required />
+              </div>
+              <button class="btn btn-primary btn-block" type="submit">Login</button>
             </form>
           </div>
         </div>

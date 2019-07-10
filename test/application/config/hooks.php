@@ -15,16 +15,12 @@ use \X\Annotation\AnnotationReader;
 use \X\Util\Logger;
 $hook['post_controller_constructor'] = function() {
   $ci =& get_instance();
-  $accessControl = AnnotationReader::getMethodAccessControl($ci->router->class, $ci->router->method);
-  Logger::d('$ci->router->class=', $ci->router->class);
-  Logger::d('$ci->router->method=', $ci->router->method);
-  Logger::d('$accessControl=', $accessControl);
-  $loggedin = !empty($_SESSION['user']);
-  if ($loggedin && !$accessControl->allow_login_user) {
-    // In case of an action that the logged-in user can not access
+  $accessibility = AnnotationReader::getAccessibility($ci->router->class, $ci->router->method);
+  if ($_SESSION['user'] && (!$accessibility->allow_login || ($accessibility->allow_role && $accessibility->allow_role !== $_SESSION['user']['role']))) {
+    // When the login user performs a non-access action.
     redirect('/dashboard');
-  } else if (!$loggedin && !$accessControl->allow_logoff_user) {
-    // In case of an action that can not be accessed by the user who is logging off
+  } else if (!$_SESSION['user'] && !$accessibility->allow_logoff) {
+    // Logoff user performs a non-access action.
     redirect('/login');
   }
 };

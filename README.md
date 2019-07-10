@@ -62,24 +62,21 @@ php -m|grep gd;
 ```
 server {
     listen       80;
-    server_name  {Your server name};
+    server_name  {ServerName};
     charset UTF-8;
-    root {Your document root};
+    root {DocumentRoot};                                    # e.g.: root /var/www/html;
     index index.php index.html;
-    location /{Your application name} {
-        alias {Root directory path of CodeIgniterExtension project}/public;
-        try_files $uri $uri/ /{Your application name}/index.php;
+    access_log  /var/log/nginx/ci-access.log;
+    error_log  /var/log/nginx/ci-error.log  warn;
+    location /{ApplicationName} {                           # e.g.: location /test
+        alias {ApplicationAbsolutePath}/public;             # e.g.: alias /var/www/html/test/public;
+        try_files $uri $uri/ /{ApplicationName}/index.php;  # e.g.: try_files $uri $uri/ /test/index.php;
         location ~ \.php$ {
             fastcgi_split_path_info ^(.+\.php)(/.+)$;
             fastcgi_index index.php;
-            fastcgi_pass unix:/var/run/php-fpm/php-fpm.sock;
+            fastcgi_pass unix:/run/php-fpm/www.sock;
             include fastcgi_params;
             fastcgi_param   SCRIPT_FILENAME $request_filename;
-        }
-        location ~ .*\.(html?|jpe?g|gif|png|css|js|ico|swf|inc) {
-            add_header Access-Control-Allow-Origin *;
-            expires 1d;
-            access_log off;
         }
     }
 }
