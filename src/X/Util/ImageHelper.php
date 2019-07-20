@@ -27,8 +27,8 @@ final class ImageHelper {
    */
   public static function putBase64(string $base64, string $dir, ?string $fileName = null): string {
     if (empty($fileName)) {
-      $dir =  pathinfo($dir, PATHINFO_DIRNAME);
       $fileName = pathinfo($dir, PATHINFO_BASENAME);
+      $dir =  pathinfo($dir, PATHINFO_DIRNAME);
     }
     $dir = rtrim($dir, '/')  . '/';
     $blob = self::convertBase64ToBlob($base64, $mime);
