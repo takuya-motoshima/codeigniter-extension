@@ -16,30 +16,28 @@ final class ImageHelper {
    * 
    * Put base64 image.
    *
+   * e.g.:
+   * use \X\Util\ImageHelper;
+   * ImageHelper::putBase64('data:image/png;base64,iVBOR...', '/tmp', 'sample');
+   * ImageHelper::putBase64('data:image/png;base64,iVBOR...', '/tmp/sample.png');
+   *
    * @param string $base64
-   * @param string $dirPath
-   * @return \stdClass
+   * @param string $dir
+   * @return string Return file name
    */
-  public static function putBase64(string $base64, string $dirPath, ?string $fileName = null): \stdClass {
+  public static function putBase64(string $base64, string $dir, ?string $fileName = null): string {
     if (empty($fileName)) {
-      $fileName = pathinfo($dirPath, PATHINFO_BASENAME);
-      $dirPath =  pathinfo($dirPath, PATHINFO_DIRNAME);
+      $dir =  pathinfo($dir, PATHINFO_DIRNAME);
+      $fileName = pathinfo($dir, PATHINFO_BASENAME);
     }
-    $dirPath = rtrim($dirPath, '/')  . '/';
+    $dir = rtrim($dir, '/')  . '/';
     $blob = self::convertBase64ToBlob($base64, $mime);
-    $extension = pathinfo($fileName, PATHINFO_EXTENSION);
-    if (empty($extension)) {
-      $baseName = $fileName . '.' . $mime;
-    } else {
-      $baseName = $fileName;
-      $mime = $extension;
+    if (empty(pathinfo($fileName, PATHINFO_EXTENSION))) {
+      $fileName .= '.' . $mime;
     }
-    FileHelper::makeDirecoty($dirPath);
-    file_put_contents($dirPath . $baseName, $blob, LOCK_EX);
-    return json_decode(json_encode([
-      'mime' => $mime,
-      'baseName' => $baseName,
-    ]));
+    FileHelper::makeDirecoty($dir);
+    file_put_contents($dir . $fileName, $blob, LOCK_EX);
+    return $fileName;
   }
 
   /**
@@ -68,14 +66,14 @@ final class ImageHelper {
    *  
    * @param string $srcImgPath
    * @param string $dstDirPath
-   * @param string $replacementImgName
+   * @param string $dstImgName
    * @return string
    */
-  public static function copy(string $srcImgPath, string $dstDirPath, string $replacementImgName = null): string {
+  public static function copy(string $srcImgPath, string $dstDirPath, string $dstImgName = null): string {
     FileHelper::makeDirecoty($dstDirPath);
-    $dstImgName = empty($replacementImgName) 
+    $dstImgName = empty($dstImgName) 
       ? basename($srcImgPath) : 
-      $replacementImgName . '.' . pathinfo($srcImgPath, PATHINFO_EXTENSION);
+      $dstImgName . '.' . pathinfo($srcImgPath, PATHINFO_EXTENSION);
     file_put_contents(rtrim($dstDirPath, '/')  . '/' . $dstImgName, file_get_contents($srcImgPath), LOCK_EX);
     return $dstImgName;
   }

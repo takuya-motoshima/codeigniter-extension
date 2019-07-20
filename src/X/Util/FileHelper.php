@@ -17,16 +17,16 @@ final class FileHelper {
    * Make directory
    *
    * @throws RuntimeException
-   * @param string $dirPath
+   * @param string $dir
    * @param int $mode
    * @return void
    */
-  public static function makeDirecoty(string $dirPath, int $mode = 0755) {
-    if (file_exists($dirPath)) {
+  public static function makeDirecoty(string $dir, int $mode = 0755) {
+    if (file_exists($dir)) {
       return;
     }
-    if (mkdir($dirPath, $mode, true) === false) {
-      throw new \RuntimeException('Cant create directory ' . $dirPath);
+    if (mkdir($dir, $mode, true) === false) {
+      throw new \RuntimeException('Cant create directory ' . $dir);
     }
   }
 
@@ -35,14 +35,12 @@ final class FileHelper {
    * Move
    * 
    * e.g:
-   *  // /tmp/old.txt -> /home/new.txt
-   *  \X\Util\FileHelper::move('/tmp/old.txt', '/home/new.txt');
-   *
-   *  // /tmp/old.txt -> ./tmp/new.txt
-   *  \X\Util\FileHelper::move('/tmp/old.txt', 'new.txt');
-   *  
-   *  // /tmp/old.txt -> ./tmp/new.txt
-   *  \X\Util\FileHelper::move('/tmp/old.txt', 'new');
+   * // /tmp/old.txt -> /home/new.txt
+   * \X\Util\FileHelper::move('/tmp/old.txt', '/home/new.txt');
+   * // /tmp/old.txt -> ./tmp/new.txt
+   * \X\Util\FileHelper::move('/tmp/old.txt', 'new.txt');
+   * // /tmp/old.txt -> ./tmp/new.txt
+   * \X\Util\FileHelper::move('/tmp/old.txt', 'new');
    *  
    * @throws RuntimeException
    * @param string $srcFilePath

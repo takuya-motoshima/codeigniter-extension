@@ -169,10 +169,10 @@ abstract class EMail {
    *
    * Useful for attached inline pictures
    *
-   * @param string  $fileName
+   * @param string  $filename
    * @return  string
    */
-  public static function attachmentCid($fileName) {
+  public static function attachmentCid($filename) {
     return call_user_func_array([self::email(), 'attachment_cid'], func_get_args());
   }
 
@@ -227,7 +227,7 @@ abstract class EMail {
   /**
    * @deprecated Not recommended. It is obsolete in version 3.0.0 or later.
    */
-  public static function attachment_cid($fileName) {
-    return self::attachmentCid($fileName);
+  public static function attachment_cid($filename) {
+    return self::attachmentCid($filename);
   }
 }

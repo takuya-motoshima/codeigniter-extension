@@ -99,7 +99,7 @@ abstract class Controller extends \CI_Controller {
    * @return void
    */
   protected function view(string $path) {
-    $this->beforeView($path);
+    $this->beforeView();
     $this->httpResponse->view($path);
   }
 
@@ -167,8 +167,7 @@ abstract class Controller extends \CI_Controller {
   /**
    * Before response template
    *
-   * @param  string $templatePath
    * @return void
    */
-  protected function beforeView(string $templatePath) {}
+  protected function beforeView() {}
 }

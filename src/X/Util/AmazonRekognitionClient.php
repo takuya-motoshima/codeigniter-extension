@@ -42,30 +42,30 @@ class AmazonRekognitionClient {
    * 
    * Compare face
    * 
-   * @param  string      $sourceImgBlob Image binary data
-   * @param  string      $targetImgBlob Image binary data
-   * @param  int $similarityThreshold
+   * @param  string      $srcImgBlob Image binary data
+   * @param  string      $dstImgBlob Image binary data
+   * @param  int $threshold
    * @return bool
    */
-  public function compareFace(string $sourceImgBlob, string $targetImgBlob, int $similarityThreshold = 80): bool {
+  public function compareFace(string $srcImgBlob, string $dstImgBlob, int $threshold = 80): bool {
     try {
 
       //s
-      if (ImageHelper::isBase64($sourceImgBlob)) {
-        $sourceImgBlob = ImageHelper::convertBase64ToBlob($sourceImgBlob);
+      if (ImageHelper::isBase64($srcImgBlob)) {
+        $srcImgBlob = ImageHelper::convertBase64ToBlob($srcImgBlob);
       }
-      if (ImageHelper::isBase64($targetImgBlob)) {
-        $targetImgBlob = ImageHelper::convertBase64ToBlob($targetImgBlob);
+      if (ImageHelper::isBase64($dstImgBlob)) {
+        $dstImgBlob = ImageHelper::convertBase64ToBlob($dstImgBlob);
       }
 
       //
       $res = $this->client->compareFaces([
-        'SimilarityThreshold' => $similarityThreshold,
+        'SimilarityThreshold' => $threshold,
         'SourceImage' => [
-          'Bytes' => $sourceImgBlob
+          'Bytes' => $srcImgBlob
         ],
         'TargetImage' => [
-          'Bytes' => $targetImgBlob
+          'Bytes' => $dstImgBlob
         ]
       ]);
       $res = $res->toArray();
@@ -90,16 +90,16 @@ class AmazonRekognitionClient {
    * 
    * Compare face by path
    * 
-   * @param  string      $sourceImgPath Image path
-   * @param  string      $targetImgPath Image path
-   * @param  int $similarityThreshold
+   * @param  string      $srcImgPath Image path
+   * @param  string      $dstImgPath Image path
+   * @param  int $threshold
    * @return bool
    */
-  public function compareFaceByPath(string $sourceImgPath, string $targetImgPath, int $similarityThreshold = 80): bool {
+  public function compareFaceByPath(string $srcImgPath, string $dstImgPath, int $threshold = 80): bool {
     return $this->compareFace(
-      ImageHelper::read($sourceImgPath),
-      ImageHelper::read($targetImgPath),
-      $similarityThreshold
+      ImageHelper::read($srcImgPath),
+      ImageHelper::read($dstImgPath),
+      $threshold
     );
   }
 
@@ -108,10 +108,10 @@ class AmazonRekognitionClient {
    * Detect face
    *
    * @param string $imgBlob Image binary data
-   * @param int $faceThreshold
+   * @param int $threshold
    * @return array
    */
-  public function detectFace(string $imgBlob, int $faceThreshold = 90): array {
+  public function detectFace(string $imgBlob, int $threshold = 90): array {
 
     try {
 
@@ -141,8 +141,8 @@ class AmazonRekognitionClient {
 
       // 
       $faces = $res['FaceDetails'];
-      return array_filter($res['FaceDetails'], function(array $face) use($faceThreshold) {
-        return $face['Confidence'] >= $faceThreshold;
+      return array_filter($res['FaceDetails'], function(array $face) use($threshold) {
+        return $face['Confidence'] >= $threshold;
       });
     } catch (Throwable $e) {
       Logger::e($e);
@@ -155,11 +155,11 @@ class AmazonRekognitionClient {
    * Is face by path
    *
    * @param string $imgPath Image path
-   * @param int $faceThreshold
+   * @param int $threshold
    * @return array
    */
-  public function detectFaceByPath(string $imgPath, int $faceThreshold = 90): array {
-    return $this->detectFace(ImageHelper::read($imgPath), $faceThreshold);
+  public function detectFaceByPath(string $imgPath, int $threshold = 90): array {
+    return $this->detectFace(ImageHelper::read($imgPath), $threshold);
   }
 
 
@@ -168,11 +168,11 @@ class AmazonRekognitionClient {
    * Count face
    *
    * @param string $imgBlob Image binary data
-   * @param int $faceThreshold
+   * @param int $threshold
    * @return int
    */
-  public function countFace(string $imgBlob, int $faceThreshold = 90): int {
-    $faces = $this->detectFace($imgBlob, $faceThreshold);
+  public function countFace(string $imgBlob, int $threshold = 90): int {
+    $faces = $this->detectFace($imgBlob, $threshold);
     return count($faces);
   }
 
@@ -181,11 +181,11 @@ class AmazonRekognitionClient {
    * Count face by path
    *
    * @param string $imgPath Image path
-   * @param int $faceThreshold
+   * @param int $threshold
    * @return int
    */
-  public function countFaceByPath(string $imgPath, int $faceThreshold = 90): int {
-    $faces = $this->detectFaceByPath($imgPath, $faceThreshold);
+  public function countFaceByPath(string $imgPath, int $threshold = 90): int {
+    $faces = $this->detectFaceByPath($imgPath, $threshold);
     // Logger::d('$faces=', $faces);
     return count($faces);
   }
@@ -398,7 +398,7 @@ class AmazonRekognitionClient {
    * @param  string $imgBlob
    * @return bool
    */
-  public function matchFaceFromCollection(string $collectionId, string $imgBlob, ?string &$faceId = null, int $faceMatchThreshold = 95): bool {
+  public function matchFaceFromCollection(string $collectionId, string $imgBlob, ?string &$faceId = null, int $threshold = 95): bool {
 
     try {
 
@@ -418,7 +418,7 @@ class AmazonRekognitionClient {
       //
       $res = $this->client->searchFacesByImage([
         'CollectionId' => $collectionId,
-        'FaceMatchThreshold' => $faceMatchThreshold,
+        'FaceMatchThreshold' => $threshold,
         'Image' => ['Bytes' => $imgBlob],
         'MaxFaces' => 1,
       ]);
