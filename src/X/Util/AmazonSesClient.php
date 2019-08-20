@@ -5,7 +5,35 @@ use \X\Util\Template;
 
 /**
  * Email Amazon SES util class
- *
+ * 
+ * e.g.:
+ * ## PHP sample code:
+ * use \X\Util\AmazonSesClient;
+ * $sesClient  = new AmazonSesClient([
+ *   'credentials' => [
+ *     'key'    => getenv('AMAZON_SES_KEY'),
+ *     'secret' => getenv('AMAZON_SES_SECRET')
+ *   ],
+ *   'configuration' => getenv('AMAZON_SES_CONFIGURATION'),
+ * ]);
+ * $sesClient
+ *   ->from('notification@sample.com', 'Sample Notifications')
+ *   ->to('who@sample.org')
+ *   ->message_from_xml('sample', ['name' => 'Sample'])
+ *   ->send();
+ * 
+ * 
+ * ## Email body and subject: views/email/sample.xml
+ * <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+ * <mail>
+ * <subject>Email subject</subject>
+ * <message>
+ * To {{ name }}
+ * 
+ * Email body
+ * </message>
+ * </mail>
+ * 
  * @author     Takuya Motoshima <https://www.facebook.com/takuya.motoshima.7>
  * @license    MIT License
  * @copyright  2017 Takuya Motoshima

@@ -12,6 +12,26 @@ trait Result {
   /**
    * Query result. "array of the form KeyValue" version.
    *
+   * .e.g:
+   * $rows = parent
+   *   select('id,name')::
+   *   from('user')::
+   *   get()->
+   *   result_keyvalue('id');
+   * var_export($rows);
+   * // array (
+   * //   1 => array (
+   * //     'id' => 1,
+   * //     'name' => 'Oliver',
+   * //     'department' => 'Administration',
+   * //   ),
+   * //   2 => array (
+   * //     'id' => 2,
+   * //     'name' => 'Harry',
+   * //     'department' => 'Marketing',
+   * //   ),
+   * // )
+   * 
    * @throws RuntimeException
    * @param  string $key = 'id'
    * @return  array

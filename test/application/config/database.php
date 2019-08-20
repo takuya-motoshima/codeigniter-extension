@@ -72,11 +72,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 */
 $active_group = 'default';
 $query_builder = TRUE;
-$database = '';
+$database = 'ciex_test';
+$username = 'root';
+$password = 'root';
 $db['default'] = array(
 	'dsn'	=> '',
 	'hostname' => 'localhost',
-	'username' => 'root',
+	'username' => $username,
 	'password' => 'root',
 	'database' => $database,
 	'dbdriver' => 'mysqli',
