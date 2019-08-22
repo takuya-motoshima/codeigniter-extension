@@ -1,9 +1,8 @@
 <?php
-
 use \X\Util\Logger;
 
 /**
- * Csv helper class
+ * Session helper class
  *
  * @author     Takuya Motoshima <https://www.facebook.com/takuya.motoshima.7>
  * @license    MIT License
