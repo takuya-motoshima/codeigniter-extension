@@ -217,10 +217,10 @@ class AmazonSesClient {
         'Source' => isset($this->from_name) ? sprintf('%s <%s>', $this->from_name, $this->from) : $from,
         'Message' => [
           'Body' => [
-            'Html' => [
-                'Charset' => $this->charset,
-                'Data' => $this->message,
-            ],
+            // 'Html' => [
+            //     'Charset' => $this->charset,
+            //     'Data' => $this->message,
+            // ],
             'Text' => [
               'Charset' => $this->charset,
               'Data' => $this->message,
