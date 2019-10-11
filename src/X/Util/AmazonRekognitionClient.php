@@ -72,12 +72,13 @@ class AmazonRekognitionClient {
         throw new \RuntimeException('Face comparison error');
       }
       return $res['FaceMatches'] ? true : false;
+    } catch (RekognitionException $e) {
+      Logger::e($e);
+      throw $e;
     } catch (Throwable $e) {
       Logger::e($e);
       throw $e;
     }
-
-
   }
 
   /**
