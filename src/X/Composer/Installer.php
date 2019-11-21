@@ -64,9 +64,6 @@ final class Installer {
     // Composer update
     self::composer_update($io);
 
-    // NPM install
-    // self::npm_install($io);
-
     // Show complete message
     self::show_message($io);
 
@@ -142,25 +139,6 @@ final class Installer {
   }
 
   /**
-   * NPM install
-   *
-   * @param ConsoleIO $io
-   * @return void
-   */
-  private static function npm_install(ConsoleIO $io) {
-    $io->write('==================================================');
-    $io->write('<info>NPM install is running');
-    FileHelper::copyFile('package.json.dist', static::DOCUMENT_ROOT . 'package.json');
-    FileHelper::copyFile('webpack.config.js.dist', static::DOCUMENT_ROOT . 'webpack.config.js');
-    $curDit = getcwd();
-    chdir(static::DOCUMENT_ROOT);
-    passthru('npm install');
-    chdir($curDit);
-    $io->write('<info>NPM install is succeeded');
-    $io->write('==================================================');
-  }
-
-  /**
    * Show message
    *
    * @param ConsoleIO $io
@@ -181,13 +159,11 @@ final class Installer {
   private static function delete_self() {
     FileHelper::delete(
       'src',
-      'test',
+      'examples',
       'composer.json.dist',
       'dot.gitignore.dist',
       'dot.gitattributes.dist',
       'dot.htaccess',
-      'package.json.dist',
-      'webpack.config.js.dist',
       'README.md',
       'LICENSE.md',
       'core.dist',

@@ -1,11 +1,11 @@
-# CodeIgniterExtensionTest
+# codeigniter-extension/test
 
 ## DB
 ```
-mysql -u root -D ciex_test;
+mysql -u root -D test;
 
-CREATE SCHEMA IF NOT EXISTS `ciex_test` DEFAULT CHARACTER SET utf8mb4;
-use ciex_test;
+CREATE SCHEMA IF NOT EXISTS `test` DEFAULT CHARACTER SET utf8mb4;
+use test;
 
 DROP TABLE `user`;
 CREATE TABLE `user` (
@@ -39,10 +39,8 @@ CREATE TABLE IF NOT EXISTS `session` (
   KEY `ikSession1` (`timestamp`)
 );
 
-INSERT INTO ciex_test.user(name) VALUES ('test');
+INSERT INTO test.user(name) VALUES ('test');
 
-INSERT INTO ciex_test.salary(userId, payday, salary) VALUES
+INSERT INTO test.salary(userId, payday, salary) VALUES
   (1, '2019-07-31', 500000),
   (1, '2019-08-31', 1000000);
-
-

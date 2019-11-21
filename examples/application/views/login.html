@@ -1,7 +1,5 @@
 {% extends 'common/base.html' %}
 {% block title %}Login{% endblock %}
-{% block style %}<link rel="stylesheet" href="{{ cache_busting('src/login.css') }}" />{% endblock %}
-{% block script %}<script src="{{ cache_busting('src/login.js') }}"></script>{% endblock %}
 {% block content %}
   <div class="container">
     <div class="row">
@@ -18,7 +16,7 @@
                 </select>
               </div>
               <div class="form-group">
-                <label for="id">LoginID</label>
+                <label for="id">ID</label>
                 <input name="id" type="text" class="form-control" required id="id" />
               </div>
               <div class="form-group">

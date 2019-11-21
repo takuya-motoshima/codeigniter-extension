@@ -3,13 +3,8 @@
 <head>
   <title>CodeIgniterExtensionTest - {{ (block('title')) ?? '' }}</title>
   <meta charset="utf-8" />
-  <meta http-equiv="x-ua-compatible" content="ie=edge" />
-  <meta http-equiv="expires" content="0" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-  <meta name="format-detection" content="telephone=no" />
-  <link rel="dns-prefetch" href="" />
   <link rel="stylesheet" href="{{ cache_busting('node_modules/bootstrap/dist/css/bootstrap.min.css') }}" />
-  <link rel="stylesheet" href="{{ cache_busting('src/app.css') }}" />
   {% block style %}{% endblock %}
 </head>
 <body>
@@ -26,7 +21,6 @@
   </main>
   <script>window.baseUrl='{{ baseUrl }}';</script>
   <script src="{{ cache_busting('node_modules/jquery/dist/jquery.min.js') }}"></script>
-  <script src="{{ cache_busting('src/app.js') }}"></script>
   {% block script %}{% endblock %}
 </body>
 </html>

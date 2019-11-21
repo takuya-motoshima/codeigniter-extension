@@ -1,175 +1,235 @@
-# CodeIgniterExtension
+# codeigniter-extension
 
-[![Latest Stable Version](https://poser.pugx.org/takuya-motoshima/codeigniter-extensions/v/stable)](https://packagist.org/packages/takuya-motoshima/codeigniter-extensions) [![Total Downloads](https://poser.pugx.org/takuya-motoshima/codeigniter-extensions/downloads)](https://packagist.org/packages/takuya-motoshima/codeigniter-extensions) [![Latest Unstable Version](https://poser.pugx.org/takuya-motoshima/codeigniter-extensions/v/unstable)](https://packagist.org/packages/takuya-motoshima/codeigniter-extensions) [![License](https://poser.pugx.org/takuya-motoshima/codeigniter-extensions/license)](https://packagist.org/packages/takuya-motoshima/codeigniter-extensions)
+A package for efficient development of Codeigniter.  
+A simple interface and some general-purpose processing classes have been added to make it easier to use models and libraries.  
 
 This package installs the offical [CodeIgniter](https://github.com/bcit-ci/CodeIgniter) (version `3.1.*`) with secure folder structure via Composer.
 
-You can update CodeIgniter system folder to latest version with one command.
+You can update CodeIgniter system folder to latest version with one command.  
 
-## Folder Structure
-
-```
-codeigniter/
-├── application/
-├── composer.json
-├── composer.lock
-├── public/
-│   ├── .htaccess
-│   └── index.php
-└── vendor/
-    └── codeigniter/
-        ├── framework/
-        │   └── system/
-        ├── facebook/
-        │   └── graph-sdk/
-        ├── hybridauth/
-        │   └── hybridauth/
-        ├── symfony/
-        │   └── polyfill-mbstring/
-        ├── twig/
-        │   └── twig/
-        └── framework/
-```
+[![Latest Stable Version](https://poser.pugx.org/takuya-motoshima/codeigniter-extensions/v/stable)](https://packagist.org/packages/takuya-motoshima/codeigniter-extensions) [![Total Downloads](https://poser.pugx.org/takuya-motoshima/codeigniter-extensions/downloads)](https://packagist.org/packages/takuya-motoshima/codeigniter-extensions) [![Latest Unstable Version](https://poser.pugx.org/takuya-motoshima/codeigniter-extensions/v/unstable)](https://packagist.org/packages/takuya-motoshima/codeigniter-extensions) [![License](https://poser.pugx.org/takuya-motoshima/codeigniter-extensions/license)](https://packagist.org/packages/takuya-motoshima/codeigniter-extensions)
 
 ## Requirements
 
-* PHP 7.0.0 or later
+* PHP 7.0.0 or later    
 * `composer` command (See [Composer Installation](https://getcomposer.org/doc/00-intro.md#installation-linux-unix-osx))
 * Git
 * GD
 
-## Installation procedure 
+## Getting Started
 
-- Create a project of CodeigniterExtension
+1. Create project.
 
-```
-composer create-project takuya-motoshima/codeIgniter-extension my-project
-```
+    ```sh
+    composer create-project takuya-motoshima/codeIgniter-extension myapp
+    ```
 
-- Grant write permission to the system directory
-```
-sudo chmod -R 777 ./application/{logs,cache,session};
-sudo chown -R nginx:nginx ./application/{logs,cache,session};
-```
+1. Grant log, session, and cache write permissions to the web server.
 
-- Install GD(Required for \X\Util\Image)
-```
-sudo yum -y install php-gd.x86_64 --enablerepo=remi-php71;
-php -m|grep gd;
-```
+    ```sh
+    sudo chmod -R 777 ./application/{logs,cache,session};
+    sudo chown -R nginx:nginx ./application/{logs,cache,session};
+    ```
 
-- If the web server is nginx, add the following settings
-```
-server {
-    listen       80;
-    server_name  {ServerName};
-    charset UTF-8;
-    root {DocumentRoot};                                    # e.g.: root /var/www/html;
-    index index.php index.html;
-    access_log  /var/log/nginx/ci-access.log;
-    error_log  /var/log/nginx/ci-error.log  warn;
-    location /{ApplicationName} {                           # e.g.: location /test
-        alias {ApplicationAbsolutePath}/public;             # e.g.: alias /var/www/html/test/public;
-        try_files $uri $uri/ /{ApplicationName}/index.php;  # e.g.: try_files $uri $uri/ /test/index.php;
-        location ~ \.php$ {
-            fastcgi_split_path_info ^(.+\.php)(/.+)$;
-            fastcgi_index index.php;
-            fastcgi_pass unix:/run/php-fpm/www.sock;
-            include fastcgi_params;
-            fastcgi_param   SCRIPT_FILENAME $request_filename;
+1. Install GD (Required for \X\Util\Image).
+
+    ```sh
+    sudo yum -y install php-gd.x86_64 --enablerepo=remi-php71;
+    php -m|grep gd;
+    ```
+
+1. Web server settings.
+
+    Create configuration file.  
+
+    ```sh
+    sudo touch /etc/nginx/conf.d/myapp.conf;
+    ```
+
+    Add content:  
+
+    ```nginx
+    server {
+        listen 80;
+        server_name  {Your server name};
+        charset UTF-8;
+        root {Your documentRoot};
+        index index.php index.html;
+        location /{Your application name} {
+            alias {Your application root directory}/public;
+            try_files $uri $uri/ /{Your application name}/index.php;
+            location ~ \.php$ {
+                fastcgi_split_path_info ^(.+\.php)(/.+)$;
+                fastcgi_index index.php;
+                fastcgi_pass unix:/run/php-fpm/www.sock;
+                include fastcgi_params;
+                fastcgi_param SCRIPT_FILENAME $request_filename;
+            }
         }
     }
-}
-```
+    ```
 
-Above command installs `public/.htaccess` to remove `index.php` in your URL. If you don't need it, please remove it.
+    Restart nginx to reflect the setting.  
 
-And it changes `application/config/config.php`:
+    ```sh
+    sudo systemctl restart nginx;
+    ```
 
-~~~
-$config['base_url'] = '';
-↓
-if (!empty($_SERVER['HTTP_HOST'])) {$config['base_url'] = "//".$_SERVER['HTTP_HOST'] . str_replace(basename($_SERVER['SCRIPT_NAME']),"",$_SERVER['SCRIPT_NAME']);}
-~~~
+1. Application settings.
 
-~~~
-$config['enable_hooks'] = FALSE;
-↓
-$config['enable_hooks'] = TRUE;
-~~~
+    Open config.  
 
-~~~
-$config['permitted_uri_chars'] = 'a-z 0-9~%.:_\-';
-↓
-$config['permitted_uri_chars'] = 'a-z 0-9~%.:_\-,';
-~~~
+    ```sh
+    vim ./application/config/config.php;
+    ```
 
-~~~
-$config['sess_save_path'] = NULL;
-↓
-$config['sess_save_path'] = APPPATH . 'session';
-~~~
+    Edit content:  
 
-~~~
-$config['cookie_httponly']  = FALSE;
-↓
-$config['cookie_httponly']  = TRUE;
-~~~
+    |Name|Before|After|
+    |--|--|--|
+    |base_url||if (!empty($_SERVER['HTTP_HOST'])) $config['base_url'] = '//' . $_SERVER['HTTP_HOST'] . str_replace(basename($_SERVER['SCRIPT_NAME']), '', $_SERVER['SCRIPT_NAME']);|
+    |enable_hooks|FALSE|TRUE|
+    |permitted_uri_chars|'a-z 0-9~%.:_\-'|'a-z 0-9~%.:_\-,'|
+    |sess_save_path|NULL|APPPATH . 'session';|
+    |cookie_httponly|FALSE|TRUE|
+    |composer_autoload|FALSE|realpath(APPPATH . '../vendor/autoload.php');|
+    |index_page|'index.php'|''|
 
-~~~
-$config['composer_autoload'] = FALSE;
-↓
-$config['composer_autoload'] = realpath(APPPATH . '../vendor/autoload.php');
-~~~
+    ## Project structure.
 
-~~~
-$config['index_page'] = 'index.php';
-↓
-$config['index_page'] = '';
-~~~
+    ```sh
+    .
+    |-- src
+    |   `-- X
+    |       |-- Annotation
+    |       |   |-- Access.php
+    |       |   `-- AnnotationReader.php
+    |       |-- Composer
+    |       |   `-- Installer.php
+    |       |-- Constant
+    |       |   |-- Environment.php
+    |       |   `-- HttpStatus.php
+    |       |-- Controller
+    |       |   `-- Controller.php
+    |       |-- Data
+    |       |   `-- address.json
+    |       |-- Database
+    |       |   |-- DB.php
+    |       |   |-- Driver
+    |       |   |   |-- Cubrid
+    |       |   |   |-- Ibase
+    |       |   |   |-- Mssql
+    |       |   |   |-- Mysql
+    |       |   |   |-- Mysqli
+    |       |   |   |-- Oci8
+    |       |   |   |-- Odbc
+    |       |   |   |-- Pdo
+    |       |   |   |-- Postgre
+    |       |   |   |-- Sqlite
+    |       |   |   |-- Sqlite3
+    |       |   |   `-- Sqlsrv
+    |       |   |-- QueryBuilder.php
+    |       |   `-- Result.php
+    |       |-- Exception
+    |       |   |-- AccessDeniedException.php
+    |       |   `-- RestClientException.php
+    |       |-- Hook
+    |       |   `-- Authenticate.php
+    |       |-- Library
+    |       |   |-- Input.php
+    |       |   `-- Router.php
+    |       |-- Model
+    |       |   |-- AddressModel.php
+    |       |   |-- Model.php
+    |       |   |-- SessionModelInterface.php
+    |       |   `-- SessionModel.php
+    |       `-- Util
+    |           |-- AmazonRekognitionClient.php
+    |           |-- AmazonSesClient.php
+    |           |-- ArrayHelper.php
+    |           |-- Cipher.php
+    |           |-- CsvHelper.php
+    |           |-- DateHelper.php
+    |           |-- EMail.php
+    |           |-- FileHelper.php
+    |           |-- HtmlHelper.php
+    |           |-- HttpResponse.php
+    |           |-- ImageHelper.php
+    |           |-- Iterator.php
+    |           |-- Loader.php
+    |           |-- Logger.php
+    |           |-- RestClient.php
+    |           |-- SessionHelper.php
+    |           |-- StringHelper.php
+    |           |-- Template.php
+    |           `-- UrlHelper.php
+    |-- composer.json
+    |-- composer.json.dist
+    |-- composer.lock
+    |-- composer.phar
+    |-- core.dist
+    |   |-- AppController.php
+    |   |-- AppInput.php
+    |   `-- AppModel.php
+    |-- dot.gitattributes.dist
+    |-- dot.gitignore.dist
+    |-- dot.htaccess
+    |-- LICENSE.md
+    |-- package.json.dist
+    |-- README.md
+    |-- script.js
+    |-- examples/
+    |-- views.dist
+    |   |-- common
+    |   |   `-- base.html
+    |   `-- index.html
+    `-- webpack.config.js.dist
+    ```
 
-You must update files manually if files in `application` folder or `index.php` change. Check [CodeIgniter User Guide](http://www.codeigniter.com/user_guide/installation/upgrading.html).
+## Reference
+- [CodeIgniter Web Framework](https://codeigniter.com/)  
+- Access control of action by annotation  
 
-## Third party reference
+    application/config/hooks.php:  
 
-* [Composer Installation](https://getcomposer.org/doc/00-intro.md#installation-linux-unix-osx)
-* [CodeIgniter](https://github.com/bcit-ci/CodeIgniter)
+    ```php
+    use \X\Annotation\AnnotationReader;  
+    $hook['post_controller_constructor'] = function() {  
+     $ci =& get_instance();
+     $accessControl = AnnotationReader::getMethodAccessControl($ci->router->class, $ci->router->method);
+     $loggedin = !empty($_SESSION['user']);
+     if ($loggedin && !$accessControl->allowLoggedin) {
+       // In case of an action that the logged-in user can not access
+       redirect('/dashboard');
+     } else if (!$loggedin && !$accessControl->allowLoggedoff) {
+       // In case of an action that can not be accessed by the user who is logging off
+       redirect('/login');
+     }
+    };
+    ```
 
-## Reference of this package
+    application/ccontrollers/Example.php:  
 
-- Access control of action by annotation
-```
-// application/config/hooks.php
-use \X\Annotation\AnnotationReader;  
-$hook['post_controller_constructor'] = function() {  
- $ci =& get_instance();
- $accessControl = AnnotationReader::getMethodAccessControl($ci->router->class, $ci->router->method);
- $loggedin = !empty($_SESSION['user']);
- if ($loggedin && !$accessControl->allowLoggedin) {
-   // In case of an action that the logged-in user can not access
-   redirect('/dashboard');
- } else if (!$loggedin && !$accessControl->allowLoggedoff) {
-   // In case of an action that can not be accessed by the user who is logging off
-   redirect('/login');
- }
-};
+    ```php
+    use \X\Annotation\AccessControl;
+    class Example extends AppController
+    {
+     /**
+      * @AccessControl(allowLoggedin=false, allowLoggedoff=true)
+      */
+     public function login() {}
 
-// application/ccontrollers/Example.php  
-use \X\Annotation\AccessControl;
-class Example extends AppController
-{
- /**
-  * @AccessControl(allowLoggedin=false, allowLoggedoff=true)
-  */
- public function login() {}
+     /**
+      * @AccessControl(allowLoggedin=true, allowLoggedoff=false)
+      */
+     public function dashboard() {}
+    }
+    ```
 
- /**
-  * @AccessControl(allowLoggedin=true, allowLoggedoff=false)
-  */
- public function dashboard() {}
-}
-```
-
+## License
+[MIT](LICENSE.txt)
 
 ## Author
-[Takuya Motoshima](https://github.com/takuya-motoshima)
+- Twitter: [@TakuyaMotoshima](https://twitter.com/taaaaaaakuya)
+- Github: [TakuyaMotoshima](https://github.com/takuya-motoshima)
+mail to: development.takuyamotoshima@gmail.com
