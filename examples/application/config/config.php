@@ -326,7 +326,10 @@ $config['cache_query_string'] = FALSE;
 | https://codeigniter.com/user_guide/libraries/encryption.html
 |
 */
-$config['encryption_key'] = '';
+$config['encryption_key'] = 'b8qmK-/BN,fB{Ce';
+
+$config['openssl_method'] = 'AES-256-CTR';
+$config['openssl_key'] = 'b8qmK-/BN,fB{Ce';
 
 /*
 |--------------------------------------------------------------------------

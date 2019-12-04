@@ -16,10 +16,10 @@ use \X\Util\Logger;
 $hook['post_controller_constructor'] = function() {
   $ci =& get_instance();
   $accessibility = AnnotationReader::getAccessibility($ci->router->class, $ci->router->method);
-  if ($_SESSION['user'] && (!$accessibility->allow_login || ($accessibility->allow_role && $accessibility->allow_role !== $_SESSION['user']['role']))) {
+  if (isset($_SESSION['user']) && (!$accessibility->allow_login || ($accessibility->allow_role && $accessibility->allow_role !== $_SESSION['user']['role']))) {
     // When the login user performs a non-access action.
     redirect('/dashboard');
-  } else if (!$_SESSION['user'] && !$accessibility->allow_logoff) {
+  } else if (!isset($_SESSION['user']) && !$accessibility->allow_logoff) {
     // Logoff user performs a non-access action.
     redirect('/login');
   }

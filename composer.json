@@ -12,7 +12,8 @@
         "twig/twig": "2.*",
         "hybridauth/hybridauth": "2.*",
         "aws/aws-sdk-php": "^3.64",
-        "doctrine/common": "^2.10"
+        "doctrine/common": "^2.10",
+        "ext-openssl": "^7.3"
     },
     "license": "MIT",
     "authors": [
@@ -36,9 +37,12 @@
     "scripts": {
         "post-create-project-cmd": [
             "X\\Composer\\Installer::post_install"
+        ],
+        "test": [
+            "./vendor/bin/phpunit"
         ]
     },
     "require-dev": {
-        "phpunit/phpunit": "@stable"
+        "phpunit/phpunit": "^8.4"
     }
 }

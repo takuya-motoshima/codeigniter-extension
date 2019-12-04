@@ -15,6 +15,7 @@ You can update CodeIgniter system folder to latest version with one command.
 * `composer` command (See [Composer Installation](https://getcomposer.org/doc/00-intro.md#installation-linux-unix-osx))
 * Git
 * GD
+* php-mcrypt
 
 ## Getting Started
 
@@ -37,6 +38,28 @@ You can update CodeIgniter system folder to latest version with one command.
     sudo yum -y install php-gd.x86_64 --enablerepo=remi-php71;
     php -m|grep gd;
     ```
+
+1. Install php-mcrypt (Required for \X\Util\Cipher).
+
+    1. Install remi repository.  
+
+    ```sh
+    sudo yum install http://rpms.remirepo.net/enterprise/remi-release-7.rpm;
+    ```
+
+    1. Install php-mcrypt.  
+
+        * For RHEL:  
+
+        ```sh
+        sudo yum install -enablerepo=remi,remi-php73 php-mcrypt;
+        ```
+
+        * For AmazonLinux2:  
+
+        ```sh
+        sudo yum install --enablerepo=remi,remi-php73 --disablerepo=amzn2-core php-mcrypt;
+        ```
 
 1. Web server settings.
 
@@ -63,6 +86,7 @@ You can update CodeIgniter system folder to latest version with one command.
                 fastcgi_index index.php;
                 fastcgi_pass unix:/run/php-fpm/www.sock;
                 include fastcgi_params;
+                #fastcgi_param CI_ENV development;
                 fastcgi_param SCRIPT_FILENAME $request_filename;
             }
         }

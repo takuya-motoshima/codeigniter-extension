@@ -8,7 +8,8 @@
     ],
     "require": {
         "php": "^7.0",
-        "takuya-motoshima/ci-ex": "dev-master"
+        "takuya-motoshima/codeigniter-extension": "dev-master",
+        "doctrine/common": "^2.10"
     },
     "require-dev": {
         "phpunit/phpunit": "@stable"

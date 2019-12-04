@@ -15,34 +15,55 @@ final class Cipher {
    * 
    * Encode SHA-256
    *
-   * @param  string $plain_text
+   * @param  string $clearText
    * @return string
    */
-  public static function encode_sha256(string $plain_text): string {
-    return hash('sha256', $plain_text . Loader::config('config', 'encryption_key'));
+  public static function encode_sha256(string $clearText): string {
+    if (empty(Loader::config('config', 'encryption_key'))) {
+      throw new \RuntimeException('Cant find encryption_key in application/config/config.php file');
+    }
+    return hash('sha256', $clearText . Loader::config('config', 'encryption_key'));
   }
 
   /**
-   * 
-   * Encode
-   *
-   * @param  string $plain_text
+   * @param string $clearText
+   * @param string $iv
    * @return string
    */
-  public static function encode(string $plain_text): string {
-    $ci =& get_instance();
-    return $ci->encrypt->encode($plain_text, Loader::config('config', 'encryption_key'));
+  public static function encrypt(string $clearText, string $iv = null, string $method = null): string {
+    if (empty(Loader::config('config', 'openssl_key'))) {
+      throw new \RuntimeException('Cant find openssl_key in application/config/config.php file');
+    }
+    $method = ($method ?? Loader::config('config', 'openssl_method')) ?? 'AES-256-CTR';
+    $options = 0;
+    return openssl_encrypt($clearText, $method, Loader::config('config', 'openssl_key'), $options, $iv);
   }
 
   /**
-   * 
-   * Decode
-   *
-   * @param  string $encrypted_text
+   * @param string $encryptedText
+   * @param string $iv
    * @return string
    */
-  public static function decode(string $encrypted_text): string {
-    $ci =& get_instance();
-    return $ci->encrypt->decode($encrypted_text, Loader::config('config', 'encryption_key'));
+  public static function decrypt(string $encryptedText, string $iv = null, string $method = null): string {
+    if (empty(Loader::config('config', 'openssl_key'))) {
+      throw new \RuntimeException('Cant find openssl_key in application/config/config.php file');
+    }
+    $method = ($method ?? Loader::config('config', 'openssl_method')) ?? 'AES-256-CTR';
+    $options = 0;
+    return openssl_decrypt($encryptedText, $method, Loader::config('config', 'openssl_key'), $options, $iv);
+  }
+
+  /**
+   * @deprecated deprecated since version 3.1.0
+   */
+  public static function encode(string $clearText): string {
+    return self::encrypt($clearText);
+  }
+
+  /**
+   * @deprecated deprecated since version 3.1.0
+   */
+  public static function decode(string $encryptedText): string {
+    return self::decrypt($encryptedText);
   }
 }
