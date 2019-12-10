@@ -45,12 +45,12 @@ final class ImageHelper {
    * Put blob image
    *
    * @param string $blob
-   * @param string $filePath
+   * @param string $filepath
    * @return Void
    */
-  public static function putBlob(string $blob, string $filePath) {
-    FileHelper::makeDirecoty(dirname($filePath));
-    file_put_contents($filePath, $blob, LOCK_EX);
+  public static function putBlob(string $blob, string $filepath) {
+    FileHelper::makeDirecoty(dirname($filepath));
+    file_put_contents($filepath, $blob, LOCK_EX);
   }
 
   /**
@@ -65,16 +65,16 @@ final class ImageHelper {
    *  \X\Util\ImageHelper::copy('/tmp/old.png', '/home', 'new');
    *  
    * @param string $srcImgPath
-   * @param string $dstDirPath
+   * @param string $dstDirpath
    * @param string $dstImgName
    * @return string
    */
-  public static function copy(string $srcImgPath, string $dstDirPath, string $dstImgName = null): string {
-    FileHelper::makeDirecoty($dstDirPath);
+  public static function copy(string $srcImgPath, string $dstDirpath, string $dstImgName = null): string {
+    FileHelper::makeDirecoty($dstDirpath);
     $dstImgName = empty($dstImgName) 
       ? basename($srcImgPath) : 
       $dstImgName . '.' . pathinfo($srcImgPath, PATHINFO_EXTENSION);
-    file_put_contents(rtrim($dstDirPath, '/')  . '/' . $dstImgName, file_get_contents($srcImgPath), LOCK_EX);
+    file_put_contents(rtrim($dstDirpath, '/')  . '/' . $dstImgName, file_get_contents($srcImgPath), LOCK_EX);
     return $dstImgName;
   }
 
@@ -82,19 +82,34 @@ final class ImageHelper {
    * 
    * Read image
    *
-   * @param string $filePath
+   * @param string $filepath
    * @return string
    */
-  public static function read(string $filePath): string {
-    if (!file_exists($filePath)) {
-      throw new \RuntimeException('Image file does not exist. Path=' . $filePath);
+  public static function read(string $filepath): string {
+    if (!file_exists($filepath)) {
+      throw new \RuntimeException('Image file does not exist. Path=' . $filepath);
     }
-    $fp = fopen($filePath, 'r');
-    $blob = fread($fp, filesize($filePath));
+    $fp = fopen($filepath, 'r');
+    $blob = fread($fp, filesize($filepath));
     fclose($fp);
     return $blob;
   }
 
+  /**
+   * 
+   * Read image
+   *
+   * @param string $filepath
+   * @return string
+   */
+  public static function readAsBase64(string $filepath): string {
+    $blob = self::read($filepath);
+    $mime = mime_content_type($filepath);
+    if ($mime === 'image/svg' || $mime === 'image/svgz') {
+      $mime = 'image/svg+xml';
+    }
+    return 'data:' . $mime . ';base64,' . base64_encode($blob);
+  }
 
   /**
    * 

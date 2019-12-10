@@ -43,24 +43,24 @@ final class FileHelper {
    * \X\Util\FileHelper::move('/tmp/old.txt', 'new');
    *  
    * @throws RuntimeException
-   * @param string $srcFilePath
-   * @param string $dstFilePath
+   * @param string $srcFilepath
+   * @param string $dstFilepath
    * @return void
    */
-  public static function move(string $srcFilePath, string $dstFilePath) {
-    if (!file_exists($srcFilePath)) {
-      throw new \RuntimeException('Not found file ' . $srcFilePath);
+  public static function move(string $srcFilepath, string $dstFilepath) {
+    if (!file_exists($srcFilepath)) {
+      throw new \RuntimeException('Not found file ' . $srcFilepath);
     }
-    if (strpos($dstFilePath, '/') === false) {
-      if (strpos($dstFilePath, '.') === false) {
-        $dstFilePath = $dstFilePath . '.' . pathinfo($srcFilePath, PATHINFO_EXTENSION);
+    if (strpos($dstFilepath, '/') === false) {
+      if (strpos($dstFilepath, '.') === false) {
+        $dstFilepath = $dstFilepath . '.' . pathinfo($srcFilepath, PATHINFO_EXTENSION);
       }
-      $dstFilePath = pathinfo($srcFilePath, PATHINFO_DIRNAME) . '/' . $dstFilePath;
+      $dstFilepath = pathinfo($srcFilepath, PATHINFO_DIRNAME) . '/' . $dstFilepath;
     } else {
-      self::makeDirecoty(dirname($dstFilePath));;
+      self::makeDirecoty(dirname($dstFilepath));;
     }
-    if (rename($srcFilePath, $dstFilePath) === false) {
-      throw new \RuntimeException('Can not rename from ' . $srcFilePath . ' to ' . $dstFilePath);
+    if (rename($srcFilepath, $dstFilepath) === false) {
+      throw new \RuntimeException('Can not rename from ' . $srcFilepath . ' to ' . $dstFilepath);
     }
   }
 
@@ -69,19 +69,19 @@ final class FileHelper {
    * Copy file
    * 
    * @throws RuntimeException
-   * @param string $srcFilePath
-   * @param string $dstFilePath
+   * @param string $srcFilepath
+   * @param string $dstFilepath
    * @return void
    */
-  public static function copyFile(string $srcFilePath, string $dstFilePath) {
-    if (!file_exists($srcFilePath)) {
-      throw new \RuntimeException('Not found file ' . $srcFilePath);
-    } else if (!is_file($srcFilePath)) {
-      throw new \RuntimeException($srcFilePath . ' is not file');
+  public static function copyFile(string $srcFilepath, string $dstFilepath) {
+    if (!file_exists($srcFilepath)) {
+      throw new \RuntimeException('Not found file ' . $srcFilepath);
+    } else if (!is_file($srcFilepath)) {
+      throw new \RuntimeException($srcFilepath . ' is not file');
     }
-    self::makeDirecoty(dirname($dstFilePath));
-    if (copy($srcFilePath, $dstFilePath) === false) {
-      throw new \RuntimeException('Can not copy from ' . $srcFilePath . ' to ' . $dstFilePath);
+    self::makeDirecoty(dirname($dstFilepath));
+    if (copy($srcFilepath, $dstFilepath) === false) {
+      throw new \RuntimeException('Can not copy from ' . $srcFilepath . ' to ' . $dstFilepath);
     }
   }
 
