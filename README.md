@@ -11,10 +11,12 @@ You can update CodeIgniter system folder to latest version with one command.
 
 ## Requirements
 
-* PHP 7.0.0 or later    
-* `composer` command (See [Composer Installation](https://getcomposer.org/doc/00-intro.md#installation-linux-unix-osx))
-* Git
-* GD
+* PHP 7.0.0 or later
+* composer (See [Composer Installation](https://getcomposer.org/doc/00-intro.md#installation-linux-unix-osx))
+* git
+* php-gd
+* php-mbstring
+* php-xml
 * php-mcrypt
 
 ## Getting Started
@@ -31,35 +33,6 @@ You can update CodeIgniter system folder to latest version with one command.
     sudo chmod -R 777 ./application/{logs,cache,session};
     sudo chown -R nginx:nginx ./application/{logs,cache,session};
     ```
-
-1. Install GD (Required for \X\Util\Image).
-
-    ```sh
-    sudo yum -y install php-gd.x86_64 --enablerepo=remi-php71;
-    php -m|grep gd;
-    ```
-
-1. Install php-mcrypt (Required for \X\Util\Cipher).
-
-    1. Install remi repository.  
-
-    ```sh
-    sudo yum install http://rpms.remirepo.net/enterprise/remi-release-7.rpm;
-    ```
-
-    1. Install php-mcrypt.  
-
-        * For RHEL:  
-
-        ```sh
-        sudo yum install -enablerepo=remi,remi-php73 php-mcrypt;
-        ```
-
-        * For AmazonLinux2:  
-
-        ```sh
-        sudo yum install --enablerepo=remi,remi-php73 --disablerepo=amzn2-core php-mcrypt;
-        ```
 
 1. Web server settings.
 
@@ -211,6 +184,7 @@ You can update CodeIgniter system folder to latest version with one command.
     ```
 
 ## Reference
+
 - [CodeIgniter Web Framework](https://codeigniter.com/)  
 - Access control of action by annotation  
 
