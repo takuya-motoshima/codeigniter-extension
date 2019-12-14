@@ -30,27 +30,55 @@ You can update CodeIgniter system folder to latest version with one command.
 1. Grant log, session, and cache write permissions to the web server.
 
     ```sh
-    sudo chmod -R 777 ./application/{logs,cache,session};
+    sudo chmod -R 755 ./application/{logs,cache,session};
     sudo chown -R nginx:nginx ./application/{logs,cache,session};
     ```
 
 1. Web server settings.
 
-    Create configuration file.  
-
-    ```sh
-    sudo touch /etc/nginx/conf.d/myapp.conf;
-    ```
-
-    Add content:  
+    Add the following to /etc/nginx/conf.d/{Your application name}.conf.  
 
     ```nginx
     server {
         listen 80;
         server_name  {Your server name};
         charset UTF-8;
-        root {Your documentRoot};
+        root {Your document root};
         index index.php index.html;
+        access_log  /var/log/nginx/{Your application name}.access.log;
+        error_log  /var/log/nginx/{Your application name}.error.log  warn;
+
+        # Execute php with php file and HTML file using FastCGI.This is a setting that is not related to codeigniter
+        location ~\.(php|html)$ {
+            fastcgi_pass unix:/run/php-fpm/www.sock;
+            fastcgi_index  index.php;
+            fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+            include        fastcgi_params;
+        }
+
+        # Codeigniter index file existence check
+        location / {
+            try_files $uri $uri/ /index.php;
+            location = /index.php {
+                fastcgi_pass  unix:/run/php-fpm/www.sock;
+                include       fastcgi_params;
+                fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+                fastcgi_param CI_ENV development;
+            }
+        }
+
+        # Codeigniter request endpoint
+        location ~ ((.*\.php)(/.*)|(\.php))$ {
+            fastcgi_split_path_info ^(.+\.php)(/.+)$;
+            fastcgi_pass unix:/run/php-fpm/www.sock;
+            fastcgi_index index.php;
+            include fastcgi_params;
+            fastcgi_param SCRIPT_FILENAME $request_filename;
+            # fastcgi_param   SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        }
+    }
+    ```
+
         location /{Your application name} {
             alias {Your application root directory}/public;
             try_files $uri $uri/ /{Your application name}/index.php;
@@ -63,8 +91,9 @@ You can update CodeIgniter system folder to latest version with one command.
                 fastcgi_param SCRIPT_FILENAME $request_filename;
             }
         }
-    }
-    ```
+
+
+
 
     Restart nginx to reflect the setting.  
 
