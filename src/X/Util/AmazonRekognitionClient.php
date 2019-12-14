@@ -48,14 +48,16 @@ class AmazonRekognitionClient {
    * @return bool
    */
   public function compareFace(string $srcImgBlob, string $dstImgBlob, int $threshold = 80): bool {
+
     try {
+
       if (ImageHelper::isBase64($srcImgBlob)) {
         $srcImgBlob = ImageHelper::convertBase64ToBlob($srcImgBlob);
       }
       if (ImageHelper::isBase64($dstImgBlob)) {
         $dstImgBlob = ImageHelper::convertBase64ToBlob($dstImgBlob);
       }
-      $res = $this->client->compareFaces([
+      $result = $this->client->compareFaces([
         'SimilarityThreshold' => $threshold,
         'SourceImage' => [
           'Bytes' => $srcImgBlob
@@ -64,19 +66,17 @@ class AmazonRekognitionClient {
           'Bytes' => $dstImgBlob
         ]
       ]);
-      $res = $res->toArray();
-      // Logger::d('$res=', $res);
+      $result = $result->toArray();
       $status = !empty($res['@metadata']['statusCode']) ? (int) $res['@metadata']['statusCode'] : null;
-      // Logger::d('$status=', $status);
       if ($status !== 200) {
         throw new \RuntimeException('Face comparison error');
       }
-      return $res['FaceMatches'] ? true : false;
+      return $result['FaceMatches'] ? true : false;
     } catch (RekognitionException $e) {
-      Logger::e($e);
+      Logger::error($e);
       throw $e;
     } catch (Throwable $e) {
-      Logger::e($e);
+      Logger::error($e);
       throw $e;
     }
   }
@@ -107,29 +107,30 @@ class AmazonRekognitionClient {
    * @return array
    */
   public function detectFace(string $imgBlob, int $threshold = 90): array {
+
     try {
+
       if (ImageHelper::isBase64($imgBlob)) {
         $imgBlob = ImageHelper::convertBase64ToBlob($imgBlob);
       }
-      $res = $this->client->DetectFaces([
+      $result = $this->client->DetectFaces([
         'Image' => ['Bytes' => $imgBlob],
         'Attributes' => ['DEFAULT']
       ]);
-      $res = $res->toArray();
-      // Logger::d('$res=', $res);
-      $status = !empty($res['@metadata']['statusCode']) ? (int) $res['@metadata']['statusCode'] : null;
+      $result = $result->toArray();
+      $status = !empty($result['@metadata']['statusCode']) ? (int) $result['@metadata']['statusCode'] : null;
       if ($status !== 200) {
         throw new \RuntimeException('Face detection error');
       }
-      if (empty($res['FaceDetails'])) {
+      if (empty($result['FaceDetails'])) {
         return [];
       }
-      $faces = $res['FaceDetails'];
-      return array_filter($res['FaceDetails'], function(array $face) use($threshold) {
+      $faces = $result['FaceDetails'];
+      return array_filter($result['FaceDetails'], function(array $face) use($threshold) {
         return $face['Confidence'] >= $threshold;
       });
     } catch (Throwable $e) {
-      Logger::e($e);
+      Logger::error($e);
       throw $e;
     }
   }
@@ -170,7 +171,6 @@ class AmazonRekognitionClient {
    */
   public function countFaceByPath(string $imgPath, int $threshold = 90): int {
     $faces = $this->detectFaceByPath($imgPath, $threshold);
-    // Logger::d('$faces=', $faces);
     return count($faces);
   }
 
@@ -185,11 +185,12 @@ class AmazonRekognitionClient {
    * @return void
    */
   public function addCollection(string $collectionId) {
+
     try {
-      $res = $this->client->createCollection(['CollectionId' => $collectionId]);
-      $res = $res->toArray();
-      // Logger::d('$res=', $res);
-      $status = !empty($res['StatusCode']) ? (int) $res['StatusCode'] : null;
+
+      $result = $this->client->createCollection(['CollectionId' => $collectionId]);
+      $result = $result->toArray();
+      $status = !empty($result['StatusCode']) ? (int) $result['StatusCode'] : null;
       if ($status !== 200) {
         throw new \RuntimeException('Collection could not be created');
       }
@@ -198,7 +199,7 @@ class AmazonRekognitionClient {
         throw $e;
       }
     } catch (Throwable $e) {
-      Logger::e($e);
+      Logger::error($e);
       throw $e;
     }
   }
@@ -211,19 +212,20 @@ class AmazonRekognitionClient {
    * @return void
    */
   public function getCollection(string $collectionId): ?array {
+
     try {
-      $res = $this->client->describeCollection(['CollectionId' => $collectionId]);
-      $res = $res->toArray();
-      // Logger::d('$res=', $res);
-      $status = !empty($res['@metadata']['statusCode']) ? (int) $res['@metadata']['statusCode'] : null;
+
+      $result = $this->client->describeCollection(['CollectionId' => $collectionId]);
+      $result = $result->toArray();
+      $status = !empty($result['@metadata']['statusCode']) ? (int) $result['@metadata']['statusCode'] : null;
       if ($status !== 200) {
         throw new \RuntimeException('Collection getting error');
       }
       return [
-        'FaceCount' => $res['FaceCount'],
-        'FaceModelVersion' => $res['FaceModelVersion'],
-        'CollectionARN' => $res['CollectionARN'],
-        'CreationTimestamp' => $res['CreationTimestamp'],
+        'FaceCount' => $result['FaceCount'],
+        'FaceModelVersion' => $result['FaceModelVersion'],
+        'CollectionARN' => $result['CollectionARN'],
+        'CreationTimestamp' => $result['CreationTimestamp'],
       ];
     } catch (RekognitionException $e) {
       if ($e->getAwsErrorCode() !== 'ResourceNotFoundException') {
@@ -231,7 +233,33 @@ class AmazonRekognitionClient {
       }
       return null;
     } catch (Throwable $e) {
-      Logger::e($e);
+      Logger::error($e);
+      throw $e;
+    }
+  }
+
+  /**
+   * 
+   * Get collection
+   *
+   * @return array
+   */
+  public function getCollections(): array {
+
+    try {
+
+      $result = $this->client->listCollections();
+      $result = $result->toArray();
+      $status = !empty($result['@metadata']['statusCode']) ? (int) $result['@metadata']['statusCode'] : null;
+      if ($status !== 200) {
+        throw new \RuntimeException('Collection getting error');
+      }
+      if (empty($result['CollectionIds'])) {
+        return [];
+      }
+      return $result['CollectionIds'];
+    } catch (Throwable $e) {
+      Logger::error($e);
       throw $e;
     }
   }
@@ -244,11 +272,12 @@ class AmazonRekognitionClient {
    * @return void
    */
   public function deleteCollection(string $collectionId) {
+
     try {
-      $res = $this->client->deleteCollection(['CollectionId' => $collectionId]);
-      $res = $res->toArray();
-      // Logger::d('$res=', $res);
-      $status = !empty($res['StatusCode']) ? (int) $res['StatusCode'] : null;
+
+      $result = $this->client->deleteCollection(['CollectionId' => $collectionId]);
+      $result = $result->toArray();
+      $status = !empty($result['StatusCode']) ? (int) $result['StatusCode'] : null;
       if ($status !== 200) {
         throw new \RuntimeException('Collection could not be delete');
       }
@@ -269,11 +298,9 @@ class AmazonRekognitionClient {
    * @return void
    */
   public function existsCollection(string $collectionId): bool {
-    $res = $this->getCollection($collectionId);
-    // Logger::d('$res=', $res);
-    return !empty($res);
+    $result = $this->getCollection($collectionId);
+    return !empty($result);
   }
-
 
 
   // ----------------------------------------------------------------
@@ -287,7 +314,9 @@ class AmazonRekognitionClient {
    * @return bool
    */
   public function addFaceToCollection(string $collectionId, string $imgBlob): string {
+
     try {
+
       if (ImageHelper::isBase64($imgBlob)) {
         $imgBlob = ImageHelper::convertBase64ToBlob($imgBlob);
       }
@@ -297,24 +326,23 @@ class AmazonRekognitionClient {
       } else if ($faceCount > 1) {
         throw new \RuntimeException('Multiple faces can not be registered');
       }
-      $res = $this->client->indexFaces([
+      $result = $this->client->indexFaces([
         'CollectionId' => $collectionId,
         'DetectionAttributes' => ['ALL'],
         // 'ExternalImageId' => '',
         'Image' => ['Bytes' => $imgBlob],
       ]);
-      $res = $res->toArray();
-      // Logger::d('$res=', $res);
-      $status = !empty($res['@metadata']['statusCode']) ? (int) $res['@metadata']['statusCode'] : null;
+      $result = $result->toArray();
+      $status = !empty($result['@metadata']['statusCode']) ? (int) $result['@metadata']['statusCode'] : null;
       if ($status !== 200) {
         throw new \RuntimeException('Collection face registration error');
       }
-      if (empty($res['FaceRecords'])) {
+      if (empty($result['FaceRecords'])) {
         throw new \RuntimeException('This image does not include faces');
       }
-      return $res['FaceRecords'][0]['Face']['FaceId'];
+      return $result['FaceRecords'][0]['Face']['FaceId'];
     } catch (Throwable $e) {
-      Logger::e($e);
+      Logger::error($e);
       throw $e;
     }
   }
@@ -327,17 +355,18 @@ class AmazonRekognitionClient {
    * @return bool
    */
   public function getFacesFromCollection(string $collectionId): array {
+
     try {
-      $res = $this->client->listFaces(['CollectionId' => $collectionId, 'MaxResults' => 4096,]);
-      $res = $res->toArray();
-      // Logger::d('$res=', $res);
-      $status = !empty($res['@metadata']['statusCode']) ? (int) $res['@metadata']['statusCode'] : null;
+
+      $result = $this->client->listFaces(['CollectionId' => $collectionId, 'MaxResults' => 4096,]);
+      $result = $result->toArray();
+      $status = !empty($result['@metadata']['statusCode']) ? (int) $result['@metadata']['statusCode'] : null;
       if ($status !== 200) {
         throw new \RuntimeException('Collection face list acquisition error');
       }
-      return $res['Faces'];
+      return $result['Faces'];
     } catch (Throwable $e) {
-      Logger::e($e);
+      Logger::error($e);
       throw $e;
     }
   }
@@ -351,7 +380,9 @@ class AmazonRekognitionClient {
    * @return bool
    */
   public function matchFaceFromCollection(string $collectionId, string $imgBlob, ?string &$faceId = null, int $threshold = 95): bool {
+
     try {
+
       if (ImageHelper::isBase64($imgBlob)) {
         $imgBlob = ImageHelper::convertBase64ToBlob($imgBlob);
       }
@@ -361,25 +392,24 @@ class AmazonRekognitionClient {
       } else if ($faceCount > 1) {
         throw new \RuntimeException('Multiple faces can not be matched');
       }
-      $res = $this->client->searchFacesByImage([
+      $result = $this->client->searchFacesByImage([
         'CollectionId' => $collectionId,
         'FaceMatchThreshold' => $threshold,
         'Image' => ['Bytes' => $imgBlob],
         'MaxFaces' => 1,
       ]);
-      $res = $res->toArray();
-      // Logger::d('$res=', $res);
-      $status = !empty($res['@metadata']['statusCode']) ? (int) $res['@metadata']['statusCode'] : null;
+      $result = $result->toArray();
+      $status = !empty($result['@metadata']['statusCode']) ? (int) $result['@metadata']['statusCode'] : null;
       if ($status !== 200) {
         throw new \RuntimeException('Collection getting error');
       }
-      if (empty($res['FaceMatches'])) {
+      if (empty($result['FaceMatches'])) {
         return false;
       }
-      $faceId = $res['FaceMatches'][0]['Face']['FaceId'];
+      $faceId = $result['FaceMatches'][0]['Face']['FaceId'];
       return true;
     } catch (Throwable $e) {
-      Logger::e($e);
+      Logger::error($e);
       throw $e;
     }
   }
@@ -392,24 +422,22 @@ class AmazonRekognitionClient {
    * @return array
    */
   public function deleteFaceFromCollection(string $collectionId, array $faceIds): array {
+
     try {
-      Logger::d('$collectionId=', $collectionId);
-      Logger::d('$faceIds=', $faceIds);
-      $res = $this->client->deleteFaces(['CollectionId' => $collectionId, 'FaceIds' => $faceIds]);
-      $res = $res->toArray();
-      // Logger::d('$res=', $res);
-      $status = !empty($res['@metadata']['statusCode']) ? (int) $res['@metadata']['statusCode'] : null;
+
+      $result = $this->client->deleteFaces(['CollectionId' => $collectionId, 'FaceIds' => $faceIds]);
+      $result = $result->toArray();
+      $status = !empty($result['@metadata']['statusCode']) ? (int) $result['@metadata']['statusCode'] : null;
       if ($status !== 200) {
         throw new \RuntimeException('Collection face deletion error');
       }
-      $deletedFaces = $res['DeletedFaces'] ?? [];
-      Logger::d('$deletedFaces=', $deletedFaces);
+      $deletedFaces = $result['DeletedFaces'] ?? [];
       return $deletedFaces;
     } catch (RekognitionException $e) {
-      Logger::e($e);
+      Logger::error($e);
       throw $e;
     } catch (Throwable $e) {
-      Logger::e($e);
+      Logger::error($e);
       throw $e;
     }
   }
