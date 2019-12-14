@@ -110,7 +110,7 @@ abstract class Controller extends \CI_Controller {
    * @return void
    */
   protected function js(string $js) {
-    $this->httpResponse->javascript($js);
+    $this->httpResponse->js($js);
   }
 
   /**
