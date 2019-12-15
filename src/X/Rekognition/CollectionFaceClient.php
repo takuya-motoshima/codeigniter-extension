@@ -104,7 +104,7 @@ class CollectionFaceClient {
    * @param  string $base64Image
    * @return bool
    */
-  public function get(string $collectionId, string $base64Image, ?string &$faceId = null, int $threshold = 95): bool {
+  public function getByImage(string $collectionId, string $base64Image, int $threshold = 80): ?array {
     try {
       if (ImageHelper::isBase64($base64Image)) $base64Image = ImageHelper::convertBase64ToBlob($base64Image);
       $count = $this->detect->count($base64Image);
@@ -121,9 +121,14 @@ class CollectionFaceClient {
       $this->debug && Logger::debug('Face search results: ', $res);
       $status = !empty($res['@metadata']['statusCode']) ? (int) $res['@metadata']['statusCode'] : null;
       if ($status !== 200) throw new \RuntimeException('Collection getting error');
-      if (empty($res['FaceMatches'])) return false;
-      $faceId = $res['FaceMatches'][0]['Face']['FaceId'];
-      return true;
+      if (empty($res['FaceMatches'])) return null;
+      $faceMatch = $res['FaceMatches'][0];
+      $similarity = $faceMatch['Similarity'];
+      $faceId = $faceMatch['Face']['FaceId'];
+      return [
+        'similarity' => $faceMatch['Similarity'],
+        'faceId' => $faceMatch['Face']['FaceId']
+      ];
     } catch (Throwable $e) {
       Logger::error($e);
       throw $e;
