@@ -14,20 +14,24 @@ use \X\Util\Logger;
 
 class CollectionClient {
 
-  protected $client;
-
+  private $rekognition;
+  private $debug;
+ 
   /**
    * 
    * construct
    *
-   * @param array $config
+   * @param string       $key
+   * @param string       $secret
+   * @param bool|boolean $debug
    */
-  public function __construct(array $config = []) {
-    $this->client = new RekognitionClient(array_replace_recursive([
-      'region'      => 'ap-northeast-1',
-      'version'     => 'latest',
-      'credentials' => ['key' => null, 'secret' => null]
-    ], $config));
+  public function __construct(string $key, string $secret, bool $debug = false) {
+    $this->rekognition = new RekognitionClient([
+      'region' => 'ap-northeast-1',
+      'version' => 'latest',
+      'credentials' => ['key' => $key, 'secret' => $secret]
+    ]);
+    $this->debug = $debug;
   }
 
   /**
@@ -39,8 +43,10 @@ class CollectionClient {
    */
   public function add(string $id) {
     try {
-      $res = $this->client->createCollection(['CollectionId' => $id]);
-      $res = $res->toArray();
+      $res = $this->rekognition
+        ->createCollection(['CollectionId' => $id])
+        ->toArray();
+      $this->debug && Logger::debug('Collection creation result: ', $res);
       $status = !empty($res['StatusCode']) ? (int) $res['StatusCode'] : null;
       if ($status !== 200) throw new \RuntimeException('Collection could not be created');
     } catch (RekognitionException $e) {
@@ -60,8 +66,10 @@ class CollectionClient {
    */
   public function get(string $id): ?array {
     try {
-      $res = $this->client->describeCollection(['CollectionId' => $id]);
-      $res = $res->toArray();
+      $res = $this->rekognition
+        ->describeCollection(['CollectionId' => $id])
+        ->toArray();
+      $this->debug && Logger::debug('Collection search results: ', $res);
       $status = !empty($res['@metadata']['statusCode']) ? (int) $res['@metadata']['statusCode'] : null;
       if ($status !== 200) throw new \RuntimeException('Collection getting error');
       return [
@@ -86,8 +94,10 @@ class CollectionClient {
    */
   public function getAll(): array {
     try {
-      $res = $this->client->listCollections();
-      $res = $res->toArray();
+      $res = $this->rekognition
+        ->listCollections()
+        ->toArray();
+      $this->debug && Logger::debug('All collection search results: ', $res);
       $status = !empty($res['@metadata']['statusCode']) ? (int) $res['@metadata']['statusCode'] : null;
       if ($status !== 200) throw new \RuntimeException('Collection getting error');
       if (empty($res['CollectionIds'])) return [];
@@ -107,8 +117,10 @@ class CollectionClient {
    */
   public function delete(string $id) {
     try {
-      $res = $this->client->deleteCollection(['CollectionId' => $id]);
-      $res = $res->toArray();
+      $res = $this->rekognition
+        ->deleteCollection(['CollectionId' => $id])
+        ->toArray();
+      $this->debug && Logger::debug('Collection deletion result: ', $res);
       $status = !empty($res['StatusCode']) ? (int) $res['StatusCode'] : null;
       if ($status !== 200) throw new \RuntimeException('Collection could not be delete');
     } catch (RekognitionException $e) {

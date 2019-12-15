@@ -16,21 +16,26 @@ use \X\Util\Logger;
 
 class CollectionFaceClient {
 
-  protected $client;
+  private $rekognition;
+  private $detect;
+  private $debug;
 
   /**
-   * 
-   * construct
    *
-   * @param array $config
+   * construct
+   * 
+   * @param string       $key
+   * @param string       $secret
+   * @param bool|boolean $debug
    */
-  public function __construct(array $config = []) {
-    $this->detectClient = new DetectClient($config);
-    $this->client = new RekognitionClient(array_replace_recursive([
-      'region'      => 'ap-northeast-1',
-      'version'     => 'latest',
-      'credentials' => ['key' => null, 'secret' => null]
-    ], $config));
+  public function __construct(string $key, string $secret, bool $debug = false) {
+    $this->detect = new DetectClient($key, $secret, $debug);
+    $this->rekognition = new RekognitionClient([
+      'region' => 'ap-northeast-1',
+      'version' => 'latest',
+      'credentials' => ['key' => $key, 'secret' => $secret]
+    ]);
+    $this->debug = $debug;
   }
 
   /**
@@ -44,16 +49,18 @@ class CollectionFaceClient {
   public function add(string $collectionId, string $base64Image): string {
     try {
       if (ImageHelper::isBase64($base64Image)) $base64Image = ImageHelper::convertBase64ToBlob($base64Image);
-      $faceCount = $this->detectClient->count($base64Image);
-      if ($faceCount === 0) throw new \RuntimeException('Face not detected');
-      if ($faceCount > 1) throw new \RuntimeException('Multiple faces can not be registered');
-      $res = $this->client->indexFaces([
-        'CollectionId' => $collectionId,
-        'DetectionAttributes' => ['ALL'],
-        // 'ExternalImageId' => '',
-        'Image' => ['Bytes' => $base64Image],
-      ]);
-      $res = $res->toArray();
+      $count = $this->detect->count($base64Image);
+      if ($count === 0) throw new \RuntimeException('Face not detected');
+      if ($count > 1) throw new \RuntimeException('Multiple faces can not be registered');
+      $res = $this->rekognition
+        ->indexFaces([
+          'CollectionId' => $collectionId,
+          'DetectionAttributes' => ['ALL'],
+          // 'ExternalImageId' => '',
+          'Image' => ['Bytes' => $base64Image],
+        ])
+        ->toArray();
+      $this->debug && Logger::debug('Face creation result: ', $res);
       $status = !empty($res['@metadata']['statusCode']) ? (int) $res['@metadata']['statusCode'] : null;
       if ($status !== 200) throw new \RuntimeException('Collection face registration error');
       if (empty($res['FaceRecords'])) throw new \RuntimeException('This image does not include faces');
@@ -73,8 +80,10 @@ class CollectionFaceClient {
    */
   public function getAll(string $collectionId): array {
     try {
-      $res = $this->client->listFaces(['CollectionId' => $collectionId, 'MaxResults' => 4096,]);
-      $res = $res->toArray();
+      $res = $this->rekognition
+        ->listFaces(['CollectionId' => $collectionId, 'MaxResults' => 4096,])
+        ->toArray();
+      $this->debug && Logger::debug('All face search results: ', $res);
       $status = !empty($res['@metadata']['statusCode']) ? (int) $res['@metadata']['statusCode'] : null;
       if ($status !== 200) throw new \RuntimeException('Collection face list acquisition error');
       return $res['Faces'];
@@ -92,21 +101,21 @@ class CollectionFaceClient {
    * @param  string $base64Image
    * @return bool
    */
-  public function match(string $collectionId, string $base64Image, ?string &$faceId = null, int $threshold = 95): bool {
+  public function get(string $collectionId, string $base64Image, ?string &$faceId = null, int $threshold = 95): bool {
     try {
-      if (ImageHelper::isBase64($base64Image)) {
-        $base64Image = ImageHelper::convertBase64ToBlob($base64Image);
-      }
-      $faceCount = $this->detectClient->count($base64Image);
-      if ($faceCount === 0) throw new \RuntimeException('Face not detected');
-      if ($faceCount > 1) throw new \RuntimeException('Multiple faces can not be matched');
-      $res = $this->client->searchFacesByImage([
-        'CollectionId' => $collectionId,
-        'FaceMatchThreshold' => $threshold,
-        'Image' => ['Bytes' => $base64Image],
-        'MaxFaces' => 1,
-      ]);
-      $res = $res->toArray();
+      if (ImageHelper::isBase64($base64Image)) $base64Image = ImageHelper::convertBase64ToBlob($base64Image);
+      $count = $this->detect->count($base64Image);
+      if ($count === 0) throw new \RuntimeException('Face not detected');
+      if ($count > 1) throw new \RuntimeException('Multiple faces can not be matched');
+      $res = $this->rekognition
+        ->searchFacesByImage([
+          'CollectionId' => $collectionId,
+          'FaceMatchThreshold' => $threshold,
+          'Image' => ['Bytes' => $base64Image],
+          'MaxFaces' => 1,
+        ])
+        ->toArray();
+      $this->debug && Logger::debug('Face search results: ', $res);
       $status = !empty($res['@metadata']['statusCode']) ? (int) $res['@metadata']['statusCode'] : null;
       if ($status !== 200) throw new \RuntimeException('Collection getting error');
       if (empty($res['FaceMatches'])) return false;
@@ -127,8 +136,10 @@ class CollectionFaceClient {
    */
   public function delete(string $collectionId, array $faceIds): array {
     try {
-      $res = $this->client->deleteFaces(['CollectionId' => $collectionId, 'FaceIds' => $faceIds]);
-      $res = $res->toArray();
+      $res = $this->rekognition
+        ->deleteFaces(['CollectionId' => $collectionId, 'FaceIds' => $faceIds])
+        ->toArray();
+      $this->debug && Logger::debug('Face removal result: ', $res);
       $status = !empty($res['@metadata']['statusCode']) ? (int) $res['@metadata']['statusCode'] : null;
       if ($status !== 200) throw new \RuntimeException('Collection face deletion error');
       $faces = $res['DeletedFaces'] ?? [];

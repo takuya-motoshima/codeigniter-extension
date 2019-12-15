@@ -9,13 +9,6 @@
 namespace X\Util;
 final class Loader {
 
-
-
-
-
-
-
-
   /**
    * Load model
    *

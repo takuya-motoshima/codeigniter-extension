@@ -15,20 +15,24 @@ use \X\Util\Logger;
 
 class DetectClient {
 
-  protected $client;
+  private $rekognition;
+  private $debug;
 
   /**
    * 
    * construct
    *
-   * @param array $config
+   * @param string       $key
+   * @param string       $secret
+   * @param bool|boolean $debug
    */
-  public function __construct(array $config = []) {
-    $this->client = new RekognitionClient(array_replace_recursive([
-      'region'      => 'ap-northeast-1',
-      'version'     => 'latest',
-      'credentials' => ['key' => null, 'secret' => null]
-    ], $config));
+  public function __construct(string $key, string $secret, bool $debug = false) {
+    $this->rekognition = new RekognitionClient([
+      'region' => 'ap-northeast-1',
+      'version' => 'latest',
+      'credentials' => ['key' => $key, 'secret' => $secret]
+    ]);
+    $this->debug = $debug;
   }
 
   /**
@@ -42,16 +46,18 @@ class DetectClient {
    */
   public function compare(string $base64Image1, string $base64Image2, int $threshold = 80): bool {
     try {
-      $res = $this->client->compareFaces([
-        'SimilarityThreshold' => $threshold,
-        'SourceImage' => [
-          'Bytes' => ImageHelper::isBase64($base64Image1) ? ImageHelper::convertBase64ToBlob($base64Image1) : $base64Image1
-        ],
-        'TargetImage' => [
-          'Bytes' => ImageHelper::isBase64($base64Image2) ? ImageHelper::convertBase64ToBlob($base64Image2) : $base64Image2
-        ]
-      ]);
-      $res = $res->toArray();
+      $res = $this->rekognition
+        ->compareFaces([
+          'SimilarityThreshold' => $threshold,
+          'SourceImage' => [
+            'Bytes' => ImageHelper::isBase64($base64Image1) ? ImageHelper::convertBase64ToBlob($base64Image1) : $base64Image1
+          ],
+          'TargetImage' => [
+            'Bytes' => ImageHelper::isBase64($base64Image2) ? ImageHelper::convertBase64ToBlob($base64Image2) : $base64Image2
+          ]
+        ])
+        ->toArray();
+      $this->debug && Logger::debug('Face comparison results: ', $res);
       $status = !empty($res['@metadata']['statusCode']) ? (int) $res['@metadata']['statusCode'] : null;
       if ($status !== 200) {
         throw new \RuntimeException('Face comparison error');
@@ -88,23 +94,19 @@ class DetectClient {
    * @return array
    */
   public function detect(string $base64Image, int $threshold = 90): array {
-
     try {
-
-      $res = $this->client->DetectFaces([
-        'Image' => [
-          'Bytes' => ImageHelper::isBase64($base64Image) ? ImageHelper::convertBase64ToBlob($base64Image) : $base64Image
-        ],
-        'Attributes' => ['DEFAULT']
-      ]);
-      $res = $res->toArray();
+      $res = $this->rekognition
+        ->DetectFaces([
+          'Image' => [
+            'Bytes' => ImageHelper::isBase64($base64Image) ? ImageHelper::convertBase64ToBlob($base64Image) : $base64Image
+          ],
+          'Attributes' => ['DEFAULT']
+        ])
+        ->toArray();
+      $this->debug && Logger::debug('Face detection result: ', $res); 
       $status = !empty($res['@metadata']['statusCode']) ? (int) $res['@metadata']['statusCode'] : null;
-      if ($status !== 200) {
-        throw new \RuntimeException('Face detection error');
-      }
-      if (empty($res['FaceDetails'])) {
-        return [];
-      }
+      if ($status !== 200) throw new \RuntimeException('Face detection error');
+      if (empty($res['FaceDetails'])) return [];
       $faces = $res['FaceDetails'];
       return array_filter($res['FaceDetails'], function(array $face) use($threshold) {
         return $face['Confidence'] >= $threshold;
