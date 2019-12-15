@@ -44,14 +44,17 @@ class CollectionFaceClient {
    *
    * @param string $collectionId
    * @param string $base64Image  Image binary data
-   * @return bool
+   * @param boolean $doValidation
+   * @return string
    */
-  public function add(string $collectionId, string $base64Image): string {
+  public function add(string $collectionId, string $base64Image, $doValidation = true): string {
     try {
       if (ImageHelper::isBase64($base64Image)) $base64Image = ImageHelper::convertBase64ToBlob($base64Image);
-      $count = $this->detect->count($base64Image);
-      if ($count === 0) throw new \RuntimeException('Face not detected');
-      if ($count > 1) throw new \RuntimeException('Multiple faces can not be registered');
+      if ($doValidation) {
+        $count = $this->detect->count($base64Image);
+        if ($count === 0) throw new \RuntimeException('Face not detected');
+        if ($count > 1) throw new \RuntimeException('Multiple faces can not be registered');
+      }
       $res = $this->rekognition
         ->indexFaces([
           'CollectionId' => $collectionId,
