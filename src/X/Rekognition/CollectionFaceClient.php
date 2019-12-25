@@ -126,7 +126,7 @@ class CollectionFaceClient {
       $similarity = $faceMatch['Similarity'];
       $faceId = $faceMatch['Face']['FaceId'];
       return [
-        'similarity' => $faceMatch['Similarity'],
+        'similarity' => round($faceMatch['Similarity'], 1),
         'faceId' => $faceMatch['Face']['FaceId']
       ];
     } catch (Throwable $e) {

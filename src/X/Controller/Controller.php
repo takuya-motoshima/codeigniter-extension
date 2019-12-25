@@ -146,6 +146,16 @@ abstract class Controller extends \CI_Controller {
   }
 
   /**
+   * Internal redirect
+   *  
+   * @param  string $internalRedirectPath
+   * @return void
+   */
+  public function internalRedirect(string $internalRedirectPath) {
+    $this->httpResponse->internalRedirect($internalRedirectPath);
+  }
+
+  /**
    * Response error
    *
    * @param  string $errorMessage
