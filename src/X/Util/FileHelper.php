@@ -119,12 +119,12 @@ final class FileHelper {
    * Delete directory or file
    *
    * @param string[] $paths
-   * @param bool $isRemoveRootDir
+   * @param bool $removeRootDir
    */
   public static function delete(...$paths) {
-    $isRemoveRootDir = true;
+    $removeRootDir = true;
     if (is_bool(end($paths))) {
-      $isRemoveRootDir = end($paths);
+      $removeRootDir = end($paths);
       unset($paths[count($paths) - 1]);
     }
     foreach ($paths as $path) {
@@ -143,7 +143,7 @@ final class FileHelper {
           unlink($file);
         }
       }
-      if ($isRemoveRootDir) {
+      if ($removeRootDir) {
         rmdir($path);
       }
     }
@@ -215,5 +215,17 @@ final class FileHelper {
     }
     $finfo = new finfo(FILEINFO_MIME_TYPE);
     return $finfo->file($filePath);
+  }
+
+
+  /**
+   * Verify that the file is of the specified Mime type
+   * 
+   * @param  string $filepath
+   * @param  string $mime
+   * @return bool
+   */
+  public function validationMime(string $filepath, string $mime): bool{
+    return self::getMimeByConent($filePath) ===  $mime;
   }
 }
