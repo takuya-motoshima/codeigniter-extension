@@ -200,4 +200,20 @@ final class FileHelper {
   public static function getRandomFileContent(string $pattern): string {
     return file_get_contents(dirname($pattern) . '/' . self::findRandomFileName($pattern));
   }
+
+  /**
+   * Get MimeType from file contents
+   * 
+   * @param  string $filePath
+   * @return string
+   */
+  public static function getMimeByConent(string $filePath): string {
+    if (!file_exists($filePath)) {
+      throw new \RuntimeException('Not found file ' . $filePath);
+    } else if (!is_file($filePath)) {
+      throw new \RuntimeException($filePath . ' is not file');
+    }
+    $finfo = new finfo(FILEINFO_MIME_TYPE);
+    return $finfo->file($filePath);
+  }
 }

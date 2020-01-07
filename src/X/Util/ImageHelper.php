@@ -45,12 +45,12 @@ final class ImageHelper {
    * Put blob image
    *
    * @param string $blob
-   * @param string $filepath
+   * @param string $filePath
    * @return Void
    */
-  public static function putBlob(string $blob, string $filepath) {
-    FileHelper::makeDirecoty(dirname($filepath));
-    file_put_contents($filepath, $blob, LOCK_EX);
+  public static function putBlob(string $blob, string $filePath) {
+    FileHelper::makeDirecoty(dirname($filePath));
+    file_put_contents($filePath, $blob, LOCK_EX);
   }
 
   /**
@@ -82,15 +82,15 @@ final class ImageHelper {
    * 
    * Read image
    *
-   * @param string $filepath
+   * @param string $filePath
    * @return string
    */
-  public static function read(string $filepath): string {
-    if (!file_exists($filepath)) {
-      throw new \RuntimeException('Image file does not exist. Path=' . $filepath);
+  public static function read(string $filePath): string {
+    if (!file_exists($filePath)) {
+      throw new \RuntimeException('Image file does not exist. Path=' . $filePath);
     }
-    $fp = fopen($filepath, 'r');
-    $blob = fread($fp, filesize($filepath));
+    $fp = fopen($filePath, 'r');
+    $blob = fread($fp, filesize($filePath));
     fclose($fp);
     return $blob;
   }
@@ -99,12 +99,12 @@ final class ImageHelper {
    * 
    * Read image
    *
-   * @param string $filepath
+   * @param string $filePath
    * @return string
    */
-  public static function readAsBase64(string $filepath): string {
-    $blob = self::read($filepath);
-    $mime = mime_content_type($filepath);
+  public static function readAsBase64(string $filePath): string {
+    $blob = self::read($filePath);
+    $mime = mime_content_type($filePath);
     if ($mime === 'image/svg' || $mime === 'image/svgz') {
       $mime = 'image/svg+xml';
     }
