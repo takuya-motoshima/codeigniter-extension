@@ -213,7 +213,7 @@ final class FileHelper {
     } else if (!is_file($filePath)) {
       throw new \RuntimeException($filePath . ' is not file');
     }
-    $finfo = new finfo(FILEINFO_MIME_TYPE);
+    $finfo = new \finfo(FILEINFO_MIME_TYPE);
     return $finfo->file($filePath);
   }
 
@@ -221,11 +221,11 @@ final class FileHelper {
   /**
    * Verify that the file is of the specified Mime type
    * 
-   * @param  string $filepath
+   * @param  string $filePath
    * @param  string $mime
    * @return bool
    */
-  public function validationMime(string $filepath, string $mime): bool{
+  public static function validationMime(string $filePath, string $mime): bool{
     return self::getMimeByConent($filePath) ===  $mime;
   }
 }
