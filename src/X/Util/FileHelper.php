@@ -179,6 +179,21 @@ final class FileHelper {
 
   /**
    * 
+   * Find only one file
+   * 
+   * @param  string $pattern
+   * @return string
+   */
+  public static function findOne(string $pattern): ?string {
+    $files = self::find($pattern);
+    if (empty($files)) {
+      return null;
+    }
+    return $files[0];
+  }
+
+  /**
+   * 
    * Find random file name
    * 
    * @param  string $pattern
