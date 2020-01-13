@@ -29,7 +29,7 @@ abstract class Input extends \CI_Input {
     if (!count($matches)) {
       // we expect regular puts to containt a query string containing data
       parse_str(urldecode($data), $data);
-      return $data;
+      return empty($index) ? $data : $data[$index] ?? '';
     }
     $boundary = $matches[1];
 
@@ -69,7 +69,7 @@ abstract class Input extends \CI_Input {
         }
       }
     }
-    return empty($index) ? $data : ($data[$index] ?? '');
+    return empty($index) ? $data : $data[$index] ?? '';
     // return parent::input_stream($index, $xss_clean);
   }
 
