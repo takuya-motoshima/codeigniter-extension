@@ -1017,6 +1017,15 @@ abstract class Model extends \CI_Model {
   }
 
   /**
+   * Set foreign key check
+   *
+   * @return  bool
+   */
+  public function set_foreign_key_checks(bool $toCheck) {
+    return $this->query('SET foreign_key_checks=' . $toCheck ? 1 : 0);
+  }
+
+  /**
    * Returns the last query that was executed
    *
    * @return  string
