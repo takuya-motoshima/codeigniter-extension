@@ -10,7 +10,16 @@ class Test extends AppController {
   /**
    * @Access(allow_login=true, allow_logoff=true)
    */
-  public function testTransaction() {
-    $this->TestModel->testTransaction();
+  public function transactionTest() {
+    // $this->TestModel->testTransaction();
+    Logger::debug('AppModel::is_connect()=', AppModel::is_connect() ? 1 : 0);
+  }
+
+  /**
+   * @Access(allow_login=true, allow_logoff=true)
+   */
+  public function dbConnectionTest() {
+    // $this->TestModel->testTransaction();
+    Logger::debug('AppModel::is_connect()=', AppModel::is_connect() ? 1 : 0);
   }
 }

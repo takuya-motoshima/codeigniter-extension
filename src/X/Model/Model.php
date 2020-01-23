@@ -9,6 +9,7 @@
  */
 namespace X\Model;
 use X\Util\Loader;
+use X\Util\Logger;
 abstract class Model extends \CI_Model {
 
   /**
@@ -44,6 +45,19 @@ abstract class Model extends \CI_Model {
   public static function db(string $config = 'default') {
     static $db;
     return $db[$config] ?? $db[$config] = Loader::database($config, true);
+  }
+
+  /**
+   * Get database object
+   *
+   * @param string $config
+   * @return CI_DB
+   */
+  public static function is_connect(string $config = 'default'): bool {
+    $db = Loader::database($config, true);
+    $connected = !empty($db->conn_id);
+    $db->close();
+    return $connected;
   }
 
   /**
