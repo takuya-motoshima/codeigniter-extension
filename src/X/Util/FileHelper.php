@@ -21,7 +21,7 @@ final class FileHelper {
    * @param int $mode
    * @return void
    */
-  public static function makeDirecoty(string $dir, int $mode = 0755) {
+  public static function makeDirectory(string $dir, int $mode = 0755) {
     if (file_exists($dir)) {
       return;
     }
