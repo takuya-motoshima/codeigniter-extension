@@ -5,6 +5,7 @@ use \X\Annotation\Access;
 use \X\Util\Logger;
 class Test extends AppController {
 
+  //@ToDo $model指定がなくてもAppModelが呼び込まれるようにする
   protected $model = 'TestModel';
 
   /**
