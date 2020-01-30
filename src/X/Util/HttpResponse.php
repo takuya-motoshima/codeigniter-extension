@@ -1,4 +1,5 @@
 <?php
+
 /**
  * HTTP Response util class
  *
@@ -94,7 +95,7 @@ final class HttpResponse {
       throw new \LogicException(sprintf('Failed to parse json string \'%s\', error: \'%s\'', $this->data, json_last_error_msg()));
     }
     ob_clean();
-    $this->setCorsHeader();
+    // $this->setCorsHeader('*');
     $this->ci->output
       ->set_status_header($this->status ?? \X\Constant\HTTP_OK)
       ->set_content_type('application/json', 'UTF-8')
@@ -108,7 +109,7 @@ final class HttpResponse {
    * @return void
    */
   public function html(string $html) {
-    $this->setCorsHeader();
+    // $this->setCorsHeader('*');
     $this->ci->output
       ->set_content_type('text/html', 'UTF-8')
       ->set_output($html);
@@ -134,7 +135,7 @@ final class HttpResponse {
    */
   public function js(string $js) {
     ob_clean();
-    $this->setCorsHeader();
+    // $this->setCorsHeader('*');
     $this->ci->output
       ->set_content_type('application/javascript', 'UTF-8')
       ->set_output($js);
@@ -148,7 +149,7 @@ final class HttpResponse {
    */
   public function text(string $text) {
     ob_clean();
-    $this->setCorsHeader();
+    // $this->setCorsHeader('*');
     $this->ci->output
       ->set_content_type('text/plain', 'UTF-8')
       ->set_output($text);
@@ -192,7 +193,7 @@ final class HttpResponse {
   public function error(string $message, int $status = \X\Constant\HTTP_INTERNAL_SERVER_ERROR) {
     if ($this->ci->input->is_ajax_request()) {
       ob_clean();
-      $this->setCorsHeader();
+      // $this->setCorsHeader('*');
       $this->ci->output
         ->set_header('Cache-Control: no-cache, must-revalidate')
         ->set_status_header($status, rawurlencode($message))
@@ -230,7 +231,7 @@ final class HttpResponse {
    * @return void
    */
   public function internalRedirect(string $internalRedirectPath) {
-    $this->setCorsHeader();
+    // $this->setCorsHeader('*');
     $this->ci->output
       ->set_header('Content-Type: true')
       ->set_header('X-Accel-Redirect: ' . $internalRedirectPath)
@@ -240,14 +241,26 @@ final class HttpResponse {
   /**
    * Sets the CORS header
    *
-   * @param
+   * eg.
+   *   // Allow all origins
+   *   $httpResponse->setCorsHeader('*');
+   *
+   *   // Allow a specific single origin
+   *   $httpResponse->setCorsHeader('http://www.example.jp');
+   *   
+   *   // Allow specific multiple origins
+   *   $httpResponse->setCorsHeader('http://www.example.jp https://www.example.jp http://sub.example.jp');
+   *
+   * @param string $origin
+   * @return void
    */
-  private function setCorsHeader() {
-    $origin = '*';
-    if (!empty($_SERVER['HTTP_ORIGIN'])) {
-      $origin = $_SERVER['HTTP_ORIGIN'];
-    } else if (!empty($_SERVER['HTTP_REFERER'])) {
-      $origin = parse_url($_SERVER['HTTP_REFERER'], PHP_URL_SCHEME) . '://' . parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST);
+  public function setCorsHeader(string $origin) {
+    if ($origin === '*') {
+      if (!empty($_SERVER['HTTP_ORIGIN'])) {
+        $origin = $_SERVER['HTTP_ORIGIN'];
+      } else if (!empty($_SERVER['HTTP_REFERER'])) {
+        $origin = parse_url($_SERVER['HTTP_REFERER'], PHP_URL_SCHEME) . '://' . parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST);
+      }
     }
     $this->ci->output
       ->set_header('Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Authorization')
