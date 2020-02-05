@@ -97,6 +97,8 @@ final class HttpResponse {
     $this->setCorsHeader();
     $this->ci->output
       ->set_status_header($this->status ?? \X\Constant\HTTP_OK)
+      ->set_header('X-Content-Type-Options: nosniff')
+      ->set_header('Content-Disposition: attachment; filename="api.json"')
       ->set_content_type('application/json', 'UTF-8')
       ->set_output($json);
   }
