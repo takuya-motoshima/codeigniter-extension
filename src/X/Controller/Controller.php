@@ -194,7 +194,8 @@ abstract class Controller extends \CI_Controller {
    * @return void
    */
   public function internalRedirect(string $internalRedirectPath) {
-    $this->beforeInternalRedirect();
+    $this->beforeResponse($this->getReferer());
+    $this->beforeInternalRedirect($this->getReferer());
     $this->httpResponse->internalRedirect($internalRedirectPath);
   }
 
@@ -279,4 +280,12 @@ abstract class Controller extends \CI_Controller {
    * @return void
    */
   protected function beforeResponseImage(string $referer) {}
+
+  /**
+   * Before response json
+   *
+   * @param  string $referer
+   * @return void
+   */
+  protected function beforeInternalRedirect(string $referer) {}
 }
