@@ -10,6 +10,7 @@
 namespace X\Util;
 use X\Constant\HttpStatus;
 use X\Util\Loader;
+use X\Util\Logger;
 final class HttpResponse {
 
   /**
@@ -262,6 +263,7 @@ final class HttpResponse {
         $origin = parse_url($_SERVER['HTTP_REFERER'], PHP_URL_SCHEME) . '://' . parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST);
       }
     }
+    Logger::debug('$origin=', $origin);
     $this->ci->output
       ->set_header('Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Authorization')
       ->set_header('Access-Control-Allow-Methods: GET, POST, OPTIONS')

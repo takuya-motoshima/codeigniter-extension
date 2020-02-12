@@ -13,8 +13,8 @@ class Sample extends AppController {
   public function get(string $id) {
 
     try {
-
       parent
+        ::setCorsHeader('https://github.com')
         ::set($this->SampleModel->getById((int) $id))
         ::json();
     } catch (\Throwable $e) {

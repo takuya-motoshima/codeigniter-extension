@@ -42,13 +42,13 @@ abstract class Controller extends \CI_Controller {
    *
    * eg.
    *  - Allow all origins
-   *      $httpResponse->setCorsHeader('*');
+   *      parent::setCorsHeader('*');
    *
    *  - Allow a specific single origin
-   *      $httpResponse->setCorsHeader('http://www.example.jp');
+   *      parent::setCorsHeader('http://www.example.jp');
    *   
    *  - Allow specific multiple origins
-   *      $httpResponse->setCorsHeader('http://www.example.jp https://www.example.jp http://sub.example.jp');
+   *      parent::setCorsHeader('http://www.example.jp https://www.example.jp http://sub.example.jp');
    *
    *  - To set the same Access-Control-Allow-Origin for all responses, use the hook point called before the response
    *      // core/AppController.php: 
