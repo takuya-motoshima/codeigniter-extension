@@ -7,7 +7,9 @@
  * @copyright  2017 Takuya Motoshima
  */
 namespace X\Util;
+use X\Util\FileHelper;
 use X\Util\Logger;
+
 final class Template {
 
   /**
@@ -22,11 +24,17 @@ final class Template {
    * @param array $option
    */
   public function __construct(array $option = []) {
+
+    // If there is no cache directory, create it
+    $cache = \APPPATH . 'cache';
+    FileHelper::makeDirecoty($cache);
+
+    // Initialize options
     $option = array_merge([
-      'paths' => [\VIEWPATH],
+      'paths' => [ \VIEWPATH ],
       'environment' => [
         // 'cache' => false,
-        'cache' => \APPPATH . 'cache',
+        'cache' => $cache,
         'debug' => \ENVIRONMENT !== 'production',
         'autoescape' => 'html',
       ],
@@ -37,7 +45,9 @@ final class Template {
         'interpolation' => ['#{','}'],
       ],
     ], $option);
+
     $this->engine = new \Twig_Environment(new \Twig_Loader_Filesystem($option['paths']), $option['environment']);
+    
     $this->engine->addFunction(new \Twig_SimpleFunction('cache_busting',
       /**
        * @param $filePath
