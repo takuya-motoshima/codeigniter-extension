@@ -37,7 +37,7 @@ trait Result {
    * @return  array
    */
   public function result_keyvalue(string $key = 'id'):array {
-    $rows = parernt::result_array();
+    $rows = $this->result_array();
     if (empty($rows)) {
       return [];
     }

@@ -10,6 +10,32 @@ namespace X\Database;
 abstract class QueryBuilder extends \CI_DB_query_builder {
 
   /**
+   * @var integer The current page we are on
+   */
+  protected $qb_cur_page = 1;
+
+  /**
+   * @var integer The number of rows/items per page
+   */
+  protected $qb_rows_per_page  = 10;
+
+  /**
+   * @var integer Only show this many page numbers per page
+   */
+  protected $qb_page_limit     = 10;
+
+  /**
+   * @var integer Max pages for this query
+   */
+  protected $qb_max_pages      = 0;
+
+  /**
+   * @var integer Total rows
+   */
+  protected $qb_total_rows = 0;
+
+
+  /**
    * Query debug flag
    *
    * Whether to output the query to the log

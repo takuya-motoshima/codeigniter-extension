@@ -4,20 +4,34 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 use \X\Annotation\Access;
 use \X\Util\Logger;
 use \X\Model\Model;
-class Test extends AppController {
+class Sample extends AppController {
 
-  protected $model = 'TestModel';
+  protected $model = 'SampleModel';
 
   public function index() {
-    parent::view('test/index');
+    parent::view('sample/index');
   }
+
+  /**
+   * @Access(allow_login=true, allow_logoff=true)
+   */
+  public function something() {
+    try {
+
+      $name = 'john';
+      $this->SampleModel->getUsersByNames($name);
+    } catch (\Throwable $e) {
+      Logger::print($e->getMessage());
+    }
+  }
+
 
   /**
    * @Access(allow_login=true, allow_logoff=true)
    */
   public function transactionTest() {
     try {
-      $this->TestModel->testTransaction();
+      $this->SampleModel->transactionTest();
     } catch (\Throwable $e) {
       Logger::print($e->getMessage());
     }
@@ -28,8 +42,7 @@ class Test extends AppController {
    */
   public function dbConnectionTest() {
     try {
-      $connected = Model::is_connect() ? 1 : 0;
-      Logger::print('$connected=', $connected ? 1 : 0);
+      Logger::print('DB connection: ', Model::is_connect() ? 1 : 0);
     } catch (\Throwable $e) {
       Logger::print($e->getMessage());
     }

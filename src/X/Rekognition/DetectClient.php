@@ -37,6 +37,45 @@ class DetectClient {
 
   /**
    * 
+   * Calculate similarity
+   * 
+   * @param  string      $base64Image1 Image binary data
+   * @param  string      $base64Image2 Image binary data
+   * @return float
+   */
+  public function calculateSimilarity(string $base64Image1, string $base64Image2): float {
+    $res = $this->rekognition
+      ->compareFaces([
+        'SimilarityThreshold' => 0,
+        'SourceImage' => [ 'Bytes' => ImageHelper::isBase64($base64Image1) ? ImageHelper::convertBase64ToBlob($base64Image1) : $base64Image1 ],
+        'TargetImage' => [ 'Bytes' => ImageHelper::isBase64($base64Image2) ? ImageHelper::convertBase64ToBlob($base64Image2) : $base64Image2 ]
+      ])
+      ->toArray();
+    $this->debug && Logger::debug('Calculate similarit results: ', $res);
+    $status = !empty($res['@metadata']['statusCode']) ? (int) $res['@metadata']['statusCode'] : null;
+    if ($status !== 200) {
+      throw new \RuntimeException('Calculate similarit error');
+    }
+    if (empty($res['FaceMatches'])) {
+      return .0;
+    }
+    return round($res['FaceMatches'][0]['Similarity'], 1);
+  }
+
+  /**
+   * 
+   * Calculate similarity by path
+   * 
+   * @param  string      $imagePath1 Image path
+   * @param  string      $imagePath2 Image path
+   * @return float
+   */
+  public function calculateSimilarityFromPath(string $imagePath1, string $imagePath2): float {
+    return $this->calculateSimilarity(ImageHelper::read($imagePath1), ImageHelper::read($imagePath2));
+  }
+
+  /**
+   * 
    * Compare face
    * 
    * @param  string      $base64Image1 Image binary data
@@ -45,31 +84,19 @@ class DetectClient {
    * @return bool
    */
   public function compare(string $base64Image1, string $base64Image2, int $threshold = 80): bool {
-    try {
-      $res = $this->rekognition
-        ->compareFaces([
-          'SimilarityThreshold' => $threshold,
-          'SourceImage' => [
-            'Bytes' => ImageHelper::isBase64($base64Image1) ? ImageHelper::convertBase64ToBlob($base64Image1) : $base64Image1
-          ],
-          'TargetImage' => [
-            'Bytes' => ImageHelper::isBase64($base64Image2) ? ImageHelper::convertBase64ToBlob($base64Image2) : $base64Image2
-          ]
-        ])
-        ->toArray();
-      $this->debug && Logger::debug('Face comparison results: ', $res);
-      $status = !empty($res['@metadata']['statusCode']) ? (int) $res['@metadata']['statusCode'] : null;
-      if ($status !== 200) {
-        throw new \RuntimeException('Face comparison error');
-      }
-      return $res['FaceMatches'] ? true : false;
-    } catch (RekognitionException $e) {
-      Logger::error($e);
-      throw $e;
-    } catch (Throwable $e) {
-      Logger::error($e);
-      throw $e;
+    $res = $this->rekognition
+      ->compareFaces([
+        'SimilarityThreshold' => $threshold,
+        'SourceImage' => [ 'Bytes' => ImageHelper::isBase64($base64Image1) ? ImageHelper::convertBase64ToBlob($base64Image1) : $base64Image1 ],
+        'TargetImage' => [ 'Bytes' => ImageHelper::isBase64($base64Image2) ? ImageHelper::convertBase64ToBlob($base64Image2) : $base64Image2 ]
+      ])
+      ->toArray();
+    $this->debug && Logger::debug('Face comparison results: ', $res);
+    $status = !empty($res['@metadata']['statusCode']) ? (int) $res['@metadata']['statusCode'] : null;
+    if ($status !== 200) {
+      throw new \RuntimeException('Face comparison error');
     }
+    return $res['FaceMatches'] ? true : false;
   }
 
   /**
@@ -94,27 +121,20 @@ class DetectClient {
    * @return array
    */
   public function detect(string $base64Image, int $threshold = 90): array {
-    try {
-      $res = $this->rekognition
-        ->DetectFaces([
-          'Image' => [
-            'Bytes' => ImageHelper::isBase64($base64Image) ? ImageHelper::convertBase64ToBlob($base64Image) : $base64Image
-          ],
-          'Attributes' => ['DEFAULT']
-        ])
-        ->toArray();
-      $this->debug && Logger::debug('Face detection result: ', $res); 
-      $status = !empty($res['@metadata']['statusCode']) ? (int) $res['@metadata']['statusCode'] : null;
-      if ($status !== 200) throw new \RuntimeException('Face detection error');
-      if (empty($res['FaceDetails'])) return [];
-      $faces = $res['FaceDetails'];
-      return array_filter($res['FaceDetails'], function(array $face) use($threshold) {
-        return $face['Confidence'] >= $threshold;
-      });
-    } catch (Throwable $e) {
-      Logger::error($e);
-      throw $e;
-    }
+    $res = $this->rekognition
+      ->DetectFaces([
+        'Image' => [ 'Bytes' => ImageHelper::isBase64($base64Image) ? ImageHelper::convertBase64ToBlob($base64Image) : $base64Image ],
+        'Attributes' => ['DEFAULT']
+      ])
+      ->toArray();
+    $this->debug && Logger::debug('Face detection result: ', $res); 
+    $status = !empty($res['@metadata']['statusCode']) ? (int) $res['@metadata']['statusCode'] : null;
+    if ($status !== 200) throw new \RuntimeException('Face detection error');
+    if (empty($res['FaceDetails'])) return [];
+    $faces = $res['FaceDetails'];
+    return array_filter($res['FaceDetails'], function(array $face) use($threshold) {
+      return $face['Confidence'] >= $threshold;
+    });
   }
 
   /**

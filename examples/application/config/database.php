@@ -72,7 +72,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 */
 $active_group = 'default';
 $query_builder = TRUE;
-$database = 'ciex_test';
+$database = 'test';
 $username = 'root';
 $password = '';
 $db['default'] = array(
@@ -94,5 +94,5 @@ $db['default'] = array(
 	'compress' => FALSE,
 	'stricton' => FALSE,
 	'failover' => array(),
-	'save_queries' => FALSE
+	'save_queries' => (ENVIRONMENT !== 'production')
 );
