@@ -89,20 +89,69 @@ abstract class Model extends \CI_Model {
     return $count !== 0;
   }
 
-  // ----------------------------------------------------------------
-  // Override X\Database\QueryBuilder methods
+  // // ----------------------------------------------------------------
   /**
-   * Insert_On_Duplicate_Key_Update_Batch
+   * Insert_On_Duplicate_Key_Update
    *
-   * Compiles batch insert strings and runs the queries
+   * Compiles insert strings and runs the queries
+   *
+   * e.g.
+   *   $SampleModel
+   *     ->set([
+   *       'key' => '1',
+   *       'title' => 'My title',
+   *       'name' => 'My Name'
+   *     ])
+   *     ->insert_on_duplicate_update();
+   *     
+   *   // You can also
+   *   $SampleModel
+   *     ->set('key', '1')
+   *     ->set('title', 'My title')
+   *     ->set('name', 'My Name')
+   *     ->insert_on_duplicate_update();
    *
    * @param   string $table = '' Table to insert into
    * @param   array|object $set = null an associative array of insert values
    * @param   bool $escape = null Whether to escape values and identifiers
    * @param   int  $batch_size = 100 Count of rows to insert at once
-   * @return  int[] Insert ID
+   * @return  int Insert ID
    */
-  public function insert_on_duplicate_update_batch(string $table = '', $set = null, bool $escape = null, int $batch_size = 100) {
+  public function insert_on_duplicate_update(string $table = '', $set = null, bool $escape = null): int {
+    if (!self::db()->isset_qb_from() && empty($table)) {
+      $table = static::TABLE;
+    }
+    return self::db()->insert_on_duplicate_update($table, $set, $escape);
+  }
+
+  /**
+   * Insert_On_Duplicate_Key_Update_Batch
+   *
+   * Compiles batch insert strings and runs the queries
+   *
+   * e.g.
+   *   $SampleModel
+   *     ->set_insert_batch([
+   *       [
+   *         'key' => '1',
+   *         'title' => 'My title',
+   *         'name' => 'My Name'
+   *       ],
+   *       [
+   *         'key' => '2',
+   *         'title' => 'Another title',
+   *         'name' => 'Another Name'
+   *       ]
+   *     ])
+   *     ->insert_on_duplicate_update_batch();
+   *
+   * @param   string $table = '' Table to insert into
+   * @param   array|object $set = null an associative array of insert values
+   * @param   bool $escape = null Whether to escape values and identifiers
+   * @param   int  $batch_size = 100 Count of rows to insert at once
+   * @return  int Number of rows inserted or FALSE on failure
+   */
+  public function insert_on_duplicate_update_batch(string $table = '', $set = null, bool $escape = null, int $batch_size = 100): int {
     if (!self::db()->isset_qb_from() && empty($table)) {
       $table = static::TABLE;
     }
@@ -1195,5 +1244,14 @@ abstract class Model extends \CI_Model {
    */
   public function error() {
     return call_user_func_array([self::db(), __FUNCTION__], func_get_args());
+  }
+
+  /**
+   * Insert ID
+   *
+   * @return  int
+   */
+  public function insert_id() {
+    return call_user_func_array([self::insert_id(), __FUNCTION__], func_get_args());
   }
 }

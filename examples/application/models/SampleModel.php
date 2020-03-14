@@ -10,6 +10,24 @@ class SampleModel extends AppModel {
     return parent::get_by_id($id);
   }
 
+  public function testSubQuery() {
+    $subQuery = parent
+      ::select('name, COUNT(*) count')
+      ::from(self::TABLE)
+      ::group_by('name')
+      ::get_compiled_select();
+
+    Logger::debug('$subQuery=', $subQuery);
+
+    $rows =parent
+      ::select('counter.name, counter.count')
+      ::from("($subQuery) counter")
+      ::get()
+      ->result_array();
+
+    Logger::debug('$rows=', $rows);
+  }
+
   public function add(array $set): int {
     try {
       parent::trans_begin();

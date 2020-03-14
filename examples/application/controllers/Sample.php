@@ -18,8 +18,12 @@ class Sample extends AppController {
   public function something() {
     try {
 
-      $name = 'john';
-      $this->SampleModel->getUsersByNames($name);
+      // $name = 'john';
+      // $this->SampleModel->getUsersByNames($name);
+      
+
+      $this->SampleModel->testSubQuery();
+
     } catch (\Throwable $e) {
       Logger::print($e->getMessage());
     }

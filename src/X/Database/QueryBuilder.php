@@ -54,6 +54,60 @@ abstract class QueryBuilder extends \CI_DB_query_builder {
   }
 
   /**
+   * Insert_On_Duplicate_Key_Update
+   *
+   * Compiles an insert string and runs the query
+   *
+   * @see CI_DB_query_builder::insert()
+   * @throws RuntimeException
+   * @param   string $table = '' the table to insert data into
+   * @param   array|object $set = null an associative array of insert values
+   * @param   bool $escape = null Whether to escape values and identifiers
+   * @return  int Insert ID
+   */
+  public function insert_on_duplicate_update($table = '', $set = null, $escape = null): int {
+    if ($set !== null) {
+      parent::set($set, '', $escape);
+    }
+    if (count($this->qb_set) === 0) {
+      // No valid data array. Folds in cases where keys and values did not match up
+      return ($this->db_debug) ? parent::display_error('db_must_use_set') : false;
+    }
+    if ($table === '') {
+      if (!isset($this->qb_from[0])) {
+        return ($this->db_debug) ? parent::display_error('db_must_set_table') : false;
+      }
+      $table = $this->qb_from[0];
+    }
+    $sql = $this->_insert_on_duplicate_key_update(
+      parent::protect_identifiers($table, true, $escape, false),
+      array_keys($this->qb_set),
+      array_values($this->qb_set)
+    );
+    $this->query($sql);
+    parent::_reset_write();
+    return (int) $this->insert_id();
+  }
+
+  /**
+   * Insert on duplicate key update  statement
+   *
+   * Generates a platform-specific insert string from the supplied data
+   *
+   * @param   string $table Table name
+   * @param   array $keys INSERT keys
+   * @param   array $values INSERT values
+   * @return  string
+   */
+  private function _insert_on_duplicate_key_update(string $table, array $keys, array $values): string {
+    foreach ($keys as $key) {
+      $update_fields[] = $key . '= VALUES(' . $key . ')';
+    }
+    return 'INSERT INTO ' . $table . ' (' . implode(', ', $keys) . ') VALUES (' . implode(', ', $values) . ') ON DUPLICATE KEY UPDATE ' . implode(', ', $update_fields);
+  }
+
+
+  /**
    * Insert_On_Duplicate_Key_Update_Batch
    *
    * Compiles batch insert strings and runs the queries
@@ -62,9 +116,9 @@ abstract class QueryBuilder extends \CI_DB_query_builder {
    * @param   array|object $set = null an associative array of insert values
    * @param   bool $escape = null Whether to escape values and identifiers
    * @param   int  $batch_size = 100 Count of rows to insert at once
-   * @return  int[] Insert ID
+   * @return  int Number of rows inserted or FALSE on failure
    */
-  public function insert_on_duplicate_update_batch(string $table = '', $set = null, bool $escape = null, int $batch_size = 100) {
+  public function insert_on_duplicate_update_batch(string $table = '', $set = null, bool $escape = null, int $batch_size = 100): int {
     if ($set !== null) {
       parent::set_insert_batch($set, '', $escape);
     }
@@ -82,7 +136,12 @@ abstract class QueryBuilder extends \CI_DB_query_builder {
     // Batch this baby
     $affected_rows = 0;
     for ($i = 0, $total = count($this->qb_set); $i < $total; $i += $batch_size) {
-      $this->query($this->_insert_on_duplicate_key_update_batch(parent::protect_identifiers($table, true, $escape, false), $this->qb_keys, array_slice($this->qb_set, $i, $batch_size)));
+      $sql = $this->_insert_on_duplicate_key_update_batch(
+        parent::protect_identifiers($table, true, $escape, false),
+        $this->qb_keys,
+        array_slice($this->qb_set, $i, $batch_size)
+      );
+      $this->query($sql);
       $affected_rows += $this->affected_rows();
       // $affected_rows += parent::affected_rows();
     }
@@ -101,7 +160,7 @@ abstract class QueryBuilder extends \CI_DB_query_builder {
    * @return  string
    */
   private function _insert_on_duplicate_key_update_batch(string $table, array $keys, array $values): string {
-    foreach ($keys as $num => $key) {
+    foreach ($keys as $key) {
       $update_fields[] = $key . '= VALUES(' . $key . ')';
     }
     return 'INSERT INTO ' . $table . ' (' . implode(', ', $keys) . ') VALUES ' . implode(', ', $values) . ' ON DUPLICATE KEY UPDATE ' . implode(', ', $update_fields);
@@ -119,7 +178,7 @@ abstract class QueryBuilder extends \CI_DB_query_builder {
    * @param   bool $escape = null Whether to escape values and identifiers
    * @return  int Insert ID
    */
-  public function insert($table = '', $set = null, $escape = null):int {
+  public function insert($table = '', $set = null, $escape = null): int {
     $result = parent::insert($table, $set, $escape);
     if ($result === false) {
       $error = parent::error();
