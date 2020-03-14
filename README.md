@@ -1,4 +1,4 @@
-# codeigniter-extension
+#  CodeIgniter Extension
 
 A package for efficient development of Codeigniter.  
 A simple interface and some general-purpose processing classes have been added to make it easier to use models and libraries.  
@@ -8,6 +8,52 @@ This package installs the offical [CodeIgniter](https://github.com/bcit-ci/CodeI
 You can update CodeIgniter system folder to latest version with one command.  
 
 [![Latest Stable Version](https://poser.pugx.org/takuya-motoshima/codeigniter-extensions/v/stable)](https://packagist.org/packages/takuya-motoshima/codeigniter-extensions) [![Total Downloads](https://poser.pugx.org/takuya-motoshima/codeigniter-extensions/downloads)](https://packagist.org/packages/takuya-motoshima/codeigniter-extensions) [![Latest Unstable Version](https://poser.pugx.org/takuya-motoshima/codeigniter-extensions/v/unstable)](https://packagist.org/packages/takuya-motoshima/codeigniter-extensions) [![License](https://poser.pugx.org/takuya-motoshima/codeigniter-extensions/license)](https://packagist.org/packages/takuya-motoshima/codeigniter-extensions)
+
+## Release Notes
+
+> ### v3.3.8 (March 14, 2020)
+>
+> #### New Features
+> 
+> * **Added insert_on_duplicate_update.**
+> 
+>     ```PHP
+>     // Here is an example of insert_on_duplicate_update.
+>     $SampleModel
+>     ->set([
+>     'key' => '1',
+>     'title' => 'My title',
+>     'name' => 'My Name'
+>     ])
+>     ->insert_on_duplicate_update();
+> 
+>     // You can also
+>     $SampleModel
+>       ->set('key', '1')
+>       ->set('title', 'My title')
+>       ->set('name', 'My Name')
+>       ->insert_on_duplicate_update();
+>     ```
+> 
+> * **Added insert_on_duplicate_update_batch.**
+> 
+>     ```PHP
+>     // Here is an example of insert_on_duplicate_update_batch
+>     $SampleModel
+>       ->set_insert_batch([
+>         [
+>           'key' => '1',
+>           'title' => 'My title',
+>           'name' => 'My Name'
+>         ],
+>         [
+>           'key' => '2',
+>           'title' => 'Another title',
+>           'name' => 'Another Name'
+>         ]
+>       ])
+>       ->insert_on_duplicate_update_batch();
+>     ```
 
 ## Requirements
 
@@ -39,7 +85,7 @@ You can update CodeIgniter system folder to latest version with one command.
     1. Add the following to /etc/nginx/conf.d/{Your application name}.conf.  
 
         When accessing with the root URL. e.g. //{Your server name} :  
-        
+
         ```nginx
         server {
             listen 80;
