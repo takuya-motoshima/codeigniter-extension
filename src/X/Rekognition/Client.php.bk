@@ -181,7 +181,7 @@ class Client {
    * @return array
    */
   public function getFaceFromCollectionByImage(string $collectionId, string $faceImage, int $threshold = 80): ?array {
-    if (\preg_match('/^\//', $faceImage) && \is_file($faceImage)) {
+    if (is_file($faceImage)) {
       $faceImage = ImageHelper::read($faceImage);
     }
     if (ImageHelper::isBase64($faceImage)) {
@@ -257,10 +257,10 @@ class Client {
    * @return float
    */
   public function compareFaces(string $faceImage1, string $faceImage2): float {
-    if (\preg_match('/^\//', $faceImage1) && \is_file($faceImage1)) {
+    if (is_file($faceImage1)) {
       $faceImage1 = ImageHelper::read($faceImage1);
     }
-    if (\preg_match('/^\//', $faceImage2) && \is_file($faceImage2)) {
+    if (is_file($faceImage2)) {
       $faceImage2 = ImageHelper::read($faceImage2);
     }
     $response = $this->client->compareFaces([
@@ -287,7 +287,7 @@ class Client {
    * @return array
    */
   public function detectionFaces(string $faceImage, int $threshold = 90): array {
-    if (\preg_match('/^\//', $faceImage) && \is_file($faceImage)) {
+    if (is_file($faceImage)) {
       $faceImage = ImageHelper::read($faceImage);
     }
     $response = $this->client->DetectFaces([
