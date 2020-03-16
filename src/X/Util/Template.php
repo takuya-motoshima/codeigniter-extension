@@ -8,6 +8,7 @@
  */
 namespace X\Util;
 use X\Util\FileHelper;
+use X\Util\Loader;
 use X\Util\Logger;
 
 final class Template {
@@ -25,16 +26,19 @@ final class Template {
    */
   public function __construct(array $option = []) {
 
+    // Get cache settings
+    $cache = Loader::config('config', 'cache_templates');
+
     // If there is no cache directory, create it
-    $cache = \APPPATH . 'cache';
-    FileHelper::makeDirecoty($cache);
+    if (!empty($cache)) {
+      FileHelper::makeDirecoty($cache);
+    }
 
     // Initialize options
     $option = array_merge([
       'paths' => [ \VIEWPATH ],
       'environment' => [
-        // 'cache' => false,
-        'cache' => $cache,
+        'cache' => !empty($cache) ? $cache : false,
         'debug' => \ENVIRONMENT !== 'production',
         'autoescape' => 'html',
       ],

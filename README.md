@@ -11,12 +11,54 @@ You can update CodeIgniter system folder to latest version with one command.
 
 ## Release Notes
 
+> ### 3.4.2 (March 16, 2020)
+>
+> #### New Features
+>
+> * **Added setting of template cache in application config (application/config/config.php).**
+>
+>    You can configure the template cache in "application/config /config.php".
+>
+>     ```PHP
+>    /*
+>    |--------------------------------------------------------------------------
+>    | Template settings
+>    |--------------------------------------------------------------------------
+>    |
+>    | 'csrf_token_name' = Directory path to store template cache. Set FALSE when not caching. The default is FALSE.
+>    */
+>    $config['cache_templates'] = false;
+>     ```
+>
+> ### v3.3.9 (March 16, 2020)
+>
+> #### New Features
+>
+> * **Added client class that summarizes face detection processing. Remove old face detection class.**
+>
+>     ```PHP
+>     use \X\Rekognition\Client;
+>     $client = new Client('AWS_REKOGNITION_KEY', 'AWS_REKOGNITION_SECRET');
+>
+>     // Create new face collection
+>     $collectionId = $client->generateCollectionId(FCPATH . 'protected');
+>     $client->addCollection($collectionId);
+>
+>     // Add a face photo in data URL format to the collection
+>     $faceImage = 'data:image/png;base64,...';
+>     $faceId = $client->addFaceToCollection($collectionId, $faceImage);
+>
+>     // You can also add to the collection from the photo file path.
+>     $faceImageFile = './face.png';
+>     $faceId = $client->addFaceToCollection($collectionId, $faceImageFile);
+>     ```
+>
 > ### v3.3.8 (March 14, 2020)
 >
 > #### New Features
-> 
+>
 > * **Added insert_on_duplicate_update.**
-> 
+>
 >     ```PHP
 >     // Here is an example of insert_on_duplicate_update.
 >     $SampleModel
@@ -26,7 +68,7 @@ You can update CodeIgniter system folder to latest version with one command.
 >     'name' => 'My Name'
 >     ])
 >     ->insert_on_duplicate_update();
-> 
+>
 >     // You can also
 >     $SampleModel
 >       ->set('key', '1')
@@ -34,9 +76,9 @@ You can update CodeIgniter system folder to latest version with one command.
 >       ->set('name', 'My Name')
 >       ->insert_on_duplicate_update();
 >     ```
-> 
+>
 > * **Added insert_on_duplicate_update_batch.**
-> 
+>
 >     ```PHP
 >     // Here is an example of insert_on_duplicate_update_batch
 >     $SampleModel
