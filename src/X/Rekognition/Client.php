@@ -181,6 +181,9 @@ class Client {
    * @return array
    */
   public function getFaceFromCollectionByImage(string $collectionId, string $faceImage, int $threshold = 80): ?array {
+    if (is_file($faceImage)) {
+      $faceImage = ImageHelper::read($faceImage);
+    }
     if (ImageHelper::isBase64($faceImage)) {
       $faceImage = ImageHelper::convertBase64ToBlob($faceImage);
     }
