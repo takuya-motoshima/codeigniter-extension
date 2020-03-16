@@ -64,7 +64,7 @@ final class Logger {
     } else {
       $message = self::createLogString($params, debug_backtrace());
       echo $message . PHP_EOL;
-      self::d($message);
+      self::debug($message);
     }
   }
 
