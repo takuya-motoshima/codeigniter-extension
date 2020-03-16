@@ -11,6 +11,7 @@ namespace X\Rekognition;
 
 use \Aws\Rekognition\RekognitionClient;
 use \Aws\Rekognition\Exception\RekognitionException;
+use \X\Util\ImageHelper;
 use \X\Util\Logger;
 
 class Client {
