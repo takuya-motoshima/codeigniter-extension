@@ -235,6 +235,19 @@ class Client {
   }
 
   /**
+   * @param  string $baseDir
+   * @return string
+   */
+  public function generateCollectionId(string $baseDir): string {
+
+    do {
+
+      $tmp = rtrim($baseDir, '/') . '/' . uniqid(bin2hex(random_bytes(1)));
+    } while(file_exists($tmp));
+    return basename($tmp);
+  }
+
+  /**
    * @param  string $faceImage1
    * @param  string $faceImage2
    * @return float
