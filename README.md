@@ -11,6 +11,11 @@ You can update CodeIgniter system folder to latest version with one command.
 
 ## Release Notes
 
+> ### 3.4.5 (April 10, 2020)
+>
+> #### Bug Fixes
+> * **Changed to return an empty string when there is no key value to get from the config with "\X\Utils\Loader::config()".**
+>
 > ### 3.4.2 (March 16, 2020)
 >
 > #### New Features
