@@ -1,6 +1,6 @@
 <?php
 namespace X;
-class UnitTestSample {
+class SampleTest {
 
   private $message;
 

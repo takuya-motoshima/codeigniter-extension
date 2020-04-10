@@ -40,7 +40,8 @@
         ],
         "test": [
             "./vendor/bin/phpunit"
-        ]
+        ],
+        "syntax-check": "find ./src/X -name \"*.php\" | xargs -n1 php -l"
     },
     "require-dev": {
         "phpunit/phpunit": "^8.4"

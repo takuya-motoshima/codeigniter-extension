@@ -1,14 +1,13 @@
 <?php
 use PHPUnit\Framework\TestCase;
-use X\UnitTestSample;
-final class UnitTestSampleTest extends TestCase {
+final class Sample extends TestCase {
 
   private $object;
 
   // Before a test method is run, a template method called setUp() is invoked.
   // setUp() is where you create the objects against which you will test. 
   protected function setUp(): void {
-    $this->object = new UnitTestSample('hello, world');
+    $this->object = new X\SampleTest('hello, world');
   }
 
   // Once the test method has finished running, whether it succeeded or failed, another template method called tearDown() is invoked. 

@@ -3,14 +3,14 @@
     "repositories": [
         {
             "type": "vcs",
-            "url": "../"
+            "url": "../",
+            "options": {
+                "symlink": true
+            }
         }
     ],
     "require": {
         "php": "^7.0",
         "takuya-motoshima/codeigniter-extension": "dev-master"
-    },
-    "require-dev": {
-        "phpunit/phpunit": "@stable"
     }
 }

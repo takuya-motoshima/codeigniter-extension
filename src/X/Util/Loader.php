@@ -7,6 +7,7 @@
  * @copyright  2017 Takuya Motoshima
  */
 namespace X\Util;
+use \X\Util\Logger;
 final class Loader {
 
   /**
@@ -50,44 +51,44 @@ final class Loader {
   /**
    * Load databse
    *
-   * @param   string|string[] $config
+   * @param   string|string[] $databaseConfig
    * @param   bool $return
    * @param   null|bool $queryBuilder
    * @return  object|null
    */
-  public static function database($config = '', bool $return = false, $queryBuilder = null) {
+  public static function database($databaseConfig = '', bool $return = false, $queryBuilder = null) {
     $ci =& \get_instance();
     if ($return === false && $queryBuilder === null && isset($ci->db) && is_object($ci->db) && !empty($ci->db->conn_id)) {
       return;
     }
     if ($return === true) {
-      return \X\Database\DB($config, $queryBuilder);
+      return \X\Database\DB($databaseConfig, $queryBuilder);
     }
     $ci->db = '';
-    $ci->db =& \X\Database\DB($config, $queryBuilder);
+    $ci->db =& \X\Database\DB($databaseConfig, $queryBuilder);
   }
 
   /**
    * Load config
    *
-   * @param   string $file
-   * @param   string $item
+   * @param   string $configName
+   * @param   string $configeKey
    * @return  array
    */
-  public static function config(string $file, string $item = null) {
+  public static function config(string $configName, string $configeKey = null) {
     static $config;
-    if (isset($config[$file])) {
-      if (empty($item)) {
-        return $config[$file];
+    if (isset($config[$configName])) {
+      if (empty($configeKey)) {
+        return $config[$configName];
       }
-      return $config[$file][$item];
+      return $config[$configName][$configeKey] ?? '';
     }
     $ci =& \get_instance();
-    $ci->config->load($file, true);
-    $config[$file] = $ci->config->item($file);
-    if (empty($item)) {
-      return $config[$file];
+    $ci->config->load($configName, true);
+    $config[$configName] = $ci->config->item($configName);
+    if (empty($configeKey)) {
+      return $config[$configName];
     }
-    return $config[$file][$item];
+    return $config[$configName][$configeKey] ?? '';
   }
 }
