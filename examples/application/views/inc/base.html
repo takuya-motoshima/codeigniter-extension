@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>{{ (block('title')) ?? '' }} - Examples</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <link rel="stylesheet" type="text/css" href="{{ baseUrl }}node_modules/bootstrap/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="{{ cache_busting('/assets/base.css') }}">
+  {% block styles %}{% endblock %}
+</head>
+<body>
+
+  {% if user is not empty %}
+
+    <header class="navbar navbar-light bg-light flex-column flex-md-row">
+      <div class="container justify-content-end">
+        <label class="mx-4">{{ user.username }}</label>
+        <a href="{{ baseUrl }}api/user/signout" class="btn btn-outline-primary my-2 my-sm-0">Sign Out</a>
+      </div>
+    </header>
+  {% endif %}
+  
+  {% block content %}{% endblock %}
+
+
+  <script src="{{ baseUrl }}node_modules/jquery/dist/jquery.min.js"></script>
+  <script src="{{ baseUrl }}node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+  <script src="{{ baseUrl }}node_modules/jquery-validation/dist/jquery.validate.min.js"></script>
+  <script src="{{ cache_busting('/assets/base.js') }}" type="module"></script>
+
+  {% block scripts %}{% endblock %}
+</body>
+</html>

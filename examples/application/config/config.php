@@ -524,3 +524,12 @@ $config['rewrite_short_tags'] = FALSE;
 | Array:		array('10.0.1.200', '192.168.5.0/24')
 */
 $config['proxy_ips'] = '';
+
+/*
+|--------------------------------------------------------------------------
+| Template settings
+|--------------------------------------------------------------------------
+|
+| 'csrf_token_name' = Directory path to store template cache. Set FALSE when not caching. The default is FALSE.
+*/
+$config['cache_templates'] = false;

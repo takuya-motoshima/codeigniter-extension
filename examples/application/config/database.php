@@ -72,7 +72,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 */
 $active_group = 'default';
 $query_builder = TRUE;
-$database = 'test';
+$database = 'codeigniter_extension_example';
 $username = 'root';
 $password = '';
 $db['default'] = array(

@@ -13,14 +13,22 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 */
 use \X\Annotation\AnnotationReader;
 use \X\Util\Logger;
+
 $hook['post_controller_constructor'] = function() {
+
   $ci =& get_instance();
-  $accessibility = AnnotationReader::getAccessibility($ci->router->class, $ci->router->method);
-  if (isset($_SESSION['user']) && (!$accessibility->allow_login || ($accessibility->allow_role && $accessibility->allow_role !== $_SESSION['user']['role']))) {
-    // When the login user performs a non-access action.
+
+  $controller = $ci->router->class;
+  $action = $ci->router->method;
+  $session = $_SESSION['user'] ?? null;
+
+  // Logger::debug("\$controller=$controller");
+  // Logger::debug("\$action=$action");
+
+  $accessibility = AnnotationReader::getAccessibility($controller, $action);
+  if (isset($session) && ( !$accessibility->allow_login || ($accessibility->allow_role && $accessibility->allow_role !== $session['role']) )) {
     redirect('/dashboard');
-  } else if (!isset($_SESSION['user']) && !$accessibility->allow_logoff) {
-    // Logoff user performs a non-access action.
-    redirect('/login');
+  } else if (!isset($session) && !$accessibility->allow_logoff) {
+    redirect('/signin');
   }
 };

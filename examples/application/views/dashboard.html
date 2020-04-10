@@ -1,11 +1,11 @@
-{% extends 'common/base.html' %}
+{% extends 'inc/base.html' %}
 {% block title %}Dashboard{% endblock %}
+{% block styles %}<link rel="stylesheet" type="text/css" href="{{ cache_busting('/assets/dashboard.css') }}">{% endblock %}
+{% block scripts %}<script src="{{ cache_busting('/assets/dashboard.js') }}" type="module"></script>{% endblock %}
 {% block content %}
-  <div class="container">
-    <h1>Dashboard</h1>
-    <ul class="list-group">
-      <li class="list-group-item"><a href="{{ baseUrl }}adminOnly">Admin only</a></li>
-      <li class="list-group-item"><a href="{{ baseUrl }}generalOnly">General only</a></li>
-    </ul>
+
+  <div class="container-fluid">
+    <h3 class="text-center">Content goes here!</h3>
   </div>
+
 {% endblock %}

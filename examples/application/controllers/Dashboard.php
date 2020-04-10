@@ -2,6 +2,8 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 use \X\Annotation\Access;
+use \X\Util\Logger;
+
 class Dashboard extends AppController {
 
   /**

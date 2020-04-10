@@ -49,14 +49,18 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | Examples:	my-controller/index	-> my_controller/index
 |		my-controller/my-method	-> my_controller/my_method
 */
-$route['default_controller'] = 'login';
+$route['default_controller'] = 'signin';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
 
-// RESTful basic rules
-$route['^api/(:any)/(:any)$']['GET'] = 'api/$1/get/$2';
-$route['^api/(:any)[^\?]?/(:any)$']['GET'] = 'api/$1/get/$2';
+// Custom URL
+$route['^api/user/signin$']['POST'] = 'api/user/signin';
+$route['^api/user/signout$']['GET'] = 'api/user/signout';
+
+// API basic routing
+$route['^api/(:any)/(:num)$']['GET'] = 'api/$1/get/$2';
 $route['^api/(:any)\??']['GET'] = 'api/$1/query';
 $route['^api/(:any)$']['POST'] = 'api/$1/post';
-$route['^api/(:any)/(:any)$']['PUT'] = 'api/$1/put/$2';
+$route['^api/(:any)/(:num)$']['PUT'] = 'api/$1/put/$2';
 $route['^api/(:any)/([^/,]+(,[^/,]+)*)$']['DELETE'] = 'api/$1/delete/$2';
+
