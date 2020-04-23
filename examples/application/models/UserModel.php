@@ -8,8 +8,8 @@ class UserModel extends \AppModel {
   const TABLE = 'user';
 
   public function signin(string $username, string $password): bool {
-    Logger::debug('Username: ', $username);
-    Logger::debug('Password: ', $password);
+    // Logger::debug('$username=', $username);
+    // Logger::debug('$password=', $password);
     $user = parent
       ::where('username', $username)
       ::where('password', $password)

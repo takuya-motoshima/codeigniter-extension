@@ -27,47 +27,21 @@ final class Installer {
    * @param Event $event
    */
   public static function post_install(Event $event) {
-
     $io = $event->getIO();
-
-    // Create application
     FileHelper::copyDirectory(static::FRAMEWORK_DIR . 'application', 'application');
-
-    // Create core system classes
     FileHelper::copyDirectory('core.dist', 'application/core');
-
-    // Create sample view
+    FileHelper::copyDirectory('libraries.dist', 'application/libraries');
     FileHelper::copyDirectory('views.dist', 'application/views');
-
-    // Create session directory
     FileHelper::makeDirecoty('application/session');
     touch('application/session/.gitkeep');
-
-    // Create index.php
     FileHelper::copyFile(static::FRAMEWORK_DIR . 'index.php', static::DOCUMENT_ROOT . 'index.php');
-
-    // Create .htaccess
     FileHelper::copyFile('dot.htaccess', static::DOCUMENT_ROOT . '.htaccess');
-
-    // Create .gitignore
     FileHelper::copyFile('dot.gitignore.dist', '.gitignore');
-
-    // Create .gitattributes
     FileHelper::copyFile('dot.gitattributes.dist', '.gitattributes');
-
-    // Update index.php
     self::update_index($io);
-
-    // Update config.php
     self::update_config($io);
-
-    // Composer update
     self::composer_update($io);
-
-    // Show complete message
     self::show_message($io);
-
-    // Delete unneeded files
     self::delete_self();
   }
 

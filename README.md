@@ -11,96 +11,136 @@ You can update CodeIgniter system folder to latest version with one command.
 
 ## Release Notes
 
-> ### 3.4.5 (April 10, 2020)
->
-> #### Bug Fixes
-> * **Changed to return an empty string when there is no key value to get from the config with "\X\Utils\Loader::config()".**
->
-> ### 3.4.2 (March 16, 2020)
->
-> #### New Features
->
-> * **Added setting of template cache in application config (application/config/config.php).**
->
->    You can configure the template cache in "application/config /config.php".
->
->     ```PHP
->    /*
->    |--------------------------------------------------------------------------
->    | Template settings
->    |--------------------------------------------------------------------------
->    |
->    | 'csrf_token_name' = Directory path to store template cache. Set FALSE when not caching. The default is FALSE.
->    */
->    $config['cache_templates'] = false;
->     ```
->
-> ### v3.3.9 (March 16, 2020)
->
-> #### New Features
->
-> * **Added client class that summarizes face detection processing. Remove old face detection class.**
->
->     ```PHP
->     use \X\Rekognition\Client;
->     $client = new Client('AWS_REKOGNITION_KEY', 'AWS_REKOGNITION_SECRET');
->
->     // Create new face collection
->     $collectionId = $client->generateCollectionId(FCPATH . 'protected');
->     $client->addCollection($collectionId);
->
->     // Add a face photo in data URL format to the collection
->     $faceImage = 'data:image/png;base64,...';
->     $faceId = $client->addFaceToCollection($collectionId, $faceImage);
->
->     // You can also add to the collection from the photo file path.
->     $faceImageFile = './face.png';
->     $faceId = $client->addFaceToCollection($collectionId, $faceImageFile);
->     ```
->
-> ### v3.3.8 (March 14, 2020)
->
-> #### New Features
->
-> * **Added insert_on_duplicate_update.**
->
->     ```PHP
->     // Here is an example of insert_on_duplicate_update.
->     $SampleModel
->     ->set([
->     'key' => '1',
->     'title' => 'My title',
->     'name' => 'My Name'
->     ])
->     ->insert_on_duplicate_update();
->
->     // You can also
->     $SampleModel
->       ->set('key', '1')
->       ->set('title', 'My title')
->       ->set('name', 'My Name')
->       ->insert_on_duplicate_update();
->     ```
->
-> * **Added insert_on_duplicate_update_batch.**
->
->     ```PHP
->     // Here is an example of insert_on_duplicate_update_batch
->     $SampleModel
->       ->set_insert_batch([
->         [
->           'key' => '1',
->           'title' => 'My title',
->           'name' => 'My Name'
->         ],
->         [
->           'key' => '2',
->           'title' => 'Another title',
->           'name' => 'Another Name'
->         ]
->       ])
->       ->insert_on_duplicate_update_batch();
->     ```
+### 3.4.6 (April 23, 2020)
+
+* Added a feature to add arbitrary columns to the session table
+
+    Set the columns you want to add to the session table in "application/confi /config.php".
+    The example adds the username column to the session table.
+
+    ```PHP
+    // Session table additional column.
+    // A session field with the same name as the additional column name is saved in the table.
+    $config['sess_table_additional_columns'] = ['username'];
+    ```
+
+    Create a session table.
+
+    ```sql
+    CREATE TABLE IF NOT EXISTS `ci_sessions` (
+        `id` varchar(128) NOT NULL,
+        `username` varchar(255) DEFAULT NULL,
+        `ip_address` varchar(45) NOT NULL,
+        `timestamp` int(10) unsigned DEFAULT 0 NOT NULL,
+        `data` blob NOT NULL,
+        KEY `ci_sessions_timestamp` (`timestamp`)
+    );
+    ```
+
+    Create a session database class (application/libraries/Session/drivers/AppSession_database_driver.php) in your application.
+
+    ```php
+    <?php
+    defined('BASEPATH') OR exit('No direct script access allowed');
+
+    use X\Library\SessionDatabaseDriver;
+
+    class AppSession_database_driver extends SessionDatabaseDriver {}
+    ```
+
+    The user name of the logged-in user will be added to the session table.
+
+    ```sql
+    SELECT * FROM session WHERE username='admin'\G;
+
+    *************************** 1. row ***************************
+            id: 78g8c230pe8onb93jkpbbkatcii3h7ss
+      username: admin
+    ip_address: 172.31.38.40
+     timestamp: 1587646280
+          data: ...
+    1 rows in set (0.000 sec)
+    ```
+
+### 3.4.5 (April 10, 2020)
+
+* Changed to return an empty string when there is no key value to get from the config with "\X\Utils\Loader::config()".
+
+### 3.4.2 (March 16, 2020)
+
+* Added setting of template cache in application config (application/config/config.php).
+
+    You can configure the template cache in "application/config/config.php".
+
+    ```PHP
+    /*
+    |--------------------------------------------------------------------------
+    | Template settings
+    |--------------------------------------------------------------------------
+    |
+    | 'csrf_token_name' = Directory path to store template cache. Set FALSE when not caching. The default is FALSE.
+    */
+    $config['cache_templates'] = false;
+    ```
+
+### v3.3.9 (March 16, 2020)
+
+* Added client class that summarizes face detection processing. Remove old face detection class.
+
+    ```PHP
+    use \X\Rekognition\Client;
+    $client = new Client('AWS_REKOGNITION_KEY', 'AWS_REKOGNITION_SECRET');
+    // Create new face collection
+    $collectionId = $client->generateCollectionId(FCPATH . 'protected');
+    $client->addCollection($collectionId);
+    // Add a face photo in data URL format to the collection
+    $faceImage = 'data:image/png;base64,...';
+    $faceId = $client->addFaceToCollection($collectionId, $faceImage);
+    // You can also add to the collection from the photo file path.
+    $faceImageFile = './face.png';
+    $faceId = $client->addFaceToCollection($collectionId, $faceImageFile);
+    ```
+
+### v3.3.8 (March 14, 2020)
+
+* Added insert_on_duplicate_update.
+
+    ```PHP
+    // Here is an example of insert_on_duplicate_update.
+    $SampleModel
+    ->set([
+    'key' => '1',
+    'title' => 'My title',
+    'name' => 'My Name'
+    ])
+    ->insert_on_duplicate_update();
+    // You can also
+    $SampleModel
+      ->set('key', '1')
+      ->set('title', 'My title')
+      ->set('name', 'My Name')
+      ->insert_on_duplicate_update();
+    ```
+
+* Added insert_on_duplicate_update_batch.
+
+    ```PHP
+    // Here is an example of insert_on_duplicate_update_batch
+    $SampleModel
+      ->set_insert_batch([
+        [
+          'key' => '1',
+          'title' => 'My title',
+          'name' => 'My Name'
+        ],
+        [
+          'key' => '2',
+          'title' => 'Another title',
+          'name' => 'Another Name'
+        ]
+      ])
+      ->insert_on_duplicate_update_batch();
+    ```
 
 ## Requirements
 

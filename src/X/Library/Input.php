@@ -2,9 +2,11 @@
 /**
  * Input Class
  *
+ * Pre-processes global input data for security
+ *
  * @author     Takuya Motoshima <https://www.facebook.com/takuya.motoshima.7>
  * @license    MIT License
- * @copyright  2018 Takuya Motoshima
+ * @copyright  2020 Takuya Motoshima
  */
 namespace X\Library;
 use \X\Util\Logger;

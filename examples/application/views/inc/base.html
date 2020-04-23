@@ -5,6 +5,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <link rel="stylesheet" type="text/css" href="{{ baseUrl }}node_modules/bootstrap/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="{{ baseUrl }}node_modules/@fortawesome/fontawesome-free/css/all.min.css">
   <link rel="stylesheet" type="text/css" href="{{ cache_busting('/assets/base.css') }}">
   {% block styles %}{% endblock %}
 </head>
@@ -14,7 +15,7 @@
 
     <header class="navbar navbar-light bg-light flex-column flex-md-row">
       <div class="container justify-content-end">
-        <label class="mx-4">{{ user.username }}</label>
+        <label class="mx-4 mb-0 d-flex align-items-center"><i class="fas fa-user-circle fa-2x mr-1"></i> {{ user.username }}</label>
         <a href="{{ baseUrl }}api/user/signout" class="btn btn-outline-primary my-2 my-sm-0">Sign Out</a>
       </div>
     </header>

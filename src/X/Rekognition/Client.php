@@ -284,15 +284,16 @@ class Client {
   /**
    * @param  string      $faceImage
    * @param  int|integer $threshold
+   * @param  string      $attributes DEFAULT|ALL
    * @return array
    */
-  public function detectionFaces(string $faceImage, int $threshold = 90): array {
+  public function detectionFaces(string $faceImage, int $threshold = 90, $attributes = 'DEFAULT'): array {
     if (\preg_match('/^\//', $faceImage) && \is_file($faceImage)) {
       $faceImage = ImageHelper::read($faceImage);
     }
     $response = $this->client->DetectFaces([
       'Image' => [ 'Bytes' => ImageHelper::isBase64($faceImage) ? ImageHelper::convertBase64ToBlob($faceImage) : $faceImage ],
-      'Attributes' => [ 'DEFAULT' ]])->toArray();
+      'Attributes' => [ $attributes ]])->toArray();
     if ($this->debug) {
       Logger::debug('Response: ', $response);
     }

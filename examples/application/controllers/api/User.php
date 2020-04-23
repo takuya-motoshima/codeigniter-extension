@@ -24,12 +24,12 @@ class User extends AppController {
         Logger::error($this->form_validation->error_string());
         return parent::error(print_r($this->form_validation->error_array(), true), HTTP_BAD_REQUEST);
       }
-
       $result = $this->UserModel->signin($this->input->post('username'), $this->input->post('password'));
       parent
         ::set($result)
         ::json();
     } catch (\Throwable $e) {
+      Logger::error($e);
       parent::error($e->getMessage(), HTTP_BAD_REQUEST);
     }
   }

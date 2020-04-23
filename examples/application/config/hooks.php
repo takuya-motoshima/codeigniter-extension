@@ -15,15 +15,12 @@ use \X\Annotation\AnnotationReader;
 use \X\Util\Logger;
 
 $hook['post_controller_constructor'] = function() {
-
   $ci =& get_instance();
-
   $controller = $ci->router->class;
   $action = $ci->router->method;
-  $session = $_SESSION['user'] ?? null;
 
-  // Logger::debug("\$controller=$controller");
-  // Logger::debug("\$action=$action");
+  $ci->load->library('session');
+  $session = $_SESSION['user'] ?? null;
 
   $accessibility = AnnotationReader::getAccessibility($controller, $action);
   if (isset($session) && ( !$accessibility->allow_login || ($accessibility->allow_role && $accessibility->allow_role !== $session['role']) )) {

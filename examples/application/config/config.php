@@ -380,13 +380,19 @@ $config['openssl_key'] = 'b8qmK-/BN,fB{Ce';
 | except for 'cookie_prefix' and 'cookie_httponly', which are ignored here.
 |
 */
-$config['sess_driver'] = 'files';
+$config['sess_driver'] = 'database';
+// $config['sess_driver'] = 'files';
 $config['sess_cookie_name'] = 'ci_session';
 $config['sess_expiration'] = 7200;
-$config['sess_save_path'] = APPPATH . 'session';
+$config['sess_save_path'] = 'session';
+// $config['sess_save_path'] = APPPATH . 'session';
 $config['sess_match_ip'] = FALSE;
 $config['sess_time_to_update'] = 300;
 $config['sess_regenerate_destroy'] = FALSE;
+
+// Session table additional column.
+// A session field with the same name as the additional column name is saved in the table.
+$config['sess_table_additional_columns'] = ['username'];
 
 /*
 |--------------------------------------------------------------------------

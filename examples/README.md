@@ -100,6 +100,18 @@
         CONSTRAINT `fkUser1` FOREIGN KEY (`role`) REFERENCES `role` (`role`) ON DELETE CASCADE ON UPDATE CASCADE
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+    -- Add login session table
+    DROP TABLE IF EXISTS `session`;
+    CREATE TABLE IF NOT EXISTS `session` (
+        `id` varchar(128) NOT NULL,
+        -- `id` varchar(40) NOT NULL,
+        `username` varchar(255) DEFAULT NULL,
+        `ip_address` varchar(45) NOT NULL,
+        `timestamp` int(10) unsigned DEFAULT 0 NOT NULL,
+        `data` blob NOT NULL,
+        KEY `ci_sessions_timestamp` (`timestamp`)
+    );
+
     -- Add login role record
     INSERT INTO role(role) VALUES ('admin'), ('user');
 
