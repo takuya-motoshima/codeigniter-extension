@@ -11,6 +11,48 @@ You can update CodeIgniter system folder to latest version with one command.
 
 ## Release Notes
 
+### 3.4.7 (April 27, 2020)
+
+* Added feature to face detector to find multiple faces from collection
+
+    ```PHP
+    use \X\Rekognition\Client;
+    $client = new Client('AWS_REKOGNITION_KEY', 'AWS_REKOGNITION_SECRET');
+
+    // Find a single face in a collection
+    $collectionId = '8e5e6f4e99f380b';
+    $faceImage = 'data:image/png;base64,...';
+    $threshold = 80;
+    $detection = $client->getFaceFromCollectionByImage($collectionId, $faceImage, $threshold);
+    // Array
+    // (
+    //     [faceId] => b3fcb4ed-5891-4bc3-bb1c-6b3f90f159d1
+    //     [similarity] => 99.7
+    // )
+
+    // Find multiple faces in a collection
+    $collectionId = '8e5e6f4e99f380b';
+    $faceImage = 'data:image/png;base64,...';
+    $threshold = 80;
+    $maxFaces = 4096;
+    $detections = $client->getMultipleFacesFromCollectionByImage($collectionId, $faceImage, $threshold, $maxFaces);
+    // Array
+    // (
+    //     [0] => Array
+    //         (
+    //             [faceId] => e12c40d2-445d-4b12-bfad-db46a2f611dc
+    //             [similarity] => 99.7
+    //         )
+    // 
+    //     [1] => Array
+    //         (
+    //             [faceId] => b3fcb4ed-5891-4bc3-bb1c-6b3f90f159d1
+    //             [similarity] => 99.3
+    //         )
+    // 
+    // )
+    ```
+
 ### 3.4.6 (April 23, 2020)
 
 * Added a feature to add arbitrary columns to the session table
@@ -90,12 +132,15 @@ You can update CodeIgniter system folder to latest version with one command.
     ```PHP
     use \X\Rekognition\Client;
     $client = new Client('AWS_REKOGNITION_KEY', 'AWS_REKOGNITION_SECRET');
+
     // Create new face collection
     $collectionId = $client->generateCollectionId(FCPATH . 'protected');
     $client->addCollection($collectionId);
+
     // Add a face photo in data URL format to the collection
     $faceImage = 'data:image/png;base64,...';
     $faceId = $client->addFaceToCollection($collectionId, $faceImage);
+
     // You can also add to the collection from the photo file path.
     $faceImageFile = './face.png';
     $faceId = $client->addFaceToCollection($collectionId, $faceImageFile);
@@ -114,6 +159,7 @@ You can update CodeIgniter system folder to latest version with one command.
     'name' => 'My Name'
     ])
     ->insert_on_duplicate_update();
+
     // You can also
     $SampleModel
       ->set('key', '1')

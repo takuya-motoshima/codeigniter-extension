@@ -81,7 +81,7 @@ abstract class Model extends \CI_Model {
   /**
    * countById
    */
-  public function count_by_id(int $id):int {
+  public function count_by_id(int $id): int {
     return $this->where('id', $id)->count_all_results();
   }
 
@@ -174,7 +174,7 @@ abstract class Model extends \CI_Model {
    * @param   bool $escape = null Whether to escape values and identifiers
    * @return  int Insert ID
    */
-  public function insert($table = '', $set = null, $escape = null):int {
+  public function insert($table = '', $set = null, $escape = null): int {
     if (\method_exists(self::db(), 'isset_qb_from') && !self::db()->isset_qb_from() && empty($table)) {
       $table = static::TABLE;
     }
@@ -194,7 +194,7 @@ abstract class Model extends \CI_Model {
    * @param   int  $batch_size = 100 Count of rows to insert at once
    * @return  int[] Insert ID
    */
-  public function insert_batch($table, $set = null, $escape = null, $batch_size = 100):array {
+  public function insert_batch($table, $set = null, $escape = null, $batch_size = 100): array {
     return call_user_func_array([self::db(), __FUNCTION__], func_get_args());
   }
 
@@ -229,7 +229,7 @@ abstract class Model extends \CI_Model {
    * @param   int $batch_size = 100 Count of rows to update at once
    * @return  int number of rows affected
    */
-  public function update_batch($table, $set = null, $index = null, $batch_size = 100):int {
+  public function update_batch($table, $set = null, $index = null, $batch_size = 100): int {
     return call_user_func_array([self::db(), __FUNCTION__], func_get_args());
   }
 

@@ -181,6 +181,17 @@ class Client {
    * @return array
    */
   public function getFaceFromCollectionByImage(string $collectionId, string $faceImage, int $threshold = 80): ?array {
+    $maxFaces = 1;
+    $detections = $this->getMultipleFacesFromCollectionByImage($collectionId, $faceImage, $threshold, $maxFaces);
+    return !empty($detections) ? $detections[0]: null;
+  }
+
+  /**
+   * @param  string $collectionId
+   * @param  string $faceImage
+   * @return array
+   */
+  public function getMultipleFacesFromCollectionByImage(string $collectionId, string $faceImage, int $threshold = 80, int $maxFaces = 4096): array {
     if (\preg_match('/^\//', $faceImage) && \is_file($faceImage)) {
       $faceImage = ImageHelper::read($faceImage);
     }
@@ -189,13 +200,13 @@ class Client {
     }
     $numberOfFaces = $this->getNumberOfFaces($faceImage);
     if ($numberOfFaces === 0) {
-      return null;
+      return [];
     }
     $response = $this->client->searchFacesByImage([
       'CollectionId' => $collectionId,
       'FaceMatchThreshold' => $threshold,
       'Image' => [ 'Bytes' => $faceImage],
-      'MaxFaces' => 1,
+      'MaxFaces' => $maxFaces
     ])->toArray();
     if ($this->debug) {
       Logger::debug('Response: ', $response);
@@ -205,12 +216,15 @@ class Client {
       throw new \RuntimeException('Collection getting error');
     }
     if (empty($response['FaceMatches'])) {
-      return null;
+      return [];
     }
-    return [
-      'faceId' => $response['FaceMatches'][0]['Face']['FaceId'],
-      'similarity' => round($response['FaceMatches'][0]['Similarity'], 1)
-    ];
+    $detections = array_map(function(array $faceMatche) {
+      return [
+        'faceId' => $faceMatche['Face']['FaceId'],
+        'similarity' => round($faceMatche['Similarity'], 1)
+      ];
+    }, $response['FaceMatches']);
+    return $detections;
   }
 
   /**
