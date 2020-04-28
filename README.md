@@ -11,6 +11,30 @@ You can update CodeIgniter system folder to latest version with one command.
 
 ## Release Notes
 
+### 3.4.8 (April 28, 2020)
+
+* Make the IP range check method of "\X\Util\HttpSecurity" class do correct check when subnet mask is 32.
+
+    ```PHP
+    use \X\Util\HttpSecurity;
+
+    HttpSecurity::isAllowIp('202.210.220.64',   '202.210.220.64/28');// false
+    HttpSecurity::isAllowIp('202.210.220.65',   '202.210.220.64/28');// true
+    HttpSecurity::isAllowIp('202.210.220.66',   '202.210.220.64/28');// true
+    HttpSecurity::isAllowIp('202.210.220.78',   '202.210.220.64/28');// true
+    HttpSecurity::isAllowIp('202.210.220.79',   '202.210.220.64/28');// false
+    HttpSecurity::isAllowIp('202.210.220.80',   '202.210.220.64/28');// false
+    HttpSecurity::isAllowIp('192.168.0.0',      '192.168.1.0/24');// false
+    HttpSecurity::isAllowIp('192.168.1.0',      '192.168.1.0/24');// false
+    HttpSecurity::isAllowIp('192.168.1.1',      '192.168.1.0/24');// true
+    HttpSecurity::isAllowIp('192.168.1.254',    '192.168.1.0/24');// true
+    HttpSecurity::isAllowIp('192.168.1.255',    '192.168.1.0/24');// false
+    HttpSecurity::isAllowIp('118.238.251.130',  '118.238.251.130');// true
+    HttpSecurity::isAllowIp('118.238.251.131',  '118.238.251.130');// false
+    HttpSecurity::isAllowIp('118.238.251.130',  '118.238.251.130/32');// true
+    HttpSecurity::isAllowIp('118.238.251.131',  '118.238.251.130/32');// false
+    ```
+
 ### 3.4.7 (April 27, 2020)
 
 * Added feature to face detector to find multiple faces from collection

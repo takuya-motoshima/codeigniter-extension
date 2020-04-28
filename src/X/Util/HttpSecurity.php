@@ -27,7 +27,8 @@ final class HttpSecurity {
    *    HttpSecurity::isAllowIp('192.168.1.255',    '192.168.1.0/24');   // false
    *    HttpSecurity::isAllowIp('118.238.251.130',  '118.238.251.130');  // true
    *    HttpSecurity::isAllowIp('118.238.251.131',  '118.238.251.130');  // false
-   * 
+   *    HttpSecurity::isAllowIp('118.238.251.130',  '118.238.251.130/32');  // true
+   *    HttpSecurity::isAllowIp('118.238.251.131',  '118.238.251.130/32');  // false
    * @param  string $ip
    * @param  string $accept
    * @return string
@@ -39,6 +40,10 @@ final class HttpSecurity {
     } else {
       // If there is no CIDR, compare the IP directly with the allowed IP
       return $ip === $accept;
+    }
+
+    if ($cidr === '32' && $net === $ip) {
+      return true;
     }
 
     // Not allowed if IP is Network address
