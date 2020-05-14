@@ -84,6 +84,8 @@ You can update CodeIgniter system folder to latest version with one command.
     Set the columns you want to add to the session table in "application/confi /config.php".
     The example adds the username column to the session table.
 
+    <p class="alert">Be sure to allow NULL for your own extra columns. This is because the session created when you are not logged in has no extra column values.</p>
+
     ```PHP
     // Session table additional column.
     // A session field with the same name as the additional column name is saved in the table.
