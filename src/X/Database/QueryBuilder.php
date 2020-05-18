@@ -79,7 +79,7 @@ abstract class QueryBuilder extends \CI_DB_query_builder {
       }
       $table = $this->qb_from[0];
     }
-    $sql = $this->_insert_on_duplicate_key_update(
+    $sql = $this->_insert_on_duplicate_update(
       parent::protect_identifiers($table, true, $escape, false),
       array_keys($this->qb_set),
       array_values($this->qb_set)
@@ -99,7 +99,7 @@ abstract class QueryBuilder extends \CI_DB_query_builder {
    * @param   array $values INSERT values
    * @return  string
    */
-  private function _insert_on_duplicate_key_update(string $table, array $keys, array $values): string {
+  private function _insert_on_duplicate_update(string $table, array $keys, array $values): string {
     foreach ($keys as $key) {
       $update_fields[] = $key . '= VALUES(' . $key . ')';
     }
@@ -136,7 +136,7 @@ abstract class QueryBuilder extends \CI_DB_query_builder {
     // Batch this baby
     $affected_rows = 0;
     for ($i = 0, $total = count($this->qb_set); $i < $total; $i += $batch_size) {
-      $sql = $this->_insert_on_duplicate_key_update_batch(
+      $sql = $this->_insert_on_duplicate_update_batch(
         parent::protect_identifiers($table, true, $escape, false),
         $this->qb_keys,
         array_slice($this->qb_set, $i, $batch_size)
@@ -159,7 +159,7 @@ abstract class QueryBuilder extends \CI_DB_query_builder {
    * @param   array $values INSERT values
    * @return  string
    */
-  private function _insert_on_duplicate_key_update_batch(string $table, array $keys, array $values): string {
+  private function _insert_on_duplicate_update_batch(string $table, array $keys, array $values): string {
     foreach ($keys as $key) {
       $update_fields[] = $key . '= VALUES(' . $key . ')';
     }

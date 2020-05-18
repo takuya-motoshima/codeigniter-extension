@@ -392,7 +392,7 @@ $config['sess_regenerate_destroy'] = FALSE;
 
 // Session table additional column.
 // A session field with the same name as the additional column name is saved in the table.
-$config['sess_table_additional_columns'] = ['username'];
+// $config['sess_table_additional_columns'] = ['username'];
 
 /*
 |--------------------------------------------------------------------------

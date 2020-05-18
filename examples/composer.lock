@@ -1201,6 +1201,7 @@
                 "rest",
                 "sdk"
             ],
+            "abandoned": true,
             "time": "2019-01-04T20:04:25+00:00"
         },
         {
@@ -1463,7 +1464,7 @@
             "source": {
                 "type": "git",
                 "url": "../",
-                "reference": "b5196f6dd168f242863f9dcb63cdcd066f890d57"
+                "reference": "fc153ed0753c8662fb572c3d57a223f7a63701dd"
             },
             "require": {
                 "aws/aws-sdk-php": "^3.64",
@@ -1514,7 +1515,7 @@
                 "CodeIgniter",
                 "Composer"
             ],
-            "time": "2020-04-10T03:03:09+00:00"
+            "time": "2020-05-14T02:52:17+00:00"
         },
         {
             "name": "twig/twig",

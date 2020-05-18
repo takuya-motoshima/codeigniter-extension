@@ -18,10 +18,8 @@ $hook['post_controller_constructor'] = function() {
   $ci =& get_instance();
   $controller = $ci->router->class;
   $action = $ci->router->method;
-
-  $ci->load->library('session');
+  // $ci->load->library('session');
   $session = $_SESSION['user'] ?? null;
-
   $accessibility = AnnotationReader::getAccessibility($controller, $action);
   if (isset($session) && ( !$accessibility->allow_login || ($accessibility->allow_role && $accessibility->allow_role !== $session['role']) )) {
     redirect('/dashboard');
@@ -29,3 +27,10 @@ $hook['post_controller_constructor'] = function() {
     redirect('/signin');
   }
 };
+
+$hook['pre_system'] = function () {
+  set_exception_handler(function ($e) {
+    Logger::error($e);
+  });
+};
+

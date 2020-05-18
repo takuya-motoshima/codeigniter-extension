@@ -51,26 +51,24 @@ final class Loader {
   /**
    * Load databse
    *
-   * @param   string|string[] $databaseConfig
+   * @param   string|string[] $config
    * @param   bool $return
    * @param   null|bool $queryBuilder
-   * @param   bool $overwriteGlobalDBInstance
+   * @param   bool $overwrite
    * @return  object|null
    */
-
-  public static function database($databaseConfig = '', bool $return = false, $queryBuilder = null, bool $overwriteGlobalDBInstance = false) {
-
+  public static function database($config = 'default', bool $return = false, $queryBuilder = null, bool $overwrite = false) {
     // Grab the super object
     $ci =& \get_instance();
 
     // Do we even need to load the database class?
-    if (!$return && $queryBuilder === null && isset($ci->db) && is_object($ci->db) && !empty($ci->db->conn_id) && !$overwriteGlobalDBInstance) {
+    if (!$return && $queryBuilder === null && isset($ci->db) && is_object($ci->db) && !empty($ci->db->conn_id) && !$overwrite) {
       return;
     }
 
     // Load the DB class
-    $db = \X\Database\DB($databaseConfig, $queryBuilder);
-    if (!$return || $overwriteGlobalDBInstance) {
+    $db = \X\Database\DB($config, $queryBuilder);
+    if (!$return || $overwrite) {
       // Initialize the db variable. Needed to prevent
       // reference errors with some configurations
       $ci->db = '';
@@ -80,6 +78,16 @@ final class Loader {
       return $db;
     }
   }
+  // public static function database($config = 'default', bool $return = false, $queryBuilder = null) {
+  //   $ci =& \get_instance();
+  //   if ($return === false && $queryBuilder === null && isset($ci->db) && is_object($ci->db) && !empty($ci->db->conn_id)) {
+  //     return;
+  //   }
+  //   if ($return === true) {
+  //     return \X\Database\DB($config, $queryBuilder);
+  //   }
+  //   $ci->db = '';
+  //   $ci->db =& \X\Database\DB($config, $queryBuilder);
 
   /**
    * Load config

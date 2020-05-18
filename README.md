@@ -11,6 +11,10 @@ You can update CodeIgniter system folder to latest version with one command.
 
 ## Release Notes
 
+### 3.5.0 (May 19, 2020)
+
+* Fixed a bug that DB class does not inherit \X\Database\QueryBuilder when making session DB
+
 ### 3.4.8 (April 28, 2020)
 
 * Make the IP range check method of "\X\Util\HttpSecurity" class do correct check when subnet mask is 32.

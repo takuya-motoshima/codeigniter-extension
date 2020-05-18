@@ -112,6 +112,16 @@
         KEY `ci_sessions_timestamp` (`timestamp`)
     );
 
+    -- Add test table
+    DROP TABLE IF EXISTS `test`;
+    CREATE TABLE IF NOT EXISTS `test` (
+        `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+        `thing` varchar(20) NOT NULL,
+        `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        `modified` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        PRIMARY KEY (`id`)
+    );
+
     -- Add login role record
     INSERT INTO role(role) VALUES ('admin'), ('user');
 

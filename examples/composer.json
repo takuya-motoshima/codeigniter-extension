@@ -9,6 +9,9 @@
             }
         }
     ],
+    "scripts": {
+        "deploy": "cp -r ../src/X/* vendor/takuya-motoshima/codeigniter-extension/src/X/"
+    },
     "require": {
         "php": "^7.0",
         "takuya-motoshima/codeigniter-extension": "dev-master"
