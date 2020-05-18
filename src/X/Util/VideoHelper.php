@@ -35,7 +35,7 @@ final class VideoHelper {
     if (empty(pathinfo($fileName, PATHINFO_EXTENSION))) {
       $fileName .= '.' . $mime;
     }
-    FileHelper::makeDirecoty($dir);
+    FileHelper::makeDirectory($dir);
     file_put_contents($dir . $fileName, $blob, LOCK_EX);
     return $fileName;
   }

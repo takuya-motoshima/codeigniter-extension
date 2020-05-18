@@ -31,7 +31,7 @@ final class Template {
 
     // If there is no cache directory, create it
     if (!empty($cache)) {
-      FileHelper::makeDirecoty($cache);
+      FileHelper::makeDirectory($cache);
     }
 
     // Initialize options

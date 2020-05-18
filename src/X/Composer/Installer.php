@@ -32,7 +32,7 @@ final class Installer {
     FileHelper::copyDirectory('core.dist', 'application/core');
     FileHelper::copyDirectory('libraries.dist', 'application/libraries');
     FileHelper::copyDirectory('views.dist', 'application/views');
-    FileHelper::makeDirecoty('application/session');
+    FileHelper::makeDirectory('application/session');
     touch('application/session/.gitkeep');
     FileHelper::copyFile(static::FRAMEWORK_DIR . 'index.php', static::DOCUMENT_ROOT . 'index.php');
     FileHelper::copyFile('dot.htaccess', static::DOCUMENT_ROOT . '.htaccess');

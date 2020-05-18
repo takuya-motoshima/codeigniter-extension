@@ -35,7 +35,7 @@ final class ImageHelper {
     if (empty(pathinfo($fileName, PATHINFO_EXTENSION))) {
       $fileName .= '.' . $mime;
     }
-    FileHelper::makeDirecoty($dir);
+    FileHelper::makeDirectory($dir);
     file_put_contents($dir . $fileName, $blob, LOCK_EX);
     return $fileName;
   }
@@ -49,7 +49,7 @@ final class ImageHelper {
    * @return Void
    */
   public static function putBlob(string $blob, string $filePath) {
-    FileHelper::makeDirecoty(dirname($filePath));
+    FileHelper::makeDirectory(dirname($filePath));
     file_put_contents($filePath, $blob, LOCK_EX);
   }
 
@@ -70,7 +70,7 @@ final class ImageHelper {
    * @return string
    */
   public static function copy(string $srcImgPath, string $dstDirpath, string $dstImgName = null): string {
-    FileHelper::makeDirecoty($dstDirpath);
+    FileHelper::makeDirectory($dstDirpath);
     $dstImgName = empty($dstImgName) 
       ? basename($srcImgPath) : 
       $dstImgName . '.' . pathinfo($srcImgPath, PATHINFO_EXTENSION);
