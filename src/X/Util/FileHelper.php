@@ -21,7 +21,7 @@ final class FileHelper {
    * @param int $mode
    * @return void
    */
-  public static function makeDirecoty(string $dir, int $mode = 0755) {
+  public static function makeDirectory(string $dir, int $mode = 0755) {
     if (file_exists($dir)) {
       return;
     }
@@ -57,7 +57,7 @@ final class FileHelper {
       }
       $dstFilepath = pathinfo($srcFilepath, PATHINFO_DIRNAME) . '/' . $dstFilepath;
     } else {
-      self::makeDirecoty(dirname($dstFilepath));;
+      self::makeDirectory(dirname($dstFilepath));;
     }
     if (rename($srcFilepath, $dstFilepath) === false) {
       throw new \RuntimeException('Can not rename from ' . $srcFilepath . ' to ' . $dstFilepath);
@@ -79,7 +79,7 @@ final class FileHelper {
     } else if (!is_file($srcFilepath)) {
       throw new \RuntimeException($srcFilepath . ' is not file');
     }
-    self::makeDirecoty(dirname($dstFilepath));
+    self::makeDirectory(dirname($dstFilepath));
     if (copy($srcFilepath, $dstFilepath) === false) {
       throw new \RuntimeException('Can not copy from ' . $srcFilepath . ' to ' . $dstFilepath);
     }
@@ -100,14 +100,14 @@ final class FileHelper {
     } else if (!is_dir($srcDirPath)) {
       throw new \RuntimeException($srcDirPath . ' is not directory');
     }
-    self::makeDirecoty($dstDirPath);
+    self::makeDirectory($dstDirPath);
     $iterator = new \RecursiveIteratorIterator(
       new \RecursiveDirectoryIterator($srcDirPath, \RecursiveDirectoryIterator::SKIP_DOTS),
       \RecursiveIteratorIterator::SELF_FIRST
     );
     foreach ($iterator as $file) {
       if ($file->isDir()) {
-        self::makeDirecoty($dstDirPath . '/' . $iterator->getSubPathName());
+        self::makeDirectory($dstDirPath . '/' . $iterator->getSubPathName());
       } else {
         self::copyFile($file, $dstDirPath . '/' . $iterator->getSubPathName());
       }
