@@ -1,4 +1,4 @@
-#  CodeIgniter Extension
+signin.js#  CodeIgniter Extension
 
 A package for efficient development of Codeigniter.  
 A simple interface and some general-purpose processing classes have been added to make it easier to use models and libraries.  
@@ -11,6 +11,205 @@ You can update CodeIgniter system folder to latest version with one command.
 
 ## Release Notes
 
+### 3.5.3 (May 20, 2020)
+
+* Added a process to log out a user who is logged in with the same ID on another device when logging in
+
+    * config/hooks.php:
+
+        ```php
+        use \X\Annotation\AnnotationReader;
+
+        $hook['post_controller_constructor'] = function() {
+          isset($_SESSION['user']) ? handlingLoggedIn() : handlingLogOff();
+        };
+
+        /**
+         * Process for logged-in user
+         */
+        function handlingLoggedIn() {
+          $ci =& get_instance();
+          // If it is BAN, call the logoff process
+          $ci->load->model('UserService');
+          if ($ci->UserService->isBanUser(session_id())) {
+            // Sign out
+            $ci->UserService->signout();
+            // Set ban message display flag
+            $ci->load->helper('cookie');
+            set_cookie('show_ban_message', true, 10);
+            // To logoff processing
+            return handlingLogOff();
+          }
+          // Check if the request URL has access privileges
+          $accessibility = AnnotationReader::getAccessibility($ci->router->class, $ci->router->method);
+          if (!$accessibility->allow_login || ($accessibility->allow_role && $accessibility->allow_role !== $session['role'])) {
+            // In case of access prohibition action, redirect to the dashboard page
+            redirect('/dashboard');
+          }
+        }
+
+        /**
+         * Process for logoff user
+         */
+        function handlingLogOff() {
+          $ci =& get_instance();
+          // Check if the request URL has access privileges
+          $accessibility = AnnotationReader::getAccessibility($ci->router->class, $ci->router->method);
+          if (!$accessibility->allow_logoff) {
+            // In case of access prohibition action, redirect to the login page
+            redirect('/signin');
+          }
+        }
+        ```
+
+    * models/UserService.php:
+
+        ```php
+        class UserService extends \AppModel {
+
+          protected $model = [
+            'UserModel',
+            'SessionModel'
+          ];
+
+          public function signin(string $username, string $password): bool {
+            // Find data matching ID and password
+            $user = $this->UserModel->getUserByUsernameAndPassword($username, $password);
+            if (empty($user)) {
+              return false;
+            }
+            unset($user['password']);
+            // Change the BAN flag of other logged-in users to on
+            $this->SessionModel->updateSessionBanFlagOn($username, session_id());
+            // Store login user data in session
+            $_SESSION['user'] = $user;
+            return true;
+          }
+
+          public function signout() {
+            session_destroy();
+          }
+
+          public function isBanUser(string $sessionId) {
+            return $this->SessionModel->isBanById(session_id());
+          }
+        }
+        ```
+
+    * models/SessionModel.php:
+
+        ```php
+        class SessionModel extends \AppModel {
+
+          const TABLE = 'session';
+
+          public function updateSessionBanFlagOn($username, string $id) {
+            parent
+              ::set('ban', 1)
+              ::where('username', $username)
+              ::where('id !=', $id)
+              ->update();
+          }
+
+          public function isBanById(string $id): bool {
+            return parent
+              ::where('id', $id)
+              ::where('ban', 1)
+              ::count_all_results() > 0;
+          }
+        }
+        ```
+
+    * controllers/api/User.php
+
+        ```php
+        use \X\Annotation\Access;
+        use const \X\Constant\HTTP_BAD_REQUEST;
+        use const \X\Constant\HTTP_CREATED;
+        use const \X\Constant\HTTP_NO_CONTENT;
+
+        class User extends AppController {
+
+          protected $model = [
+            'UserService',
+            'UserModel',
+          ];
+
+          /**
+           * @Access(allow_login=false, allow_logoff=true)
+           */
+          public function signin() {
+            try {
+              $this->form_validation
+                ->set_data($this->input->post())
+                ->set_rules('username', 'username', 'required|max_length[30]')
+                ->set_rules('password', 'password', 'required|max_length[30]');
+              if (!$this->form_validation->run()) {
+                return parent::error(print_r($this->form_validation->error_array(), true), HTTP_BAD_REQUEST);
+              }
+              $result = $this->UserService->signin($this->input->post('username'), $this->input->post('password'));
+              parent
+                ::set($result)
+                ::json();
+            } catch (\Throwable $e) {
+              parent::error($e->getMessage(), HTTP_BAD_REQUEST);
+            }
+          }
+
+          /**
+           * @Access(allow_login=true, allow_logoff=false)
+           */
+          public function signout() {
+            try {
+              $this->UserService->signout();
+              redirect('/signin');
+            } catch (\Throwable $e) {
+              parent::error($e->getMessage(), HTTP_BAD_REQUEST);
+            }
+          }
+        }
+        ```
+
+    * public/assets/signin.js
+
+        ```js
+        (() => {
+          /**
+           * Set up login form
+           *
+           * @return {void}
+           */
+          function setupLoginForm() {
+            const validator = $('#signupForm').validate({
+              submitHandler: async (form, event) => {
+                event.preventDefault();
+                const response = await $.ajax({
+                  url: 'api/user/signin',
+                  type: 'POST',
+                  data: new FormData(form),
+                  processData: false,
+                  contentType: false
+                });
+                console.log('response=', response);
+                if (!response) {
+                  return void validator.showErrors({ username: 'Wrong username or password' });
+                }
+                location.href = '/';
+              }
+            });
+          }
+
+          // Set up login form
+          setupLoginForm();
+
+          // Display BAN message
+          if (Cookies.get('show_ban_message')) {
+            Cookies.remove('show_ban_message')
+            alert('Logged out because it was logged in on another terminal.');
+          }
+        })();
+        ````
+
 ### 3.5.0 (May 19, 2020)
 
 * Fixed a bug that DB class does not inherit \X\Database\QueryBuilder when making session DB
@@ -19,7 +218,7 @@ You can update CodeIgniter system folder to latest version with one command.
 
 * Make the IP range check method of "\X\Util\HttpSecurity" class do correct check when subnet mask is 32.
 
-    ```PHP
+    ```php
     use \X\Util\HttpSecurity;
 
     HttpSecurity::isAllowIp('202.210.220.64',   '202.210.220.64/28');// false
@@ -43,7 +242,7 @@ You can update CodeIgniter system folder to latest version with one command.
 
 * Added feature to face detector to find multiple faces from collection
 
-    ```PHP
+    ```php
     use \X\Rekognition\Client;
     $client = new Client('AWS_REKOGNITION_KEY', 'AWS_REKOGNITION_SECRET');
 
@@ -71,13 +270,13 @@ You can update CodeIgniter system folder to latest version with one command.
     //             [faceId] => e12c40d2-445d-4b12-bfad-db46a2f611dc
     //             [similarity] => 99.7
     //         )
-    // 
+    //
     //     [1] => Array
     //         (
     //             [faceId] => b3fcb4ed-5891-4bc3-bb1c-6b3f90f159d1
     //             [similarity] => 99.3
     //         )
-    // 
+    //
     // )
     ```
 
@@ -90,7 +289,7 @@ You can update CodeIgniter system folder to latest version with one command.
 
     <p class="alert">Be sure to allow NULL for your own extra columns. This is because the session created when you are not logged in has no extra column values.</p>
 
-    ```PHP
+    ```php
     // Session table additional column.
     // A session field with the same name as the additional column name is saved in the table.
     $config['sess_table_additional_columns'] = ['username'];
@@ -144,7 +343,7 @@ You can update CodeIgniter system folder to latest version with one command.
 
     You can configure the template cache in "application/config/config.php".
 
-    ```PHP
+    ```php
     /*
     |--------------------------------------------------------------------------
     | Template settings
@@ -159,7 +358,7 @@ You can update CodeIgniter system folder to latest version with one command.
 
 * Added client class that summarizes face detection processing. Remove old face detection class.
 
-    ```PHP
+    ```php
     use \X\Rekognition\Client;
     $client = new Client('AWS_REKOGNITION_KEY', 'AWS_REKOGNITION_SECRET');
 
@@ -180,7 +379,7 @@ You can update CodeIgniter system folder to latest version with one command.
 
 * Added insert_on_duplicate_update.
 
-    ```PHP
+    ```php
     // Here is an example of insert_on_duplicate_update.
     $SampleModel
     ->set([
@@ -200,7 +399,7 @@ You can update CodeIgniter system folder to latest version with one command.
 
 * Added insert_on_duplicate_update_batch.
 
-    ```PHP
+    ```php
     // Here is an example of insert_on_duplicate_update_batch
     $SampleModel
       ->set_insert_batch([
