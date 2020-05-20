@@ -9,7 +9,10 @@ use const \X\Constant\HTTP_NO_CONTENT;
 
 class User extends AppController {
 
-  protected $model = 'UserModel';
+  protected $model = [
+    'UserService',
+    'UserModel',
+  ];
 
   /**
    * @Access(allow_login=false, allow_logoff=true)
@@ -24,7 +27,7 @@ class User extends AppController {
         Logger::error($this->form_validation->error_string());
         return parent::error(print_r($this->form_validation->error_array(), true), HTTP_BAD_REQUEST);
       }
-      $result = $this->UserModel->signin($this->input->post('username'), $this->input->post('password'));
+      $result = $this->UserService->signin($this->input->post('username'), $this->input->post('password'));
       parent
         ::set($result)
         ::json();
@@ -39,7 +42,7 @@ class User extends AppController {
    */
   public function signout() {
     try {
-      $this->UserModel->signout();
+      $this->UserService->signout();
       redirect('/signin');
     } catch (\Throwable $e) {
       parent::error($e->getMessage(), HTTP_BAD_REQUEST);
@@ -73,8 +76,7 @@ class User extends AppController {
         return parent::error(print_r($this->form_validation->error_array(), true), HTTP_BAD_REQUEST);
       }
 
-      $id = $this->UserModel->addUser($this->input->post());
-
+      $id = $this->UserService->addUser($this->input->post());
       parent
         ::status(HTTP_CREATED)
         ::set($id)
@@ -107,7 +109,7 @@ class User extends AppController {
         return parent::error(print_r($this->form_validation->error_array(), true), HTTP_BAD_REQUEST);
       }
 
-      $this->UserModel->updateUser($id, $this->input->put());
+      $this->UserService->updateUser($id, $this->input->put());
       parent
         ::status(HTTP_NO_CONTENT)
         ::json();
@@ -121,7 +123,7 @@ class User extends AppController {
    */
   public function delete(int $id) {
     try {
-      $this->UserModel->deleteUser($id);
+      $this->UserService->deleteUser($id);
       parent
         ::status(HTTP_NO_CONTENT)
         ::json();

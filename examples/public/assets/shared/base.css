@@ -1,3 +1,7 @@
+@import url('navbar.css');
+@import url('sidebar.css');
+@import url('content.css');
+
 /* jQuery Validation Plugin error message style */
 
 input.error {

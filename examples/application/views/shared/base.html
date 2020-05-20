@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>{{ (block('title')) ?? '' }} - Examples</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <link rel="stylesheet" type="text/css" href="/node_modules/bootstrap/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="/node_modules/@fortawesome/fontawesome-free/css/all.min.css">
+  <link rel="stylesheet" type="text/css" href="{{ cache_busting('/assets/shared/base.css') }}">
+  {% block styles %}{% endblock %}
+</head>
+<body>
+
+  {% block content %}{% endblock %}
+
+  <script src="/node_modules/jquery/dist/jquery.min.js"></script>
+  <script src="/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+  <script src="/node_modules/jquery-validation/dist/jquery.validate.min.js"></script>
+  <script src="/node_modules/js-cookie/src/js.cookie.js"></script>
+  <script src="{{ cache_busting('/assets/shared/base.js') }}" type="module"></script>
+
+  {% block scripts %}{% endblock %}
+</body>
+</html>

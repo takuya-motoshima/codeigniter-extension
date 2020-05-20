@@ -106,6 +106,7 @@
         `id` varchar(128) NOT NULL,
         -- `id` varchar(40) NOT NULL,
         `username` varchar(255) DEFAULT NULL,
+        `ban` tinyint(1) NOT NULL DEFAULT 0,
         `ip_address` varchar(45) NOT NULL,
         `timestamp` int(10) unsigned DEFAULT 0 NOT NULL,
         `data` blob NOT NULL,
