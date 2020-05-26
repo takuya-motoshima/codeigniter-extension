@@ -44,4 +44,24 @@ class TestModel extends \AppModel {
       ::where('thing', $fromThing)
       ::update(self::TABLE);
   }
+
+  public function getUsingSubquery(): array {
+    $fromClause = parent
+      ::select("
+        CASE thing
+          WHEN 'Hawk' THEN '鷹'
+          WHEN 'Tiger' THEN '虎'
+          WHEN 'Shark' THEN '鮫'
+          ELSE '不明'
+          END thing,
+      ")
+      ::from(self::TABLE)
+      ::get_compiled_select();
+    Logger::debug('$fromClause=', $fromClause);
+    return parent
+      ::from('(' . $fromClause . ') AS t')
+      ::where('t.thing', '虎')
+      ::get()
+      ->result_array();
+  }
 }

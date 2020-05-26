@@ -123,6 +123,9 @@
         PRIMARY KEY (`id`)
     );
 
+    -- Add login test record
+    INSERT INTO test(thing) VALUES ('Hawk'), ('Tiger'), ('Shark');
+
     -- Add login role record
     INSERT INTO role(role) VALUES ('admin'), ('user');
 

@@ -20,28 +20,28 @@ class Test extends AppController {
       // Transaction start
       $this->TestModel->trans_begin();
 
-      // Added "human" and "insect"
+      // Added "Human" and "insect"
       $this->TestModel->saveRows([
-        [ 'thing' => 'human' ],
+        [ 'thing' => 'Human' ],
         [ 'thing' => 'insect' ],
       ]);
-      Logger::print('Added "human" and "insect": ', $this->TestModel->getAll());
+      Logger::print('Added "Human" and "insect": ', $this->TestModel->getAll());
 
-      // Update "human" to "squid"
-      $this->TestModel->saveRow([ 'id' => 1, 'thing' => 'squid' ]);
-      Logger::print('Update "human" to "squid": ', $this->TestModel->getAll());
+      // Update "Human" to "Squid"
+      $this->TestModel->saveRow([ 'id' => 1, 'thing' => 'Squid' ]);
+      Logger::print('Update "Human" to "Squid": ', $this->TestModel->getAll());
 
       // Added "Lion"
-      $this->TestModel->addRow([ 'thing' => 'lion' ]);
+      $this->TestModel->addRow([ 'thing' => 'Lion' ]);
       Logger::print('Added "Lion": ', $this->TestModel->getAll());
 
       // Delete "insect"
       $this->TestModel->deleteRow('insect');
       Logger::print('Delete "insect": ', $this->TestModel->getAll());
 
-      // Update "squid" to "whale"
-      $this->TestModel->updateRow('squid', 'whale');
-      Logger::print('Update "squid" to "whale": ', $this->TestModel->getAll());
+      // Update "Squid" to "Whale"
+      $this->TestModel->updateRow('Squid', 'Whale');
+      Logger::print('Update "Squid" to "Whale": ', $this->TestModel->getAll());
 
       // Undo
       $this->TestModel->trans_rollback();
@@ -54,5 +54,10 @@ class Test extends AppController {
       Logger::print($e->getMessage());
       throw $e;
     }
+  }
+
+  public function getUsingSubquery() {
+    $results = $this->TestModel->getUsingSubquery();
+    Logger::print($results);
   }
 }
