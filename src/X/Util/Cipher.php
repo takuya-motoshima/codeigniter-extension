@@ -18,11 +18,14 @@ final class Cipher {
    * @param  string $clearText
    * @return string
    */
-  public static function encode_sha256(string $clearText): string {
-    if (empty(Loader::config('config', 'encryption_key'))) {
+  public static function encode_sha256(string $clearText, string $encryptionKey = null): string {
+    if (empty($encryptionKey)) {
+      $encryptionKey = Loader::config('config', 'encryption_key');
+    }
+    if (empty($encryptionKey)) {
       throw new \RuntimeException('Cant find encryption_key in application/config/config.php file');
     }
-    return hash('sha256', $clearText . Loader::config('config', 'encryption_key'));
+    return hash('sha256', $clearText . $encryptionKey);
   }
 
   /**
