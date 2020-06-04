@@ -3,6 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 use \X\Annotation\Access;
 use \X\Util\Logger;
+use \X\Util\Cipher;
 
 class Test extends AppController {
 
@@ -59,5 +60,11 @@ class Test extends AppController {
   public function getUsingSubquery() {
     $results = $this->TestModel->getUsingSubquery();
     Logger::print($results);
+  }
+
+  public function cipher() {
+    Logger::print(Cipher::encode_sha256('tiger'));// 1583d0f164625326e8c78c008c53a6ad9a2d21556e3423abef12511bf6bf3753
+    Logger::print(Cipher::encode_sha256('tiger', uniqid()));// 2fc96f26120bb333ada08609bb4ef009be4b20f2fa37468b05d5bacf885453fa
+    Logger::print(Cipher::encode_sha256('tiger', uniqid()));// 066bf68b8150e46b5d77f088d00c125c7127f751dab5da91967f77363062e056
   }
 }
