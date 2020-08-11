@@ -14,6 +14,7 @@
     },
     "require": {
         "php": "^7.0",
-        "takuya-motoshima/codeigniter-extension": "dev-master"
+        "takuya-motoshima/codeigniter-extension": "dev-master",
+        "maennchen/zipstream-php": "^2.1"
     }
 }

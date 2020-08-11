@@ -11,7 +11,19 @@ You can update CodeIgniter system folder to latest version with one command.
 
 ## Release Notes
 
-### 3.5.4 (June 4, 2020)
+### 3.5.5 (6/4/2020)
+
+* Added a method to AA that returns the size of all files in a directory.
+
+    ```php
+    // Returns the total size of all files in a directory
+    FileHelper::getDirectorySize('/var/log');
+
+    // Returns the total size of all files in multiple directories
+    FileHelper::getDirectorySize([ '/var/log/php-fpm' '/var/log/nginx' ]);
+    ```
+
+### 3.5.4 (6/4/2020)
 
 * Add encryption key to the parameter of hash conversion method
 
@@ -23,7 +35,7 @@ You can update CodeIgniter system folder to latest version with one command.
     Cipher::encode_sha256('tiger', uniqid());// 066bf68b8150e46b5d77f088d00c125c7127f751dab5da91967f77363062e056
     ```
 
-### 3.5.3 (May 20, 2020)
+### 3.5.3 (5/20/2020)
 
 * Added a process to log out a user who is logged in with the same ID on another device when logging in
 
@@ -222,11 +234,11 @@ You can update CodeIgniter system folder to latest version with one command.
         })();
         ````
 
-### 3.5.0 (May 19, 2020)
+### 3.5.0 (5/19/2020)
 
 * Fixed a bug that DB class does not inherit \X\Database\QueryBuilder when making session DB
 
-### 3.4.8 (April 28, 2020)
+### 3.4.8 (4/28/2020)
 
 * Make the IP range check method of "\X\Util\HttpSecurity" class do correct check when subnet mask is 32.
 
@@ -250,7 +262,7 @@ You can update CodeIgniter system folder to latest version with one command.
     HttpSecurity::isAllowIp('118.238.251.131',  '118.238.251.130/32');// false
     ```
 
-### 3.4.7 (April 27, 2020)
+### 3.4.7 (4/27/2020)
 
 * Added feature to face detector to find multiple faces from collection
 
@@ -292,7 +304,7 @@ You can update CodeIgniter system folder to latest version with one command.
     // )
     ```
 
-### 3.4.6 (April 23, 2020)
+### 3.4.6 (4/23/2020)
 
 * Added a feature to add arbitrary columns to the session table
 
@@ -345,11 +357,11 @@ You can update CodeIgniter system folder to latest version with one command.
     1 rows in set (0.000 sec)
     ```
 
-### 3.4.5 (April 10, 2020)
+### 3.4.5 (4/10/2020)
 
 * Changed to return an empty string when there is no key value to get from the config with "\X\Utils\Loader::config()".
 
-### 3.4.2 (March 16, 2020)
+### 3.4.2 (3/16/2020)
 
 * Added setting of template cache in application config (application/config/config.php).
 
@@ -366,7 +378,7 @@ You can update CodeIgniter system folder to latest version with one command.
     $config['cache_templates'] = false;
     ```
 
-### v3.3.9 (March 16, 2020)
+### 3.3.9 (3/16/2020)
 
 * Added client class that summarizes face detection processing. Remove old face detection class.
 
@@ -387,7 +399,7 @@ You can update CodeIgniter system folder to latest version with one command.
     $faceId = $client->addFaceToCollection($collectionId, $faceImageFile);
     ```
 
-### v3.3.8 (March 14, 2020)
+### 3.3.8 (3/14/2020)
 
 * Added insert_on_duplicate_update.
 

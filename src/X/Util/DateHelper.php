@@ -10,52 +10,45 @@ namespace X\Util;
 final class DateHelper {
 
   /**
-   * 
-   * x年x月の第n週は、何日から何日までかを取得
+   * Returns the start and end dates of the week of the given year and month
    *
-   * @param string $ym 対象年月。YYYYMM形式
-   * @param int $nthWeek 取得したい週
-   * @param bool $aroundMonth 前後の月を含めて算出する場合はtrue
-   * @param bool $startMonday 月曜始まりとしたい場合はtrue
+   * @param string $yearMonth The target date. YYYYMM format
+   * @param int $nthWeek Week number
+   * @param bool $aroundMonth If true, calculate including the months before and after
+   * @param bool $startMonday True if Monday is the first day of the week. 
    * @return array
    */
-  public static function getWeekPeriod(string $ym, int $nthWeek, bool $aroundMonth = false, bool $startMonday = true): array {
-    // 第1週最終曜日の計算用。デフォルトは土曜、月曜始まりの場合は日曜。
+  public static function getWeekPeriod(string $yearMonth, int $nthWeek, bool $aroundMonth = false, bool $startMonday = true): array {
+
+    // Last day of the week.The default is Saturday.If Monday is the first day of the week, it will be Sunday.
     $weekEnd = 6;
-    if ($startMonday === true) {
-      $weekEnd = 7;
-    }
+    if ($startMonday === true) $weekEnd = 7;
 
-    // 月初(1日)の曜日を取得
-    $weekNo = date('w', strtotime('first day of ' . $ym));
+    // Day of the first day of the month
+    $weekNo = date('w', strtotime('first day of ' . $yearMonth));
 
-    // 曜日番号の差から第1週最終曜日の日付を算出
+    // Date of last day of week 1
     $firstEndDay = $weekEnd - $weekNo + 1;
-    if ($firstEndDay === 8) {
-      // 1日が日曜かつ、月曜始まりの場合のみ8になってしまうので調整
-      $firstEndDay = 1;
-    }
-    $firstEndStamp = strtotime($ym . sprintf('%02d', $firstEndDay));
 
-    // 第1週最終曜日の日付 - 6 = 第1週の最初の日付
+    // If the first day of a month is Sunday and the first day of the week is Monday, the value will be 8, so adjust it.
+    if ($firstEndDay === 8) $firstEndDay = 1;
+    $firstEndStamp = strtotime($yearMonth . sprintf('%02d', $firstEndDay));
+
+    // Date of last day of first week-6 = first date of first week
     $firstStartStamp = $firstEndStamp - (6 * 24 * 60 * 60);
 
-    // 第1週の開始日と終了日が分かっているので、これを第N週にスライド
+    // Since we know the start and end dates of week 1, slide to week N
     $startStamp = $firstStartStamp + (($nthWeek - 1) * 7 * 24 * 60 * 60);
     $endStamp = $firstEndStamp + (($nthWeek - 1) * 7 * 24 * 60 * 60);
-
     if ($aroundMonth === false) {
-      // 前後の月を含まない場合
-      if (date('Ym', $startStamp) !== $ym) {
-        // 週初めが先月の場合、1日に変換
-        $startStamp = strtotime('first day of ' . $ym);
-      }
-      if (date('Ym', $endStamp) !== $ym) {
-        // 週終わりが来月の場合、末日に変換
-        $endStamp = strtotime('last day of ' . $ym);
-      }
+      // When the previous and next months are not included
+
+      // If the first day of the week is last month, convert to the first day
+      if (date('Ym', $startStamp) !== $yearMonth) $startStamp = strtotime('first day of ' . $yearMonth);
+
+      // If the end of the week is the next month, convert to the last day
+      if (date('Ym', $endStamp) !== $yearMonth) $endStamp = strtotime('last day of ' . $yearMonth);
     }
     return [$startStamp, $endStamp];
-    // return [date('Y-m-d', $startStamp), date('Y-m-d', $endStamp)];
   }
 }

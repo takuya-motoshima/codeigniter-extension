@@ -1,3 +1,19 @@
+/* navbar */
+.navbar {
+  min-height: 4rem;
+  box-shadow: 0 0.5rem 1rem rgba(0,0,0,.05), inset 0 -1px 0 rgba(0,0,0,.1);
+}
+
+@media (min-width: 768px) {
+  .bd-navbar {
+    position: sticky;
+    top: 0;
+    z-index: 1071;
+  }
+}
+
+
+/* sidebar */
 .sidebar {
   order: 0;
   border-bottom: 1px solid rgba(0,0,0,.1);
@@ -45,3 +61,22 @@
       color: rgba(0,0,0,.85);
       text-decoration: none;
     }
+
+/* content */
+.content {
+  order: 1;
+}
+
+/* jQuery Validation Plugin error message style */
+input.error {
+  border: 1px dashed red !important;
+}
+
+input.error:focus {
+  box-shadow: 0 0 0 0.2rem rgba(255,0,0,.25) !important;
+}
+
+label.error {
+  color: red;
+  font-style: italic;
+}
