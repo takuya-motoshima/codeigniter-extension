@@ -178,6 +178,9 @@ class SessionDatabaseDriver extends \CI_Session_database_driver {
     $additionalColumns = !is_array($this->_config['table_additional_columns']) ? [$this->_config['table_additional_columns']] : $this->_config['table_additional_columns'];
     $defaultColumns = $this->_db->list_fields($this->_config['save_path']);
     $unserialized = $this->unserialize($session_data);
+    if (empty($unserialized)) {
+      $unserialized = [];
+    }
     foreach ($additionalColumns as $additionalColumn) {
       if (in_array($additionalColumn, $defaultColumns)) {
         $additionalColumnValue = ArrayHelper::searchArrayByKey($additionalColumn, $unserialized);
