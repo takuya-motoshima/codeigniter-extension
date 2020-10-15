@@ -7,6 +7,8 @@
  * @copyright  2017 Takuya Motoshima
  */
 namespace X\Util;
+
+use X\Util\Logger;
 final class HttpSecurity {
 
   /**
@@ -14,10 +16,12 @@ final class HttpSecurity {
    * 
    * @return string
    */
-  public static function getIpFromXFF() :string {
+  public static function getIpFromXFF() :?string {
     $privateIps = [ '10.0.0.0/8', '172.16.0.0/12', '192.168.0.0/16', ];
-    $ips = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
-    if (count($ips)==1) return $_SERVER['HTTP_X_FORWARDED_FOR'];
+    $xForwardedFor = $_SERVER['HTTP_X_FORWARDED_FOR'] ?? null;
+    if (empty($xForwardedFor)) return null;
+    $ips = explode(',', $xForwardedFor);
+    if (count($ips) == 1) return $xForwardedFor;
     // Check if the leftmost address is a private IP.
     $isPrivate = false;
     foreach ($privateIps as $privateIpAddress) {

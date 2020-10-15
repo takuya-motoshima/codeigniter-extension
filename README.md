@@ -11,7 +11,11 @@ You can update CodeIgniter system folder to latest version with one command.
 
 ## Release Notes
 
-### 3.5.6 (10/15/2020)
+### 3.5.8 (10/16/2020)
+
+* Fixed a bug that IP acquisition fails when XFF is empty(\X\Util\HttpSecurity#getIpFromXFF).
+
+### 3.5.7 (10/15/2020)
 
 * Added method to get IP from XFF(\X\Util\HttpSecurity#getIpFromXFF).
 
