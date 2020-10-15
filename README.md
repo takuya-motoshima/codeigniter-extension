@@ -11,6 +11,10 @@ You can update CodeIgniter system folder to latest version with one command.
 
 ## Release Notes
 
+### 3.5.6 (10/15/2020)
+
+* Added method to get IP from XFF(\X\Util\HttpSecurity#getIpFromXFF).
+
 ### 3.5.5 (6/4/2020)
 
 * Added a method to AA that returns the size of all files in a directory.
