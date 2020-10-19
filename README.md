@@ -11,6 +11,10 @@ You can update CodeIgniter system folder to latest version with one command.
 
 ## Release Notes
 
+### 3.5.9 (10/19/2020)
+
+* Added log output method without file path(\X\Util\Logger#printWithoutPath).
+
 ### 3.5.8 (10/16/2020)
 
 * Fixed a bug that IP acquisition fails when XFF is empty(\X\Util\HttpSecurity#getIpFromXFF).

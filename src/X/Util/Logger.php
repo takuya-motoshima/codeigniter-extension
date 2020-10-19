@@ -69,21 +69,45 @@ final class Logger {
   }
 
   /**
+   * Display log without file path.
+   *
+   * @param mixed[] $params
+   * @return void
+   */
+  public static function printWithoutPath(...$params) {
+    if (!is_cli()) {
+      $message = '';
+      foreach ($params as $param) {
+        if (is_array($param) || is_object($param)) {
+          $message .= '<pre>' . htmlspecialchars(print_r($param, true), ENT_QUOTES) . '</pre>';
+        } else {
+          $message .= htmlspecialchars($param, ENT_QUOTES);
+        }
+      }
+      echo '<div style="border-bottom:1px solid #efefef;padding:4px;">' . $message . '</div>';
+    } else {
+      $message = self::createLogString($params, debug_backtrace(), false);
+      echo $message . PHP_EOL;
+      self::debug($message);
+    }
+  }
+
+  /**
    * Create log string
    *
    * @param  array $params
    * @param  array $trace
    * @return string
    */
-  private static function createLogString(array $params, array $trace): string {
-    $message = str_replace(realpath(\FCPATH . '../') . '/', '', $trace[0]['file']) . '(' . $trace[0]['line'] . ')';
-    if (isset($trace[1]['class'])) {
-      $message .= ' ' . $trace[1]['class'] . '.' . $trace[1]['function'];
-    } else if (isset($trace[1]['function'])) {
-      $message .= ' ' . $trace[1]['function'];
+  private static function createLogString(array $params, array $trace, bool $witPath = true): string {
+    $message = '';
+    if ($witPath) {
+      $message = str_replace(realpath(\FCPATH . '../') . '/', '', $trace[0]['file']) . '(' . $trace[0]['line'] . ')';
+      if (isset($trace[1]['class'])) $message .= ' ' . $trace[1]['class'] . '.' . $trace[1]['function'];
+      else if (isset($trace[1]['function'])) $message .= ' ' . $trace[1]['function'];
     }
     if (!empty($params)) {
-      $message .= ':';
+      if ($witPath) $message .= ':';
       foreach ($params as $param) {
         if (is_array($param) || is_object($param)) {
           $message .= print_r($param, true);
