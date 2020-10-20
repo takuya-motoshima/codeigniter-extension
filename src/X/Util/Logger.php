@@ -105,6 +105,8 @@ final class Logger {
       $message = str_replace(realpath(\FCPATH . '../') . '/', '', $trace[0]['file']) . '(' . $trace[0]['line'] . ')';
       if (isset($trace[1]['class'])) $message .= ' ' . $trace[1]['class'] . '.' . $trace[1]['function'];
       else if (isset($trace[1]['function'])) $message .= ' ' . $trace[1]['function'];
+    } else if (is_cli()) {
+      $message .= date('Y-m-d H:i:s') . ' --> ';
     }
     if (!empty($params)) {
       if ($witPath) $message .= ':';

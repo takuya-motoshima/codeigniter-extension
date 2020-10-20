@@ -11,6 +11,10 @@ You can update CodeIgniter system folder to latest version with one command.
 
 ## Release Notes
 
+### 3.6.0 (10/20/2020)
+
+* Add a time stamp to the log message output to the CLI(\X\Util\Logger#printWithoutPath).
+
 ### 3.5.9 (10/19/2020)
 
 * Added log output method without file path(\X\Util\Logger#printWithoutPath).
