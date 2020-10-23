@@ -11,6 +11,75 @@ You can update CodeIgniter system folder to latest version with one command.
 
 ## Release Notes
 
+### 3.6.1 (10/23/2020)
+
+* Added IP utility class(\X\Util\IpUtils). And since \X\Util\HttpSecurity has moved to IPUtils, I deleted it.
+
+    ```php
+    // Get client ip.
+    IpUtils::getClientIpFromXFF();//  202.210.220.78
+
+    // IP range check.
+    // 202.210.220.64/28
+    IpUtils::inRange('202.210.220.63', '202.210.220.64/28');// false
+    IpUtils::inRange('202.210.220.64', '202.210.220.64/28');// true
+    IpUtils::inRange('202.210.220.65', '202.210.220.64/28');// true
+    IpUtils::inRange('202.210.220.78', '202.210.220.64/28');// true
+    IpUtils::inRange('202.210.220.79', '202.210.220.64/28');// true
+    IpUtils::inRange('202.210.220.80', '202.210.220.64/28');// false
+    
+    // 192.168.1.0/24
+    IpUtils::inRange('192.168.0.255', '192.168.1.0/24'); // false
+    IpUtils::inRange('192.168.1.0', '192.168.1.0/24'); // true
+    IpUtils::inRange('192.168.1.1', '192.168.1.0/24'); // true
+    IpUtils::inRange('192.168.1.244', '192.168.1.0/24'); // true
+    IpUtils::inRange('192.168.1.255', '192.168.1.0/24'); // true
+    IpUtils::inRange('192.168.2.0', '192.168.1.0/24'); // false
+    
+    // 118.238.251.130
+    IpUtils::inRange('118.238.251.129', '118.238.251.130'); // false
+    IpUtils::inRange('118.238.251.130', '118.238.251.130'); // true
+    IpUtils::inRange('118.238.251.131', '118.238.251.130'); // false
+    
+    // 118.238.251.130/32
+    IpUtils::inRange('118.238.251.129', '118.238.251.130/32'); // false
+    IpUtils::inRange('118.238.251.130', '118.238.251.130/32'); // true
+    IpUtils::inRange('118.238.251.131', '118.238.251.130/32'); // false
+    
+    // 2001:4860:4860::8888/32
+    IpUtils::inRange('2001:4859:FFFF:FFFF:FFFF:FFFF:FFFF:FFFF', '2001:4860:4860::8888/32');// false
+    IpUtils::inRange('2001:4860:4860:0000:0000:0000:0000:8888', '2001:4860:4860::8888/32');// true
+    IpUtils::inRange('2001:4860:4860:0000:0000:0000:0000:8889', '2001:4860:4860::8888/32');// true
+    IpUtils::inRange('2001:4860:FFFF:FFFF:FFFF:FFFF:FFFF:FFFE', '2001:4860:4860::8888/32');// true
+    IpUtils::inRange('2001:4860:FFFF:FFFF:FFFF:FFFF:FFFF:FFFF', '2001:4860:4860::8888/32');// true
+    IpUtils::inRange('2001:4861:0000:0000:0000:0000:0000:0000', '2001:4860:4860::8888/32');// false
+    
+    // 2404:7a81:b0a0:9100::/64
+    IpUtils::inRange('2404:7A81:B0A0:90FF:0000:0000:0000:0000', '2404:7A81:B0A0:9100::/64');// false
+    IpUtils::inRange('2404:7A81:B0A0:9100:0000:0000:0000:0000', '2404:7A81:B0A0:9100::/64');// true
+    IpUtils::inRange('2404:7A81:B0A0:9100:0000:0000:0000:0001', '2404:7A81:B0A0:9100::/64');// true
+    IpUtils::inRange('2404:7A81:B0A0:9100:A888:5EE2:EA92:B618', '2404:7A81:B0A0:9100::/64');// true
+    IpUtils::inRange('2404:7A81:B0A0:9100:D03:959E:7F47:9B77', '2404:7A81:B0A0:9100::/64');// true
+    IpUtils::inRange('2404:7A81:B0A0:9100:FFFF:FFFF:FFFF:FFFE', '2404:7A81:B0A0:9100::/64');// true
+    IpUtils::inRange('2404:7A81:B0A0:9100:FFFF:FFFF:FFFF:FFFF', '2404:7A81:B0A0:9100::/64');// true
+    IpUtils::inRange('2404:7A81:B0A0:9101:0000:0000:0000:0000', '2404:7A81:B0A0:9100::/64');// false
+
+    // IPv4 format check.
+    IpUtils::isIPv4('234.192.0.2');// true
+    IpUtils::isIPv4('234.198.51.100');// true
+    IpUtils::isIPv4('234.203.0.113');// true
+    IpUtils::isIPv4('0000:0000:0000:0000:0000:ffff:7f00:0001');// false
+    IpUtils::isIPv4('::1');// false
+
+    // IPv6 format check.
+    IpUtils::isIPv6('234.192.0.2');// false
+    IpUtils::isIPv6('234.198.51.100');// false
+    IpUtils::isIPv6('234.203.0.113');// false
+    IpUtils::isIPv6('0000:0000:0000:0000:0000:ffff:7f00:0001');// true
+    IpUtils::isIPv6('::1');// true
+
+    ```
+
 ### 3.6.0 (10/20/2020)
 
 * Add a time stamp to the log message output to the CLI(\X\Util\Logger#printWithoutPath).

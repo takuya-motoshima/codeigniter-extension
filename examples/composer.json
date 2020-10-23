@@ -1,20 +1,21 @@
 {
-    "description" : "The CodeIgniter Application with Composer",
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "../",
-            "options": {
-                "symlink": true
-            }
-        }
-    ],
-    "scripts": {
-        "deploy": "cp -r ../src/X/* vendor/takuya-motoshima/codeigniter-extension/src/X/"
-    },
-    "require": {
-        "php": "^7.0",
-        "takuya-motoshima/codeigniter-extension": "dev-master",
-        "maennchen/zipstream-php": "^2.1"
+  "description" : "The CodeIgniter Application with Composer",
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "../",
+      "options": {
+        "symlink": true
+      }
     }
+  ],
+  "scripts": {
+    "deploy": "cp -r ../src/X/* vendor/takuya-motoshima/codeigniter-extension/src/X/",
+    "syntax-check": "find ./application -name \"*.php\" | xargs -n1 php -l"
+  },
+  "require": {
+    "php": "^7.0",
+    "takuya-motoshima/codeigniter-extension": "dev-master",
+    "maennchen/zipstream-php": "^2.1"
+  }
 }

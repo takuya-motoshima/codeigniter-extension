@@ -1,20 +1,20 @@
 <?php
 use PHPUnit\Framework\TestCase;
-final class Sample extends TestCase {
+final class UnittestSample extends TestCase {
 
-  private $object;
+  private $unittestSample;
 
   // Before a test method is run, a template method called setUp() is invoked.
   // setUp() is where you create the objects against which you will test. 
   protected function setUp(): void {
-    $this->object = new X\SampleTest('hello, world');
+    $this->unittestSample = new X\UnittestSample('hello, world');
   }
 
   // Once the test method has finished running, whether it succeeded or failed, another template method called tearDown() is invoked. 
   // tearDown() is where you clean up the objects against which you tested.
   protected function tearDown(): void {
     // do nothing
-    unset($this->object);
+    unset($this->unittestSample);
   }
 
 
@@ -29,11 +29,11 @@ final class Sample extends TestCase {
   }
 
   public function testGetMessage(): void {
-    $this->assertEquals('hello, world', $this->object->getMessage());
+    $this->assertEquals('hello, world', $this->unittestSample->getMessage());
   }
 
   public function testSetMessage(): void {
-    $this->object->setMessage('good-bye, world');
-    $this->assertEquals('good-bye, world', $this->object->getMessage());
+    $this->unittestSample->setMessage('good-bye, world');
+    $this->assertEquals('good-bye, world', $this->unittestSample->getMessage());
   }
 }
