@@ -15,7 +15,7 @@ class Test extends AppController {
     parent::view('test');
   }
 
-  public function getDirectorySize() {
+  public function directorysize() {
     try {
       $size = FileHelper::getDirectorySize([ APPPATH . 'test/animals', APPPATH . 'test/transport' ]);
       Logger::print('The size of test/animals and test/transport is ' . $size);
@@ -28,7 +28,7 @@ class Test extends AppController {
     }
   }
 
-  public function copyDirectory() {
+  public function copydirectory() {
     FileHelper::copyDirectory(APPPATH . 'test/animals', APPPATH . 'test/copyResult');
   }
 
@@ -75,34 +75,26 @@ class Test extends AppController {
   public function transaction() {
     try {
       Logger::print('Transaction start');
-
       // Transaction start
       $this->TestModel->trans_begin();
-
       // Added "Human" and "insect"
       $this->TestModel->saveRows([[ 'thing' => 'Human' ], [ 'thing' => 'insect' ],]);
       Logger::print('Added "Human" and "insect": ', $this->TestModel->getAll());
-
       // Update "Human" to "Squid"
       $this->TestModel->saveRow([ 'id' => 1, 'thing' => 'Squid' ]);
       Logger::print('Update "Human" to "Squid": ', $this->TestModel->getAll());
-
       // Added "Lion"
       $this->TestModel->addRow([ 'thing' => 'Lion' ]);
       Logger::print('Added "Lion": ', $this->TestModel->getAll());
-
       // Delete "insect"
       $this->TestModel->deleteRow('insect');
       Logger::print('Delete "insect": ', $this->TestModel->getAll());
-
       // Update "Squid" to "Whale"
       $this->TestModel->updateRow('Squid', 'Whale');
       Logger::print('Update "Squid" to "Whale": ', $this->TestModel->getAll());
-
       // Undo
       $this->TestModel->trans_rollback();
       // $this->TestModel->trans_commit();
-
       // Search test table after rollback
       Logger::print('Test table rolled back: ', $this->TestModel->getAll());
     } catch (\Throwable $e) {
@@ -113,15 +105,36 @@ class Test extends AppController {
 
   public function cipher() {
     try {
-      Logger::print(Cipher::encode_sha256('tiger'));// 1583d0f164625326e8c78c008c53a6ad9a2d21556e3423abef12511bf6bf3753
-      Logger::print(Cipher::encode_sha256('tiger', uniqid()));// 2fc96f26120bb333ada08609bb4ef009be4b20f2fa37468b05d5bacf885453fa
-      Logger::print(Cipher::encode_sha256('tiger', uniqid()));// 066bf68b8150e46b5d77f088d00c125c7127f751dab5da91967f77363062e056
+      // Get the initialization vector. This should be changed every time to make it difficult to predict.
+      $iv = Cipher::generateInitialVector();
+
+      // Plaintext.
+      $plaintext = 'Hello, World.';
+
+      // Encrypted password.
+      $password = 'password';
+
+      // Encrypt.
+      $encrypted = Cipher::encrypt($plaintext, $password, $iv);
+      Logger::print('Encrypted: ', $encrypted);
+
+      // Decrypt.
+      $decrypted = Cipher::decrypt($encrypted, $password, $iv);
+      Logger::print('Decrypt: ', $decrypted);
+
+      // Compare image sizes before and after encryption.
+      $base64 = base64_encode(file_get_contents(APPPATH . 'test/0qmIJOcCtbs.jpg'));
+      $originalSize = mb_strlen($base64 , '8bit');
+      $decrypted = Cipher::encrypt($base64, $password, $iv);
+      $decryptedSize = mb_strlen($decrypted , '8bit');
+      Logger::print('Size before encryption: ', $originalSize);
+      Logger::print('Size after encryption: ', $decryptedSize);
     } catch (\Throwable $e) {
       Logger::print($e);
     }
   }
 
-  public function ipUtilsTest() {
+  public function iputils() {
     try {
       // Get client ip.
       $ip = IpUtils::getClientIpFromXFF();

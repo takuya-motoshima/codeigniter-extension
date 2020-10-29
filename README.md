@@ -11,6 +11,29 @@ You can update CodeIgniter system folder to latest version with one command.
 
 ## Release Notes
 
+
+### 3.6.2 (10/29/2020)
+
+* Fixed OpenSSL encryption/decryption method.
+
+    ```php
+    use \X\Util\Cipher;
+    
+    // Get the initialization vector. This should be changed every time to make it difficult to predict.
+    $iv = Cipher::generateInitialVector();
+    
+    // Plaintext.
+    $plaintext = 'Hello, World.';
+
+    // Encrypted password.
+    $password = 'password';
+    // Encrypt.
+    $encrypted = Cipher::encrypt($plaintext, $password, $iv);// UHLY5PckT7Da02e42g==
+
+    // Decrypt.
+    $decrypted = Cipher::decrypt($encrypted, $password, $iv);// Hello, World.
+    ```
+
 ### 3.6.1 (10/23/2020)
 
 * Added IP utility class(\X\Util\IpUtils). And since \X\Util\HttpSecurity has moved to IPUtils, I deleted it.
@@ -115,9 +138,8 @@ You can update CodeIgniter system folder to latest version with one command.
     ```php
     use \X\Util\Cipher;
 
-    Cipher::encode_sha256('tiger');// 1583d0f164625326e8c78c008c53a6ad9a2d21556e3423abef12511bf6bf3753
-    Cipher::encode_sha256('tiger', uniqid());// 2fc96f26120bb333ada08609bb4ef009be4b20f2fa37468b05d5bacf885453fa
-    Cipher::encode_sha256('tiger', uniqid());// 066bf68b8150e46b5d77f088d00c125c7127f751dab5da91967f77363062e056
+    $password = 'password';
+    Cipher::encode_sha256('tiger', $password);// c30675022a22cf76c622b7982e8894dd5ac03c4bb2f17ac13a5da01a76acbe6c
     ```
 
 ### 3.5.3 (5/20/2020)

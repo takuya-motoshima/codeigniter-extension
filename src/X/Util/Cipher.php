@@ -15,58 +15,112 @@ final class Cipher {
    * 
    * Encode SHA-256
    *
-   * @param  string $clearText
+   * @param  string $plaintext
    * @return string
    */
-  public static function encode_sha256(string $clearText, string $encryptionKey = null): string {
-    if (empty($encryptionKey)) {
-      $encryptionKey = Loader::config('config', 'encryption_key');
-    }
-    if (empty($encryptionKey)) {
-      throw new \RuntimeException('Cant find encryption_key in application/config/config.php file');
-    }
-    return hash('sha256', $clearText . $encryptionKey);
+  public static function encode_sha256(string $plaintext, string $password = null): string {
+    if (empty($password)) $password = Loader::config('config', 'encryption_key');
+    if (empty($password)) throw new \RuntimeException('Cant find encryption_key in application/config/config.php file');
+    return hash('sha256', $plaintext . $password);
   }
 
   /**
-   * @param string $clearText
-   * @param string $iv
+   * Generate initial vector.
+   * 
+   * @param string $method
    * @return string
    */
-  public static function encrypt(string $clearText, string $iv = null, string $method = null): string {
-    if (empty(Loader::config('config', 'openssl_key'))) {
-      throw new \RuntimeException('Cant find openssl_key in application/config/config.php file');
-    }
-    $method = ($method ?? Loader::config('config', 'openssl_method')) ?? 'AES-256-CTR';
-    $options = 0;
-    return openssl_encrypt($clearText, $method, Loader::config('config', 'openssl_key'), $options, $iv);
+  public static function generateInitialVector(string $method = 'AES-256-CTR'): string {
+    $length = openssl_cipher_iv_length($method);
+    return openssl_random_pseudo_bytes($length);
   }
 
   /**
-   * @param string $encryptedText
-   * @param string $iv
+   * Encrypt.
+   *
+   * @example
+   * use \X\Util\Cipher;
+   *
+   * // Get the initialization vector. This should be changed every time to make it difficult to predict.
+   * $iv = Cipher::generateInitialVector();
+   *
+   * // Plaintext.
+   * $plaintext = 'Hello, World.';
+   *
+   * // Encrypted password.
+   * $password = 'password';
+   *
+   * // Encrypt.
+   * $encrypted = Cipher::encrypt($plaintext, $password, $iv);// UHLY5PckT7Da02e42g==
+   *
+   * // Decrypt.
+   * $decrypted = Cipher::decrypt($encrypted, $password, $iv);// Hello, World.
+   * 
+   * @param  string $plaintext
+   * @param  string $password
+   * @param  string $iv
+   * @param  string $method
    * @return string
    */
-  public static function decrypt(string $encryptedText, string $iv = null, string $method = null): string {
-    if (empty(Loader::config('config', 'openssl_key'))) {
-      throw new \RuntimeException('Cant find openssl_key in application/config/config.php file');
-    }
-    $method = ($method ?? Loader::config('config', 'openssl_method')) ?? 'AES-256-CTR';
+  public static function encrypt(string $plaintext, string $password, string $iv, string $method = 'AES-256-CTR'): string {
     $options = 0;
-    return openssl_decrypt($encryptedText, $method, Loader::config('config', 'openssl_key'), $options, $iv);
+    return openssl_encrypt($plaintext, $method, $password, $options, $iv);
+  }
+
+  /**
+   * Decrypt.
+   *
+   * @example
+   * use \X\Util\Cipher;
+   *
+   * // Get the initialization vector. This should be changed every time to make it difficult to predict.
+   * $iv = Cipher::generateInitialVector();
+   *
+   * // Plaintext.
+   * $plaintext = 'Hello, World.';
+   *
+   * // Encrypted password.
+   * $password = 'password';
+   *
+   * // Encrypt.
+   * $encrypted = Cipher::encrypt($plaintext, $password, $iv);// UHLY5PckT7Da02e42g==
+   *
+   * // Decrypt.
+   * $decrypted = Cipher::decrypt($encrypted, $password, $iv);// Hello, World.
+   * 
+   * @param  string $encrypted
+   * @param  string $password
+   * @param  string $iv
+   * @param  string $method
+   * @return string
+   */
+  public static function decrypt(string $encrypted, string $password, string $iv, string $method = 'AES-256-CTR'): string {
+    $options = 0;
+    return openssl_decrypt($encrypted, $method, $password, $options, $iv);
+  }
+
+  /**
+   * Generate a random key.
+   * 
+   * @param  int $length
+   * @return string
+   */
+  public static function generateKey(int $length = 32): string {
+    if ($length < 1) throw new RuntimeException('Key length must be 1 or more.');
+    return base64_encode(random_bytes($length));
   }
 
   /**
    * @deprecated deprecated since version 3.1.0
    */
-  public static function encode(string $clearText): string {
-    return self::encrypt($clearText);
+  public static function encode(string $plaintext): string {
+    return self::encrypt($plaintext);
   }
 
   /**
    * @deprecated deprecated since version 3.1.0
    */
-  public static function decode(string $encryptedText): string {
-    return self::decrypt($encryptedText);
+  public static function decode(string $encrypted): string {
+    return self::decrypt($encrypted);
   }
 }

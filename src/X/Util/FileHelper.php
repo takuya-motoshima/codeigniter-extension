@@ -113,10 +113,15 @@ final class FileHelper {
       $dirIt = new \RecursiveDirectoryIterator($path, \RecursiveDirectoryIterator::SKIP_DOTS);
       $fileIt = new \RecursiveIteratorIterator($dirIt, \RecursiveIteratorIterator::CHILD_FIRST);
       foreach ($fileIt as $fileInfo) {
-        if ($fileInfo->isDir()) rmdir($fileInfo);
-        else unlink($fileInfo);
+        if ($fileInfo->isDir()) {
+          rmdir($fileInfo);
+        } else {
+          unlink($fileInfo);
+        }
       }
-      if ($removeRootDir) rmdir($path);
+      if ($removeRootDir) {
+        rmdir($path);
+      }
     }
   }
 
