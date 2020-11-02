@@ -198,17 +198,19 @@ class AmazonSesClient {
    */
   public function send() {
     try {
-      
       $ci =& get_instance();
       $ci->load->library('form_validation'); 
       $ci->form_validation
-        ->set_data(['to' => $this->to, 'from' => $this->from,])
-        ->set_rules('to', 'To Email', 'required|valid_email')
+        ->set_data([
+          // 'to' => $this->to,
+          'from' => $this->from
+        ])
+        // ->set_rules('to', 'To Email', 'required|valid_email')
         ->set_rules('from', 'From Email', 'required|valid_email');
       if (!$ci->form_validation->run()) {
         throw new InvalidArgumentException(implode('', $ci->form_validation->error_array()));
       }
-      $destination['ToAddresses'] = [$this->to];
+      $destination['ToAddresses'] = is_array($this->to) ? $this->to : [$this->to];
       isset($this->cc) && $destination['CcAddresses'] = $this->cc;
       isset($this->bcc) && $destination['BccAddresses'] = $this->bcc;
       $this->client()->sendEmail([

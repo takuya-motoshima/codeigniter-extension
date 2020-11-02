@@ -11,6 +11,32 @@ You can update CodeIgniter system folder to latest version with one command.
 
 ## Release Notes
 
+### 3.6.3 (11/2/2020)
+
+* Changed to be able to specify multiple Amazon SES email destinations in an array.(\X\Util\AmazonSesClient)
+
+    ```php
+    use \X\Util\AmazonSesClient;
+
+    $client = new AmazonSesClient([
+      'credentials' => [
+        'key' => $_ENV['AMAZON_SES_ACCESS_KEY'],
+        'secret' => $_ENV['AMAZON_SES_SECRET_KEY']
+      ],
+      'configuration' => $_ENV['AMAZON_SES_CONFIGURATION'],
+      'region' => 'us-west-2',
+    ]);
+
+    $client
+      ->from('me@example.com')
+      ->to([
+        'foo@example.jp',
+        'bar@example.jp',
+      ])
+      ->subject('Test email')
+      ->message('Hello, World.')
+      ->send();
+    ```
 
 ### 3.6.2 (10/29/2020)
 
