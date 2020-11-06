@@ -97,14 +97,23 @@ final class Logger {
    *
    * @param  array $params
    * @param  array $trace
+   * @param  bool  $witPath
+   * @param  bool  $showFunctionName
    * @return string
    */
-  private static function createLogString(array $params, array $trace, bool $witPath = true): string {
+  private static function createLogString(
+    array $params,
+    array $trace,
+    bool $witPath = true,
+    bool $showFunctionName = false
+  ): string {
     $message = '';
     if ($witPath) {
       $message = str_replace(realpath(\FCPATH . '../') . '/', '', $trace[0]['file']) . '(' . $trace[0]['line'] . ')';
-      if (isset($trace[1]['class'])) $message .= ' ' . $trace[1]['class'] . '.' . $trace[1]['function'];
-      else if (isset($trace[1]['function'])) $message .= ' ' . $trace[1]['function'];
+      if ($showFunctionName) {
+        if (isset($trace[1]['class'])) $message .= ' ' . $trace[1]['class'] . '.' . $trace[1]['function'];
+        else if (isset($trace[1]['function'])) $message .= ' ' . $trace[1]['function'];
+      }
     } else if (is_cli()) {
       $message .= date('Y-m-d H:i:s') . ' --> ';
     }

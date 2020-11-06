@@ -11,6 +11,10 @@ You can update CodeIgniter system folder to latest version with one command.
 
 ## Release Notes
 
+### 3.6.4 (11/6/2020)
+
+* Remove class and function names from the log.(\X\Util\Logger)
+
 ### 3.6.3 (11/2/2020)
 
 * Changed to be able to specify multiple Amazon SES email destinations in an array.(\X\Util\AmazonSesClient)

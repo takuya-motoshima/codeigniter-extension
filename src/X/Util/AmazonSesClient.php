@@ -208,7 +208,7 @@ class AmazonSesClient {
         // ->set_rules('to', 'To Email', 'required|valid_email')
         ->set_rules('from', 'From Email', 'required|valid_email');
       if (!$ci->form_validation->run()) {
-        throw new InvalidArgumentException(implode('', $ci->form_validation->error_array()));
+        throw new \InvalidArgumentException(implode('', $ci->form_validation->error_array()));
       }
       $destination['ToAddresses'] = is_array($this->to) ? $this->to : [$this->to];
       isset($this->cc) && $destination['CcAddresses'] = $this->cc;
