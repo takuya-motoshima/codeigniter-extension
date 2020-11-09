@@ -11,6 +11,10 @@ You can update CodeIgniter system folder to latest version with one command.
 
 ## Release Notes
 
+### 3.6.5 (11/9/2020)
+
+* Fixed to ignore directory creation error (FileHelper::makeDirectory).
+
 ### 3.6.4 (11/6/2020)
 
 * Remove class and function names from the log.(\X\Util\Logger)

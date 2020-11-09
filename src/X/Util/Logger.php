@@ -105,12 +105,12 @@ final class Logger {
     array $params,
     array $trace,
     bool $witPath = true,
-    bool $showFunctionName = false
+    bool $showFunction = false
   ): string {
     $message = '';
     if ($witPath) {
       $message = str_replace(realpath(\FCPATH . '../') . '/', '', $trace[0]['file']) . '(' . $trace[0]['line'] . ')';
-      if ($showFunctionName) {
+      if ($showFunction) {
         if (isset($trace[1]['class'])) $message .= ' ' . $trace[1]['class'] . '.' . $trace[1]['function'];
         else if (isset($trace[1]['function'])) $message .= ' ' . $trace[1]['function'];
       }

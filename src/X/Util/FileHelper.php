@@ -23,8 +23,12 @@ final class FileHelper {
    * @return void
    */
   public static function makeDirectory(string $dirPath, int $mode = 0755) {
-    if (file_exists($dirPath)) return;
-    if (mkdir($dirPath, $mode, true) === false) throw new \RuntimeException('Cant create directory ' . $dirPath);
+    try {
+      if (file_exists($dirPath)) return;
+      if (mkdir($dirPath, $mode, true) === false) throw new \RuntimeException('Cant create directory ' . $dirPath);
+    } catch (\Throwable $e) {
+      Logger::info($e->getMessage());
+    }
   }
 
   /**
