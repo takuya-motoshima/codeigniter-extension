@@ -11,13 +11,17 @@ You can update CodeIgniter system folder to latest version with one command.
 
 ## Release Notes
 
+### 3.6.6 (11/10/2020)
+
+* Add PID to log message(\X\Util\Logger).
+
 ### 3.6.5 (11/9/2020)
 
-* Fixed to ignore directory creation error (FileHelper::makeDirectory).
+* Fixed to ignore directory creation error (\X\Util\FileHelper::makeDirectory).
 
 ### 3.6.4 (11/6/2020)
 
-* Remove class and function names from the log.(\X\Util\Logger)
+* Remove class and function names from the log(\X\Util\Logger).
 
 ### 3.6.3 (11/2/2020)
 

@@ -15,6 +15,14 @@ class Test extends AppController {
     parent::view('test');
   }
 
+  public function logger() {
+    Logger::debug('Test message');
+    Logger::info('Test message');
+    Logger::error('Test message');
+    Logger::print('Test message');
+    Logger::printWithoutPath('Test message');
+  }
+
   public function directorysize() {
     try {
       $size = FileHelper::getDirectorySize([ APPPATH . 'test/animals', APPPATH . 'test/transport' ]);
