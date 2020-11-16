@@ -11,6 +11,16 @@ You can update CodeIgniter system folder to latest version with one command.
 
 ## Release Notes
 
+### 3.6.7 (11/16/2020)
+
+* Prepend a slash to the PID of the log(\X\Util\Logger).
+
+    Here is an example of a log.
+
+    ```php
+    DEBUG - 2020-11-16 10:04:38 --> #7567 application/controllers/Sample.php(20):Message here.
+    ```
+
 ### 3.6.6 (11/10/2020)
 
 * Add PID to log message(\X\Util\Logger).

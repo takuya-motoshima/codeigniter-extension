@@ -19,7 +19,7 @@ final class Logger {
   public static function debug(...$params) {
     $message = self::create($params, debug_backtrace());
     $pid = getmypid();
-    log_message('debug', "[$pid]$message");
+    log_message('debug', "#$pid $message");
   }
 
   /**
@@ -31,7 +31,7 @@ final class Logger {
   public static function info(...$params) {
     $message = self::create($params, debug_backtrace());
     $pid = getmypid();
-    log_message('info', "[$pid]$message");
+    log_message('info', "#$pid $message");
   }
 
   /**
@@ -45,7 +45,7 @@ final class Logger {
       ? $params[0]->getMessage() . PHP_EOL . $params[0]->getTraceAsString()
       : self::create($params, debug_backtrace());
     $pid = getmypid();
-    log_message('error', "[$pid]$message");
+    log_message('error', "#$pid $message");
   }
 
   /**
