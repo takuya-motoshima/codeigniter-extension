@@ -1,0 +1,79 @@
+# Ignore all files starting with . or ~
+.*
+~*
+
+# Ignore node/grunt dependency directories
+node_modules/
+
+# Ignore composer vendor directory
+vendor/
+
+# Ignore components loaded via Bower
+bower_components/
+
+# Ignore jekyll build directory
+/_site
+
+# Ignore OS generated files
+ehthumbs.db
+Thumbs.db
+
+# Ignore Editor files
+*.sublime-project
+*.sublime-workspace
+*.komodoproject
+sftp-config.json
+
+# Ignore log files and databases
+*.log
+*.sql
+*.sqlite
+
+# Ignore compiled files
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.so
+
+# Ignore packaged files
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+
+# Ignore codeIgniter
+*application/logs/*
+!application/logs/index.html
+!application/logs/.htaccess
+application/cache/*
+!application/cache/index.html
+!application/cache/.htaccess
+application/session/*
+!application/session/index.html
+!application/session/.htaccess
+user_guide_src/build/*
+user_guide_src/cilexer/build/*
+user_guide_src/cilexer/dist/*
+user_guide_src/cilexer/pycilexer.egg-info/*
+
+# Ignore phpstorm
+.idea/
+.idea_modules/
+
+# Ignore webpack
+dist/*
+!dist/
+
+# Ignore my appplication
+
+# Whitelisted files
+!.gitignore
+!.gitkeep
+!.editorconfig
+!.phpcs.xml.dist

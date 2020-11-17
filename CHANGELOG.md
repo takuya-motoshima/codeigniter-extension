@@ -1,5 +1,9 @@
 # Changelog
 
+## [3.7.0] - 2020-11-17
+
+- Fix skeleton.
+
 ## [3.6.9] - 2020-11-17
 
 - Fix README.md.
