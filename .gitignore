@@ -83,3 +83,5 @@ examples/application/session/*
 !.gitkeep
 !.editorconfig
 !.phpcs.xml.dist
+!skeleton/.gitattributes
+!skeleton/public/.htaccess
