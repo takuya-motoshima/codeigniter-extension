@@ -1,4 +1,4 @@
-signin.js#  CodeIgniter Extension
+#  CodeIgniter Extension
 
 A package for efficient development of Codeigniter.  
 A simple interface and some general-purpose processing classes have been added to make it easier to use models and libraries.  

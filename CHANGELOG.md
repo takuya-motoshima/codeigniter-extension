@@ -1,5 +1,9 @@
 # Changelog
 
+## [3.6.9] - 2020-11-17
+
+- Fix README.md.
+
 ## [3.6.8] - 2020-11-17
 
 - Fix project creation process.
