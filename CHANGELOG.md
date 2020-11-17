@@ -1,5 +1,9 @@
 # Changelog
 
+## [3.7.1] - 2020-11-17
+
+- Fixed a bug in the project creation command.
+
 ## [3.7.0] - 2020-11-17
 
 - Fix skeleton.

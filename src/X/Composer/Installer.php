@@ -29,7 +29,7 @@ final class Installer {
   public static function post_install(Event $event) {
     $io = $event->getIO();
     FileHelper::copyDirectory(static::FRAMEWORK_DIR . 'application', 'application');
-    FileHelper::copyDirectory('skeleton', 'application');
+    FileHelper::copyDirectory('skeleton/application', 'application');
     FileHelper::copyFile(static::FRAMEWORK_DIR . 'index.php', static::DOCUMENT_ROOT . 'index.php');
     FileHelper::copyFile('skeleton/public/.htaccess', static::DOCUMENT_ROOT . '.htaccess');
     FileHelper::copyFile('skeleton/.gitignore', '.gitignore');
