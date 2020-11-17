@@ -18,14 +18,14 @@ final class FileHelper {
    * Make directory
    *
    * @throws RuntimeException
-   * @param string $dirPath
+   * @param string $dir
    * @param int $mode
    * @return void
    */
-  public static function makeDirectory(string $dirPath, int $mode = 0755) {
+  public static function makeDirectory(string $dir, int $mode = 0755) {
     try {
-      if (file_exists($dirPath)) return;
-      if (@mkdir($dirPath, $mode, true) === false) throw new \RuntimeException('Cant create directory ' . $dirPath);
+      if (file_exists($dir)) return;
+      if (@mkdir($dir, $mode, true) === false) throw new \RuntimeException('Cant create directory ' . $dir);
     } catch (\Throwable $e) {
       Logger::info($e->getMessage());
     }
@@ -44,19 +44,19 @@ final class FileHelper {
    * \X\Util\FileHelper::move('/tmp/old.txt', 'new');
    *  
    * @throws RuntimeException
-   * @param string $srcFilepath
-   * @param string $dstFilepath
+   * @param string $srcFile
+   * @param string $dstFile
    * @return void
    */
-  public static function move(string $srcFilepath, string $dstFilepath) {
-    if (!file_exists($srcFilepath)) throw new \RuntimeException('Not found file ' . $srcFilepath);
-    if (strpos($dstFilepath, '/') === false) {
-      if (strpos($dstFilepath, '.') === false) $dstFilepath = $dstFilepath . '.' . pathinfo($srcFilepath, PATHINFO_EXTENSION);
-      $dstFilepath = pathinfo($srcFilepath, PATHINFO_DIRNAME) . '/' . $dstFilepath;
+  public static function move(string $srcFile, string $dstFile) {
+    if (!file_exists($srcFile)) throw new \RuntimeException('Not found file ' . $srcFile);
+    if (strpos($dstFile, '/') === false) {
+      if (strpos($dstFile, '.') === false) $dstFile = $dstFile . '.' . pathinfo($srcFile, PATHINFO_EXTENSION);
+      $dstFile = pathinfo($srcFile, PATHINFO_DIRNAME) . '/' . $dstFile;
     } else {
-      self::makeDirectory(dirname($dstFilepath));;
+      self::makeDirectory(dirname($dstFile));
     }
-    if (rename($srcFilepath, $dstFilepath) === false) throw new \RuntimeException('Can not rename from ' . $srcFilepath . ' to ' . $dstFilepath);
+    if (rename($srcFile, $dstFile) === false) throw new \RuntimeException('Can not rename from ' . $srcFile . ' to ' . $dstFile);
   }
 
   /**
@@ -64,15 +64,15 @@ final class FileHelper {
    * Copy file
    * 
    * @throws RuntimeException
-   * @param string $srcFilepath
-   * @param string $dstFilepath
+   * @param string $srcFile
+   * @param string $dstFile
    * @return void
    */
-  public static function copyFile(string $srcFilepath, string $dstFilepath) {
-    if (!file_exists($srcFilepath)) throw new \RuntimeException('Not found file ' . $srcFilepath);
-    else if (!is_file($srcFilepath)) throw new \RuntimeException($srcFilepath . ' is not file');
-    self::makeDirectory(dirname($dstFilepath));
-    if (copy($srcFilepath, $dstFilepath) === false) throw new \RuntimeException('Can not copy from ' . $srcFilepath . ' to ' . $dstFilepath);
+  public static function copyFile(string $srcFile, string $dstFile) {
+    if (!file_exists($srcFile)) throw new \RuntimeException('Not found file ' . $srcFile);
+    else if (!is_file($srcFile)) throw new \RuntimeException($srcFile . ' is not file');
+    self::makeDirectory(dirname($dstFile));
+    if (copy($srcFile, $dstFile) === false) throw new \RuntimeException('Can not copy from ' . $srcFile . ' to ' . $dstFile);
   }
 
   /**
@@ -80,19 +80,18 @@ final class FileHelper {
    * Copy directory
    *
    * @throws RuntimeException
-   * @param string $srcDirPath
-   * @param string $dstDirPath
+   * @param string $srcDir
+   * @param string $dstDir
    * @return void
    */
-  public static function copyDirectory(string $srcDirPath, string $dstDirPath) {
-    if (!file_exists($srcDirPath)) throw new \RuntimeException('Not found directory ' . $srcDirPath);
-    else if (!is_dir($srcDirPath)) throw new \RuntimeException($srcDirPath . ' is not directory');
-    self::makeDirectory($dstDirPath);
-    $dirIt = new \RecursiveDirectoryIterator($srcDirPath, \RecursiveDirectoryIterator::SKIP_DOTS);
-    $fileIt = new \RecursiveIteratorIterator($dirIt, \RecursiveIteratorIterator::SELF_FIRST);
-    foreach ($fileIt as $fileInfo) {
-      if ($fileInfo->isDir()) self::makeDirectory($dstDirPath . '/' . $fileIt->getSubPathName());
-      else self::copyFile($fileInfo, $dstDirPath . '/' . $fileIt->getSubPathName());
+  public static function copyDirectory(string $srcDir, string $dstDir) {
+    if (!file_exists($srcDir)) throw new \RuntimeException('Not found directory ' . $srcDir);
+    else if (!is_dir($srcDir)) throw new \RuntimeException($srcDir . ' is not directory');
+    self::makeDirectory($dstDir);
+    $iterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($srcDir, \RecursiveDirectoryIterator::SKIP_DOTS), \RecursiveIteratorIterator::SELF_FIRST);
+    foreach ($iterator as $info) {
+      if ($info->isDir()) self::makeDirectory($dstDir . '/' . $iterator->getSubPathName());
+      else self::copyFile($info, $dstDir . '/' . $iterator->getSubPathName());
     }
   }
 
@@ -101,12 +100,11 @@ final class FileHelper {
    * Delete directory or file
    *
    * @param string[] $paths
-   * @param bool $removeRootDir
    */
   public static function delete(...$paths) {
-    $removeRootDir = true;
+    $isRemoveRoot = true;
     if (is_bool(end($paths))) {
-      $removeRootDir = end($paths);
+      $isRemoveRoot = end($paths);
       unset($paths[count($paths) - 1]);
     }
     foreach ($paths as $path) {
@@ -114,18 +112,12 @@ final class FileHelper {
         unlink($path);
         continue;
       }
-      $dirIt = new \RecursiveDirectoryIterator($path, \RecursiveDirectoryIterator::SKIP_DOTS);
-      $fileIt = new \RecursiveIteratorIterator($dirIt, \RecursiveIteratorIterator::CHILD_FIRST);
-      foreach ($fileIt as $fileInfo) {
-        if ($fileInfo->isDir()) {
-          rmdir($fileInfo);
-        } else {
-          unlink($fileInfo);
-        }
+      $iterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($path, \RecursiveDirectoryIterator::SKIP_DOTS), \RecursiveIteratorIterator::CHILD_FIRST);
+      foreach ($iterator as $info) {
+        if ($info->isDir()) rmdir($info);
+        else unlink($info);
       }
-      if ($removeRootDir) {
-        rmdir($path);
-      }
+      if ($isRemoveRoot) rmdir($path);
     }
   }
 
@@ -143,7 +135,6 @@ final class FileHelper {
   }
 
   /**
-   * 
    * Find file
    * 
    * @param  string $pattern
@@ -195,26 +186,26 @@ final class FileHelper {
   /**
    * Get MimeType from file contents
    * 
-   * @param  string $filePath
+   * @param  string $file
    * @return string
    */
-  public static function getMimeByConent(string $filePath): string {
-    if (!file_exists($filePath)) throw new \RuntimeException('Not found file ' . $filePath);
-    else if (!is_file($filePath)) throw new \RuntimeException($filePath . ' is not file');
+  public static function getMimeByConent(string $file): string {
+    if (!file_exists($file)) throw new \RuntimeException('Not found file ' . $file);
+    else if (!is_file($file)) throw new \RuntimeException($file . ' is not file');
     $finfo = new \finfo(FILEINFO_MIME_TYPE);
-    return $finfo->file($filePath);
+    return $finfo->file($file);
   }
 
 
   /**
    * Verify that the file is of the specified Mime type
    * 
-   * @param  string $filePath
+   * @param  string $file
    * @param  string $mime
    * @return bool
    */
-  public static function validationMime(string $filePath, string $mime): bool{
-    return self::getMimeByConent($filePath) ===  $mime;
+  public static function validationMime(string $file, string $mime): bool{
+    return self::getMimeByConent($file) ===  $mime;
   }
 
   /**
@@ -229,20 +220,19 @@ final class FileHelper {
    * // Returns the total size of all files in multiple directories
    * FileHelper::getDirectorySize([ '/var/log/php-fpm' '/var/log/nginx' ]);
    * 
-   * @param  string|array $dirPaths
-   * @param  SplFileInfo[] $result
+   * @param  string|array $dirs
+   * @param  SplFileInfo[] $infos
    * @return int
    */
-  public static function getDirectorySize($dirPaths, array &$result = []): int {
-    if (is_string($dirPaths)) $dirPaths = [ $dirPaths ];
-    else if (!is_array($dirPaths)) throw new RuntimeException('The file path type only allows strings or arrays of strings.');
+  public static function getDirectorySize($dirs, array &$infos = []): int {
+    if (is_string($dirs)) $dirs = [ $dirs ];
+    else if (!is_array($dirs)) throw new RuntimeException('The file path type only allows strings or arrays of strings.');
     $size = 0;
-    foreach ($dirPaths as $dirPath) {
-      $dirIt = new \RecursiveDirectoryIterator($dirPath, \FilesystemIterator::CURRENT_AS_FILEINFO | \FilesystemIterator::SKIP_DOTS);
-      $fileIt = new \RecursiveIteratorIterator($dirIt);
-      foreach($fileIt as $fileInfo) {
-        $result[] = $fileInfo;
-        $size += $fileInfo->getSize();
+    foreach ($dirs as $dir) {
+      $iterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($dir, \FilesystemIterator::CURRENT_AS_FILEINFO | \FilesystemIterator::SKIP_DOTS));
+      foreach($iterator as $info) {
+        $infos[] = $info;
+        $size += $info->getSize();
       }
     }
     return $size;

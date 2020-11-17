@@ -29,15 +29,11 @@ final class Installer {
   public static function post_install(Event $event) {
     $io = $event->getIO();
     FileHelper::copyDirectory(static::FRAMEWORK_DIR . 'application', 'application');
-    FileHelper::copyDirectory('core.dist', 'application/core');
-    FileHelper::copyDirectory('libraries.dist', 'application/libraries');
-    FileHelper::copyDirectory('views.dist', 'application/views');
-    FileHelper::makeDirectory('application/session');
-    touch('application/session/.gitkeep');
+    FileHelper::copyDirectory('skeleton', 'application');
     FileHelper::copyFile(static::FRAMEWORK_DIR . 'index.php', static::DOCUMENT_ROOT . 'index.php');
-    FileHelper::copyFile('dot.htaccess', static::DOCUMENT_ROOT . '.htaccess');
-    FileHelper::copyFile('dot.gitignore.dist', '.gitignore');
-    FileHelper::copyFile('dot.gitattributes.dist', '.gitattributes');
+    FileHelper::copyFile('skeleton/public/.htaccess', static::DOCUMENT_ROOT . '.htaccess');
+    FileHelper::copyFile('skeleton/.gitignore', '.gitignore');
+    FileHelper::copyFile('skeleton/.gitattributes', '.gitattributes');
     self::update_index($io);
     self::update_config($io);
     self::composer_update($io);
@@ -135,13 +131,9 @@ final class Installer {
       'src',
       'examples',
       'composer.json.dist',
-      'dot.gitignore.dist',
-      'dot.gitattributes.dist',
-      'dot.htaccess',
+      'skeleton',
       'README.md',
-      'LICENSE.md',
-      'core.dist',
-      'views.dist'
+      'LICENSE.md'
     );
   }
 }

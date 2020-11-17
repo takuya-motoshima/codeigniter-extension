@@ -2,11 +2,10 @@
 {% block title %}Test{% endblock %}
 {% block scripts %}
 <script>
-  
   $('#btn1').on('click', async () => {
     const $btn = $(event.currentTarget).prop('disabled', true);
     const $progress = $('#progress1');
-    const res = await $.ajax('/test/zipLibrary', { type: 'POST', xhrFields: { responseType: 'blob' }, xhr: () => {
+    const res = await $.ajax('/test/ziplibrary', { type: 'POST', xhrFields: { responseType: 'blob' }, xhr: () => {
       const xhr = new XMLHttpRequest();
       xhr.addEventListener('progress', event => event.lengthComputable && $progress.css('width', `${Math.round(event.loaded / event.total * 100)}%`));
       return xhr;
@@ -19,29 +18,26 @@
     URL.revokeObjectURL(url);
     $btn.prop('disabled', false);
   });
-
   $('#btn2').on('click', async () => {
     const $btn = $(event.currentTarget).prop('disabled', true);
     const $progress = $('#progress2');
-    const res = await $.ajax('/test/zipStream', { type: 'POST', xhrFields: { responseType: 'blob' }, xhr: () => {
+    const res = await $.ajax('/test/zipstream', { type: 'POST', xhrFields: { responseType: 'blob' }, xhr: () => {
       const xhr = new XMLHttpRequest();
       xhr.addEventListener('progress', event => event.lengthComputable && $progress.css('width', `${Math.round(event.loaded / event.total * 100)}%`));
       return xhr;
     }});
     const url = URL.createObjectURL(res);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'test.zip';
-    a.click();
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'test.zip';
+    link.click();
     URL.revokeObjectURL(url);
     $btn.prop('disabled', false);
   });
 </script>
 {% endblock %}
-
 {% block content %}
   <div class="container">
-
     <section class="mt-3">
       <h2>Zip library file download</h2>
       <button id="btn1" type="button" class="btn btn-primary">Download</button>
@@ -49,7 +45,6 @@
         <div id="progress1" class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
       </div>
     </section>
-
     <section class="mt-3">
       <h2>Zip stream file download</h2>
       <button id="btn2" type="button" class="btn btn-primary">Download</button>
@@ -57,6 +52,5 @@
         <div id="progress2" class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
       </div>
     </section>
-    
   </div>
 {% endblock %}
