@@ -263,14 +263,6 @@ abstract class Model extends \CI_Model {
     return call_user_func_array([self::db(), __FUNCTION__], func_get_args());
   }
 
-  /**
-   * Get paginated search results
-   * 
-   * @return  array
-   */
-  public function paginate(): array {
-    return [];
-  }
 
   // ----------------------------------------------------------------
   // Override QueryBuilder method

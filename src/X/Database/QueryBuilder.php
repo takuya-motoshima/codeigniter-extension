@@ -300,4 +300,14 @@ abstract class QueryBuilder extends \CI_DB_query_builder {
   public function isset_qb_from(int $index = 0): bool {
     return isset($this->qb_from[$index]);
   }
+
+
+  /**
+   * Get paginated search results
+   * 
+   * @return  array
+   */
+  public function paginate(int $offset, int $limit): array {
+    return [];
+  }
 }

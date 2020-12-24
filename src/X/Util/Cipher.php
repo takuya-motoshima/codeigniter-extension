@@ -16,12 +16,13 @@ final class Cipher {
    * Encode SHA-256
    *
    * @param  string $plaintext
+   * @param  string $key
    * @return string
    */
-  public static function encode_sha256(string $plaintext, string $password = null): string {
-    if (empty($password)) $password = Loader::config('config', 'encryption_key');
-    if (empty($password)) throw new \RuntimeException('Cant find encryption_key in application/config/config.php file');
-    return hash('sha256', $plaintext . $password);
+  public static function encode_sha256(string $plaintext, string $key = null): string {
+    if (empty($key)) $key = Loader::config('config', 'encryption_key');
+    if (empty($key)) throw new \RuntimeException('Cant find encryption_key in application/config/config.php file');
+    return hash('sha256', $plaintext . $key);
   }
 
   /**
@@ -47,24 +48,24 @@ final class Cipher {
    * // Plaintext.
    * $plaintext = 'Hello, World.';
    *
-   * // Encrypted password.
-   * $password = 'password';
+   * // Encrypted key.
+   * $key = 'key';
    *
    * // Encrypt.
-   * $encrypted = Cipher::encrypt($plaintext, $password, $iv);// UHLY5PckT7Da02e42g==
+   * $encrypted = Cipher::encrypt($plaintext, $key, $iv);// UHLY5PckT7Da02e42g==
    *
    * // Decrypt.
-   * $decrypted = Cipher::decrypt($encrypted, $password, $iv);// Hello, World.
+   * $decrypted = Cipher::decrypt($encrypted, $key, $iv);// Hello, World.
    * 
    * @param  string $plaintext
-   * @param  string $password
+   * @param  string $key
    * @param  string $iv
    * @param  string $method
    * @return string
    */
-  public static function encrypt(string $plaintext, string $password, string $iv, string $method = 'AES-256-CTR'): string {
+  public static function encrypt(string $plaintext, string $key, string $iv, string $method = 'AES-256-CTR'): string {
     $options = 0;
-    return openssl_encrypt($plaintext, $method, $password, $options, $iv);
+    return openssl_encrypt($plaintext, $method, $key, $options, $iv);
   }
 
   /**
@@ -79,24 +80,24 @@ final class Cipher {
    * // Plaintext.
    * $plaintext = 'Hello, World.';
    *
-   * // Encrypted password.
-   * $password = 'password';
+   * // Encrypted key.
+   * $key = 'key';
    *
    * // Encrypt.
-   * $encrypted = Cipher::encrypt($plaintext, $password, $iv);// UHLY5PckT7Da02e42g==
+   * $encrypted = Cipher::encrypt($plaintext, $key, $iv);// UHLY5PckT7Da02e42g==
    *
    * // Decrypt.
-   * $decrypted = Cipher::decrypt($encrypted, $password, $iv);// Hello, World.
+   * $decrypted = Cipher::decrypt($encrypted, $key, $iv);// Hello, World.
    * 
    * @param  string $encrypted
-   * @param  string $password
+   * @param  string $key
    * @param  string $iv
    * @param  string $method
    * @return string
    */
-  public static function decrypt(string $encrypted, string $password, string $iv, string $method = 'AES-256-CTR'): string {
+  public static function decrypt(string $encrypted, string $key, string $iv, string $method = 'AES-256-CTR'): string {
     $options = 0;
-    return openssl_decrypt($encrypted, $method, $password, $options, $iv);
+    return openssl_decrypt($encrypted, $method, $key, $options, $iv);
   }
 
   /**

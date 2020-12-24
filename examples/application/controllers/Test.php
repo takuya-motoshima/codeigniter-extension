@@ -116,7 +116,7 @@ class Test extends AppController {
     $iv = Cipher::generateInitialVector();
 
     // Plaintext.
-    $plaintext = 'Hello, World.';
+    $plaintext = 'Hello, World!';
 
     // Encrypted password.
     $password = 'password';
