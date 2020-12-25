@@ -1,5 +1,18 @@
 # Changelog
 
+
+## [3.7.2] - 2020-12-25
+
+- Added search options to file search(\X\Util\FileHelper).
+
+  For example, when searching only image files.
+
+  ```php
+  use \X\Util\FileHelper;
+  FileHelper::find('/img/*.{jpg,jpeg,png,gif}', GLOB_BRACE);
+  ```
+
+
 ## [3.7.1] - 2020-11-17
 
 - Fixed a bug in the project creation command.

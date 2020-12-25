@@ -137,12 +137,27 @@ final class FileHelper {
   /**
    * Find file
    * 
-   * @param  string $pattern
+   * @example
+   * use \X\Util\FileHelper;
+   *
+   * // Search only image files.
+   * FileHelper::find('/img/*.{jpg,jpeg,png,gif}', GLOB_BRACE);
+   * 
+   * @param  string      $pattern 
+   * @param  int|integer $flags
+   *                     Valid flags:
+   *                     GLOB_MARK - Adds a slash (a backslash on Windows) to each directory returned
+   *                     GLOB_NOSORT - Return files as they appear in the directory (no sorting). When this flag is not used, the pathnames are sorted alphabetically
+   *                     GLOB_NOCHECK - Return the search pattern if no files matching it were found
+   *                     GLOB_NOESCAPE - Backslashes do not quote metacharacters
+   *                     GLOB_BRACE - Expands {a,b,c} to match 'a', 'b', or 'c'
+   *                     GLOB_ONLYDIR - Return only directory entries which match the pattern
+   *                     GLOB_ERR - Stop on read errors (like unreadable directories), by default errors are ignored.
    * @return array
    */
-  public static function find(string $pattern): array {
+  public static function find(string $pattern, int $flags = 0): array {
     $files = [];
-    foreach (glob($pattern) as $file) $files[] = basename($file);
+    foreach (glob($pattern, $flags) as $file) $files[] = basename($file);
     return $files;
   }
 
