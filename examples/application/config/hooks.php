@@ -21,6 +21,9 @@ $hook['post_controller_constructor'] = function() {
 };
 
 $hook['pre_system'] = function () {
+  // set_error_handler(function ($err_level, $err_msg, $err_file, $err_line, $err_context) {
+  //   Logger::print('set_error_handler');
+  // }, E_WARNING | E_NOTICE);
   set_exception_handler(function ($e) {
     Logger::error($e);
   });

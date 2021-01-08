@@ -15,6 +15,36 @@ class Test extends AppController {
     parent::view('test');
   }
 
+  public function warningOccurred() {
+    try {
+      error_reporting(E_ALL);
+      ini_set('display_errors', 'On');
+      Logger::print('Begin');
+
+      // Warning occurs here
+      file_get_contents('not_exists.txt');
+
+      Logger::print('End');
+    } catch (\Throwable $e) {
+      Logger::print('Error occurred');
+    }
+  }
+
+  public function noticeOccurred() {
+    try {
+      error_reporting(E_ALL);
+      ini_set('display_errors', 'On');
+      Logger::print('Begin');
+
+      // Notice occurs here
+      echo $undefined;
+
+      Logger::print('End');
+    } catch (\Throwable $e) {
+      Logger::print('Error occurred');
+    }
+  }
+
   public function log() {
     Logger::debug('Test message');
     Logger::info('Test message');
