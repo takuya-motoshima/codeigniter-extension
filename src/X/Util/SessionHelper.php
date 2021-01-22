@@ -1,6 +1,4 @@
 <?php
-use \X\Util\Logger;
-
 /**
  * Session helper class
  *
@@ -9,6 +7,8 @@ use \X\Util\Logger;
  * @copyright  2017 Takuya Motoshima
  */
 namespace X\Util;
+use \X\Util\Logger;
+
 final class SessionHelper {
 
   /**

@@ -1,5 +1,4 @@
 <?php
-
 /**
  * IP utility class.
  *

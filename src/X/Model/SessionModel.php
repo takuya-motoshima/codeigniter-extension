@@ -8,6 +8,7 @@
  * @property CI_DB_query_builder $db
  */
 namespace X\Model;
+
 abstract class SessionModel implements SessionModelInterface {
 
   const SESSION_NAME = 'user';

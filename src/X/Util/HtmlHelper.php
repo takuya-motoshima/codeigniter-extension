@@ -6,8 +6,9 @@
  * @license    MIT License
  * @copyright  2017 Takuya Motoshima
  */
-use \X\Util\Logger;
 namespace X\Util;
+use \X\Util\Logger;
+
 final class HtmlHelper {
 
   /**

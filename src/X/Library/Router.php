@@ -9,6 +9,7 @@
  * @copyright  2020 Takuya Motoshima
  */
 namespace X\Library;
+
 abstract class Router extends \CI_Router {
 
   // /**

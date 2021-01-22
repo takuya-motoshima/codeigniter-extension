@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Iterator class
  *
@@ -8,6 +7,7 @@
  * @copyright  2019 Takuya Motoshima
  */
 namespace X\Util;
+
 final class Iterator {
  
   /**

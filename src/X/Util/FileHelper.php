@@ -1,7 +1,4 @@
 <?php
-
-use \X\Util\Logger;
-
 /**
  * File helper class
  *
@@ -11,6 +8,7 @@ use \X\Util\Logger;
  */
 namespace X\Util;
 use \X\Util\Logger;
+
 final class FileHelper {
 
   /**

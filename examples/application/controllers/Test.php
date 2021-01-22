@@ -5,6 +5,7 @@ use \X\Annotation\Access;
 use \X\Util\Logger;
 use \X\Util\Cipher;
 use \X\Util\FileHelper;
+use \X\Util\ImageHelper;
 use \X\Util\IpUtils;
 
 class Test extends AppController {
@@ -13,6 +14,26 @@ class Test extends AppController {
 
   public function index() {
     parent::view('test');
+  }
+
+  public function createThumbnail() {
+    try {
+      // resize only the width of the image
+      ImageHelper::resize(APPPATH . 'sample_data/0qmIJOcCtbs.jpg', APPPATH . 'sample_data/0qmIJOcCtbs_thumb_1.jpg', 100, null, false);
+
+      // resize only the height of the image
+      ImageHelper::resize(APPPATH . 'sample_data/0qmIJOcCtbs.jpg', APPPATH . 'sample_data/0qmIJOcCtbs_thumb_2.jpg', null, 100, false);
+
+      // resize the image to a width of 100 and constrain aspect ratio (auto height)
+      ImageHelper::resize(APPPATH . 'sample_data/0qmIJOcCtbs.jpg', APPPATH . 'sample_data/0qmIJOcCtbs_thumb_3.jpg', 100, null, true);
+
+      // resize the image to a height of 100 and constrain aspect ratio (auto width)
+      ImageHelper::resize(APPPATH . 'sample_data/0qmIJOcCtbs.jpg', APPPATH . 'sample_data/0qmIJOcCtbs_thumb_4.jpg', null, 100, true);
+
+      Logger::print('Thumbnail creation successful.');
+    } catch (\Throwable $e) {
+      Logger::print($e);
+    }
   }
 
   public function warningOccurred() {

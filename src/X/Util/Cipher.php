@@ -1,6 +1,4 @@
 <?php
-use \X\Util\Loader;
-
 /**
  * Cipher class
  *
@@ -9,6 +7,8 @@ use \X\Util\Loader;
  * @copyright  2017 Takuya Motoshima
  */
 namespace X\Util;
+use \X\Util\Loader;
+
 final class Cipher {
 
   /**

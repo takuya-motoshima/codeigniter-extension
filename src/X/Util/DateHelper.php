@@ -7,6 +7,7 @@
  * @copyright  2018 Takuya Motoshima
  */
 namespace X\Util;
+
 final class DateHelper {
 
   /**

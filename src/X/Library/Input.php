@@ -10,6 +10,7 @@
  */
 namespace X\Library;
 use \X\Util\Logger;
+
 abstract class Input extends \CI_Input {
 
   /**

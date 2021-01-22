@@ -10,6 +10,7 @@
 namespace X\Util;
 use \X\Util\FileHelper;
 use \X\Util\Logger;
+
 final class VideoHelper {
 
   /**

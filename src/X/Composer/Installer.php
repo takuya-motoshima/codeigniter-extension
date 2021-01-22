@@ -10,6 +10,7 @@ namespace X\Composer;
 use Composer\Script\Event;
 use Composer\IO\ConsoleIO;
 use X\Util\FileHelper;
+
 final class Installer {
   /**
    * @var string DOCUMENT_ROOT

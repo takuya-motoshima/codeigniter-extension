@@ -9,4 +9,5 @@ use X\Util\Logger;
  * @property CI_DB_query_builder $db
  */
 namespace X\Hook;
+
 class Authenticate {}

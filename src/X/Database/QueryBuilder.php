@@ -7,6 +7,7 @@
  * @copyright  2017 Takuya Motoshima
  */
 namespace X\Database;
+
 abstract class QueryBuilder extends \CI_DB_query_builder {
 
   /**

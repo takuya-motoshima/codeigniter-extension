@@ -1,7 +1,4 @@
 <?php
-namespace X\Annotation;
-use \Doctrine\Common\Annotations\Annotation;
-
 /**
  *
  * Method accessibility annotation
@@ -11,6 +8,9 @@ use \Doctrine\Common\Annotations\Annotation;
  * @license    MIT License
  * @copyright  2018 Takuya Motoshima
  */
+namespace X\Annotation;
+use \Doctrine\Common\Annotations\Annotation;
+
 class Access {
   public $allow_login = true;
   public $allow_logoff = true;

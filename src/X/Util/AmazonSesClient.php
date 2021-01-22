@@ -1,8 +1,4 @@
 <?php
-
-use \X\Util\Logger;
-use \X\Util\Template;
-
 /**
  * Email Amazon SES util class
  * 
@@ -39,6 +35,9 @@ use \X\Util\Template;
  * @copyright  2017 Takuya Motoshima
  */
 namespace X\Util;
+use \X\Util\Logger;
+use \X\Util\Template;
+
 class AmazonSesClient {
   /** @var array */
   private $option = null;

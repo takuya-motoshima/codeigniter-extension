@@ -9,6 +9,7 @@
  * @return  object
  */
 namespace X\Database;
+
 function &DB($config = '', $queryBuilderOverride = null) {
   // Load the DB config file if a DSN string wasn't passed
   if (is_string($config) && strpos($config, '://') === false) {

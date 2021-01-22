@@ -51,6 +51,7 @@
  */
 namespace X\Annotation;
 use \X\Annotation\Access;
+
 final class AnnotationReader {
 
   /**

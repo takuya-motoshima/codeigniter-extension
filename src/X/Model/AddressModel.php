@@ -8,6 +8,7 @@
  * @property CI_DB_query_builder $db
  */
 namespace X\Model;
+
 class AddressModel extends Model {
 
   /**

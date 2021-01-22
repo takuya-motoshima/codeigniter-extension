@@ -9,6 +9,7 @@
 namespace X\Controller;
 use X\Util\HttpResponse;
 use X\Util\Loader;
+
 abstract class Controller extends \CI_Controller {
 
   /**

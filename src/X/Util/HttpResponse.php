@@ -1,5 +1,4 @@
 <?php
-
 /**
  * HTTP Response util class
  *
@@ -11,6 +10,7 @@ namespace X\Util;
 use X\Constant\HttpStatus;
 use X\Util\Loader;
 use X\Util\Logger;
+
 final class HttpResponse {
 
   /**

@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Image helper class
  *
@@ -10,6 +9,8 @@
 namespace X\Util;
 use \X\Util\FileHelper;
 use \X\Util\Logger;
+use \Intervention\Image\ImageManager;
+
 final class ImageHelper {
 
   /**
@@ -25,19 +26,19 @@ final class ImageHelper {
    * @param string $dir
    * @return string Return file name
    */
-  public static function putBase64(string $base64, string $dir, ?string $fileName = null): string {
-    if (empty($fileName)) {
-      $fileName = pathinfo($dir, PATHINFO_BASENAME);
+  public static function putBase64(string $base64, string $dir, ?string $filename = null): string {
+    if (empty($filename)) {
+      $filename = pathinfo($dir, PATHINFO_BASENAME);
       $dir =  pathinfo($dir, PATHINFO_DIRNAME);
     }
     $dir = rtrim($dir, '/')  . '/';
     $blob = self::convertBase64ToBlob($base64, $mime);
-    if (empty(pathinfo($fileName, PATHINFO_EXTENSION))) {
-      $fileName .= '.' . $mime;
+    if (empty(pathinfo($filename, PATHINFO_EXTENSION))) {
+      $filename .= '.' . $mime;
     }
     FileHelper::makeDirectory($dir);
-    file_put_contents($dir . $fileName, $blob, LOCK_EX);
-    return $fileName;
+    file_put_contents($dir . $filename, $blob, LOCK_EX);
+    return $filename;
   }
 
   /**
@@ -45,12 +46,12 @@ final class ImageHelper {
    * Put blob image
    *
    * @param string $blob
-   * @param string $filePath
+   * @param string $filepath
    * @return Void
    */
-  public static function putBlob(string $blob, string $filePath) {
-    FileHelper::makeDirectory(dirname($filePath));
-    file_put_contents($filePath, $blob, LOCK_EX);
+  public static function putBlob(string $blob, string $filepath) {
+    FileHelper::makeDirectory(dirname($filepath));
+    file_put_contents($filepath, $blob, LOCK_EX);
   }
 
   /**
@@ -82,15 +83,15 @@ final class ImageHelper {
    * 
    * Read image
    *
-   * @param string $filePath
+   * @param string $filepath
    * @return string
    */
-  public static function read(string $filePath): string {
-    if (!file_exists($filePath)) {
-      throw new \RuntimeException('Image file does not exist. Path=' . $filePath);
+  public static function read(string $filepath): string {
+    if (!file_exists($filepath)) {
+      throw new \RuntimeException('Image file does not exist. Path=' . $filepath);
     }
-    $fp = fopen($filePath, 'r');
-    $blob = fread($fp, filesize($filePath));
+    $fp = fopen($filepath, 'r');
+    $blob = fread($fp, filesize($filepath));
     fclose($fp);
     return $blob;
   }
@@ -99,12 +100,12 @@ final class ImageHelper {
    * 
    * Read image
    *
-   * @param string $filePath
+   * @param string $filepath
    * @return string
    */
-  public static function readAsBase64(string $filePath): string {
-    $blob = self::read($filePath);
-    $mime = mime_content_type($filePath);
+  public static function readAsBase64(string $filepath): string {
+    $blob = self::read($filepath);
+    $mime = mime_content_type($filepath);
     if ($mime === 'image/svg' || $mime === 'image/svgz') {
       $mime = 'image/svg+xml';
     }
@@ -112,64 +113,29 @@ final class ImageHelper {
   }
 
   /**
-   * 
    * Resize
-   *
-   * @param  string $srcImgPath
-   * @param  int $dstWidth
-   * @param  string $dstFilePrefix
-   * @return string
+   * 
+   * @param  string       $filepath
+   * @param  string       $resizepath
+   * @param  int|null     $width
+   * @param  int|null     $height
+   * @param  bool|boolean $aspectRatio True if you want to keep the aspect ratio
    */
-  public static function resize(string $srcImgPath, int $dstWidth, string $dstFilePrefix = "-thumb"): string {
-    list($srcWidth, $srcHeight, $type) = \getimagesize($srcImgPath);
-    $dstHeight = round($srcHeight * $dstWidth / $srcWidth);
-    $tmpImg = \imagecreatetruecolor($dstWidth, $dstHeight);
-    if ($tmpImg === FALSE) {
-      throw new \RuntimeException('TrueColor image creation failed');
-    }
-    if ($type == IMAGETYPE_JPEG) {
-      $dstImg = \imagecreatefromjpeg($srcImgPath);
-    } else if ($type == IMAGETYPE_GIF) {
-      $dstImg = \imagecreatefromgif($srcImgPath);
-    } else if ($type == IMAGETYPE_PNG) {
-      imagealphablending($tmpImg, false);
-      imagesavealpha($tmpImg, true);
-      $dstImg = \imagecreatefrompng($srcImgPath);
-    }
-    // else if ($type == IMAGETYPE_BMP) {
-    //   $dstImg = \imagecreatefromwbmp($srcImgPath);
-    // }
-    \imagecopyresampled(
-      $tmpImg,
-      $dstImg,
-      0,
-      0,
-      0,
-      0,
-      $dstWidth,
-      $dstHeight,
-      $srcWidth,
-      $srcHeight
-    );
-    $dstImgName = pathinfo($srcImgPath, PATHINFO_FILENAME) . $dstFilePrefix . '.' . pathinfo($srcImgPath, PATHINFO_EXTENSION);
-    $dstImgPath = rtrim(pathinfo($srcImgPath, PATHINFO_DIRNAME), '/') . '/' . $dstImgName;
-    $quality = 100;
-    if ($type == IMAGETYPE_JPEG) {
-      \imagejpeg($tmpImg, $dstImgPath, $quality);
-    } else if ($type == IMAGETYPE_GIF) {
-      $bgColor = \imagecolorallocatealpha($dstImg,0,0,0,127);
-      \imagefill($tmpImg, 0, 0, $bgColor);
-      \imagecolortransparent($tmpImg, $bgColor);
-      \imagegif($tmpImg, $dstImgPath);
-    } else if ($type == IMAGETYPE_PNG) {
-      \imagepng($tmpImg, $dstImgPath, $quality * (9 / 100));
-    }
-    // else if ($type == IMAGETYPE_BMP:
-    //   \imagewbmp($tmpImg, $dstImgPath);
-    // }
-    imagedestroy($tmpImg);
-    imagedestroy($dstImg);
-    return $dstImgName;
+  public static function resize(
+    string $filepath,
+    string $resizepath,
+    ?int $width = null,
+    ?int $height = null,
+    bool $aspectRatio = true
+  ) {
+    // resize the image to a width of 300 and constrain aspect ratio (auto height)
+    $manager = new ImageManager(['driver' => 'gd']);
+    $manager
+      ->make($filepath)
+      ->resize($width, $height, function ($constraint) use($aspectRatio) {
+        if ($aspectRatio) $constraint->aspectRatio();
+      })
+      ->save($resizepath);
   }
 
   /**

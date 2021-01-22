@@ -8,6 +8,7 @@
  */
 namespace X\Util;
 use \X\Util\Logger;
+
 final class Loader {
 
   /**

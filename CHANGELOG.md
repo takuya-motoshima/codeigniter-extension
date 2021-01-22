@@ -1,17 +1,37 @@
 # Changelog
 
+## [3.7.3] - 2021-01-22
+
+- Change image resizing features(\X\Util\ImageHelper).
+
+    Image resizing example.
+
+    ```php
+    use \X\Util\ImageHelper;
+
+    // resize only the width of the image
+    ImageHelper::resize('img.jpg', 'thumb.jpg', 100, null, false);
+
+    // resize only the height of the image
+    ImageHelper::resize('img.jpg', 'thumb.jpg', null, 100, false);
+
+    // resize the image to a width of 100 and constrain aspect ratio (auto height)
+    ImageHelper::resize('img.jpg', 'thumb.jpg', 100, null, true);
+
+    // resize the image to a height of 100 and constrain aspect ratio (auto width)
+    ImageHelper::resize('img.jpg', 'thumb.jpg', null, 100, true);
+    ```
 
 ## [3.7.2] - 2020-12-25
 
 - Added search options to file search(\X\Util\FileHelper).
 
-  For example, when searching only image files.
+    For example, when searching only image files.
 
-  ```php
-  use \X\Util\FileHelper;
-  FileHelper::find('/img/*.{jpg,jpeg,png,gif}', GLOB_BRACE);
-  ```
-
+    ```php
+    use \X\Util\FileHelper;
+    FileHelper::find('/img/*.{jpg,jpeg,png,gif}', GLOB_BRACE);
+    ```
 
 ## [3.7.1] - 2020-11-17
 

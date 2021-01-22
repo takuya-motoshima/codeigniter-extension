@@ -8,7 +8,6 @@
  * @copyright  2020 Takuya Motoshima
  */
 namespace X\Rekognition;
-
 use \Aws\Rekognition\RekognitionClient;
 use \Aws\Rekognition\Exception\RekognitionException;
 use \X\Util\ImageHelper;

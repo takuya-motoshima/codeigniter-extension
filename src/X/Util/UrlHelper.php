@@ -7,6 +7,7 @@
  * @copyright  2017 Takuya Motoshima
  */
 namespace X\Util;
+
 final class UrlHelper {
 
   /**
