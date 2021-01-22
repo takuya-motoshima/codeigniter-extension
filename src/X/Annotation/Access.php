@@ -1,4 +1,8 @@
 <?php
+namespace X\Annotation;
+// The "\Doctrine\Common\Annotations\Annotation" must be read before the class comment.
+use \Doctrine\Common\Annotations\Annotation;
+
 /**
  *
  * Method accessibility annotation
@@ -8,9 +12,6 @@
  * @license    MIT License
  * @copyright  2018 Takuya Motoshima
  */
-namespace X\Annotation;
-use \Doctrine\Common\Annotations\Annotation;
-
 class Access {
   public $allow_login = true;
   public $allow_logoff = true;

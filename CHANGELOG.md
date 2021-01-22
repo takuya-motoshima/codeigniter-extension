@@ -1,5 +1,9 @@
 # Changelog
 
+## [3.7.4] - 2021-01-22
+
+- Fixed a bug that Annotation could not be read.
+
 ## [3.7.3] - 2021-01-22
 
 - Change image resizing features(\X\Util\ImageHelper).
