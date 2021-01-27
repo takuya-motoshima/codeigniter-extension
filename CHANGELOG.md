@@ -1,5 +1,9 @@
 # Changelog
 
+## [3.7.5] - 2021-01-27
+
+- Delete debug log.
+
 ## [3.7.4] - 2021-01-22
 
 - Fixed a bug that Annotation could not be read.
