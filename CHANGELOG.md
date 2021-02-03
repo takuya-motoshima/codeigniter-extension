@@ -1,5 +1,36 @@
 # Changelog
 
+## [3.7.6] - 2021-02-03
+
+- Create a form validation class and add a datetime validation method(\X\Library\FormValidation).
+
+    Datetime verification example.  
+
+    Override form validation.  
+    application/libraries/AppForm_validation.php:  
+
+    ```php
+    <?php
+    defined('BASEPATH') OR exit('No direct script access allowed');
+
+    use X\Library\FormValidation;
+
+    class AppForm_validation extends FormValidation {}
+    ```
+
+    This is an example of Datetime verification.  
+
+    ```php
+    $this->form_validation
+      ->set_data(['datetime' => '2021-02-03 17:46:00'])
+      ->set_rules('datetime', 'datetime', 'required|datetime[Y-m-d H:i:s]');
+    if ($this->form_validation->run() != false) {
+      // put your code here
+    } else {
+      echo validation_errors();
+    }
+    ```
+
 ## [3.7.5] - 2021-01-27
 
 - Delete debug log.

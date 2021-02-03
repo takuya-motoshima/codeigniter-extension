@@ -16,6 +16,22 @@ class Test extends AppController {
     parent::view('test');
   }
 
+  public function validateDatetime() {
+    try {
+      $this->form_validation
+        ->set_data(['datetime' => '2021-02-03 17:46:00'])
+        ->set_rules('datetime', 'datetime', 'required|datetime[Y-m-d H:i:s]');
+      if ($this->form_validation->run() != false) {
+        // put your code here
+        Logger::print('There are no errors.');
+      } else {
+        Logger::print(validation_errors());
+      }
+    } catch (\Throwable $e) {
+      Logger::print($e);
+    }
+  }
+
   public function createThumbnail() {
     try {
       // resize only the width of the image
