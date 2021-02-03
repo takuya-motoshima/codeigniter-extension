@@ -1,6 +1,6 @@
 # Changelog
 
-## [3.7.6] - 2021-02-03
+## [3.7.7] - 2021-02-03
 
 - Create a form validation class and add a datetime validation method(\X\Library\FormValidation).
 
@@ -31,15 +31,15 @@
     }
     ```
 
-## [3.7.5] - 2021-01-27
+## [3.7.6] - 2021-01-27
 
 - Delete debug log.
 
-## [3.7.4] - 2021-01-22
+## [3.7.5] - 2021-01-22
 
 - Fixed a bug that Annotation could not be read.
 
-## [3.7.3] - 2021-01-22
+## [3.7.4] - 2021-01-22
 
 - Change image resizing features(\X\Util\ImageHelper).
 
@@ -61,7 +61,7 @@
     ImageHelper::resize('img.jpg', 'thumb.jpg', null, 100, true);
     ```
 
-## [3.7.2] - 2020-12-25
+## [3.7.3] - 2020-12-25
 
 - Added search options to file search(\X\Util\FileHelper).
 
@@ -71,6 +71,10 @@
     use \X\Util\FileHelper;
     FileHelper::find('/img/*.{jpg,jpeg,png,gif}', GLOB_BRACE);
     ```
+
+## [3.7.2] - 2020-11-17
+
+- Remove unused paginate method from Model class.
 
 ## [3.7.1] - 2020-11-17
 
