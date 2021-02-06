@@ -77,4 +77,46 @@ final class ArrayHelper {
     unset($array[$key]);
     return $value;
   }
+
+  /**
+   * Group associative arrays by key..
+   * 
+   * @example
+   * use \X\Util\ArrayHelper;
+   *
+   * $foods = [
+   *   ['name' => 'Apple',       'category' => 'fruits'],
+   *   ['name' => 'Strawberry',  'category' => 'fruits'],
+   *   ['name' => 'Tomato',      'category' => 'vegetables'],
+   *   ['name' => 'Carot',       'category' => 'vegetables'],
+   *   ['name' => 'water',       'category' => 'drink'],
+   *   ['name' => 'beer',        'category' => 'drink'],
+   * ];
+   * 
+   * ArrayHelper::grouping($foods, 'category');
+   * // [
+   * //   'fruits' => [
+   * //     ['name' => 'Apple',       'category' => 'fruits'],
+   * //     ['name' => 'Strawberry',  'category' => 'fruits']
+   * //   ],
+   * //   'vegetables' => [
+   * //     ['name' => 'Tomato',      'category' => 'vegetables'],
+   * //     ['name' => 'Carot',       'category' => 'vegetables']
+   * //   ],
+   * //   'drink' => [
+   * //     ['name' => 'water',       'category' => 'drink'],
+   * //     ['name' => 'beer',        'category' => 'drink']
+   * //   ]
+   * // ]
+   * 
+   * @param  array  $array    Arrays you want to group.
+   * @param  string $groupkey Group key.
+   * @return [type]           Grouped arrays.
+   */
+  public static function grouping(array $array, string $groupkey): array {
+    return array_reduce($array, function (array $groups, array $row) use ($groupkey) {
+      $groups[$row[$groupkey]][] = $row;
+      return $groups;
+    }, []);
+  }
 }

@@ -1,5 +1,40 @@
 # Changelog
 
+## [3.7.8] - 2021-02-06
+
+- Added a method to group associative arrays by key to ArrayHelper.(\X\Util\ArrayHelper).
+
+    Here is an example.
+
+    ```php
+    use \X\Util\ArrayHelper;
+
+    $foods = [
+      ['name' => 'Apple',       'category' => 'fruits'],
+      ['name' => 'Strawberry',  'category' => 'fruits'],
+      ['name' => 'Tomato',      'category' => 'vegetables'],
+      ['name' => 'Carot',       'category' => 'vegetables'],
+      ['name' => 'water',       'category' => 'drink'],
+      ['name' => 'beer',        'category' => 'drink'],
+    ];
+
+    ArrayHelper::grouping($foods, 'category');
+    // [
+    //   'fruits' => [
+    //     ['name' => 'Apple',       'category' => 'fruits'],
+    //     ['name' => 'Strawberry',  'category' => 'fruits']
+    //   ],
+    //   'vegetables' => [
+    //     ['name' => 'Tomato',      'category' => 'vegetables'],
+    //     ['name' => 'Carot',       'category' => 'vegetables']
+    //   ],
+    //   'drink' => [
+    //     ['name' => 'water',       'category' => 'drink'],
+    //     ['name' => 'beer',        'category' => 'drink']
+    //   ]
+    // ]
+    ```
+
 ## [3.7.7] - 2021-02-03
 
 - Create a form validation class and add a datetime validation method(\X\Library\FormValidation).
