@@ -93,7 +93,7 @@ abstract class Model extends \CI_Model {
     return $count !== 0;
   }
 
-  // // ----------------------------------------------------------------
+  // ----------------------------------------------------------------
   /**
    * Insert_On_Duplicate_Key_Update
    *
@@ -262,7 +262,6 @@ abstract class Model extends \CI_Model {
   public function load_rdriver():string {
     return call_user_func_array([self::db(), __FUNCTION__], func_get_args());
   }
-
 
   // ----------------------------------------------------------------
   // Override QueryBuilder method

@@ -217,6 +217,8 @@ abstract class Controller extends \CI_Controller {
       : (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
   }
 
+  // ----------------------------------------------------------------
+
   /**
    * Before response
    *

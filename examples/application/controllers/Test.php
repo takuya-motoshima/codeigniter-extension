@@ -16,16 +16,118 @@ class Test extends AppController {
     parent::view('test');
   }
 
-  public function validateDatetime() {
+  public function validate() {
     try {
       $this->form_validation
-        ->set_data(['datetime' => '2021-02-03 17:46:00'])
-        ->set_rules('datetime', 'datetime', 'required|datetime[Y-m-d H:i:s]');
+        ->set_data([
+          // Datetime custom validation.
+          'datetime' => '2021-02-03 17:46:00',// ok
+
+          // Host name custom validation.
+          'hostname1' => 'external.asd1230-123.asd_internal.asd.gm-_ail.com',// ok
+          'hostname2' => 'domain.com',// ok
+          'hostname3' => 'example.domain.com',// ok
+          'hostname4' => 'example.domain-hyphen.com',// ok
+          'hostname5' => 'www.domain.com',// ok
+          'hostname6' => 'example.museum',// ok
+          'hostname7' => 'http://example.com',// ng
+          'hostname8' => 'subdomain.-example.com',// ng
+          'hostname9' => 'example.com/parameter',// ng
+          'hostname10' => 'example.com?anything',// ng
+
+          // IP address custom validation.
+          'ipaddress1' => '000.0000.00.00',// ng
+          'ipaddress2' => '192.168.1.1',// ok
+          'ipaddress3' => '912.456.123.123',// ng
+
+          // Host name or ip address custom validation.
+          'hostname_or_ipaddress1' => 'external.asd1230-123.asd_internal.asd.gm-_ail.com',// ok
+          'hostname_or_ipaddress2' => 'domain.com',// ok
+          'hostname_or_ipaddress3' => 'example.domain.com',// ok
+          'hostname_or_ipaddress4' => 'example.domain-hyphen.com',// ok
+          'hostname_or_ipaddress5' => 'www.domain.com',// ok
+          'hostname_or_ipaddress6' => 'example.museum',// ok
+          'hostname_or_ipaddress7' => 'http://example.com',// ng
+          'hostname_or_ipaddress8' => 'subdomain.-example.com',// ng
+          'hostname_or_ipaddress9' => 'example.com/parameter',// ng
+          'hostname_or_ipaddress10' => 'example.com?anything',// ng
+          'hostname_or_ipaddress11' => '000.0000.00.00',// ng
+          'hostname_or_ipaddress12' => '192.168.1.1',// ok
+          'hostname_or_ipaddress13' => '912.456.123.123',// ng
+
+          // UNix user name custom validation.
+          'unix_username1' => 'abcd',// ok
+          'unix_username2' => 'a123',// ok
+          'unix_username3' => 'abc-',// ok
+          'unix_username4' => 'a-bc',// ok
+          'unix_username5' => 'abc$',// ok
+          'unix_username7' => 'a-b$',// ok
+          'unix_username8' => '1234',// ng
+          'unix_username9' => '1abc',// ng
+          'unix_username10' => '-abc',// ng
+          'unix_username11' => '$abc',// ng
+          'unix_username12' => 'a$bc',// ng
+
+          // Port number custom validation.
+          'port1' => '-1',// ng
+          'port2' => '0',// ok
+          'port3' => '1',// ok
+          'port4' => '',// ok
+          'port5' => '65534',// ok
+          'port6' => '65535',// ok
+          'port7' => '65536',// ng
+        ])
+        ->set_rules('datetime', 'datetime', 'required|datetime[Y-m-d H:i:s]')
+        ->set_rules('hostname1', 'hostname1', 'hostname')
+        ->set_rules('hostname2', 'hostname2', 'hostname')
+        ->set_rules('hostname3', 'hostname3', 'hostname')
+        ->set_rules('hostname4', 'hostname4', 'hostname')
+        ->set_rules('hostname5', 'hostname5', 'hostname')
+        ->set_rules('hostname6', 'hostname6', 'hostname')
+        ->set_rules('hostname7', 'hostname7', 'hostname')
+        ->set_rules('hostname8', 'hostname8', 'hostname')
+        ->set_rules('hostname9', 'hostname9', 'hostname')
+        ->set_rules('hostname10', 'hostname10', 'hostname')
+        ->set_rules('ipaddress1', 'ipaddress1', 'ipaddress')
+        ->set_rules('ipaddress2', 'ipaddress2', 'ipaddress')
+        ->set_rules('ipaddress3', 'ipaddress3', 'ipaddress')
+        ->set_rules('hostname_or_ipaddress1', 'hostname_or_ipaddress1', 'hostname_or_ipaddress')
+        ->set_rules('hostname_or_ipaddress2', 'hostname_or_ipaddress2', 'hostname_or_ipaddress')
+        ->set_rules('hostname_or_ipaddress3', 'hostname_or_ipaddress3', 'hostname_or_ipaddress')
+        ->set_rules('hostname_or_ipaddress4', 'hostname_or_ipaddress4', 'hostname_or_ipaddress')
+        ->set_rules('hostname_or_ipaddress5', 'hostname_or_ipaddress5', 'hostname_or_ipaddress')
+        ->set_rules('hostname_or_ipaddress6', 'hostname_or_ipaddress6', 'hostname_or_ipaddress')
+        ->set_rules('hostname_or_ipaddress7', 'hostname_or_ipaddress7', 'hostname_or_ipaddress')
+        ->set_rules('hostname_or_ipaddress8', 'hostname_or_ipaddress8', 'hostname_or_ipaddress')
+        ->set_rules('hostname_or_ipaddress9', 'hostname_or_ipaddress9', 'hostname_or_ipaddress')
+        ->set_rules('hostname_or_ipaddress10', 'hostname_or_ipaddress10', 'hostname_or_ipaddress')
+        ->set_rules('hostname_or_ipaddress11', 'hostname_or_ipaddress11', 'hostname_or_ipaddress')
+        ->set_rules('hostname_or_ipaddress12', 'hostname_or_ipaddress12', 'hostname_or_ipaddress')
+        ->set_rules('hostname_or_ipaddress13', 'hostname_or_ipaddress13', 'hostname_or_ipaddress')
+        ->set_rules('unix_username1', 'unix_username1', 'unix_username')
+        ->set_rules('unix_username2', 'unix_username2', 'unix_username')
+        ->set_rules('unix_username3', 'unix_username3', 'unix_username')
+        ->set_rules('unix_username4', 'unix_username4', 'unix_username')
+        ->set_rules('unix_username5', 'unix_username5', 'unix_username')
+        ->set_rules('unix_username6', 'unix_username6', 'unix_username')
+        ->set_rules('unix_username7', 'unix_username7', 'unix_username')
+        ->set_rules('unix_username8', 'unix_username8', 'unix_username')
+        ->set_rules('unix_username9', 'unix_username9', 'unix_username')
+        ->set_rules('unix_username10', 'unix_username10', 'unix_username')
+        ->set_rules('unix_username11', 'unix_username11', 'unix_username')
+        ->set_rules('unix_username12', 'unix_username12', 'unix_username')
+        ->set_rules('port1', 'port1', 'port')
+        ->set_rules('port2', 'port2', 'port')
+        ->set_rules('port3', 'port3', 'port')
+        ->set_rules('port4', 'port4', 'port')
+        ->set_rules('port5', 'port5', 'port')
+        ->set_rules('port6', 'port6', 'port')
+        ->set_rules('port7', 'port7', 'port');
       if ($this->form_validation->run() != false) {
         // put your code here
         Logger::print('There are no errors.');
       } else {
-        Logger::print(validation_errors());
+        Logger::print($this->form_validation->error_array());
       }
     } catch (\Throwable $e) {
       Logger::print($e);
