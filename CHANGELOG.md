@@ -1,5 +1,9 @@
 # Changelog
 
+## [3.8.2] - 2021-02-10
+
+- Fixed README.
+
 ## [3.8.1] - 2021-02-10
 
 - Added an empty judgment method for characters trimmed with left and right spaces(\X\Util\StringHelper).

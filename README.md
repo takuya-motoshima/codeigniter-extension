@@ -1,182 +1,178 @@
-#  CodeIgniter Extension
+# CodeIgniter Extension
 
-A package for efficient development of Codeigniter.  
-A simple interface and some general-purpose processing classes have been added to make it easier to use models and libraries.  
+Codeigniter extension package.  
+It extends the core classes (controllers, models, views) and adds useful libraries.  
 
 This package installs the offical [CodeIgniter](https://github.com/bcit-ci/CodeIgniter) (version `3.1.*`) with secure folder structure via Composer.
 
-You can update CodeIgniter system folder to latest version with one command.  
+## Changelog
 
-[![Latest Stable Version](https://poser.pugx.org/takuya-motoshima/codeigniter-extensions/v/stable)](https://packagist.org/packages/takuya-motoshima/codeigniter-extensions) [![Total Downloads](https://poser.pugx.org/takuya-motoshima/codeigniter-extensions/downloads)](https://packagist.org/packages/takuya-motoshima/codeigniter-extensions) [![Latest Unstable Version](https://poser.pugx.org/takuya-motoshima/codeigniter-extensions/v/unstable)](https://packagist.org/packages/takuya-motoshima/codeigniter-extensions) [![License](https://poser.pugx.org/takuya-motoshima/codeigniter-extensions/license)](https://packagist.org/packages/takuya-motoshima/codeigniter-extensions)
-
-## Release Notes
-
-All change history is [here](./CHANGELOG.md).
+See [CHANGELOG.md](./CHANGELOG.md).
 
 ## Requirements
 
-* PHP 7.0.0 or later
-* composer (See [Composer Installation](https://getcomposer.org/doc/00-intro.md#installation-linux-unix-osx))
+* PHP 7.3.0 or later
+* composer
 * git
 * php-gd
 * php-mbstring
 * php-xml
-* php-mcrypt
 
 ## Getting Started
 
-1. Create project.
+### Create project.
 
-    ```sh
-    composer create-project takuya-motoshima/codeIgniter-extension myapp
-    ```
+```sh
+composer create-project takuya-motoshima/codeIgniter-extension myapp
+```
 
-1. Grant log, session, and cache write permissions to the web server.
+### Grant log, session, and cache write permissions to the web server.
 
-    ```sh
-    sudo chmod -R 755 ./application/{logs,cache,session};
-    sudo chown -R nginx:nginx ./application/{logs,cache,session};
-    ```
+```sh
+sudo chmod -R 755 ./application/{logs,cache,session};
+sudo chown -R nginx:nginx ./application/{logs,cache,session};
+```
 
-1. Web server settings.
+### Web server settings.
 
-    1. Add the following to /etc/nginx/conf.d/{Your application name}.conf.  
-        When accessing with the root URL.  
-        A sample nginx config file can be found in [nginx.sample.conf](./nginx.sample.conf).  
+Add the following to /etc/nginx/conf.d/{Your application name}.conf.  
 
-        When the domain is the same and the URL is separated. e.g. //{Your server name}/admin
+When accessing with the root URL.  
+A sample nginx config file can be found in [nginx.sample.conf](./nginx.sample.conf).  
 
-            ```nginx
-            location /{Your application name} {
-              alias {Your application root directory}/public;
-              try_files $uri $uri/ /{Your application name}/index.php;
-              location ~ \.php$ {
-                fastcgi_split_path_info ^(.+\.php)(/.+)$;
-                fastcgi_index index.php;
-                fastcgi_pass unix:/run/php-fpm/www.sock;
-                include fastcgi_params;
-                #fastcgi_param CI_ENV development;
-                fastcgi_param SCRIPT_FILENAME $request_filename;
-              }
-            }
-            ```
+When the domain is the same and the URL is separated. e.g. //{Your server name}/admin
 
-    1. Restart nginx to reflect the setting.  
+```nginx
+location /{Your application name} {
+  alias {Your application root directory}/public;
+  try_files $uri $uri/ /{Your application name}/index.php;
+  location ~ \.php$ {
+    fastcgi_split_path_info ^(.+\.php)(/.+)$;
+    fastcgi_index index.php;
+    fastcgi_pass unix:/run/php-fpm/www.sock;
+    include fastcgi_params;
+    #fastcgi_param CI_ENV development;
+    fastcgi_param SCRIPT_FILENAME $request_filename;
+  }
+}
+```
 
-        ```sh
-        sudo systemctl restart nginx;
-        ```
+Restart nginx to reflect the setting.  
 
-1. Application settings.
+```sh
+sudo systemctl restart nginx;
+```
 
-    Open config.  
+### Application settings.
 
-    ```sh
-    vim ./application/config/config.php;
-    ```
+Open config.  
 
-    Edit content:  
+```sh
+vim ./application/config/config.php;
+```
 
-    |Name|Before|After|
-    |--|--|--|
-    |base_url||if (!empty($_SERVER['HTTP_HOST'])) $config['base_url'] = '//' . $_SERVER['HTTP_HOST'] . str_replace(basename($_SERVER['SCRIPT_NAME']), '', $_SERVER['SCRIPT_NAME']);|
-    |enable_hooks|FALSE|TRUE|
-    |permitted_uri_chars|'a-z 0-9~%.:_\-'|'a-z 0-9~%.:_\-,'|
-    |sess_save_path|NULL|APPPATH . 'session';|
-    |cookie_httponly|FALSE|TRUE|
-    |composer_autoload|FALSE|realpath(APPPATH . '../vendor/autoload.php');|
-    |index_page|'index.php'|''|
+Edit content:  
 
-    ## Project structure.
+|Name|Before|After|
+|--|--|--|
+|base_url||if (!empty($_SERVER['HTTP_HOST'])) $config['base_url'] = '//' . $_SERVER['HTTP_HOST'] . str_replace(basename($_SERVER['SCRIPT_NAME']), '', $_SERVER['SCRIPT_NAME']);|
+|enable_hooks|FALSE|TRUE|
+|permitted_uri_chars|'a-z 0-9~%.:_\-'|'a-z 0-9~%.:_\-,'|
+|sess_save_path|NULL|APPPATH . 'session';|
+|cookie_httponly|FALSE|TRUE|
+|composer_autoload|FALSE|realpath(APPPATH . '../vendor/autoload.php');|
+|index_page|'index.php'|''|
 
-    ```sh
-    .
-    |-- src
-    |   `-- X
-    |       |-- Annotation
-    |       |   |-- Access.php
-    |       |   `-- AnnotationReader.php
-    |       |-- Composer
-    |       |   `-- Installer.php
-    |       |-- Constant
-    |       |   |-- Environment.php
-    |       |   `-- HttpStatus.php
-    |       |-- Controller
-    |       |   `-- Controller.php
-    |       |-- Data
-    |       |   `-- address.json
-    |       |-- Database
-    |       |   |-- DB.php
-    |       |   |-- Driver
-    |       |   |   |-- Cubrid
-    |       |   |   |-- Ibase
-    |       |   |   |-- Mssql
-    |       |   |   |-- Mysql
-    |       |   |   |-- Mysqli
-    |       |   |   |-- Oci8
-    |       |   |   |-- Odbc
-    |       |   |   |-- Pdo
-    |       |   |   |-- Postgre
-    |       |   |   |-- Sqlite
-    |       |   |   |-- Sqlite3
-    |       |   |   `-- Sqlsrv
-    |       |   |-- QueryBuilder.php
-    |       |   `-- Result.php
-    |       |-- Exception
-    |       |   |-- AccessDeniedException.php
-    |       |   `-- RestClientException.php
-    |       |-- Hook
-    |       |   `-- Authenticate.php
-    |       |-- Library
-    |       |   |-- Input.php
-    |       |   `-- Router.php
-    |       |-- Model
-    |       |   |-- AddressModel.php
-    |       |   |-- Model.php
-    |       |   |-- SessionModelInterface.php
-    |       |   `-- SessionModel.php
-    |       `-- Util
-    |           |-- AmazonRekognitionClient.php
-    |           |-- AmazonSesClient.php
-    |           |-- ArrayHelper.php
-    |           |-- Cipher.php
-    |           |-- CsvHelper.php
-    |           |-- DateHelper.php
-    |           |-- EMail.php
-    |           |-- FileHelper.php
-    |           |-- HtmlHelper.php
-    |           |-- HttpResponse.php
-    |           |-- ImageHelper.php
-    |           |-- Iterator.php
-    |           |-- Loader.php
-    |           |-- Logger.php
-    |           |-- RestClient.php
-    |           |-- SessionHelper.php
-    |           |-- StringHelper.php
-    |           |-- Template.php
-    |           `-- UrlHelper.php
-    |-- composer.json
-    |-- composer.json.dist
-    |-- composer.lock
-    |-- composer.phar
-    |-- core.dist
-    |   |-- AppController.php
-    |   |-- AppInput.php
-    |   `-- AppModel.php
-    |-- dot.gitattributes.dist
-    |-- dot.gitignore.dist
-    |-- dot.htaccess
-    |-- LICENSE.md
-    |-- package.json.dist
-    |-- README.md
-    |-- script.js
-    |-- examples/
-    |-- views.dist
-    |   |-- common
-    |   |   `-- base.html
-    |   `-- index.html
-    `-- webpack.config.js.dist
-    ```
+## Project structure.
+
+```sh
+.
+|-- src
+|   `-- X
+|       |-- Annotation
+|       |   |-- Access.php
+|       |   `-- AnnotationReader.php
+|       |-- Composer
+|       |   `-- Installer.php
+|       |-- Constant
+|       |   |-- Environment.php
+|       |   `-- HttpStatus.php
+|       |-- Controller
+|       |   `-- Controller.php
+|       |-- Data
+|       |   `-- address.json
+|       |-- Database
+|       |   |-- DB.php
+|       |   |-- Driver
+|       |   |   |-- Cubrid
+|       |   |   |-- Ibase
+|       |   |   |-- Mssql
+|       |   |   |-- Mysql
+|       |   |   |-- Mysqli
+|       |   |   |-- Oci8
+|       |   |   |-- Odbc
+|       |   |   |-- Pdo
+|       |   |   |-- Postgre
+|       |   |   |-- Sqlite
+|       |   |   |-- Sqlite3
+|       |   |   `-- Sqlsrv
+|       |   |-- QueryBuilder.php
+|       |   `-- Result.php
+|       |-- Exception
+|       |   |-- AccessDeniedException.php
+|       |   `-- RestClientException.php
+|       |-- Hook
+|       |   `-- Authenticate.php
+|       |-- Library
+|       |   |-- Input.php
+|       |   `-- Router.php
+|       |-- Model
+|       |   |-- AddressModel.php
+|       |   |-- Model.php
+|       |   |-- SessionModelInterface.php
+|       |   `-- SessionModel.php
+|       `-- Util
+|           |-- AmazonRekognitionClient.php
+|           |-- AmazonSesClient.php
+|           |-- ArrayHelper.php
+|           |-- Cipher.php
+|           |-- CsvHelper.php
+|           |-- DateHelper.php
+|           |-- EMail.php
+|           |-- FileHelper.php
+|           |-- HtmlHelper.php
+|           |-- HttpResponse.php
+|           |-- ImageHelper.php
+|           |-- Iterator.php
+|           |-- Loader.php
+|           |-- Logger.php
+|           |-- RestClient.php
+|           |-- SessionHelper.php
+|           |-- StringHelper.php
+|           |-- Template.php
+|           `-- UrlHelper.php
+|-- composer.json
+|-- composer.json.dist
+|-- composer.lock
+|-- composer.phar
+|-- core.dist
+|   |-- AppController.php
+|   |-- AppInput.php
+|   `-- AppModel.php
+|-- dot.gitattributes.dist
+|-- dot.gitignore.dist
+|-- dot.htaccess
+|-- LICENSE.md
+|-- package.json.dist
+|-- README.md
+|-- script.js
+|-- examples/
+|-- views.dist
+|   |-- common
+|   |   `-- base.html
+|   `-- index.html
+`-- webpack.config.js.dist
+```
 
 ## Reference
 
@@ -220,9 +216,5 @@ All change history is [here](./CHANGELOG.md).
     ```
 
 ## License
-[MIT](LICENSE.txt)
 
-## Author
-- Twitter: [@TakuyaMotoshima](https://twitter.com/taaaaaaakuya)
-- Github: [TakuyaMotoshima](https://github.com/takuya-motoshima)
-mail to: development.takuyamotoshima@gmail.com
+[MIT licensed](./LICENSE.txt)
