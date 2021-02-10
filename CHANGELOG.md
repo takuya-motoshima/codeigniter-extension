@@ -1,5 +1,10 @@
 # Changelog
 
+## [3.8.0] - 2021-02-10
+
+- Added nginxn configuration sample file to REAME.
+
+
 ## [3.7.9] - 2021-02-09
 
 - Added the following rules to form validation.
