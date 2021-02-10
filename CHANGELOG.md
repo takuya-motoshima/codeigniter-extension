@@ -1,5 +1,9 @@
 # Changelog
 
+## [3.8.3] - 2021-02-11
+
+- Added form validation class.The reason I added it is that I want to validate it with the model(\X\Util\Validation).
+
 ## [3.8.2] - 2021-02-10
 
 - Fixed README.

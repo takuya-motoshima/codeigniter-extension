@@ -8,6 +8,7 @@
  */
 namespace X\Library;
 use \X\Util\Logger;
+use \X\Util\Validation;
 
 abstract class FormValidation extends \CI_Form_validation {
 
@@ -58,7 +59,7 @@ abstract class FormValidation extends \CI_Form_validation {
    * @return bool          Returns true if validation succeeds, false if validation fails.
    */
   public function hostname(string $input): bool {
-    if (preg_match('/^(?!:\/\/)([a-zA-Z0-9-_]+\.)*[a-zA-Z0-9][a-zA-Z0-9-_]+\.[a-zA-Z]{2,11}?$/', $input)) return true;
+    if (Validation::hostname($input)) return true;
     # if (preg_match('/^(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9]$/', $input)) return true;
     $this->set_message('hostname', 'The {field} field must contain a valid host name.');
     return false;
@@ -71,7 +72,7 @@ abstract class FormValidation extends \CI_Form_validation {
    * @return bool          Returns true if validation succeeds, false if validation fails.
    */
   public function ipaddress(string $input): bool {
-    if (preg_match('/^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/', $input)) return true;
+    if (Validation::ipaddress($input)) return true;
     $this->set_message('ipaddress', 'The {field} field must contain a valid ip address.');
     return false;
   }
@@ -83,7 +84,7 @@ abstract class FormValidation extends \CI_Form_validation {
    * @return bool          Returns true if validation succeeds, false if validation fails.
    */
   public function hostname_or_ipaddress(string $input): bool {
-    if (preg_match('/^((([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])|((?!:\/\/)([a-zA-Z0-9-_]+\.)*[a-zA-Z0-9][a-zA-Z0-9-_]+\.[a-zA-Z]{2,11}?))$/', $input)) return true;
+    if (Validation::hostname_or_ipaddress($input)) return true;
     # if (preg_match('/^((([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])|((?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9]))$/', $input)) return true;
     $this->set_message('hostname_or_ipaddress', 'The {field} field must contain a valid host name or ip address.');
     return false;
@@ -96,7 +97,7 @@ abstract class FormValidation extends \CI_Form_validation {
    * @return bool          Returns true if validation succeeds, false if validation fails.
    */
   public function unix_username(string $input): bool {
-    if (preg_match('/^[a-z_]([a-z0-9_-]{0,31}|[a-z0-9_-]{0,30}\$)$/', $input)) return true;
+    if (Validation::unix_username($input)) return true;
     $this->set_message('unix_username', 'The {field} field must contain a valid UNIX username.');
     return false;
   }
@@ -108,7 +109,7 @@ abstract class FormValidation extends \CI_Form_validation {
    * @return bool          Returns true if validation succeeds, false if validation fails.
    */
   public function port(string $input): bool {
-    if (preg_match('/^\d+$/', $input) && (int) $input >= 0 && (int) $input <= 65535) return true;
+    if (Validation::port($input)) return true;
     $this->set_message('port', 'The {field} field must contain a valid port number.');
     return false;
   }
