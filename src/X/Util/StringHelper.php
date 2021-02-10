@@ -11,21 +11,30 @@ namespace X\Util;
 final class StringHelper {
 
   /**
-   * Trim
+   * Returns characters with left and right whitespace trimmed.
    *
    * @param  string $str
-   * @param  string $addReplacement
    * @return string
    */
-  public static function trim(string $str):string {
+  public static function trim(?string $str):string {
     return trim($str, " \t\n\r\0\x0B　");
   }
 
   /**
-   * Omit if the string is too long
+   * Returns true if the whitespace trimmed character is empty.
    *
    * @param  string $str
-   * @param  int $length
+   * @return bool
+   */
+  public static function empty(?string $str):bool {
+    return empty(self::trim($str));
+  }
+
+  /**
+   * Omit if the string is too long.
+   *
+   * @param  string     $str
+   * @param  int        $length
    * @return string
    */
   public static function ellipsis(string $str, int $length = 100): string {

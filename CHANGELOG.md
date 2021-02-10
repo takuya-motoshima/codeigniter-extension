@@ -1,9 +1,24 @@
 # Changelog
 
+## [3.8.1] - 2021-02-10
+
+- Added an empty judgment method for characters trimmed with left and right spaces(\X\Util\StringHelper).
+
+    ```php
+    use \X\Util\StringHelper;
+
+    StringHelper::empty(' ');// true
+    StringHelper::empty(1);// false
+    StringHelper::empty('');// true
+    StringHelper::empty(0);// true
+    StringHelper::empty('0');// true
+    StringHelper::empty(null);// true
+    StringHelper::empty([]);// true
+    ```
+
 ## [3.8.0] - 2021-02-10
 
 - Added nginxn configuration sample file to REAME.
-
 
 ## [3.7.9] - 2021-02-09
 
