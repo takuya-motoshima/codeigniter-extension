@@ -7,6 +7,7 @@ use \X\Util\Cipher;
 use \X\Util\FileHelper;
 use \X\Util\ImageHelper;
 use \X\Util\IpUtils;
+use \X\Util\AmazonSesClient;
 
 class Test extends AppController {
 
@@ -14,6 +15,33 @@ class Test extends AppController {
 
   public function index() {
     parent::view('test');
+  }
+
+  public function sendEmail() {
+    try {
+      // SES client.
+      $ses = new AmazonSesClient([
+        'credentials' => [
+          'key' => $_ENV['SES_ACCESS_KEY'],
+          'secret' => $_ENV['SES_SECRET_KEY'],
+        ],
+        'configuration' => $_ENV['SES_CONFIGURATION'],
+        'region' => $_ENV['SES_REGION']
+      ]);
+
+      // Send email.
+      $result = $ses
+        ->from('from@example.com')
+        ->to('to@example.com')
+        ->subject('Test email')
+        ->message('Hello, World!')
+        ->send();
+      $messageId = $result->get('MessageId');
+      Logger::print("Email sent! Message ID: $messageId");
+    } catch(\Throwable $e) {
+      Logger::print($e->getMessage());
+    }
+
   }
 
   public function validate() {

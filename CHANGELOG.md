@@ -1,8 +1,38 @@
 # Changelog
 
+## [3.8.4] - 2021-02-17
+
+- Changed to return SES mail sending result object.(\X\Util\AmazonSesClient).
+
 ## [3.8.3] - 2021-02-11
 
 - Added form validation class.The reason I added it is that I want to validate it with the model(\X\Util\Validation).
+
+    Define the SES "access key" and "secret" in examples/.env.  
+
+    ```php
+    use \X\Util\AmazonSesClient;
+
+    // SES client.
+    $ses = new AmazonSesClient([
+      'credentials' => [
+        'key' => $_ENV['SES_ACCESS_KEY'],
+        'secret' => $_ENV['SES_SECRET_KEY'],
+      ],
+      'configuration' => $_ENV['SES_CONFIGURATION'],
+      'region' => $_ENV['SES_REGION']
+    ]);
+
+    // Send email.
+    $result = $ses
+      ->from('from@example.com')
+      ->to('to@example.com')
+      ->subject('Test email')
+      ->message('Hello, World!')
+      ->send();
+    $messageId = $result->get('MessageId');
+    Logger::print("Email sent! Message ID: $messageId");
+    ```
 
 ## [3.8.2] - 2021-02-10
 

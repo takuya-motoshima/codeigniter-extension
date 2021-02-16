@@ -17,6 +17,7 @@
     "php": "^7.0",
     "takuya-motoshima/codeigniter-extension": "dev-master",
     "maennchen/zipstream-php": "^2.1",
-    "intervention/image": "^2.5"
+    "intervention/image": "^2.5",
+    "vlucas/phpdotenv": "^5.3"
   }
 }

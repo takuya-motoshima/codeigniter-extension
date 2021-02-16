@@ -14,16 +14,22 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 use \X\Annotation\AnnotationReader;
 use \X\Util\Logger;
 
+// post_controller_constructor callback.
 $hook['post_controller_constructor'] = function() {
-  isset($_SESSION['user'])
-    ? handlingLoggedIn()
-    : handlingLogOff();
+  isset($_SESSION['user']) ? handlingLoggedIn() : handlingLogOff();
 };
 
+// pre_system callback.
 $hook['pre_system'] = function () {
+  // Load environment variables.
+  $dotenv = Dotenv\Dotenv::createImmutable(realpath(APPPATH . '..'));
+  $dotenv->load();
+
   // set_error_handler(function ($err_level, $err_msg, $err_file, $err_line, $err_context) {
   //   Logger::print('set_error_handler');
   // }, E_WARNING | E_NOTICE);
+
+  // Check for uncaught exceptions.
   set_exception_handler(function ($e) {
     Logger::error($e);
   });

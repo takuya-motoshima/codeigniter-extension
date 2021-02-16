@@ -193,51 +193,48 @@ class AmazonSesClient {
    *
    * Send
    *
-   * @return void
+   * @return \Aws\Result
    */
-  public function send() {
-    try {
-      $ci =& get_instance();
-      $ci->load->library('form_validation'); 
-      $ci->form_validation
-        ->set_data([
-          // 'to' => $this->to,
-          'from' => $this->from
-        ])
-        // ->set_rules('to', 'To Email', 'required|valid_email')
-        ->set_rules('from', 'From Email', 'required|valid_email');
-      if (!$ci->form_validation->run()) {
-        throw new \InvalidArgumentException(implode('', $ci->form_validation->error_array()));
-      }
-      $destination['ToAddresses'] = is_array($this->to) ? $this->to : [$this->to];
-      isset($this->cc) && $destination['CcAddresses'] = $this->cc;
-      isset($this->bcc) && $destination['BccAddresses'] = $this->bcc;
-      $this->client()->sendEmail([
-        'Destination' => $destination,
-        'ReplyToAddresses' => [$this->from],
-        'Source' => isset($this->from_name) ? sprintf('%s <%s>', $this->from_name, $this->from) : $from,
-        'Message' => [
-          'Body' => [
-            // 'Html' => [
-            //     'Charset' => $this->charset,
-            //     'Data' => $this->message,
-            // ],
-            'Text' => [
-              'Charset' => $this->charset,
-              'Data' => $this->message,
-            ],
-          ],
-          'Subject' => [
+  public function send(): \Aws\Result {
+    $ci =& get_instance();
+    $ci->load->library('form_validation'); 
+    $ci->form_validation
+      ->set_data([
+        // 'to' => $this->to,
+        'from' => $this->from
+      ])
+      // ->set_rules('to', 'To Email', 'required|valid_email')
+      ->set_rules('from', 'From Email', 'required|valid_email');
+    if (!$ci->form_validation->run()) {
+      throw new \InvalidArgumentException(implode('', $ci->form_validation->error_array()));
+    }
+    $destination['ToAddresses'] = is_array($this->to) ? $this->to : [$this->to];
+    isset($this->cc) && $destination['CcAddresses'] = $this->cc;
+    isset($this->bcc) && $destination['BccAddresses'] = $this->bcc;
+    $result = $this->client()->sendEmail([
+      'Destination' => $destination,
+      'ReplyToAddresses' => [$this->from],
+      'Source' => isset($this->from_name) ? sprintf('%s <%s>', $this->from_name, $this->from) : $this->from,
+      'Message' => [
+        'Body' => [
+          // 'Html' => [
+          //     'Charset' => $this->charset,
+          //     'Data' => $this->message,
+          // ],
+          'Text' => [
             'Charset' => $this->charset,
-            'Data' => $this->subject,
+            'Data' => $this->message,
           ],
         ],
-        'ConfigurationSetName' => $this->option['configuration'],
-      ]);
-      $this->reset();
-    } catch (\Throwable $e) {
-      throw $e;
-    }
+        'Subject' => [
+          'Charset' => $this->charset,
+          'Data' => $this->subject,
+        ],
+      ],
+      'ConfigurationSetName' => $this->option['configuration'],
+    ]);
+    $this->reset();
+    return $result;
   }
 
   /**
