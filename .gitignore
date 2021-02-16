@@ -78,6 +78,7 @@ examples/application/cache/*
 examples/application/session/*
 !examples/application/session
 examples/.env
+!examples/.env.sample
 
 # Whitelisted files
 !.gitignore
