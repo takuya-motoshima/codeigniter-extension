@@ -60,7 +60,7 @@
 * \/**
 *  * It can only be done with the CLI.
 *  * 
-*  * @Access(allow_login=true, allow_logoff=false)
+*  * @Access(allow_http=false)
 *  *\/
 * public function batch() {}
  *

@@ -1,5 +1,9 @@
 # Changelog
 
+## [3.8.6] - 2021-02-18
+
+- Fixed changelog typos.
+
 ## [3.8.5] - 2021-02-18
 
 - Added HTTP / CLI access control to controller public method annotation.
@@ -65,7 +69,7 @@
     /**
      * It can only be done with the CLI.
      * 
-     * @Access(allow_login=true, allow_logoff=false)
+     * @Access(allow_http=false)
      */
     public function batch() {}
     ```
