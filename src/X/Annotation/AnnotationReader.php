@@ -3,47 +3,66 @@
  *
  * Annotation reader class
  *
- * e.g.:
+ * @example
  * 
- * // application/config/hooks.php:
- * use \X\Annotation\AnnotationReader;
- * use \X\Util\Logger;
- * $hook['post_controller_constructor'] = function() {
- *   $ci =& get_instance();
- *   $accessibility = AnnotationReader::getAccessibility($ci->router->class, $ci->router->method);
- *   Logger::d('$accessibility=', $accessibility);
- *   $loggedin = !empty($_SESSION['user']);
- *   if ($loggedin && !$accessibility->allow_login) {
- *     // When the login user performs a non-access action.
- *     redirect('/dashboard');
- *   } else if (!$loggedin && !$accessibility->allow_logoff) {
- *     // Logoff user performs a non-access action.
- *     redirect('/login');
- *   }
- * };
- * 
- * // application/controllers/Login.php:
- * use \X\Annotation\Access;
- * class Login extends AppController {
- *   \/**
- *    * @Access(allow_login=false, allow_logoff=true)
- *    *\/
- *   public function index() {
- *     parent::view('login');
- *   }
- * }
- *
- * // application/controllers/Dashboard.php:
- * use \X\Annotation\Access;
- * class Dashboard extends AppController {
- *   \/**
- *    * @Access(allow_login=true, allow_logoff=false)
- *    *\/
- *   public function index() {
- *     parent::view('dashboard');
- *   }
- * }
- * 
+* Step 1: Add access control to the hook(application/config/hooks.php).
+* 
+* use \X\Annotation\AnnotationReader;
+* 
+* // Add access control to hooks.
+* $hook['post_controller_constructor'] = function() {
+*   $ci =& get_instance();
+* 
+*   // Get access from annotations.
+*   $accessibility = AnnotationReader::getAccessibility($ci->router->class, $ci->router->method);
+* 
+*   // Whether you are logged in.
+*   $islogin = !empty($_SESSION['user']);
+* 
+*   // Whether it is HTTP access.
+*   $ishttp = !is_cli();
+* 
+*   // Request URL.
+*   $requesturl = $ci->router->directory . $ci->router->class . '/' . $ci->router->method;
+* 
+*   // When accessed by HTTP.
+*   if ($ishttp) {
+*     // Returns an error if HTTP access is not allowed.
+*     if (!$accessibility->allow_http) throw new \RuntimeException('HTTP access is not allowed.');
+* 
+*     // When the logged-in user calls a request that only the log-off user can access, redirect to the dashboard.
+*     // It also redirects to the login page when the log-off user calls a request that only the logged-in user can access.
+*     if ($islogin && !$accessibility->allow_login) redirect('/dashboard');
+*     else if (!$islogin && !$accessibility->allow_logoff) redirect('/login');
+*   } else {
+*     // When executed with CLI.
+*   }
+* };
+* 
+* Step 2: Define annotations for public methods on each controller.
+* 
+* use \X\Annotation\Access;
+* 
+* \/**
+*  * Only log-off users can access it.
+*  * 
+*  * @Access(allow_login=false, allow_logoff=true)
+*  *\/
+* public function login() {}
+* 
+* \/**
+*  * Only logged-in users can access it..
+*  * 
+*  * @Access(allow_login=true, allow_logoff=false)
+*  *\/
+* public function dashboard() {}
+* 
+* \/**
+*  * It can only be done with the CLI.
+*  * 
+*  * @Access(allow_login=true, allow_logoff=false)
+*  *\/
+* public function batch() {}
  *
  * @author     Takuya Motoshima <https://www.facebook.com/takuya.motoshima.7>
  * @license    MIT License
