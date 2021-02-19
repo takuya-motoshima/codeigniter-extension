@@ -1,5 +1,20 @@
 # Changelog
 
+## [3.8.7] - 2021-02-19
+
+- Added a method to the file helper that returns a file size with units.
+
+    ```php
+    use \X\Util\FileHelper;
+
+    FileHelper::humanFilesize('/var/somefile.txt', 0);// 12B
+    FileHelper::humanFilesize('/var/somefile.txt', 4);// 1.1498GB
+    FileHelper::humanFilesize('/var/somefile.txt', 1);// 117.7MB
+    FileHelper::humanFilesize('/var/somefile.txt', 5);// 11.22833TB
+    FileHelper::humanFilesize('/var/somefile.txt', 3);// 1.177MB
+    FileHelper::humanFilesize('/var/somefile.txt');// 120.56KB
+    ```
+
 ## [3.8.6] - 2021-02-18
 
 - Fixed changelog typos.
@@ -7,9 +22,6 @@
 ## [3.8.5] - 2021-02-18
 
 - Added HTTP / CLI access control to controller public method annotation.
-
-    The following is how to use it.  
-
 
     Step 1: Add access control to the hook(application/config/hooks.php).  
 
@@ -60,7 +72,7 @@
     public function login() {}
 
     /**
-     * Only logged-in users can access it..
+     * Only logged-in users can access it.
      * 
      * @Access(allow_login=true, allow_logoff=false)
      */
@@ -264,8 +276,6 @@
 
 - Added a method to group associative arrays by key to ArrayHelper.(\X\Util\ArrayHelper).
 
-    Here is an example.
-
     ```php
     use \X\Util\ArrayHelper;
 
@@ -298,8 +308,6 @@
 ## [3.7.7] - 2021-02-03
 
 - Create a form validation class and add a datetime validation method(\X\Library\FormValidation).
-
-    Datetime verification example.  
 
     Override form validation.  
     application/libraries/AppForm_validation.php:  
@@ -338,8 +346,6 @@
 
 - Change image resizing features(\X\Util\ImageHelper).
 
-    Image resizing example.
-
     ```php
     use \X\Util\ImageHelper;
 
@@ -360,10 +366,10 @@
 
 - Added search options to file search(\X\Util\FileHelper).
 
-    For example, when searching only image files.
-
     ```php
     use \X\Util\FileHelper;
+
+    // When searching only image files.
     FileHelper::find('/img/*.{jpg,jpeg,png,gif}', GLOB_BRACE);
     ```
 
@@ -570,200 +576,200 @@
 
 - Added a process to log out a user who is logged in with the same ID on another device when logging in
 
-    - config/hooks.php:
+    config/hooks.php:  
 
-        ```php
-        use \X\Annotation\AnnotationReader;
+    ```php
+    use \X\Annotation\AnnotationReader;
 
-        $hook['post_controller_constructor'] = function() {
-          isset($_SESSION['user']) ? handlingLoggedIn() : handlingLogOff();
-        };
+    $hook['post_controller_constructor'] = function() {
+      isset($_SESSION['user']) ? handlingLoggedIn() : handlingLogOff();
+    };
 
-        /**
-         * Process for logged-in user
-         */
-        function handlingLoggedIn() {
-          $ci =& get_instance();
-          // If it is BAN, call the logoff process
-          $ci->load->model('UserService');
-          if ($ci->UserService->isBanUser(session_id())) {
-            // Sign out
-            $ci->UserService->signout();
-            // Set ban message display flag
-            $ci->load->helper('cookie');
-            set_cookie('show_ban_message', true, 10);
-            // To logoff processing
-            return handlingLogOff();
-          }
-          // Check if the request URL has access privileges
-          $accessibility = AnnotationReader::getAccessibility($ci->router->class, $ci->router->method);
-          if (!$accessibility->allow_login || ($accessibility->allow_role && $accessibility->allow_role !== $session['role'])) {
-            // In case of access prohibition action, redirect to the dashboard page
-            redirect('/dashboard');
-          }
+    /**
+     * Process for logged-in user
+     */
+    function handlingLoggedIn() {
+      $ci =& get_instance();
+      // If it is BAN, call the logoff process
+      $ci->load->model('UserService');
+      if ($ci->UserService->isBanUser(session_id())) {
+        // Sign out
+        $ci->UserService->signout();
+        // Set ban message display flag
+        $ci->load->helper('cookie');
+        set_cookie('show_ban_message', true, 10);
+        // To logoff processing
+        return handlingLogOff();
+      }
+      // Check if the request URL has access privileges
+      $accessibility = AnnotationReader::getAccessibility($ci->router->class, $ci->router->method);
+      if (!$accessibility->allow_login || ($accessibility->allow_role && $accessibility->allow_role !== $session['role'])) {
+        // In case of access prohibition action, redirect to the dashboard page
+        redirect('/dashboard');
+      }
+    }
+
+    /**
+     * Process for logoff user
+     */
+    function handlingLogOff() {
+      $ci =& get_instance();
+      // Check if the request URL has access privileges
+      $accessibility = AnnotationReader::getAccessibility($ci->router->class, $ci->router->method);
+      if (!$accessibility->allow_logoff) {
+        // In case of access prohibition action, redirect to the login page
+        redirect('/signin');
+      }
+    }
+    ```
+
+    models/UserService.php:  
+
+    ```php
+    class UserService extends \AppModel {
+
+      protected $model = [
+        'UserModel',
+        'SessionModel'
+      ];
+
+      public function signin(string $username, string $password): bool {
+        // Find data matching ID and password
+        $user = $this->UserModel->getUserByUsernameAndPassword($username, $password);
+        if (empty($user)) {
+          return false;
         }
+        unset($user['password']);
+        // Change the BAN flag of other logged-in users to on
+        $this->SessionModel->updateSessionBanFlagOn($username, session_id());
+        // Store login user data in session
+        $_SESSION['user'] = $user;
+        return true;
+      }
 
-        /**
-         * Process for logoff user
-         */
-        function handlingLogOff() {
-          $ci =& get_instance();
-          // Check if the request URL has access privileges
-          $accessibility = AnnotationReader::getAccessibility($ci->router->class, $ci->router->method);
-          if (!$accessibility->allow_logoff) {
-            // In case of access prohibition action, redirect to the login page
-            redirect('/signin');
+      public function signout() {
+        session_destroy();
+      }
+
+      public function isBanUser(string $sessionId) {
+        return $this->SessionModel->isBanById(session_id());
+      }
+    }
+    ```
+
+    models/SessionModel.php:  
+
+    ```php
+    class SessionModel extends \AppModel {
+
+      const TABLE = 'session';
+
+      public function updateSessionBanFlagOn($username, string $id) {
+        parent
+          ::set('ban', 1)
+          ::where('username', $username)
+          ::where('id !=', $id)
+          ->update();
+      }
+
+      public function isBanById(string $id): bool {
+        return parent
+          ::where('id', $id)
+          ::where('ban', 1)
+          ::count_all_results() > 0;
+      }
+    }
+    ```
+
+    controllers/api/User.php:  
+
+    ```php
+    use \X\Annotation\Access;
+    use const \X\Constant\HTTP_BAD_REQUEST;
+    use const \X\Constant\HTTP_CREATED;
+    use const \X\Constant\HTTP_NO_CONTENT;
+
+    class User extends AppController {
+
+      protected $model = [
+        'UserService',
+        'UserModel',
+      ];
+
+      /**
+       * @Access(allow_login=false, allow_logoff=true)
+       */
+      public function signin() {
+        try {
+          $this->form_validation
+            ->set_data($this->input->post())
+            ->set_rules('username', 'username', 'required|max_length[30]')
+            ->set_rules('password', 'password', 'required|max_length[30]');
+          if (!$this->form_validation->run()) {
+            return parent::error(print_r($this->form_validation->error_array(), true), HTTP_BAD_REQUEST);
           }
+          $result = $this->UserService->signin($this->input->post('username'), $this->input->post('password'));
+          parent
+            ::set($result)
+            ::json();
+        } catch (\Throwable $e) {
+          parent::error($e->getMessage(), HTTP_BAD_REQUEST);
         }
-        ```
+      }
 
-    - models/UserService.php:
-
-        ```php
-        class UserService extends \AppModel {
-
-          protected $model = [
-            'UserModel',
-            'SessionModel'
-          ];
-
-          public function signin(string $username, string $password): bool {
-            // Find data matching ID and password
-            $user = $this->UserModel->getUserByUsernameAndPassword($username, $password);
-            if (empty($user)) {
-              return false;
-            }
-            unset($user['password']);
-            // Change the BAN flag of other logged-in users to on
-            $this->SessionModel->updateSessionBanFlagOn($username, session_id());
-            // Store login user data in session
-            $_SESSION['user'] = $user;
-            return true;
-          }
-
-          public function signout() {
-            session_destroy();
-          }
-
-          public function isBanUser(string $sessionId) {
-            return $this->SessionModel->isBanById(session_id());
-          }
+      /**
+       * @Access(allow_login=true, allow_logoff=false)
+       */
+      public function signout() {
+        try {
+          $this->UserService->signout();
+          redirect('/signin');
+        } catch (\Throwable $e) {
+          parent::error($e->getMessage(), HTTP_BAD_REQUEST);
         }
-        ```
+      }
+    }
+    ```
 
-    - models/SessionModel.php:
+    public/assets/signin.js: 
 
-        ```php
-        class SessionModel extends \AppModel {
-
-          const TABLE = 'session';
-
-          public function updateSessionBanFlagOn($username, string $id) {
-            parent
-              ::set('ban', 1)
-              ::where('username', $username)
-              ::where('id !=', $id)
-              ->update();
-          }
-
-          public function isBanById(string $id): bool {
-            return parent
-              ::where('id', $id)
-              ::where('ban', 1)
-              ::count_all_results() > 0;
-          }
-        }
-        ```
-
-    - controllers/api/User.php
-
-        ```php
-        use \X\Annotation\Access;
-        use const \X\Constant\HTTP_BAD_REQUEST;
-        use const \X\Constant\HTTP_CREATED;
-        use const \X\Constant\HTTP_NO_CONTENT;
-
-        class User extends AppController {
-
-          protected $model = [
-            'UserService',
-            'UserModel',
-          ];
-
-          /**
-           * @Access(allow_login=false, allow_logoff=true)
-           */
-          public function signin() {
-            try {
-              $this->form_validation
-                ->set_data($this->input->post())
-                ->set_rules('username', 'username', 'required|max_length[30]')
-                ->set_rules('password', 'password', 'required|max_length[30]');
-              if (!$this->form_validation->run()) {
-                return parent::error(print_r($this->form_validation->error_array(), true), HTTP_BAD_REQUEST);
-              }
-              $result = $this->UserService->signin($this->input->post('username'), $this->input->post('password'));
-              parent
-                ::set($result)
-                ::json();
-            } catch (\Throwable $e) {
-              parent::error($e->getMessage(), HTTP_BAD_REQUEST);
-            }
-          }
-
-          /**
-           * @Access(allow_login=true, allow_logoff=false)
-           */
-          public function signout() {
-            try {
-              $this->UserService->signout();
-              redirect('/signin');
-            } catch (\Throwable $e) {
-              parent::error($e->getMessage(), HTTP_BAD_REQUEST);
-            }
-          }
-        }
-        ```
-
-    - public/assets/signin.js
-
-        ```js
-        (() => {
-          /**
-           * Set up login form
-           *
-           * @return {void}
-           */
-          function setupLoginForm() {
-            const validator = $('#signupForm').validate({
-              submitHandler: async (form, event) => {
-                event.preventDefault();
-                const response = await $.ajax({
-                  url: 'api/user/signin',
-                  type: 'POST',
-                  data: new FormData(form),
-                  processData: false,
-                  contentType: false
-                });
-                console.log('response=', response);
-                if (!response) {
-                  return void validator.showErrors({ username: 'Wrong username or password' });
-                }
-                location.href = '/';
-              }
+    ```js
+    (() => {
+      /**
+       * Set up login form
+       *
+       * @return {void}
+       */
+      function setupLoginForm() {
+        const validator = $('#signupForm').validate({
+          submitHandler: async (form, event) => {
+            event.preventDefault();
+            const response = await $.ajax({
+              url: 'api/user/signin',
+              type: 'POST',
+              data: new FormData(form),
+              processData: false,
+              contentType: false
             });
+            console.log('response=', response);
+            if (!response) {
+              return void validator.showErrors({ username: 'Wrong username or password' });
+            }
+            location.href = '/';
           }
+        });
+      }
 
-          // Set up login form
-          setupLoginForm();
+      // Set up login form
+      setupLoginForm();
 
-          // Display BAN message
-          if (Cookies.get('show_ban_message')) {
-            Cookies.remove('show_ban_message')
-            alert('Logged out because it was logged in on another terminal.');
-          }
-        })();
-        ````
+      // Display BAN message
+      if (Cookies.get('show_ban_message')) {
+        Cookies.remove('show_ban_message')
+        alert('Logged out because it was logged in on another terminal.');
+      }
+    })();
+    ````
 
 ## [3.5.0] - 2020-5-19
 

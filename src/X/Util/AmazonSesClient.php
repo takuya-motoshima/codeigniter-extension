@@ -2,8 +2,7 @@
 /**
  * Email Amazon SES util class
  * 
- * e.g.:
- * ## PHP sample code:
+ * ```php
  * use \X\Util\AmazonSesClient;
  * $sesClient  = new AmazonSesClient([
  *   'credentials' => [
@@ -17,9 +16,11 @@
  *   ->to('who@sample.org')
  *   ->message_from_xml('sample', ['name' => 'Sample'])
  *   ->send();
- * 
- * 
- * ## Email body and subject: views/email/sample.xml
+ * ```
+ *
+ * Email body and subject: views/email/sample.xml.
+ *
+ * ```xml
  * <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
  * <mail>
  * <subject>Email subject</subject>
@@ -29,6 +30,7 @@
  * Email body
  * </message>
  * </mail>
+ * ```
  * 
  * @author     Takuya Motoshima <https://www.facebook.com/takuya.motoshima.7>
  * @license    MIT License

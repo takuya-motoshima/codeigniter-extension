@@ -16,13 +16,14 @@ final class IpUtils {
   /**
    * Returns true for IPv4 format.
    *
-   * @example
+   * ```php
    * // IPv4 format check.
    * IpUtils::isIPv4('234.192.0.2');// true
    * IpUtils::isIPv4('234.198.51.100');// true
    * IpUtils::isIPv4('234.203.0.113');// true
    * IpUtils::isIPv4('0000:0000:0000:0000:0000:ffff:7f00:0001');// false
    * IpUtils::isIPv4('::1');// false
+   * ```
    * 
    * @param  string  $ip
    * @return boolean
@@ -34,13 +35,14 @@ final class IpUtils {
   /**
    * Returns true for IPv6 format.
    *
-   * @example
+   * ```php
    * // IPv6 format check.
    * IpUtils::isIPv6('234.192.0.2');// false
    * IpUtils::isIPv6('234.198.51.100');// false
    * IpUtils::isIPv6('234.203.0.113');// false
    * IpUtils::isIPv6('0000:0000:0000:0000:0000:ffff:7f00:0001');// true
    * IpUtils::isIPv6('::1');// true
+   * ```
    * 
    * @param  string  $ip
    * @return boolean
@@ -52,7 +54,7 @@ final class IpUtils {
   /**
    * Checks if an IPv4 or IPv6 address is contained in the list of given IPs or subnets.
    *
-   * @example
+   * ```php
    * // IP range check.
    * // 202.210.220.64/28
    * IpUtils::inRange('202.210.220.63', '202.210.220.64/28');// false
@@ -97,7 +99,8 @@ final class IpUtils {
    * IpUtils::inRange('2404:7A81:B0A0:9100:FFFF:FFFF:FFFF:FFFE', '2404:7A81:B0A0:9100::/64');// true
    * IpUtils::inRange('2404:7A81:B0A0:9100:FFFF:FFFF:FFFF:FFFF', '2404:7A81:B0A0:9100::/64');// true
    * IpUtils::inRange('2404:7A81:B0A0:9101:0000:0000:0000:0000', '2404:7A81:B0A0:9100::/64');// false
-   * 
+   * ```
+   *
    * @param string|array $ips List of IPs or subnets (can be a string if only a single one)
    * @return bool Whether the IP is valid
    */
@@ -115,7 +118,7 @@ final class IpUtils {
    * Compares two IPv4 addresses.
    * In case a subnet is given, it checks if it contains the request IP.
    * 
-   * @example
+   * ```php
    * // IPv4 range check.
    * // 202.210.220.64/28
    * IpUtils::inRangeIPv4('202.210.220.63', '202.210.220.64/28')// false
@@ -142,7 +145,8 @@ final class IpUtils {
    * IpUtils::inRangeIPv4('118.238.251.129', '118.238.251.130');// false
    * IpUtils::inRangeIPv4('118.238.251.130', '118.238.251.130');// true
    * IpUtils::inRangeIPv4('118.238.251.131', '118.238.251.130');// false
-   * 
+   * ```
+   *
    * @param string $ip IPv4 address or subnet in CIDR notation
    * @return bool Whether the request IP matches the IP, or whether the request IP is within the CIDR subnet
    */
@@ -166,7 +170,7 @@ final class IpUtils {
    * Compares two IPv6 addresses.
    * In case a subnet is given, it checks if it contains the request IP.
    *
-   * @example
+   * ```php
    * // IPv6 range check.
    * IpUtils::inRangeIPv6('2404:7A81:B0A0:90FF:0000:0000:0000:0000', '2404:7A81:B0A0:9100::/64');// false
    * IpUtils::inRangeIPv6('2404:7A81:B0A0:9100:0000:0000:0000:0000', '2404:7A81:B0A0:9100::/64');// true
@@ -176,7 +180,8 @@ final class IpUtils {
    * IpUtils::inRangeIPv6('2404:7A81:B0A0:9100:FFFF:FFFF:FFFF:FFFE', '2404:7A81:B0A0:9100::/64');// true
    * IpUtils::inRangeIPv6('2404:7A81:B0A0:9100:FFFF:FFFF:FFFF:FFFF', '2404:7A81:B0A0:9100::/64');// true
    * IpUtils::inRangeIPv6('2404:7A81:B0A0:9101:0000:0000:0000:0000', '2404:7A81:B0A0:9100::/64');// false
-   * 
+   * ```
+   *
    * @param string $ip IPv6 address or subnet in CIDR notation
    * @return bool Whether the IP is valid
    */
@@ -209,10 +214,11 @@ final class IpUtils {
   /**
    * Get client ip from X-Forwarded-For.
    *
-   * @example
+   * ```php
    * // Get client ip.
    * IpUtils::getClientIpFromXFF();//  202.210.220.78
-   * 
+   * ```
+   *
    * @return string
    */
   public static function getClientIpFromXFF() :?string {

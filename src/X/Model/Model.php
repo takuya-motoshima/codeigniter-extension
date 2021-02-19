@@ -99,7 +99,7 @@ abstract class Model extends \CI_Model {
    *
    * Compiles insert strings and runs the queries
    *
-   * e.g.
+   * ```php
    *   $SampleModel
    *     ->set([
    *       'key' => '1',
@@ -114,6 +114,7 @@ abstract class Model extends \CI_Model {
    *     ->set('title', 'My title')
    *     ->set('name', 'My Name')
    *     ->insert_on_duplicate_update();
+   * ```
    *
    * @param   string $table = '' Table to insert into
    * @param   array|object $set = null an associative array of insert values
@@ -133,7 +134,7 @@ abstract class Model extends \CI_Model {
    *
    * Compiles batch insert strings and runs the queries
    *
-   * e.g.
+   * ```php
    *   $SampleModel
    *     ->set_insert_batch([
    *       [
@@ -148,6 +149,7 @@ abstract class Model extends \CI_Model {
    *       ]
    *     ])
    *     ->insert_on_duplicate_update_batch();
+   * ```
    *
    * @param   string $table = '' Table to insert into
    * @param   array|object $set = null an associative array of insert values

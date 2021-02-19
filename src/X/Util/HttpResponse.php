@@ -212,21 +212,26 @@ final class HttpResponse {
    * provide content to the end user from the internally redirected location,
    * and free up the backend to handle other requests.
    *
-   * .e.g.
-   *  Nginx configuration example:
-   *  # Will serve /var/www/files/myfile
-   *  # When passed URI /protected_files/myfile
-   *  location /protected_files {
-   *    internal;
-   *    alias /var/www/files;
-   *  }
+   * Nginx configuration example.
    *
-   *  Codeigniter controller example:
-   *  class Files extends \X\Controller\Controller {
-   *    public function index(string $fileName) {
-   *      parent::internalRedirect('/protected_files/myfile');
-   *    }
-   *  }
+   * ```nginx
+   * # Will serve /var/www/files/myfile
+   * # When passed URI /protected_files/myfile
+   * location /protected_files {
+   *   internal;
+   *   alias /var/www/files;
+   * }
+   * ```
+   * 
+   *  Codeigniter controller example.
+   *
+   * ```php
+   * class Files extends \X\Controller\Controller {
+   *   public function index(string $fileName) {
+   *     parent::internalRedirect('/protected_files/myfile');
+   *   }
+   * }
+   * ```
    *  
    * @param  string $internalRedirectPath
    * @return void

@@ -13,7 +13,7 @@ trait Result {
   /**
    * Query result. "array of the form KeyValue" version.
    *
-   * .e.g:
+   * ```php
    * $rows = parent
    *   select('id,name')::
    *   from('user')::
@@ -32,7 +32,8 @@ trait Result {
    * //     'department' => 'Marketing',
    * //   ),
    * // )
-   * 
+   * ```
+   *
    * @throws RuntimeException
    * @param  string $key = 'id'
    * @return  array

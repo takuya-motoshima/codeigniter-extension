@@ -39,7 +39,7 @@ final class Cipher {
   /**
    * Encrypt.
    *
-   * @example
+   * ```php
    * use \X\Util\Cipher;
    *
    * // Get the initialization vector. This should be changed every time to make it difficult to predict.
@@ -56,7 +56,8 @@ final class Cipher {
    *
    * // Decrypt.
    * $decrypted = Cipher::decrypt($encrypted, $key, $iv);// Hello, World.
-   * 
+   * ```
+   *
    * @param  string $plaintext
    * @param  string $key
    * @param  string $iv
@@ -71,7 +72,7 @@ final class Cipher {
   /**
    * Decrypt.
    *
-   * @example
+   * ```php
    * use \X\Util\Cipher;
    *
    * // Get the initialization vector. This should be changed every time to make it difficult to predict.
@@ -88,7 +89,8 @@ final class Cipher {
    *
    * // Decrypt.
    * $decrypted = Cipher::decrypt($encrypted, $key, $iv);// Hello, World.
-   * 
+   * ```
+   *
    * @param  string $encrypted
    * @param  string $key
    * @param  string $iv

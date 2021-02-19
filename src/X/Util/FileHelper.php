@@ -33,14 +33,15 @@ final class FileHelper {
    * 
    * Move
    * 
-   * e.g:
+   * ```php
    * // /tmp/old.txt -> /home/new.txt
    * \X\Util\FileHelper::move('/tmp/old.txt', '/home/new.txt');
    * // /tmp/old.txt -> ./tmp/new.txt
    * \X\Util\FileHelper::move('/tmp/old.txt', 'new.txt');
    * // /tmp/old.txt -> ./tmp/new.txt
    * \X\Util\FileHelper::move('/tmp/old.txt', 'new');
-   *  
+   * ```
+   * 
    * @throws RuntimeException
    * @param string $srcFile
    * @param string $dstFile
@@ -135,12 +136,13 @@ final class FileHelper {
   /**
    * Find file
    * 
-   * @example
+   * ```php
    * use \X\Util\FileHelper;
    *
    * // Search only image files.
    * FileHelper::find('/img/*.{jpg,jpeg,png,gif}', GLOB_BRACE);
-   * 
+   * ```
+   *
    * @param  string      $pattern 
    * @param  int|integer $flags
    *                     Valid flags:
@@ -224,7 +226,7 @@ final class FileHelper {
   /**
    * Returns the total size of all files in the directory in bytes.
    * 
-   * @example
+   * ```php
    * use \X\Util\FileHelper;
    *
    * // Returns the total size of all files in a directory
@@ -232,7 +234,8 @@ final class FileHelper {
    *
    * // Returns the total size of all files in multiple directories
    * FileHelper::getDirectorySize([ '/var/log/php-fpm' '/var/log/nginx' ]);
-   * 
+   * ```
+   *
    * @param  string|array $dirs
    * @param  SplFileInfo[] $infos
    * @return int
@@ -250,4 +253,30 @@ final class FileHelper {
     }
     return $size;
   }
+
+  /**
+   * Returns the file size with units.
+   *
+   * ```php
+   * use \X\Util\FileHelper;
+   *
+   * FileHelper::humanFilesize('/var/somefile.txt', 0);// 12B
+   * FileHelper::humanFilesize('/var/somefile.txt', 4);// 1.1498GB
+   * FileHelper::humanFilesize('/var/somefile.txt', 1);// 117.7MB
+   * FileHelper::humanFilesize('/var/somefile.txt', 5);// 11.22833TB
+   * FileHelper::humanFilesize('/var/somefile.txt', 3);// 1.177MB
+   * FileHelper::humanFilesize('/var/somefile.txt');// 120.56KB
+   * ```
+   * 
+   * @param  string      $filepath File Path
+   * @param  int|integer $decimals Decimal digits
+   * @return string                File size with units 
+   */
+  public static function humanFilesize(string $filepath, int $decimals = 2): string {
+    $bytes = file_exists($filepath) ? filesize($filepath) : 0;
+    $factor = floor((strlen($bytes) - 1) / 3);
+    if ($factor > 0) $sz = 'KMGT';
+    return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . @$sz[$factor - 1] . 'B';
+  }
 }
+

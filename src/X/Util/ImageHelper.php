@@ -17,10 +17,12 @@ final class ImageHelper {
    * 
    * Put base64 image.
    *
-   * e.g.:
+   * ```php
    * use \X\Util\ImageHelper;
+   *
    * ImageHelper::putBase64('data:image/png;base64,iVBOR...', '/tmp', 'sample');
    * ImageHelper::putBase64('data:image/png;base64,iVBOR...', '/tmp/sample.png');
+   * ```
    *
    * @param string $base64
    * @param string $dir
@@ -58,13 +60,14 @@ final class ImageHelper {
    * 
    * Copy image.
    *
-   * e.g:
-   *  // /tmp/example.png -> /home/example.png
-   *  \X\Util\ImageHelper::copy('/tmp/example.png', '/home');
+   * ```php
+   * // /tmp/example.png -> /home/example.png
+   * \X\Util\ImageHelper::copy('/tmp/example.png', '/home');
    *
-   *  // /tmp/old.png -> /home/new.png
-   *  \X\Util\ImageHelper::copy('/tmp/old.png', '/home', 'new');
-   *  
+   * // /tmp/old.png -> /home/new.png
+   * \X\Util\ImageHelper::copy('/tmp/old.png', '/home', 'new');
+   * ```
+   * 
    * @param string $srcImgPath
    * @param string $dstDirpath
    * @param string $dstImgName

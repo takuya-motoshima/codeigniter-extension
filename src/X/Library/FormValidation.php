@@ -29,7 +29,7 @@ abstract class FormValidation extends \CI_Form_validation {
   /**
   * Validate datetime.
   *
-  * @example
+  * ```php
   * $this->form_validation
   *   ->set_data(['datetime' => '2021-02-03 17:46:00'])
   *   ->set_rules('datetime', 'datetime', 'required|datetime[Y-m-d H:i:s]');
@@ -38,6 +38,7 @@ abstract class FormValidation extends \CI_Form_validation {
   * } else {
   *   echo validation_errors();
   * }
+  * ```
   * 
   * @param  string $input  Input value.
   * @param  string $format Date format

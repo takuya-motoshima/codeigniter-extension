@@ -17,10 +17,12 @@ final class VideoHelper {
    * 
    * Put base64 video.
    *
-   * e.g.:
+   * ```php
    * use \X\Util\VideoHelper;
+   * 
    * VideoHelper::putBase64('data:video/mp4;base64,iVBOR...', '/tmp', 'sample');
    * VideoHelper::putBase64('data:video/mp4;base64,iVBOR...', '/tmp/sample.mp4');
+   * ```
    *
    * @param string $base64
    * @param string $dir

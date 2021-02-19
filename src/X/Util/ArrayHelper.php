@@ -13,7 +13,7 @@ final class ArrayHelper {
   /**
    * Searches and returns the value of the specified key from the array
    *
-   * @example
+   * ```php
    * use \X\Util\ArrayHelper;
    *
    * // Search from a simple array
@@ -36,6 +36,7 @@ final class ArrayHelper {
    *     'USA' => 'New York'
    *   ]
    * ];
+   * ```
    * 
    * ArrayHelper::searchArrayByKey('USA', $nested);
    * // New York
@@ -81,7 +82,7 @@ final class ArrayHelper {
   /**
    * Group associative arrays by key..
    * 
-   * @example
+   * ```php
    * use \X\Util\ArrayHelper;
    *
    * $foods = [
@@ -108,7 +109,8 @@ final class ArrayHelper {
    * //     ['name' => 'beer',        'category' => 'drink']
    * //   ]
    * // ]
-   * 
+   * ```
+   *
    * @param  array  $array    Arrays you want to group.
    * @param  string $groupkey Group key.
    * @return [type]           Grouped arrays.
