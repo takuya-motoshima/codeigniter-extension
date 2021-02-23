@@ -1,5 +1,9 @@
 # Changelog
 
+## [3.8.8] - 2021-02-23
+
+* Organized readme and added batch lock test program.
+
 ## [3.8.7] - 2021-02-19
 
 - Added a method to the file helper that returns a file size with units.
