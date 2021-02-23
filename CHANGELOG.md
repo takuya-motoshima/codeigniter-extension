@@ -95,7 +95,7 @@
 
 - Added form validation class.The reason I added it is that I want to validate it with the model(\X\Util\Validation).
 
-    Define the SES "access key" and "secret" in examples/.env.  
+    Define the SES "access key" and "secret" in sampleapp/.env.  
 
     ```php
     use \X\Util\AmazonSesClient;

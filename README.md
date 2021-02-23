@@ -5,11 +5,7 @@ It extends the core classes (controllers, models, views) and adds useful librari
 
 This package installs the offical [CodeIgniter](https://github.com/bcit-ci/CodeIgniter) (version `3.1.*`) with secure folder structure via Composer.
 
-## Changelog
-
-See [CHANGELOG.md](./CHANGELOG.md).
-
-## Requirements
+The following must be installed before running this package.  
 
 * PHP 7.3.0 or later
 * composer
@@ -18,34 +14,41 @@ See [CHANGELOG.md](./CHANGELOG.md).
 * php-mbstring
 * php-xml
 
+## Changelog
+
+See [CHANGELOG.md](./CHANGELOG.md).
+
+## Examples
+
+The sample application is in "./sampleapp", so please refer to it.
+
 ## Getting Started
 
-### Create project.
+Create project.  
 
 ```sh
-composer create-project takuya-motoshima/codeIgniter-extension myapp
+composer create-project takuya-motoshima/codeIgniter-extension myapp;
 ```
 
-### Grant log, session, and cache write permissions to the web server.
+Grant log, session, and cache write permissions to the web server.  
 
 ```sh
 sudo chmod -R 755 ./application/{logs,cache,session};
 sudo chown -R nginx:nginx ./application/{logs,cache,session};
 ```
 
-### Web server settings.
-
-Add the following to /etc/nginx/conf.d/{Your application name}.conf.  
+Web server settings.  
+Add the following to /etc/nginx/conf.d/<Your application name>.conf.  
 
 When accessing with the root URL.  
 A sample nginx config file can be found in [nginx.sample.conf](./nginx.sample.conf).  
 
-When the domain is the same and the URL is separated. e.g. //{Your server name}/admin
+When the domain is the same and the URL is separated. e.g. //<Your server name>/admin
 
 ```nginx
-location /{Your application name} {
-  alias {Your application root directory}/public;
-  try_files $uri $uri/ /{Your application name}/index.php;
+location /<Your application name> {
+  alias <Your application root directory>/public;
+  try_files $uri $uri/ /<Your application name>/index.php;
   location ~ \.php$ {
     fastcgi_split_path_info ^(.+\.php)(/.+)$;
     fastcgi_index index.php;
@@ -63,15 +66,13 @@ Restart nginx to reflect the setting.
 sudo systemctl restart nginx;
 ```
 
-### Application settings.
+## Usage
 
-Open config.  
+See [https://codeigniter.com/](https://codeigniter.com/) for basic usage of Codeigniter.  
 
-```sh
-vim ./application/config/config.php;
-```
+### About application config
 
-Edit content:  
+The basic settings are defined in ./application/config/config.php.  
 
 |Name|Before|After|
 |--|--|--|
@@ -83,137 +84,72 @@ Edit content:
 |composer_autoload|FALSE|realpath(APPPATH . '../vendor/autoload.php');|
 |index_page|'index.php'|''|
 
-## Project structure.
+### Access control of action by annotation  
 
-```sh
-.
-|-- src
-|   `-- X
-|       |-- Annotation
-|       |   |-- Access.php
-|       |   `-- AnnotationReader.php
-|       |-- Composer
-|       |   `-- Installer.php
-|       |-- Constant
-|       |   |-- Environment.php
-|       |   `-- HttpStatus.php
-|       |-- Controller
-|       |   `-- Controller.php
-|       |-- Data
-|       |   `-- address.json
-|       |-- Database
-|       |   |-- DB.php
-|       |   |-- Driver
-|       |   |   |-- Cubrid
-|       |   |   |-- Ibase
-|       |   |   |-- Mssql
-|       |   |   |-- Mysql
-|       |   |   |-- Mysqli
-|       |   |   |-- Oci8
-|       |   |   |-- Odbc
-|       |   |   |-- Pdo
-|       |   |   |-- Postgre
-|       |   |   |-- Sqlite
-|       |   |   |-- Sqlite3
-|       |   |   `-- Sqlsrv
-|       |   |-- QueryBuilder.php
-|       |   `-- Result.php
-|       |-- Exception
-|       |   |-- AccessDeniedException.php
-|       |   `-- RestClientException.php
-|       |-- Hook
-|       |   `-- Authenticate.php
-|       |-- Library
-|       |   |-- Input.php
-|       |   `-- Router.php
-|       |-- Model
-|       |   |-- AddressModel.php
-|       |   |-- Model.php
-|       |   |-- SessionModelInterface.php
-|       |   `-- SessionModel.php
-|       `-- Util
-|           |-- AmazonRekognitionClient.php
-|           |-- AmazonSesClient.php
-|           |-- ArrayHelper.php
-|           |-- Cipher.php
-|           |-- CsvHelper.php
-|           |-- DateHelper.php
-|           |-- EMail.php
-|           |-- FileHelper.php
-|           |-- HtmlHelper.php
-|           |-- HttpResponse.php
-|           |-- ImageHelper.php
-|           |-- Iterator.php
-|           |-- Loader.php
-|           |-- Logger.php
-|           |-- RestClient.php
-|           |-- SessionHelper.php
-|           |-- StringHelper.php
-|           |-- Template.php
-|           `-- UrlHelper.php
-|-- composer.json
-|-- composer.json.dist
-|-- composer.lock
-|-- composer.phar
-|-- core.dist
-|   |-- AppController.php
-|   |-- AppInput.php
-|   `-- AppModel.php
-|-- dot.gitattributes.dist
-|-- dot.gitignore.dist
-|-- dot.htaccess
-|-- LICENSE.md
-|-- package.json.dist
-|-- README.md
-|-- script.js
-|-- examples/
-|-- views.dist
-|   |-- common
-|   |   `-- base.html
-|   `-- index.html
-`-- webpack.config.js.dist
+application/config/hooks.php:  
+
+```php
+use \X\Annotation\AnnotationReader;
+
+// Add access control to hooks.
+$hook['post_controller_constructor'] = function() {
+  $ci =& get_instance();
+
+  // Get access from annotations.
+  $accessibility = AnnotationReader::getAccessibility($ci->router->class, $ci->router->method);
+
+  // Whether you are logged in.
+  $islogin = !empty($_SESSION['user']);
+
+  // Whether it is HTTP access.
+  $ishttp = !is_cli();
+
+  // Request URL.
+  $requesturl = $ci->router->directory . $ci->router->class . '/' . $ci->router->method;
+
+  // When accessed by HTTP.
+  if ($ishttp) {
+    // Returns an error if HTTP access is not allowed.
+    if (!$accessibility->allow_http) throw new \RuntimeException('HTTP access is not allowed.');
+
+    // When the logged-in user calls a request that only the log-off user can access, redirect to the dashboard.
+    // It also redirects to the login page when the log-off user calls a request that only the logged-in user can access.
+    if ($islogin && !$accessibility->allow_login) redirect('/dashboard');
+    else if (!$islogin && !$accessibility->allow_logoff) redirect('/login');
+  } else {
+    // When executed with CLI.
+  }
+};
 ```
 
-## Reference
+application/ccontrollers/Sample.php:  
 
-- [CodeIgniter Web Framework](https://codeigniter.com/)  
-- Access control of action by annotation  
-
-    application/config/hooks.php:  
-
-    ```php
-    use \X\Annotation\AnnotationReader;  
-    $hook['post_controller_constructor'] = function() {  
-     $ci =& get_instance();
-     $accessControl = AnnotationReader::getMethodAccessControl($ci->router->class, $ci->router->method);
-     $loggedin = !empty($_SESSION['user']);
-     if ($loggedin && !$accessControl->allowLoggedin) {
-       // In case of an action that the logged-in user can not access
-       redirect('/dashboard');
-     } else if (!$loggedin && !$accessControl->allowLoggedoff) {
-       // In case of an action that can not be accessed by the user who is logging off
-       redirect('/login');
-     }
-    };
-    ```
-
-    application/ccontrollers/Example.php:  
-
-    ```php
-    use \X\Annotation\AccessControl;
-    class Example extends AppController
-    {
-     /**
-      * @AccessControl(allowLoggedin=false, allowLoggedoff=true)
-      */
-     public function login() {}
-
-     /**
-      * @AccessControl(allowLoggedin=true, allowLoggedoff=false)
-      */
-     public function dashboard() {}
-    }
-    ```
+```php
+use \X\Annotation\Access;
+class Sample extends AppController {
+  
+  /**
+   * Only log-off users can access it.
+   * 
+   * @Access(allow_login=false, allow_logoff=true)
+   */
+  public function login() {}
+  
+  /**
+   * Only logged-in users can access it..
+   * 
+   * @Access(allow_login=true, allow_logoff=false)
+   */
+  public function dashboard() {}
+  
+  /**
+   * It can only be done with the CLI.
+   * 
+   * @Access(allow_http=false)
+   */
+  public function batch() {}
+}
+```
 
 ## License
 

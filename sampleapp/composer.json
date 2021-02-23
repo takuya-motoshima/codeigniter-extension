@@ -11,7 +11,8 @@
   ],
   "scripts": {
     "deploy": "cp -r ../src/X/* vendor/takuya-motoshima/codeigniter-extension/src/X/",
-    "syntax-check": "find ./application -name \"*.php\" | xargs -n1 php -l"
+    "syntax-check": "find ./application -name \"*.php\" | xargs -n1 php -l",
+    "log": "tail -f $(/bin/ls -1tr application/logs/* | /bin/sed -ne '$p')"
   },
   "require": {
     "php": "^7.0",
