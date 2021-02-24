@@ -86,73 +86,29 @@ sudo systemctl reload nginx;
 ```
 
 Create a DB.  
+Connect to MariaDB and execute the following command to build the DB.  
 
-```sql
-CREATE SCHEMA IF NOT EXISTS `codeigniter_extension_example` DEFAULT CHARACTER SET utf8mb4;
-use codeigniter_extension_example;
-
--- User role master.
-DROP TABLE IF EXISTS `role`;
-CREATE TABLE `role` (
-    `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-    `role` enum('admin','user') NOT NULL,
-    `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `modified` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (`id`),
-    UNIQUE KEY `ukRole1` (`role`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- User table.
-DROP TABLE IF EXISTS `user`;
-CREATE TABLE `user` (
-    `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-    `role` enum('admin','user') NOT NULL,
-    `username` varchar(255) NOT NULL,
-    `password` varchar(30) NOT NULL,
-    `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `modified` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (`id`),
-    UNIQUE KEY `ukUser1` (`username`),
-    CONSTRAINT `fkUser1` FOREIGN KEY (`role`) REFERENCES `role` (`role`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- Login session.
-DROP TABLE IF EXISTS `session`;
-CREATE TABLE IF NOT EXISTS `session` (
-    `id` varchar(128) NOT NULL,
-    -- `id` varchar(40) NOT NULL,
-    `username` varchar(255) DEFAULT NULL,
-    `ban` tinyint(1) NOT NULL DEFAULT 0,
-    `ip_address` varchar(45) NOT NULL,
-    `timestamp` int(10) unsigned DEFAULT 0 NOT NULL,
-    `data` blob NOT NULL,
-    KEY `ci_sessions_timestamp` (`timestamp`)
-);
-
--- test.
-DROP TABLE IF EXISTS `test`;
-CREATE TABLE IF NOT EXISTS `test` (
-    `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-    `thing` varchar(20) NOT NULL,
-    `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `modified` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (`id`)
-);
-
--- Add test data.
-INSERT INTO test(thing) VALUES ('Hawk'), ('Tiger'), ('Shark');
-INSERT INTO role(role) VALUES ('admin'), ('user');
-INSERT INTO user(role, username, password) VALUES ('admin', 'admin', 'admin'), ('user', 'user', 'user');
+```sh
+cd /var/www/html/sampleapp;
+mysql -u root;
+SOURCE ./ddl.sql;
 ```
-
 Please open the URL below and check that the login screen is displayed.  
 
 https://<Your host name>
 
 ## Command for testing
 
-Batch lock test.  
+Run a batch that prohibits multiple launches using file locks.  
 
 ```sh
-CI_ENV=development php public/index.php batch/locktest/run;
+cd /var/www/html/sampleapp;
+CI_ENV=development php public/index.php batch/runMultipleBatch/run/filelock;
+```
+
+Run a batch that prohibits multiple launches using advisory locks.  
+
+```sh
+cd /var/www/html/sampleapp;
+CI_ENV=development php public/index.php batch/runMultipleBatch/run/advisorylock;
 ```

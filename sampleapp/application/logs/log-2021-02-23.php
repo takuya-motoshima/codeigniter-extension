@@ -483,3 +483,326 @@ DEBUG - 2021-02-23 09:55:48 --> #16380 application/controllers/batch/Batch.php(4
 DEBUG - 2021-02-23 09:55:48 --> #16382 application/controllers/batch/Batch.php(40):B: Completed
 DEBUG - 2021-02-23 09:55:48 --> Total execution time: 0.3993
 DEBUG - 2021-02-23 09:55:48 --> Total execution time: 0.4060
+DEBUG - 2021-02-23 18:59:39 --> UTF-8 Support Enabled
+DEBUG - 2021-02-23 18:59:39 --> Global POST, GET and COOKIE data sanitized
+DEBUG - 2021-02-23 18:59:39 --> Session: Initialization under CLI aborted.
+DEBUG - 2021-02-23 18:59:39 --> Total execution time: 0.0320
+DEBUG - 2021-02-23 18:59:39 --> UTF-8 Support Enabled
+DEBUG - 2021-02-23 18:59:39 --> Global POST, GET and COOKIE data sanitized
+DEBUG - 2021-02-23 18:59:39 --> UTF-8 Support Enabled
+DEBUG - 2021-02-23 18:59:39 --> Session: Initialization under CLI aborted.
+DEBUG - 2021-02-23 18:59:39 --> Global POST, GET and COOKIE data sanitized
+DEBUG - 2021-02-23 18:59:39 --> Session: Initialization under CLI aborted.
+DEBUG - 2021-02-23 18:59:40 --> #19655 application/controllers/batch/Batch.php(38):B: Start
+DEBUG - 2021-02-23 18:59:40 --> #19653 application/controllers/batch/Batch.php(38):A: Start
+DEBUG - 2021-02-23 18:59:40 --> #19655 application/controllers/batch/Batch.php(38):B: Completed
+DEBUG - 2021-02-23 18:59:40 --> #19653 application/controllers/batch/Batch.php(38):A: Completed
+DEBUG - 2021-02-23 18:59:40 --> Total execution time: 0.8794
+DEBUG - 2021-02-23 18:59:40 --> Total execution time: 0.8871
+DEBUG - 2021-02-23 19:00:02 --> UTF-8 Support Enabled
+DEBUG - 2021-02-23 19:00:02 --> Global POST, GET and COOKIE data sanitized
+DEBUG - 2021-02-23 19:00:02 --> Session: Initialization under CLI aborted.
+DEBUG - 2021-02-23 19:00:02 --> Total execution time: 0.0345
+DEBUG - 2021-02-23 19:00:02 --> UTF-8 Support Enabled
+DEBUG - 2021-02-23 19:00:02 --> Global POST, GET and COOKIE data sanitized
+DEBUG - 2021-02-23 19:00:02 --> UTF-8 Support Enabled
+DEBUG - 2021-02-23 19:00:02 --> Session: Initialization under CLI aborted.
+DEBUG - 2021-02-23 19:00:02 --> Global POST, GET and COOKIE data sanitized
+DEBUG - 2021-02-23 19:00:02 --> Session: Initialization under CLI aborted.
+DEBUG - 2021-02-23 19:00:03 --> #19714 application/controllers/batch/Batch.php(38):B: Start
+DEBUG - 2021-02-23 19:00:03 --> #19712 application/controllers/batch/Batch.php(38):A: Start
+DEBUG - 2021-02-23 19:00:03 --> #19714 application/controllers/batch/Batch.php(38):B: Completed
+DEBUG - 2021-02-23 19:00:03 --> #19712 application/controllers/batch/Batch.php(38):A: Completed
+DEBUG - 2021-02-23 19:00:03 --> Total execution time: 0.8028
+DEBUG - 2021-02-23 19:00:03 --> Total execution time: 0.8108
+DEBUG - 2021-02-23 19:00:24 --> UTF-8 Support Enabled
+DEBUG - 2021-02-23 19:00:24 --> Global POST, GET and COOKIE data sanitized
+DEBUG - 2021-02-23 19:00:24 --> Session: Initialization under CLI aborted.
+DEBUG - 2021-02-23 19:00:24 --> Total execution time: 0.0335
+DEBUG - 2021-02-23 19:00:24 --> UTF-8 Support Enabled
+DEBUG - 2021-02-23 19:00:24 --> UTF-8 Support Enabled
+DEBUG - 2021-02-23 19:00:24 --> Global POST, GET and COOKIE data sanitized
+DEBUG - 2021-02-23 19:00:24 --> Global POST, GET and COOKIE data sanitized
+DEBUG - 2021-02-23 19:00:24 --> Session: Initialization under CLI aborted.
+DEBUG - 2021-02-23 19:00:24 --> Session: Initialization under CLI aborted.
+DEBUG - 2021-02-23 19:00:25 --> #19725 application/controllers/batch/Batch.php(38):A: Start
+DEBUG - 2021-02-23 19:00:25 --> #19725 application/controllers/batch/Batch.php(38):A: Completed
+DEBUG - 2021-02-23 19:00:25 --> #19727 application/controllers/batch/Batch.php(38):B: Start
+DEBUG - 2021-02-23 19:00:25 --> #19727 application/controllers/batch/Batch.php(38):B: Completed
+DEBUG - 2021-02-23 19:00:25 --> Total execution time: 0.4533
+DEBUG - 2021-02-23 19:00:25 --> Total execution time: 0.4536
+DEBUG - 2021-02-23 19:09:10 --> UTF-8 Support Enabled
+DEBUG - 2021-02-23 19:09:10 --> Global POST, GET and COOKIE data sanitized
+DEBUG - 2021-02-23 19:09:10 --> Session: Initialization under CLI aborted.
+DEBUG - 2021-02-23 19:09:10 --> Total execution time: 0.0271
+DEBUG - 2021-02-23 19:09:10 --> UTF-8 Support Enabled
+DEBUG - 2021-02-23 19:09:10 --> Global POST, GET and COOKIE data sanitized
+ERROR - 2021-02-23 19:09:10 --> #19765 application/config/hooks.php(34):ParseError Object
+(
+    [message:protected] => syntax error, unexpected 'exit' (T_EXIT)
+    [string:Error:private] => 
+    [code:protected] => 0
+    [file:protected] => /var/www/html/codeigniter-extension/sampleapp/application/controllers/batch/Batch.php
+    [line:protected] => 34
+    [trace:Error:private] => Array
+        (
+            [0] => Array
+                (
+                    [file] => /var/www/html/codeigniter-extension/sampleapp/public/index.php
+                    [line] => 315
+                    [function] => require_once
+                )
+
+        )
+
+    [previous:Error:private] => 
+)
+
+DEBUG - 2021-02-23 19:09:10 --> UTF-8 Support Enabled
+DEBUG - 2021-02-23 19:09:10 --> Global POST, GET and COOKIE data sanitized
+ERROR - 2021-02-23 19:09:10 --> #19767 application/config/hooks.php(34):ParseError Object
+(
+    [message:protected] => syntax error, unexpected 'exit' (T_EXIT)
+    [string:Error:private] => 
+    [code:protected] => 0
+    [file:protected] => /var/www/html/codeigniter-extension/sampleapp/application/controllers/batch/Batch.php
+    [line:protected] => 34
+    [trace:Error:private] => Array
+        (
+            [0] => Array
+                (
+                    [file] => /var/www/html/codeigniter-extension/sampleapp/public/index.php
+                    [line] => 315
+                    [function] => require_once
+                )
+
+        )
+
+    [previous:Error:private] => 
+)
+
+DEBUG - 2021-02-23 19:09:23 --> UTF-8 Support Enabled
+DEBUG - 2021-02-23 19:09:23 --> Global POST, GET and COOKIE data sanitized
+DEBUG - 2021-02-23 19:09:23 --> Session: Initialization under CLI aborted.
+DEBUG - 2021-02-23 19:09:23 --> Total execution time: 0.0268
+DEBUG - 2021-02-23 19:09:23 --> UTF-8 Support Enabled
+DEBUG - 2021-02-23 19:09:23 --> Global POST, GET and COOKIE data sanitized
+DEBUG - 2021-02-23 19:09:23 --> UTF-8 Support Enabled
+DEBUG - 2021-02-23 19:09:23 --> Session: Initialization under CLI aborted.
+DEBUG - 2021-02-23 19:09:23 --> Global POST, GET and COOKIE data sanitized
+DEBUG - 2021-02-23 19:09:23 --> Session: Initialization under CLI aborted.
+DEBUG - 2021-02-23 19:09:24 --> #19770 application/controllers/batch/Batch.php(56):A: Start
+DEBUG - 2021-02-23 19:09:24 --> #19770 application/controllers/batch/Batch.php(56):A: Completed
+DEBUG - 2021-02-23 19:09:24 --> Total execution time: 0.4085
+DEBUG - 2021-02-23 19:09:24 --> #19772 application/controllers/batch/Batch.php(56):B: Start
+DEBUG - 2021-02-23 19:09:24 --> #19772 application/controllers/batch/Batch.php(56):B: Completed
+DEBUG - 2021-02-23 19:09:24 --> Total execution time: 0.4035
+DEBUG - 2021-02-23 19:09:28 --> UTF-8 Support Enabled
+DEBUG - 2021-02-23 19:09:28 --> Global POST, GET and COOKIE data sanitized
+DEBUG - 2021-02-23 19:09:28 --> Session: Initialization under CLI aborted.
+DEBUG - 2021-02-23 19:09:28 --> Total execution time: 0.0294
+DEBUG - 2021-02-23 19:09:28 --> UTF-8 Support Enabled
+DEBUG - 2021-02-23 19:09:28 --> UTF-8 Support Enabled
+DEBUG - 2021-02-23 19:09:28 --> Global POST, GET and COOKIE data sanitized
+DEBUG - 2021-02-23 19:09:28 --> Global POST, GET and COOKIE data sanitized
+DEBUG - 2021-02-23 19:09:28 --> Session: Initialization under CLI aborted.
+DEBUG - 2021-02-23 19:09:28 --> Session: Initialization under CLI aborted.
+ERROR - 2021-02-23 19:09:29 --> Severity: Warning --> time_sleep_until(): Sleep until to time is less than current time /var/www/html/codeigniter-extension/sampleapp/application/controllers/batch/Batch.php 23
+DEBUG - 2021-02-23 19:09:29 --> #19775 application/controllers/batch/Batch.php(56):A: Start
+DEBUG - 2021-02-23 19:09:29 --> #19775 application/controllers/batch/Batch.php(56):A: Completed
+DEBUG - 2021-02-23 19:09:29 --> Total execution time: 0.0364
+ERROR - 2021-02-23 19:09:29 --> Severity: Warning --> time_sleep_until(): Sleep until to time is less than current time /var/www/html/codeigniter-extension/sampleapp/application/controllers/batch/Batch.php 23
+DEBUG - 2021-02-23 19:09:29 --> #19777 application/controllers/batch/Batch.php(56):B: Start
+DEBUG - 2021-02-23 19:09:29 --> #19777 application/controllers/batch/Batch.php(56):B: Completed
+DEBUG - 2021-02-23 19:09:29 --> Total execution time: 0.0380
+DEBUG - 2021-02-23 19:09:51 --> UTF-8 Support Enabled
+DEBUG - 2021-02-23 19:09:51 --> Global POST, GET and COOKIE data sanitized
+DEBUG - 2021-02-23 19:09:51 --> Session: Initialization under CLI aborted.
+DEBUG - 2021-02-23 19:09:51 --> Total execution time: 0.0270
+DEBUG - 2021-02-23 19:09:51 --> UTF-8 Support Enabled
+DEBUG - 2021-02-23 19:09:51 --> Global POST, GET and COOKIE data sanitized
+DEBUG - 2021-02-23 19:09:51 --> UTF-8 Support Enabled
+DEBUG - 2021-02-23 19:09:51 --> Session: Initialization under CLI aborted.
+DEBUG - 2021-02-23 19:09:51 --> Global POST, GET and COOKIE data sanitized
+DEBUG - 2021-02-23 19:09:51 --> Session: Initialization under CLI aborted.
+DEBUG - 2021-02-23 19:09:52 --> #19782 application/controllers/batch/Batch.php(56):B: Start
+DEBUG - 2021-02-23 19:09:52 --> #19780 application/controllers/batch/Batch.php(56):A: Start
+DEBUG - 2021-02-23 19:09:52 --> #19780 application/controllers/batch/Batch.php(56):A: Exit because it is running in another process.
+DEBUG - 2021-02-23 19:09:52 --> #19782 application/controllers/batch/Batch.php(56):B: Completed
+DEBUG - 2021-02-23 19:09:52 --> Total execution time: 0.4910
+DEBUG - 2021-02-23 19:10:04 --> UTF-8 Support Enabled
+DEBUG - 2021-02-23 19:10:04 --> Global POST, GET and COOKIE data sanitized
+DEBUG - 2021-02-23 19:10:04 --> Session: Initialization under CLI aborted.
+DEBUG - 2021-02-23 19:10:04 --> Total execution time: 0.0274
+DEBUG - 2021-02-23 19:10:04 --> UTF-8 Support Enabled
+DEBUG - 2021-02-23 19:10:04 --> Global POST, GET and COOKIE data sanitized
+DEBUG - 2021-02-23 19:10:04 --> UTF-8 Support Enabled
+DEBUG - 2021-02-23 19:10:04 --> Session: Initialization under CLI aborted.
+DEBUG - 2021-02-23 19:10:04 --> Global POST, GET and COOKIE data sanitized
+DEBUG - 2021-02-23 19:10:04 --> Session: Initialization under CLI aborted.
+DEBUG - 2021-02-23 19:10:05 --> #19792 application/controllers/batch/Batch.php(56):A: Start
+DEBUG - 2021-02-23 19:10:05 --> #19792 application/controllers/batch/Batch.php(56):A: Completed
+DEBUG - 2021-02-23 19:10:05 --> Total execution time: 0.0527
+ERROR - 2021-02-23 19:10:05 --> Severity: Warning --> time_sleep_until(): Sleep until to time is less than current time /var/www/html/codeigniter-extension/sampleapp/application/controllers/batch/Batch.php 23
+DEBUG - 2021-02-23 19:10:05 --> #19794 application/controllers/batch/Batch.php(56):B: Start
+DEBUG - 2021-02-23 19:10:05 --> #19794 application/controllers/batch/Batch.php(56):B: Completed
+DEBUG - 2021-02-23 19:10:05 --> Total execution time: 0.0479
+DEBUG - 2021-02-23 19:10:25 --> UTF-8 Support Enabled
+DEBUG - 2021-02-23 19:10:25 --> Global POST, GET and COOKIE data sanitized
+DEBUG - 2021-02-23 19:10:25 --> Session: Initialization under CLI aborted.
+DEBUG - 2021-02-23 19:10:25 --> Total execution time: 0.0275
+DEBUG - 2021-02-23 19:10:25 --> UTF-8 Support Enabled
+DEBUG - 2021-02-23 19:10:25 --> Global POST, GET and COOKIE data sanitized
+DEBUG - 2021-02-23 19:10:25 --> UTF-8 Support Enabled
+DEBUG - 2021-02-23 19:10:25 --> Session: Initialization under CLI aborted.
+DEBUG - 2021-02-23 19:10:25 --> Global POST, GET and COOKIE data sanitized
+DEBUG - 2021-02-23 19:10:25 --> Session: Initialization under CLI aborted.
+DEBUG - 2021-02-23 19:10:27 --> #19797 application/controllers/batch/Batch.php(56):A: Start
+DEBUG - 2021-02-23 19:10:27 --> #19797 application/controllers/batch/Batch.php(56):A: Completed
+DEBUG - 2021-02-23 19:10:27 --> #19799 application/controllers/batch/Batch.php(56):B: Start
+DEBUG - 2021-02-23 19:10:27 --> Total execution time: 1.3760
+DEBUG - 2021-02-23 19:10:27 --> #19799 application/controllers/batch/Batch.php(56):B: Completed
+DEBUG - 2021-02-23 19:10:27 --> Total execution time: 1.3692
+DEBUG - 2021-02-23 19:10:35 --> UTF-8 Support Enabled
+DEBUG - 2021-02-23 19:10:35 --> Global POST, GET and COOKIE data sanitized
+DEBUG - 2021-02-23 19:10:35 --> Session: Initialization under CLI aborted.
+DEBUG - 2021-02-23 19:10:35 --> Total execution time: 0.0251
+DEBUG - 2021-02-23 19:10:35 --> UTF-8 Support Enabled
+DEBUG - 2021-02-23 19:10:35 --> Global POST, GET and COOKIE data sanitized
+DEBUG - 2021-02-23 19:10:35 --> UTF-8 Support Enabled
+DEBUG - 2021-02-23 19:10:35 --> Session: Initialization under CLI aborted.
+DEBUG - 2021-02-23 19:10:35 --> Global POST, GET and COOKIE data sanitized
+DEBUG - 2021-02-23 19:10:35 --> Session: Initialization under CLI aborted.
+DEBUG - 2021-02-23 19:10:37 --> #19802 application/controllers/batch/Batch.php(56):A: Start
+DEBUG - 2021-02-23 19:10:37 --> #19802 application/controllers/batch/Batch.php(56):A: Completed
+DEBUG - 2021-02-23 19:10:37 --> #19804 application/controllers/batch/Batch.php(56):B: Start
+DEBUG - 2021-02-23 19:10:37 --> Total execution time: 1.2686
+DEBUG - 2021-02-23 19:10:37 --> #19804 application/controllers/batch/Batch.php(56):B: Completed
+DEBUG - 2021-02-23 19:10:37 --> Total execution time: 1.2624
+DEBUG - 2021-02-23 19:11:03 --> UTF-8 Support Enabled
+DEBUG - 2021-02-23 19:11:03 --> Global POST, GET and COOKIE data sanitized
+DEBUG - 2021-02-23 19:11:03 --> Session: Initialization under CLI aborted.
+DEBUG - 2021-02-23 19:11:03 --> Total execution time: 0.0291
+DEBUG - 2021-02-23 19:11:03 --> UTF-8 Support Enabled
+DEBUG - 2021-02-23 19:11:03 --> Global POST, GET and COOKIE data sanitized
+ERROR - 2021-02-23 19:11:03 --> #19809 application/config/hooks.php(34):ParseError Object
+(
+    [message:protected] => syntax error, unexpected 'if' (T_IF)
+    [string:Error:private] => 
+    [code:protected] => 0
+    [file:protected] => /var/www/html/codeigniter-extension/sampleapp/application/controllers/batch/Batch.php
+    [line:protected] => 33
+    [trace:Error:private] => Array
+        (
+            [0] => Array
+                (
+                    [file] => /var/www/html/codeigniter-extension/sampleapp/public/index.php
+                    [line] => 315
+                    [function] => require_once
+                )
+
+        )
+
+    [previous:Error:private] => 
+)
+
+DEBUG - 2021-02-23 19:11:03 --> UTF-8 Support Enabled
+DEBUG - 2021-02-23 19:11:03 --> Global POST, GET and COOKIE data sanitized
+ERROR - 2021-02-23 19:11:03 --> #19811 application/config/hooks.php(34):ParseError Object
+(
+    [message:protected] => syntax error, unexpected 'if' (T_IF)
+    [string:Error:private] => 
+    [code:protected] => 0
+    [file:protected] => /var/www/html/codeigniter-extension/sampleapp/application/controllers/batch/Batch.php
+    [line:protected] => 33
+    [trace:Error:private] => Array
+        (
+            [0] => Array
+                (
+                    [file] => /var/www/html/codeigniter-extension/sampleapp/public/index.php
+                    [line] => 315
+                    [function] => require_once
+                )
+
+        )
+
+    [previous:Error:private] => 
+)
+
+DEBUG - 2021-02-23 19:11:20 --> UTF-8 Support Enabled
+DEBUG - 2021-02-23 19:11:20 --> Global POST, GET and COOKIE data sanitized
+DEBUG - 2021-02-23 19:11:20 --> Session: Initialization under CLI aborted.
+DEBUG - 2021-02-23 19:11:20 --> Total execution time: 0.0264
+DEBUG - 2021-02-23 19:11:20 --> UTF-8 Support Enabled
+DEBUG - 2021-02-23 19:11:20 --> Global POST, GET and COOKIE data sanitized
+DEBUG - 2021-02-23 19:11:20 --> UTF-8 Support Enabled
+DEBUG - 2021-02-23 19:11:20 --> Session: Initialization under CLI aborted.
+DEBUG - 2021-02-23 19:11:20 --> Global POST, GET and COOKIE data sanitized
+DEBUG - 2021-02-23 19:11:20 --> Session: Initialization under CLI aborted.
+DEBUG - 2021-02-23 19:11:22 --> #19814 application/controllers/batch/Batch.php(56):A: Start
+DEBUG - 2021-02-23 19:11:22 --> #19814 application/controllers/batch/Batch.php(56):A: Completed
+DEBUG - 2021-02-23 19:11:22 --> Total execution time: 1.7874
+DEBUG - 2021-02-23 19:11:22 --> #19816 application/controllers/batch/Batch.php(56):B: Start
+DEBUG - 2021-02-23 19:11:22 --> #19816 application/controllers/batch/Batch.php(56):B: Exit because it is running in another process.
+DEBUG - 2021-02-23 19:13:42 --> UTF-8 Support Enabled
+DEBUG - 2021-02-23 19:13:42 --> Global POST, GET and COOKIE data sanitized
+DEBUG - 2021-02-23 19:13:42 --> Session: Initialization under CLI aborted.
+DEBUG - 2021-02-23 19:13:42 --> Total execution time: 0.0250
+DEBUG - 2021-02-23 19:13:42 --> UTF-8 Support Enabled
+DEBUG - 2021-02-23 19:13:42 --> Global POST, GET and COOKIE data sanitized
+DEBUG - 2021-02-23 19:13:42 --> UTF-8 Support Enabled
+DEBUG - 2021-02-23 19:13:42 --> Session: Initialization under CLI aborted.
+DEBUG - 2021-02-23 19:13:42 --> Global POST, GET and COOKIE data sanitized
+DEBUG - 2021-02-23 19:13:42 --> Session: Initialization under CLI aborted.
+DEBUG - 2021-02-23 19:13:44 --> #19823 application/controllers/batch/Batch.php(56):A: Start
+DEBUG - 2021-02-23 19:13:44 --> #19823 application/controllers/batch/Batch.php(56):A: Exit because it is running in another process.
+DEBUG - 2021-02-23 19:13:44 --> #19825 application/controllers/batch/Batch.php(56):B: Start
+DEBUG - 2021-02-23 19:13:44 --> #19825 application/controllers/batch/Batch.php(56):B: Exit because it is running in another process.
+DEBUG - 2021-02-23 19:13:54 --> UTF-8 Support Enabled
+DEBUG - 2021-02-23 19:13:54 --> Global POST, GET and COOKIE data sanitized
+DEBUG - 2021-02-23 19:13:54 --> Session: Initialization under CLI aborted.
+DEBUG - 2021-02-23 19:13:54 --> Total execution time: 0.0282
+DEBUG - 2021-02-23 19:13:54 --> UTF-8 Support Enabled
+DEBUG - 2021-02-23 19:13:54 --> Global POST, GET and COOKIE data sanitized
+DEBUG - 2021-02-23 19:13:54 --> UTF-8 Support Enabled
+DEBUG - 2021-02-23 19:13:54 --> Session: Initialization under CLI aborted.
+DEBUG - 2021-02-23 19:13:54 --> Global POST, GET and COOKIE data sanitized
+DEBUG - 2021-02-23 19:13:54 --> Session: Initialization under CLI aborted.
+DEBUG - 2021-02-23 19:13:56 --> #19828 application/controllers/batch/Batch.php(56):A: Start
+DEBUG - 2021-02-23 19:13:56 --> #19828 application/controllers/batch/Batch.php(56):A: Completed
+DEBUG - 2021-02-23 19:13:56 --> Total execution time: 1.4838
+DEBUG - 2021-02-23 19:13:56 --> #19830 application/controllers/batch/Batch.php(56):B: Start
+DEBUG - 2021-02-23 19:13:56 --> #19830 application/controllers/batch/Batch.php(56):B: Completed
+DEBUG - 2021-02-23 19:13:56 --> Total execution time: 1.4773
+DEBUG - 2021-02-23 19:13:58 --> UTF-8 Support Enabled
+DEBUG - 2021-02-23 19:13:58 --> Global POST, GET and COOKIE data sanitized
+DEBUG - 2021-02-23 19:13:58 --> Session: Initialization under CLI aborted.
+DEBUG - 2021-02-23 19:13:58 --> Total execution time: 0.0271
+DEBUG - 2021-02-23 19:13:58 --> UTF-8 Support Enabled
+DEBUG - 2021-02-23 19:13:58 --> Global POST, GET and COOKIE data sanitized
+DEBUG - 2021-02-23 19:13:58 --> UTF-8 Support Enabled
+DEBUG - 2021-02-23 19:13:58 --> Session: Initialization under CLI aborted.
+DEBUG - 2021-02-23 19:13:58 --> Global POST, GET and COOKIE data sanitized
+DEBUG - 2021-02-23 19:13:58 --> Session: Initialization under CLI aborted.
+DEBUG - 2021-02-23 19:14:00 --> #19833 application/controllers/batch/Batch.php(56):A: Start
+DEBUG - 2021-02-23 19:14:00 --> #19833 application/controllers/batch/Batch.php(56):A: Completed
+DEBUG - 2021-02-23 19:14:00 --> #19835 application/controllers/batch/Batch.php(56):B: Start
+DEBUG - 2021-02-23 19:14:00 --> #19835 application/controllers/batch/Batch.php(56):B: Completed
+DEBUG - 2021-02-23 19:14:00 --> Total execution time: 1.3160
+DEBUG - 2021-02-23 19:14:00 --> Total execution time: 1.3085
+DEBUG - 2021-02-23 19:14:08 --> UTF-8 Support Enabled
+DEBUG - 2021-02-23 19:14:08 --> Global POST, GET and COOKIE data sanitized
+DEBUG - 2021-02-23 19:14:08 --> Session: Initialization under CLI aborted.
+DEBUG - 2021-02-23 19:14:08 --> Total execution time: 0.0268
+DEBUG - 2021-02-23 19:14:08 --> UTF-8 Support Enabled
+DEBUG - 2021-02-23 19:14:08 --> UTF-8 Support Enabled
+DEBUG - 2021-02-23 19:14:08 --> Global POST, GET and COOKIE data sanitized
+DEBUG - 2021-02-23 19:14:08 --> Session: Initialization under CLI aborted.
+DEBUG - 2021-02-23 19:14:08 --> Global POST, GET and COOKIE data sanitized
+DEBUG - 2021-02-23 19:14:08 --> Session: Initialization under CLI aborted.
+DEBUG - 2021-02-23 19:14:10 --> #19845 application/controllers/batch/Batch.php(56):A: Start
+DEBUG - 2021-02-23 19:14:10 --> #19847 application/controllers/batch/Batch.php(56):B: Start
+DEBUG - 2021-02-23 19:14:10 --> #19845 application/controllers/batch/Batch.php(56):A: Completed
+DEBUG - 2021-02-23 19:14:10 --> #19847 application/controllers/batch/Batch.php(56):B: Completed
+DEBUG - 2021-02-23 19:14:10 --> Total execution time: 1.4797
+DEBUG - 2021-02-23 19:14:10 --> Total execution time: 1.4847

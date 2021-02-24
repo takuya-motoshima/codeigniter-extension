@@ -18,9 +18,76 @@ The following must be installed before running this package.
 
 See [CHANGELOG.md](./CHANGELOG.md).
 
+Latest 3 changelogs.  
+
+### [3.8.9] - 2021-02-24
+
+* Added batch exclusive control sample program for file lock and advisory lock to the sample application.
+    
+    Description of the added file.  
+
+    <table>
+      <thead>
+        <tr>
+          <th>File</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>sampleapp/application/controllers/batch/RunMultipleBatch.php</td>
+          <td>An entry point that launches multiple batches at the same time.</td>
+        </tr>
+        <tr>
+          <td>sampleapp/application/controllers/batch/FileLockBatch.php</td>
+          <td>Batch with file locking.This is called from RunMultipleBatch.</td>
+        </tr>
+        <tr>
+          <td>sampleapp/application/controllers/batch/AdvisoryLockBatch.php</td>
+          <td>Batch with advisory lock.This is called from RunMultipleBatch.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    How to do it.  
+
+    Run a batch that prohibits multiple launches using file locks.  
+
+    ```sh
+    cd /var/www/html/sampleapp;
+    CI_ENV=development php public/index.php batch/runMultipleBatch/run/filelock;
+    ```
+
+    Run a batch that prohibits multiple launches using advisory locks.  
+
+    ```sh
+    cd /var/www/html/sampleapp;
+    CI_ENV=development php public/index.php batch/runMultipleBatch/run/advisorylock;
+    ```
+
+### [3.8.8] - 2021-02-23
+
+* Organized readme and added batch lock test program.
+
+### [3.8.7] - 2021-02-19
+
+- Added a method to the file helper that returns a file size with units.
+
+    ```php
+    use \X\Util\FileHelper;
+
+    FileHelper::humanFilesize('/var/somefile.txt', 0);// 12B
+    FileHelper::humanFilesize('/var/somefile.txt', 4);// 1.1498GB
+    FileHelper::humanFilesize('/var/somefile.txt', 1);// 117.7MB
+    FileHelper::humanFilesize('/var/somefile.txt', 5);// 11.22833TB
+    FileHelper::humanFilesize('/var/somefile.txt', 3);// 1.177MB
+    FileHelper::humanFilesize('/var/somefile.txt');// 120.56KB
+    ```
+
 ## Examples
 
-The sample application is in "./sampleapp", so please refer to it.
+The sample application is in "./sampleapp", so please refer to it.  
+Please refer to [sampleapp/README.md](sampleapp/README.md) for how to use the sample application.
 
 ## Getting Started
 
@@ -74,15 +141,52 @@ See [https://codeigniter.com/](https://codeigniter.com/) for basic usage of Code
 
 The basic settings are defined in ./application/config/config.php.  
 
-|Name|Before|After|
-|--|--|--|
-|base_url||if (!empty($_SERVER['HTTP_HOST'])) $config['base_url'] = '//' . $_SERVER['HTTP_HOST'] . str_replace(basename($_SERVER['SCRIPT_NAME']), '', $_SERVER['SCRIPT_NAME']);|
-|enable_hooks|FALSE|TRUE|
-|permitted_uri_chars|'a-z 0-9~%.:_\-'|'a-z 0-9~%.:_\-,'|
-|sess_save_path|NULL|APPPATH . 'session';|
-|cookie_httponly|FALSE|TRUE|
-|composer_autoload|FALSE|realpath(APPPATH . '../vendor/autoload.php');|
-|index_page|'index.php'|''|
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Before</th>
+      <th>After</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>base_url</td>
+      <td></td>
+      <td>if (!empty($_SERVER['HTTP_HOST'])) $config['base_url'] = '//' . $_SERVER['HTTP_HOST'] . str_replace(basename($_SERVER['SCRIPT_NAME']), '', $_SERVER['SCRIPT_NAME']);</td>
+    </tr>
+    <tr>
+      <td>enable_hooks</td>
+      <td>FALSE</td>
+      <td>TRUE</td>
+    </tr>
+    <tr>
+      <td>permitted_uri_chars</td>
+      <td>a-z 0-9~%.:_\-</td>
+      <td>a-z 0-9~%.:_\-,</td>
+    </tr>
+    <tr>
+      <td>sess_save_path</td>
+      <td>NULL</td>
+      <td>APPPATH . 'session';</td>
+    </tr>
+    <tr>
+      <td>cookie_httponly</td>
+      <td>FALSE</td>
+      <td>TRUE</td>
+    </tr>
+    <tr>
+      <td>composer_autoload</td>
+      <td>FALSE</td>
+      <td>realpath(APPPATH . '../vendor/autoload.php');</td>
+    </tr>
+    <tr>
+      <td>index_page</td>
+      <td>index.php</td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
 
 ### Access control of action by annotation  
 

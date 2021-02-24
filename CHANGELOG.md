@@ -1,5 +1,50 @@
 # Changelog
 
+## [3.8.9] - 2021-02-24
+
+* Added batch exclusive control sample program for file lock and advisory lock to the sample application.
+    
+    Description of the added file.  
+
+    <table>
+      <thead>
+        <tr>
+          <th>File</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>sampleapp/application/controllers/batch/RunMultipleBatch.php</td>
+          <td>An entry point that launches multiple batches at the same time.</td>
+        </tr>
+        <tr>
+          <td>sampleapp/application/controllers/batch/FileLockBatch.php</td>
+          <td>Batch with file locking.This is called from RunMultipleBatch.</td>
+        </tr>
+        <tr>
+          <td>sampleapp/application/controllers/batch/AdvisoryLockBatch.php</td>
+          <td>Batch with advisory lock.This is called from RunMultipleBatch.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    How to do it.  
+
+    Run a batch that prohibits multiple launches using file locks.  
+
+    ```sh
+    cd /var/www/html/sampleapp;
+    CI_ENV=development php public/index.php batch/runMultipleBatch/run/filelock;
+    ```
+
+    Run a batch that prohibits multiple launches using advisory locks.  
+
+    ```sh
+    cd /var/www/html/sampleapp;
+    CI_ENV=development php public/index.php batch/runMultipleBatch/run/advisorylock;
+    ```
+
 ## [3.8.8] - 2021-02-23
 
 * Organized readme and added batch lock test program.
@@ -38,7 +83,7 @@
 
       // Get access from annotations.
       $accessibility = AnnotationReader::getAccessibility($ci->router->class, $ci->router->method);
-      
+
       // Whether you are logged in.
       $islogin = !empty($_SESSION['user']);
 
@@ -70,21 +115,21 @@
 
     /**
      * Only log-off users can access it.
-     * 
+     *
      * @Access(allow_login=false, allow_logoff=true)
      */
     public function login() {}
 
     /**
      * Only logged-in users can access it.
-     * 
+     *
      * @Access(allow_login=true, allow_logoff=false)
      */
     public function dashboard() {}
 
     /**
      * It can only be done with the CLI.
-     * 
+     *
      * @Access(allow_http=false)
      */
     public function batch() {}
@@ -153,14 +198,55 @@
 
 - Added the following rules to form validation.
 
-    |Rule|Parameter|Description|Example|
-    |-|-|-|-|
-    |datetime|Yes|Returns FALSE if the form element does not contain a valid Datetime.|datetime[Y-m-d H:i:s]|
-    |hostname|No|Returns FALSE if the form element does not contain a valid host name.||
-    |ipaddress|No|Returns FALSE if the form element does not contain a valid IP address.||
-    |hostname_or_ipaddress|No|Returns FALSE if the form element does not contain a valid host name or IP address.||
-    |unix_username|No|Returns FALSE if the form element does not contain a valid UNIX user name.||
-    |port|No|Returns FALSE if the form element does not contain a valid port number.||
+    <table>
+      <thead>
+        <tr>
+          <th>Rule</th>
+          <th>Parameter</th>
+          <th>Description</th>
+          <th>Example</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>datetime</td>
+          <td>Yes</td>
+          <td>Returns FALSE if the form element does not contain a valid Datetime.</td>
+          <td>datetime[Y-m-d H:i:s]</td>
+        </tr>
+        <tr>
+          <td>hostname</td>
+          <td>No</td>
+          <td>Returns FALSE if the form element does not contain a valid host name.</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>ipaddress</td>
+          <td>No</td>
+          <td>Returns FALSE if the form element does not contain a valid IP address.</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>hostname_or_ipaddress</td>
+          <td>No</td>
+          <td>Returns FALSE if the form element does not contain a valid host name or IP address.</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>unix_username</td>
+          <td>No</td>
+          <td>Returns FALSE if the form element does not contain a valid UNIX user name.</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>port</td>
+          <td>No</td>
+          <td>Returns FALSE if the form element does not contain a valid port number.</td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+
 
     ```php
     $this->form_validation
@@ -452,10 +538,10 @@
 
     ```php
     use \X\Util\Cipher;
-    
+
     // Get the initialization vector. This should be changed every time to make it difficult to predict.
     $iv = Cipher::generateInitialVector();
-    
+
     // Plaintext.
     $plaintext = 'Hello, World.';
 
@@ -484,7 +570,7 @@
     IpUtils::inRange('202.210.220.78', '202.210.220.64/28');// true
     IpUtils::inRange('202.210.220.79', '202.210.220.64/28');// true
     IpUtils::inRange('202.210.220.80', '202.210.220.64/28');// false
-    
+
     // 192.168.1.0/24
     IpUtils::inRange('192.168.0.255', '192.168.1.0/24'); // false
     IpUtils::inRange('192.168.1.0', '192.168.1.0/24'); // true
@@ -492,17 +578,17 @@
     IpUtils::inRange('192.168.1.244', '192.168.1.0/24'); // true
     IpUtils::inRange('192.168.1.255', '192.168.1.0/24'); // true
     IpUtils::inRange('192.168.2.0', '192.168.1.0/24'); // false
-    
+
     // 118.238.251.130
     IpUtils::inRange('118.238.251.129', '118.238.251.130'); // false
     IpUtils::inRange('118.238.251.130', '118.238.251.130'); // true
     IpUtils::inRange('118.238.251.131', '118.238.251.130'); // false
-    
+
     // 118.238.251.130/32
     IpUtils::inRange('118.238.251.129', '118.238.251.130/32'); // false
     IpUtils::inRange('118.238.251.130', '118.238.251.130/32'); // true
     IpUtils::inRange('118.238.251.131', '118.238.251.130/32'); // false
-    
+
     // 2001:4860:4860::8888/32
     IpUtils::inRange('2001:4859:FFFF:FFFF:FFFF:FFFF:FFFF:FFFF', '2001:4860:4860::8888/32');// false
     IpUtils::inRange('2001:4860:4860:0000:0000:0000:0000:8888', '2001:4860:4860::8888/32');// true
@@ -510,7 +596,7 @@
     IpUtils::inRange('2001:4860:FFFF:FFFF:FFFF:FFFF:FFFF:FFFE', '2001:4860:4860::8888/32');// true
     IpUtils::inRange('2001:4860:FFFF:FFFF:FFFF:FFFF:FFFF:FFFF', '2001:4860:4860::8888/32');// true
     IpUtils::inRange('2001:4861:0000:0000:0000:0000:0000:0000', '2001:4860:4860::8888/32');// false
-    
+
     // 2404:7a81:b0a0:9100::/64
     IpUtils::inRange('2404:7A81:B0A0:90FF:0000:0000:0000:0000', '2404:7A81:B0A0:9100::/64');// false
     IpUtils::inRange('2404:7A81:B0A0:9100:0000:0000:0000:0000', '2404:7A81:B0A0:9100::/64');// true
@@ -735,7 +821,7 @@
     }
     ```
 
-    public/assets/signin.js: 
+    public/assets/signin.js:
 
     ```js
     (() => {
