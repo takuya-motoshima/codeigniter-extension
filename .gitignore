@@ -71,14 +71,14 @@ dist/*
 !dist/
 
 # Ignore my appplication
-examples/application/logs/*
-!examples/application/logs
-examples/application/cache/*
-!examples/application/cache
-examples/application/session/*
-!examples/application/session
-examples/.env
-!examples/.env.sample
+sampleapp/application/logs/*
+!sampleapp/application/logs
+sampleapp/application/cache/*
+!sampleapp/application/cache
+sampleapp/application/session/*
+!sampleapp/application/session
+sampleapp/.env
+!sampleapp/.env.sample
 
 # Whitelisted files
 !.gitignore
