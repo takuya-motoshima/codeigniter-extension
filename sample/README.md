@@ -7,18 +7,18 @@ Create project.
 ```sh
 mkdir -p /var/www/html;
 cd /var/www/html;
-composer create-project takuya-motoshima/codeIgniter-extension sampleapp;
+composer create-project takuya-motoshima/codeIgniter-extension sample;
 ```
 
 Grant log, session, and cache write permissions to the web server.  
 
 ```sh
-sudo chmod -R 755 /var/www/html/sampleapp/application/{logs,cache,session};
-sudo chown -R nginx:nginx /var/www/html/sampleapp/application/{logs,cache,session};
+sudo chmod -R 755 /var/www/html/sample/application/{logs,cache,session};
+sudo chown -R nginx:nginx /var/www/html/sample/application/{logs,cache,session};
 ```
 
 Add the settings of the WEB server (nginx).  
-Write the following in /etc/nginx/conf.d/sampleapp.conf.  
+Write the following in /etc/nginx/conf.d/sample.conf.  
 
 ```nginx
 server {
@@ -27,10 +27,10 @@ server {
   ssi_last_modified on;
   ssi on;
   charset UTF-8;
-  root /var/www/html/sampleapp/public;
+  root /var/www/html/sample/public;
   index index.php index.html;
-  access_log  /var/log/nginx/sampleapp.access.log;
-  error_log  /var/log/nginx/sampleapp.error.log  warn;
+  access_log  /var/log/nginx/sample.access.log;
+  error_log  /var/log/nginx/sample.error.log  warn;
   gzip on;
   gzip_types application/json;
 
@@ -89,7 +89,7 @@ Create a DB.
 Connect to MariaDB and execute the following command to build the DB.  
 
 ```sh
-cd /var/www/html/sampleapp;
+cd /var/www/html/sample;
 mysql -u root;
 SOURCE ./ddl.sql;
 ```
@@ -102,13 +102,13 @@ https://<Your host name>
 Run a batch that prohibits multiple launches using file locks.  
 
 ```sh
-cd /var/www/html/sampleapp;
+cd /var/www/html/sample;
 CI_ENV=development php public/index.php batch/runMultipleBatch/run/filelock;
 ```
 
 Run a batch that prohibits multiple launches using advisory locks.  
 
 ```sh
-cd /var/www/html/sampleapp;
+cd /var/www/html/sample;
 CI_ENV=development php public/index.php batch/runMultipleBatch/run/advisorylock;
 ```

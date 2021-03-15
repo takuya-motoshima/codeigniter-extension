@@ -8,6 +8,8 @@ use \X\Util\FileHelper;
 use \X\Util\ImageHelper;
 use \X\Util\IpUtils;
 use \X\Util\AmazonSesClient;
+use \X\Util\ArrayHelper;
+use MathieuViossat\Util\ArrayToTextTable;
 
 class Test extends AppController {
 
@@ -401,6 +403,28 @@ class Test extends AppController {
       $range = $ip[1];
       $matched = IpUtils::inRange($requestIp, $range);
       Logger::print(sprintf('%s in %s: %s', $requestIp, $range, $matched ? 'true' : 'false'));
+    }
+  } 
+
+  public function arrayToTable() {
+    try {
+      $arr = [
+        [
+          'firstname' => 'John',
+          'lastname' => 'Mathew',
+          'email' => 'John.Mathew@xyz.com'
+        ],
+        [
+          'firstname' => 'Jim',
+          'lastname' => 'Parker',
+          'email' => 'Jim.Parker@xyz.com'
+        ]
+      ];
+      // $renderer = new ArrayToTextTable(ArrayHelper::isVector($arr) ? $arr : [$arr]);
+      // echo $renderer->getTable();
+      echo '<pre>' . ArrayHelper::toTable($arr) . '</pre>';
+    } catch (\Throwable $e) {
+      Logger::print($e->getMessage());
     }
   }
 }

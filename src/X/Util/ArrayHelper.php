@@ -7,6 +7,7 @@
  * @copyright  2018 Takuya Motoshima
  */
 namespace X\Util;
+use MathieuViossat\Util\ArrayToTextTable;
 
 final class ArrayHelper {
 
@@ -17,14 +18,14 @@ final class ArrayHelper {
    * use \X\Util\ArrayHelper;
    *
    * // Search from a simple array
-   * $array = [
+   * $arr = [
    *   'France' => 'Paris',
    *   'India' => 'Mumbai',
    *   'UK' => 'London',
    *   'USA' => 'New York'
    * ];
    * 
-   * ArrayHelper::searchArrayByKey('France', $array);
+   * ArrayHelper::searchArrayByKey('France', $arr);
    * // Paris
    * 
    * // Search from nested array
@@ -44,8 +45,8 @@ final class ArrayHelper {
    * @param  array $haystack
    * @return mixed
    */
-  public static function searchArrayByKey(string $needle, array $array) {
-    foreach (new \RecursiveIteratorIterator(new \RecursiveArrayIterator($array)) as $key => $value) {
+  public static function searchArrayByKey(string $needle, array $arr) {
+    foreach (new \RecursiveIteratorIterator(new \RecursiveArrayIterator($arr)) as $key => $value) {
       if ($needle === $key) {
         return $value;
       }
@@ -56,26 +57,24 @@ final class ArrayHelper {
   /**
    * Returns an array with the keys of the array initialized to 0,1,2 ...
    *
-   * @param  array $array
+   * @param  array $arr
    * @return array
    */
-  public static function resetArrayKeys(array $array):array {
-    return array_values($array);
+  public static function resetArrayKeys(array $arr):array {
+    return array_values($arr);
   }
 
   /**
    * Returns a unique value from an array
    *
-   * @param  array $array
+   * @param  array $arr
    * @return mixed
    */
-  public static function getRandomValue(array &$array) {
-    if (empty($array)) {
-      return null;
-    }
-    $key = array_rand($array, 1);
-    $value = $array[$key];
-    unset($array[$key]);
+  public static function getRandomValue(array &$arr) {
+    if (empty($arr)) return null;
+    $key = array_rand($arr, 1);
+    $value = $arr[$key];
+    unset($arr[$key]);
     return $value;
   }
 
@@ -111,14 +110,60 @@ final class ArrayHelper {
    * // ]
    * ```
    *
-   * @param  array  $array    Arrays you want to group.
+   * @param  array  $arr      Arrays you want to group.
    * @param  string $groupkey Group key.
-   * @return [type]           Grouped arrays.
+   * @return array            Grouped arrays.
    */
-  public static function grouping(array $array, string $groupkey): array {
-    return array_reduce($array, function (array $groups, array $row) use ($groupkey) {
+  public static function grouping(array $arr, string $groupkey): array {
+    return array_reduce($arr, function (array $groups, array $row) use ($groupkey) {
       $groups[$row[$groupkey]][] = $row;
       return $groups;
     }, []);
+  }
+
+
+  /**
+   * Returns true if the subscript is an array starting from 0.
+   * 
+   * @param  array   $arr Array
+   * @return boolean      Returns true for vector arrays
+   */
+  public static function isVector(array $arr): bool {
+    return array_values($arr) === $arr;
+  }
+
+  /**
+   * Returns an array as a tabular string.
+   * 
+   * ```php
+   * use \X\Util\ArrayHelper;
+   * 
+   * $arr = [
+   *   [
+   *     'firstname' => 'John',
+   *     'lastname' => 'Mathew',
+   *     'email' => 'John.Mathew@xyz.com'
+   *   ],
+   *   [
+   *     'firstname' => 'Jim',
+   *     'lastname' => 'Parker',
+   *     'email' => 'Jim.Parker@xyz.com'
+   *   ]
+   * ];
+   * echo ArrayHelper::toTable($arr);
+   * ┌───────────┬──────────┬─────────────────────┐
+   * │ FIRSTNAME │ LASTNAME │        EMAIL        │
+   * ├───────────┼──────────┼─────────────────────┤
+   * │ John      │ Mathew   │ John.Mathew@xyz.com │
+   * │ Jim       │ Parker   │ Jim.Parker@xyz.com  │
+   * └───────────┴──────────┴─────────────────────┘
+   * ```
+   * 
+   * @param  array  $arr Array
+   * @return string Returns a tabular string.
+   */
+  public static function toTable(array $arr): string {
+    $renderer = new ArrayToTextTable(self::isVector($arr) ? $arr : [$arr]);
+    return $renderer->getTable();
   }
 }

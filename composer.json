@@ -14,7 +14,8 @@
     "aws/aws-sdk-php": "^3.64",
     "doctrine/common": "^2.10",
     "ext-openssl": "^7.3",
-    "intervention/image": "^2.5"
+    "intervention/image": "^2.5",
+    "mathieuviossat/arraytotexttable": "^1.0"
   },
   "license": "MIT",
   "authors": [

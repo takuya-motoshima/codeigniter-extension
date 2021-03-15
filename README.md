@@ -18,7 +18,35 @@ The following must be installed before running this package.
 
 See [CHANGELOG.md](./CHANGELOG.md).
 
-Latest 3 changelogs.  
+Latest 5 changelogs.  
+
+### [3.9.1] - 2021-03-15
+
+* Added a method that returns a table string of an array.
+
+    ```php
+    use \X\Util\ArrayHelper;
+    
+    $arr = [
+      [
+        'firstname' => 'John',
+        'lastname' => 'Mathew',
+        'email' => 'John.Mathew@xyz.com'
+      ],
+      [
+        'firstname' => 'Jim',
+        'lastname' => 'Parker',
+        'email' => 'Jim.Parker@xyz.com'
+      ]
+    ];
+    echo ArrayHelper::toTable($arr);
+    ┌───────────┬──────────┬─────────────────────┐
+    │ FIRSTNAME │ LASTNAME │        EMAIL        │
+    ├───────────┼──────────┼─────────────────────┤
+    │ John      │ Mathew   │ John.Mathew@xyz.com │
+    │ Jim       │ Parker   │ Jim.Parker@xyz.com  │
+    └───────────┴──────────┴─────────────────────┘
+    ```
 
 ### [3.9.0] - 2021-03-15
 
@@ -45,15 +73,15 @@ Latest 3 changelogs.
       </thead>
       <tbody>
         <tr>
-          <td>sampleapp/application/controllers/batch/RunMultipleBatch.php</td>
+          <td>sample/application/controllers/batch/RunMultipleBatch.php</td>
           <td>An entry point that launches multiple batches at the same time.</td>
         </tr>
         <tr>
-          <td>sampleapp/application/controllers/batch/FileLockBatch.php</td>
+          <td>sample/application/controllers/batch/FileLockBatch.php</td>
           <td>Batch with file locking.This is called from RunMultipleBatch.</td>
         </tr>
         <tr>
-          <td>sampleapp/application/controllers/batch/AdvisoryLockBatch.php</td>
+          <td>sample/application/controllers/batch/AdvisoryLockBatch.php</td>
           <td>Batch with advisory lock.This is called from RunMultipleBatch.</td>
         </tr>
       </tbody>
@@ -64,14 +92,14 @@ Latest 3 changelogs.
     Run a batch that prohibits multiple launches using file locks.  
 
     ```sh
-    cd /var/www/html/sampleapp;
+    cd /var/www/html/sample;
     CI_ENV=development php public/index.php batch/runMultipleBatch/run/filelock;
     ```
 
     Run a batch that prohibits multiple launches using advisory locks.  
 
     ```sh
-    cd /var/www/html/sampleapp;
+    cd /var/www/html/sample;
     CI_ENV=development php public/index.php batch/runMultipleBatch/run/advisorylock;
     ```
 
@@ -96,8 +124,8 @@ Latest 3 changelogs.
 
 ## Examples
 
-The sample application is in "./sampleapp", so please refer to it.  
-Please refer to [sampleapp/README.md](sampleapp/README.md) for how to use the sample application.
+The sample application is in "./sample", so please refer to it.  
+Please refer to [sample/README.md](sample/README.md) for how to use the sample application.
 
 ## Getting Started
 

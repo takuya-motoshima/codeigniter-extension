@@ -1,5 +1,43 @@
 # Changelog
 
+## [3.9.1] - 2021-03-15
+
+* Added a method that returns a table string of an array.
+
+    ```php
+    use \X\Util\ArrayHelper;
+    
+    $arr = [
+      [
+        'firstname' => 'John',
+        'lastname' => 'Mathew',
+        'email' => 'John.Mathew@xyz.com'
+      ],
+      [
+        'firstname' => 'Jim',
+        'lastname' => 'Parker',
+        'email' => 'Jim.Parker@xyz.com'
+      ]
+    ];
+    echo ArrayHelper::toTable($arr);
+    ┌───────────┬──────────┬─────────────────────┐
+    │ FIRSTNAME │ LASTNAME │        EMAIL        │
+    ├───────────┼──────────┼─────────────────────┤
+    │ John      │ Mathew   │ John.Mathew@xyz.com │
+    │ Jim       │ Parker   │ Jim.Parker@xyz.com  │
+    └───────────┴──────────┴─────────────────────┘
+    ```
+
+## [3.9.0] - 2021-03-15
+
+* Added a log function that does not output path information.
+
+    ```php
+    use \X\Util\Logger;
+
+    Logger::printHidepath('I told you so');
+    ```
+
 ## [3.8.9] - 2021-02-24
 
 * Added batch exclusive control sample program for file lock and advisory lock to the sample application.

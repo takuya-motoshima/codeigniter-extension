@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Amazon rekognition client
  *
