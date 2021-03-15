@@ -72,7 +72,7 @@ final class Logger {
    * @param mixed[] $params
    * @return void
    */
-  public static function printWithoutPath(...$params) {
+  public static function printHidepath(...$params) {
     if (!is_cli()) {
       $message = self::create($params, null, false, false, true);
       echo '<div style="border-bottom:1px solid #efefef;padding:4px;">' . $message . '</div>';
@@ -81,6 +81,17 @@ final class Logger {
       echo $message . PHP_EOL;
       self::debug($message);
     }
+  }
+
+  /**
+   * printHidepath alias.
+   * 
+   * @deprecated 3.9.1 Scheduled to be abolished
+   * @param mixed[] $params
+   * @return void
+   */
+  public static function printWithoutPath(...$params) {
+    self::printHidepath(...$params);
   }
 
   /**
@@ -93,13 +104,7 @@ final class Logger {
    * @param  bool  $isBrowser
    * @return string
    */
-  private static function create(
-    array $params,
-    ?array $trace,
-    bool $showPath = true,
-    bool $showFunction = false,
-    bool $isBrowser = false
-  ): string {
+  private static function create(array $params, ?array $trace, bool $showPath = true, bool $showFunction = false, bool $isBrowser = false): string {
     $message = '';
     if ($showPath && !empty($trace)) {
       $message = str_replace(realpath(\FCPATH . '../') . '/', '', $trace[0]['file']) . '(' . $trace[0]['line'] . ')';

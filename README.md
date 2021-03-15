@@ -20,6 +20,16 @@ See [CHANGELOG.md](./CHANGELOG.md).
 
 Latest 3 changelogs.  
 
+### [3.9.0] - 2021-03-15
+
+* Added a log function that does not output path information.
+
+    ```php
+    use \X\Util\Logger;
+
+    Logger::printHidepath('I told you so');
+    ```
+
 ### [3.8.9] - 2021-02-24
 
 * Added batch exclusive control sample program for file lock and advisory lock to the sample application.
