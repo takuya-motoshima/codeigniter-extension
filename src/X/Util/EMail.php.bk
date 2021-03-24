@@ -7,7 +7,6 @@
  * @copyright  2017 Takuya Motoshima
  */
 namespace X\Util;
-// use \X\Util\Logger;
 
 abstract class EMail {
 
@@ -50,10 +49,9 @@ abstract class EMail {
    * Send Email
    *
    * @param   bool    $auto_clear = TRUE
-   * @return  array
+   * @return  bool
    */
-  public static function send($auto_clear = TRUE) {
-  // public static function send($auto_clear = TRUE): bool {
+  public static function send($auto_clear = TRUE):bool {
     return call_user_func_array([self::email(), __FUNCTION__], func_get_args());
   }
 
@@ -160,7 +158,7 @@ abstract class EMail {
    * @param string  $disposition = 'attachment'
    * @param string  $newname = NULL
    * @param string  $mime = ''
-   * @return  EMail
+   * @return  CI_Email
    */
   public static function attach($file, $disposition = '', $newname = NULL, $mime = '') {
     call_user_func_array([self::email(), __FUNCTION__], func_get_args());
@@ -184,15 +182,14 @@ abstract class EMail {
    *
    * @return \CI_Email
    */
-  private static function email() {
-  // private static function email(): \CI_Email {
-    static $instance;
-    if (!isset($$instance)) {
+  private static function email(): \CI_Email {
+    static $email;
+    if (!isset($email)) {
       $ci =& \get_instance();
       $ci->load->library('email', self::$default);
-      $$instance = $ci->email;
+      $email = $ci->email;
     }
-    return $$instance;
+    return $email;
   }
 
   /**

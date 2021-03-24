@@ -20,6 +20,10 @@ See [CHANGELOG.md](./CHANGELOG.md).
 
 Latest 5 changelogs.  
 
+### [3.9.2] - 2021-03-24
+
+* Resolved an error where the return type of the email function of the email subclass (/X/Util/Email) did not match the definition.
+
 ### [3.9.1] - 2021-03-15
 
 * Added a method that returns a table string of an array.
