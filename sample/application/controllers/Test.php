@@ -9,6 +9,7 @@ use \X\Util\ImageHelper;
 use \X\Util\IpUtils;
 use \X\Util\AmazonSesClient;
 use \X\Util\ArrayHelper;
+use \X\Util\DateHelper;
 use MathieuViossat\Util\ArrayToTextTable;
 
 class Test extends AppController {
@@ -17,6 +18,13 @@ class Test extends AppController {
 
   public function index() {
     parent::view('test');
+  }
+
+  public function getDaysInMonth() {
+    $days = DateHelper::getDaysInMonth(2021, 3, 'Y-m-d');
+    parent
+      ::set($days)
+      ::json(false, true);
   }
 
   public function sendEmail() {

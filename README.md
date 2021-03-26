@@ -20,6 +20,18 @@ See [CHANGELOG.md](./CHANGELOG.md).
 
 Latest 5 changelogs.  
 
+### [3.9.3] - 2021-03-26
+
+* Added a function to the Date helper that returns the date of the specified month.
+
+    ```php
+    use \X\Util\DateHelper;
+
+    // Get the date of March 2021.
+    DateHelper::getDaysInMonth(2021, 3, 'Y-m-d');
+    // ["2021-03-01", "2021-03-02", "2021-03-03", "2021-03-04", "2021-03-05", "2021-03-06", "2021-03-07", "2021-03-08", "2021-03-09", "2021-03-10", "2021-03-11", "2021-03-12", "2021-03-13", "2021-03-14", "2021-03-15", "2021-03-16", "2021-03-17", "2021-03-18", "2021-03-19", "2021-03-20", "2021-03-21", "2021-03-22", "2021-03-23", "2021-03-24", "2021-03-25", "2021-03-26", "2021-03-27", "2021-03-28", "2021-03-29", "2021-03-30", "2021-03-31"]
+    ```
+
 ### [3.9.2] - 2021-03-24
 
 * Resolved an error where the return type of the email function of the email subclass (/X/Util/Email) did not match the definition.
