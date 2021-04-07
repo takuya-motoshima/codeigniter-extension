@@ -130,7 +130,7 @@ final class Installer {
   private static function delete_self() {
     FileHelper::delete(
       'src',
-      'examples',
+      'sample',
       'composer.json.dist',
       'skeleton',
       'README.md',

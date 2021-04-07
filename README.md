@@ -20,7 +20,7 @@ See [CHANGELOG.md](./CHANGELOG.md).
 
 Latest 5 changelogs.  
 
-### [3.9.3] - 2021-03-26
+### [3.9.3] - 2021-3-26
 
 * Added a function to the Date helper that returns the date of the specified month.
 
@@ -32,11 +32,11 @@ Latest 5 changelogs.
     // ["2021-03-01", "2021-03-02", "2021-03-03", "2021-03-04", "2021-03-05", "2021-03-06", "2021-03-07", "2021-03-08", "2021-03-09", "2021-03-10", "2021-03-11", "2021-03-12", "2021-03-13", "2021-03-14", "2021-03-15", "2021-03-16", "2021-03-17", "2021-03-18", "2021-03-19", "2021-03-20", "2021-03-21", "2021-03-22", "2021-03-23", "2021-03-24", "2021-03-25", "2021-03-26", "2021-03-27", "2021-03-28", "2021-03-29", "2021-03-30", "2021-03-31"]
     ```
 
-### [3.9.2] - 2021-03-24
+### [3.9.2] - 2021-3-24
 
 * Resolved an error where the return type of the email function of the email subclass (/X/Util/Email) did not match the definition.
 
-### [3.9.1] - 2021-03-15
+### [3.9.1] - 2021-3-15
 
 * Added a method that returns a table string of an array.
 
@@ -64,7 +64,7 @@ Latest 5 changelogs.
     └───────────┴──────────┴─────────────────────┘
     ```
 
-### [3.9.0] - 2021-03-15
+### [3.9.0] - 2021-3-15
 
 * Added a log function that does not output path information.
 
@@ -74,7 +74,7 @@ Latest 5 changelogs.
     Logger::printHidepath('I told you so');
     ```
 
-### [3.8.9] - 2021-02-24
+### [3.8.9] - 2021-2-24
 
 * Added batch exclusive control sample program for file lock and advisory lock to the sample application.
     
@@ -119,11 +119,11 @@ Latest 5 changelogs.
     CI_ENV=development php public/index.php batch/runMultipleBatch/run/advisorylock;
     ```
 
-### [3.8.8] - 2021-02-23
+### [3.8.8] - 2021-2-23
 
 * Organized readme and added batch lock test program.
 
-### [3.8.7] - 2021-02-19
+### [3.8.7] - 2021-2-19
 
 - Added a method to the file helper that returns a file size with units.
 
