@@ -31,7 +31,8 @@ abstract class Input extends \CI_Input {
     // content type is probably regular form-encoded
     if (!count($matches)) {
       // we expect regular puts to containt a query string containing data
-      parse_str(urldecode($data), $data);
+      // All variables created (or values returned into array if second parameter is set) are already urldecode()d.
+      parse_str($data, $data);
       return empty($index) ? $data : $data[$index] ?? '';
     }
     $boundary = $matches[1];
