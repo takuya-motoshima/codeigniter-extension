@@ -87,10 +87,10 @@ final class FileHelper {
     if (!file_exists($srcDir)) throw new \RuntimeException('Not found directory ' . $srcDir);
     else if (!is_dir($srcDir)) throw new \RuntimeException($srcDir . ' is not directory');
     self::makeDirectory($dstDir);
-    $iterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($srcDir, \RecursiveDirectoryIterator::SKIP_DOTS), \RecursiveIteratorIterator::SELF_FIRST);
-    foreach ($iterator as $info) {
-      if ($info->isDir()) self::makeDirectory($dstDir . '/' . $iterator->getSubPathName());
-      else self::copyFile($info, $dstDir . '/' . $iterator->getSubPathName());
+    $it = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($srcDir, \RecursiveDirectoryIterator::SKIP_DOTS), \RecursiveIteratorIterator::SELF_FIRST);
+    foreach ($it as $info) {
+      if ($info->isDir()) self::makeDirectory($dstDir . '/' . $it->getSubPathName());
+      else self::copyFile($info, $dstDir . '/' . $it->getSubPathName());
     }
   }
 
@@ -101,22 +101,35 @@ final class FileHelper {
    * @param string[] $paths
    */
   public static function delete(...$paths) {
-    $isRemoveRoot = true;
+    // If the parameter path is an array rather than a variadic argument, target the first element.
+    if (is_array(reset($paths))) $paths = reset($paths);
+
+    // Whether to delete the root directory at the end.
+    $deleteRoute = true;
     if (is_bool(end($paths))) {
-      $isRemoveRoot = end($paths);
+      $deleteRoute = end($paths);
       unset($paths[count($paths) - 1]);
     }
+
+    // Recursively delete the specified path.
     foreach ($paths as $path) {
-      if (is_file($path)) {
+      if (!file_exists($path)) {
+        Logger::error("{$path} not found");
+      } else if (is_file($path)) {
+        // If it's a file, simply delete it.
         unlink($path);
-        continue;
+      } else {
+        // For directories, recursively delete files and directories under them.
+        $it = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($path, \RecursiveDirectoryIterator::SKIP_DOTS), \RecursiveIteratorIterator::CHILD_FIRST);
+        foreach ($it as $info) {
+          if ($info->isDir())
+            rmdir($info);
+          else
+            unlink($info);
+        }
+        if ($deleteRoute)
+          rmdir($path);
       }
-      $iterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($path, \RecursiveDirectoryIterator::SKIP_DOTS), \RecursiveIteratorIterator::CHILD_FIRST);
-      foreach ($iterator as $info) {
-        if ($info->isDir()) rmdir($info);
-        else unlink($info);
-      }
-      if ($isRemoveRoot) rmdir($path);
     }
   }
 
@@ -245,8 +258,8 @@ final class FileHelper {
     else if (!is_array($dirs)) throw new RuntimeException('The file path type only allows strings or arrays of strings.');
     $size = 0;
     foreach ($dirs as $dir) {
-      $iterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($dir, \FilesystemIterator::CURRENT_AS_FILEINFO | \FilesystemIterator::SKIP_DOTS));
-      foreach($iterator as $info) {
+      $it = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($dir, \FilesystemIterator::CURRENT_AS_FILEINFO | \FilesystemIterator::SKIP_DOTS));
+      foreach($it as $info) {
         $infos[] = $info;
         $size += $info->getSize();
       }

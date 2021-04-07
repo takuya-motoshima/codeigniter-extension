@@ -9,6 +9,7 @@ use \X\Util\ImageHelper;
 use \X\Util\IpUtils;
 use \X\Util\AmazonSesClient;
 use \X\Util\ArrayHelper;
+use \X\Util\DateHelper;
 use MathieuViossat\Util\ArrayToTextTable;
 
 class Test extends AppController {
@@ -19,18 +20,47 @@ class Test extends AppController {
     parent::view('test');
   }
 
-  public function sendEmail() {
+  /**
+   * 
+   * Delete directory or file
+   *
+   * @param string[] $paths
+   */
+  public static function delete(...$paths) {
+    $isRemoveRoot = true;
+    if (is_bool(end($paths))) {
+      $isRemoveRoot = end($paths);
+      unset($paths[count($paths) - 1]);
+    }
+    foreach ($paths as $path) {
+      if (is_file($path)) {
+        unlink($path);
+        continue;
+      }
+      $iterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($path, \RecursiveDirectoryIterator::SKIP_DOTS), \RecursiveIteratorIterator::CHILD_FIRST);
+      foreach ($iterator as $info) {
+        if ($info->isDir()) rmdir($info);
+        else unlink($info);
+      }
+      if ($isRemoveRoot) rmdir($path);
+    }
+  }
+
+  public function daysInMonth() {
+    $days = DateHelper::getDaysInMonth(2021, 3, 'Y-m-d');
+    parent
+      ::set($days)
+      ::json(false, true);
+  }
+
+  public function email() {
     try {
       // SES client.
       $ses = new AmazonSesClient([
-        'credentials' => [
-          'key' => $_ENV['SES_ACCESS_KEY'],
-          'secret' => $_ENV['SES_SECRET_KEY'],
-        ],
+        'credentials' => ['key' => $_ENV['SES_ACCESS_KEY'], 'secret' => $_ENV['SES_SECRET_KEY']],
         'configuration' => $_ENV['SES_CONFIGURATION'],
         'region' => $_ENV['SES_REGION']
       ]);
-
       // Send email.
       $result = $ses
         ->from('from@example.com')
@@ -52,7 +82,6 @@ class Test extends AppController {
         ->set_data([
           // Datetime custom validation.
           'datetime' => '2021-02-03 17:46:00',// ok
-
           // Host name custom validation.
           'hostname1' => 'external.asd1230-123.asd_internal.asd.gm-_ail.com',// ok
           'hostname2' => 'domain.com',// ok
@@ -64,12 +93,10 @@ class Test extends AppController {
           'hostname8' => 'subdomain.-example.com',// ng
           'hostname9' => 'example.com/parameter',// ng
           'hostname10' => 'example.com?anything',// ng
-
           // IP address custom validation.
           'ipaddress1' => '000.0000.00.00',// ng
           'ipaddress2' => '192.168.1.1',// ok
           'ipaddress3' => '912.456.123.123',// ng
-
           // Host name or ip address custom validation.
           'hostname_or_ipaddress1' => 'external.asd1230-123.asd_internal.asd.gm-_ail.com',// ok
           'hostname_or_ipaddress2' => 'domain.com',// ok
@@ -84,7 +111,6 @@ class Test extends AppController {
           'hostname_or_ipaddress11' => '000.0000.00.00',// ng
           'hostname_or_ipaddress12' => '192.168.1.1',// ok
           'hostname_or_ipaddress13' => '912.456.123.123',// ng
-
           // UNix user name custom validation.
           'unix_username1' => 'abcd',// ok
           'unix_username2' => 'a123',// ok
@@ -97,7 +123,6 @@ class Test extends AppController {
           'unix_username10' => '-abc',// ng
           'unix_username11' => '$abc',// ng
           'unix_username12' => 'a$bc',// ng
-
           // Port number custom validation.
           'port1' => '-1',// ng
           'port2' => '0',// ok
@@ -164,20 +189,16 @@ class Test extends AppController {
     }
   }
 
-  public function createThumbnail() {
+  public function thumbnail() {
     try {
       // resize only the width of the image
       ImageHelper::resize(APPPATH . 'sample_data/0qmIJOcCtbs.jpg', APPPATH . 'sample_data/0qmIJOcCtbs_thumb_1.jpg', 100, null, false);
-
       // resize only the height of the image
       ImageHelper::resize(APPPATH . 'sample_data/0qmIJOcCtbs.jpg', APPPATH . 'sample_data/0qmIJOcCtbs_thumb_2.jpg', null, 100, false);
-
       // resize the image to a width of 100 and constrain aspect ratio (auto height)
       ImageHelper::resize(APPPATH . 'sample_data/0qmIJOcCtbs.jpg', APPPATH . 'sample_data/0qmIJOcCtbs_thumb_3.jpg', 100, null, true);
-
       // resize the image to a height of 100 and constrain aspect ratio (auto width)
       ImageHelper::resize(APPPATH . 'sample_data/0qmIJOcCtbs.jpg', APPPATH . 'sample_data/0qmIJOcCtbs_thumb_4.jpg', null, 100, true);
-
       Logger::print('Thumbnail creation successful.');
     } catch (\Throwable $e) {
       Logger::print($e);
@@ -189,10 +210,8 @@ class Test extends AppController {
       error_reporting(E_ALL);
       ini_set('display_errors', 'On');
       Logger::print('Begin');
-
       // Warning occurs here
       file_get_contents('not_exists.txt');
-
       Logger::print('End');
     } catch (\Throwable $e) {
       Logger::print('Error occurred');
@@ -204,22 +223,12 @@ class Test extends AppController {
       error_reporting(E_ALL);
       ini_set('display_errors', 'On');
       Logger::print('Begin');
-
       // Notice occurs here
       echo $undefined;
-
       Logger::print('End');
     } catch (\Throwable $e) {
       Logger::print('Error occurred');
     }
-  }
-
-  public function log() {
-    Logger::debug('Test message');
-    Logger::info('Test message');
-    Logger::error('Test message');
-    Logger::print('Test message');
-    Logger::printWithoutPath('Test message');
   }
 
   public function file() {
@@ -313,21 +322,16 @@ class Test extends AppController {
   public function cipher() {
     // Get the initialization vector. This should be changed every time to make it difficult to predict.
     $iv = Cipher::generateInitialVector();
-
     // Plaintext.
     $plaintext = 'Hello, World!';
-
     // Encrypted password.
     $password = 'password';
-
     // Encrypt.
     $encrypted = Cipher::encrypt($plaintext, $password, $iv);
     Logger::print('Encrypted: ', $encrypted);
-
     // Decrypt.
     $decrypted = Cipher::decrypt($encrypted, $password, $iv);
     Logger::print('Decrypt: ', $decrypted);
-
     // Compare image sizes before and after encryption.
     $base64 = base64_encode(file_get_contents(APPPATH . 'sample_data/0qmIJOcCtbs.jpg'));
     $originalSize = mb_strlen($base64 , '8bit');
@@ -409,16 +413,8 @@ class Test extends AppController {
   public function arrayToTable() {
     try {
       $arr = [
-        [
-          'firstname' => 'John',
-          'lastname' => 'Mathew',
-          'email' => 'John.Mathew@xyz.com'
-        ],
-        [
-          'firstname' => 'Jim',
-          'lastname' => 'Parker',
-          'email' => 'Jim.Parker@xyz.com'
-        ]
+        ['firstname' => 'John', 'email' => 'John.Mathew@xyz.com'],
+        ['firstname' => 'Jim', 'lastname' => 'Parker', 'email' => 'Jim.Parker@xyz.com']
       ];
       // $renderer = new ArrayToTextTable(ArrayHelper::isVector($arr) ? $arr : [$arr]);
       // echo $renderer->getTable();

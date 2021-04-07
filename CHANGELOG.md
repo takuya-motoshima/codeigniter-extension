@@ -1,6 +1,26 @@
 # Changelog
 
-## [3.9.1] - 2021-03-15
+## [3.9.4] - 2021-4-7
+
+* Fix create-project error.
+
+## [3.9.3] - 2021-3-26
+
+* Added a function to the Date helper that returns the date of the specified month.
+
+    ```php
+    use \X\Util\DateHelper;
+
+    // Get the date of March 2021.
+    DateHelper::getDaysInMonth(2021, 3, 'Y-m-d');
+    // ["2021-03-01", "2021-03-02", "2021-03-03", "2021-03-04", "2021-03-05", "2021-03-06", "2021-03-07", "2021-03-08", "2021-03-09", "2021-03-10", "2021-03-11", "2021-03-12", "2021-03-13", "2021-03-14", "2021-03-15", "2021-03-16", "2021-03-17", "2021-03-18", "2021-03-19", "2021-03-20", "2021-03-21", "2021-03-22", "2021-03-23", "2021-03-24", "2021-03-25", "2021-03-26", "2021-03-27", "2021-03-28", "2021-03-29", "2021-03-30", "2021-03-31"]
+    ```
+
+## [3.9.2] - 2021-3-24
+
+* Resolved an error where the return type of the email function of the email subclass (/X/Util/Email) did not match the definition.
+
+## [3.9.1] - 2021-3-15
 
 * Added a method that returns a table string of an array.
 
@@ -28,7 +48,7 @@
     └───────────┴──────────┴─────────────────────┘
     ```
 
-## [3.9.0] - 2021-03-15
+## [3.9.0] - 2021-3-15
 
 * Added a log function that does not output path information.
 
@@ -38,7 +58,7 @@
     Logger::printHidepath('I told you so');
     ```
 
-## [3.8.9] - 2021-02-24
+## [3.8.9] - 2021-2-24
 
 * Added batch exclusive control sample program for file lock and advisory lock to the sample application.
     
@@ -83,11 +103,11 @@
     CI_ENV=development php public/index.php batch/runMultipleBatch/run/advisorylock;
     ```
 
-## [3.8.8] - 2021-02-23
+## [3.8.8] - 2021-2-23
 
 * Organized readme and added batch lock test program.
 
-## [3.8.7] - 2021-02-19
+## [3.8.7] - 2021-2-19
 
 - Added a method to the file helper that returns a file size with units.
 
@@ -102,11 +122,11 @@
     FileHelper::humanFilesize('/var/somefile.txt');// 120.56KB
     ```
 
-## [3.8.6] - 2021-02-18
+## [3.8.6] - 2021-2-18
 
 - Fixed changelog typos.
 
-## [3.8.5] - 2021-02-18
+## [3.8.5] - 2021-2-18
 
 - Added HTTP / CLI access control to controller public method annotation.
 
@@ -174,11 +194,11 @@
     ```
 
 
-## [3.8.4] - 2021-02-17
+## [3.8.4] - 2021-2-17
 
 - Changed to return SES mail sending result object.(\X\Util\AmazonSesClient).
 
-## [3.8.3] - 2021-02-11
+## [3.8.3] - 2021-2-11
 
 - Added form validation class.The reason I added it is that I want to validate it with the model(\X\Util\Validation).
 
@@ -208,11 +228,11 @@
     Logger::print("Email sent! Message ID: $messageId");
     ```
 
-## [3.8.2] - 2021-02-10
+## [3.8.2] - 2021-2-10
 
 - Fixed README.
 
-## [3.8.1] - 2021-02-10
+## [3.8.1] - 2021-2-10
 
 - Added an empty judgment method for characters trimmed with left and right spaces(\X\Util\StringHelper).
 
@@ -228,11 +248,11 @@
     StringHelper::empty([]);// true
     ```
 
-## [3.8.0] - 2021-02-10
+## [3.8.0] - 2021-2-10
 
 - Added nginxn configuration sample file to REAME.
 
-## [3.7.9] - 2021-02-09
+## [3.7.9] - 2021-2-9
 
 - Added the following rules to form validation.
 
@@ -400,7 +420,7 @@
     }
     ```
 
-## [3.7.8] - 2021-02-06
+## [3.7.8] - 2021-2-6
 
 - Added a method to group associative arrays by key to ArrayHelper.(\X\Util\ArrayHelper).
 
@@ -433,7 +453,7 @@
     // ]
     ```
 
-## [3.7.7] - 2021-02-03
+## [3.7.7] - 2021-2-3
 
 - Create a form validation class and add a datetime validation method(\X\Library\FormValidation).
 
@@ -462,15 +482,15 @@
     }
     ```
 
-## [3.7.6] - 2021-01-27
+## [3.7.6] - 2021-1-27
 
 - Delete debug log.
 
-## [3.7.5] - 2021-01-22
+## [3.7.5] - 2021-1-22
 
 - Fixed a bug that Annotation could not be read.
 
-## [3.7.4] - 2021-01-22
+## [3.7.4] - 2021-1-22
 
 - Change image resizing features(\X\Util\ImageHelper).
 

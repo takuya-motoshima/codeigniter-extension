@@ -20,7 +20,6 @@ final class DateHelper {
    * @return array
    */
   public static function getWeekPeriod(string $yearMonth, int $nthWeek, bool $aroundMonth = false, bool $startMonday = true): array {
-
     // Last day of the week.The default is Saturday.If Monday is the first day of the week, it will be Sunday.
     $weekEnd = 6;
     if ($startMonday === true) $weekEnd = 7;
@@ -51,5 +50,17 @@ final class DateHelper {
       if (date('Ym', $endStamp) !== $yearMonth) $endStamp = strtotime('last day of ' . $yearMonth);
     }
     return [$startStamp, $endStamp];
+  }
+
+  /**
+   * Returns all dates in the specified month.
+   *
+   * @return array
+   */
+  public static function getDaysInMonth(int $year, int $month, string $format): array {
+    $days = [];
+    for($i=1, $date=\DateTime::createFromFormat('Y-n', "$year-$month"); $i<=$date->format('t'); $i++)
+      $days[] = \DateTime::createFromFormat("Y-n-d", "$year-$month-$i")->format($format);
+   return $days;
   }
 }
