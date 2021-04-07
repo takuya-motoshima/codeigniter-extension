@@ -20,6 +20,10 @@ See [CHANGELOG.md](./CHANGELOG.md).
 
 Latest 5 changelogs.  
 
+### [3.9.4] - 2021-4-7
+
+* Fix create-project error.
+
 ### [3.9.3] - 2021-3-26
 
 * Added a function to the Date helper that returns the date of the specified month.

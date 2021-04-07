@@ -4,7 +4,6 @@
 
 * Fix create-project error.
 
-
 ## [3.9.3] - 2021-3-26
 
 * Added a function to the Date helper that returns the date of the specified month.
