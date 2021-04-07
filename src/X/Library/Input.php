@@ -28,11 +28,11 @@ abstract class Input extends \CI_Input {
     // grab multipart boundary from content type header
     preg_match('/boundary=(.*)$/', $_SERVER['CONTENT_TYPE'], $matches);
 
-    // content type is probably regular form-encoded
+    // content type is probably regular form-encoded or application/json
     if (!count($matches)) {
-      // we expect regular puts to containt a query string containing data
+      // we expect regular puts to contain a query string containing data
       // All variables created (or values returned into array if second parameter is set) are already urldecode()d.
-      parse_str($data, $data);
+      if($_SERVER['CONTENT_TYPE'] != 'application/json') parse_str($data, $data);
       return empty($index) ? $data : $data[$index] ?? '';
     }
     $boundary = $matches[1];
