@@ -1,5 +1,9 @@
 # Changelog
 
+## [3.9.6] - 2021-4-8
+
+* Fix the issue text not recognized after '&' in case of PUT request.
+
 ## [3.9.5] - 2021-4-8
 
 * Refactor sample application and skeleton.
