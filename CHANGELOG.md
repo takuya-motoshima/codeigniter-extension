@@ -1,5 +1,9 @@
 # Changelog
 
+## [3.9.5] - 2021-4-8
+
+* Refactor sample application and skeleton.
+
 ## [3.9.4] - 2021-4-7
 
 * Fix create-project error.
