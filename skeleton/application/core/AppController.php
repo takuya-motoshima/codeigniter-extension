@@ -2,54 +2,81 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 use X\Util\Logger;
-
-/**
- * @see \X\Controller\Controller
- */
 abstract class AppController extends \X\Controller\Controller {
 
   /**
-   * @see \X\Controller\Controller::beforeResponse()
+   * Before response
+   *
+   * @param  string $referer
+   * @return void
    */
   protected function beforeResponse(string $referer) {}
 
   /**
-   * @see \X\Controller\Controller::beforeResponseJson()
+   * Before response JSON
+   *
+   * @param  string $referer
+   * @return void
    */
   protected function beforeResponseJson(string $referer) {}
 
   /**
-   * @see \X\Controller\Controller::beforeResponseView()
+   * Before response Template
+   * 
+   * @param  string $referer
+   * @return void
    */
-  protected function beforeResponseView(string $referer) {}
+  protected function beforeResponseView(string $referer) {
+    if (isset($_SESSION['session']))
+      parent::set('session', $_SESSION['session']);
+  }
+
 
   /**
-   * @see \X\Controller\Controller::beforeResponseHtml()
+   * Before response HTML
+   *
+   * @param  string $referer
+   * @return void
    */
   protected function beforeResponseHtml(string $referer) {}
 
   /**
-   * @see \X\Controller\Controller::beforeResponseJs()
+   * Before response JS
+   *
+   * @param  string $referer
+   * @return void
    */
   protected function beforeResponseJs(string $referer) {}
 
   /**
-   * @see \X\Controller\Controller::beforeResponseText()
+   * Before response Text
+   *
+   * @param  string $referer
+   * @return void
    */
   protected function beforeResponseText(string $referer) {}
 
   /**
-   * @see \X\Controller\Controller::beforeDownload()
+   * Before download
+   *
+   * @param  string $referer
+   * @return void
    */
   protected function beforeDownload(string $referer) {}
 
   /**
-   * @see \X\Controller\Controller::beforeResponseImage()
+   * Before response json
+   *
+   * @param  string $referer
+   * @return void
    */
   protected function beforeResponseImage(string $referer) {}
 
   /**
-   * @see \X\Controller\Controller::beforeInternalRedirect()
+   * Before response json
+   *
+   * @param  string $referer
+   * @return void
    */
   protected function beforeInternalRedirect(string $referer) {}
 }

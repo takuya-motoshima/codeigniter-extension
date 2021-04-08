@@ -32,9 +32,10 @@ final class Installer {
     FileHelper::copyDirectory(static::FRAMEWORK_DIR . 'application', 'application');
     FileHelper::copyDirectory('skeleton/application', 'application');
     FileHelper::copyFile(static::FRAMEWORK_DIR . 'index.php', static::DOCUMENT_ROOT . 'index.php');
-    FileHelper::copyFile('skeleton/public/.htaccess', static::DOCUMENT_ROOT . '.htaccess');
-    FileHelper::copyFile('skeleton/.gitignore', '.gitignore');
-    FileHelper::copyFile('skeleton/.gitattributes', '.gitattributes');
+    FileHelper::copyDirectory('skeleton/public', static::DOCUMENT_ROOT);
+    // FileHelper::copyFile('skeleton/public/.htaccess', static::DOCUMENT_ROOT . '.htaccess');
+    // FileHelper::copyFile('skeleton/.gitignore', '.gitignore');
+    // FileHelper::copyFile('skeleton/.gitattributes', '.gitattributes');
     self::update_index($io);
     self::update_config($io);
     self::composer_update($io);

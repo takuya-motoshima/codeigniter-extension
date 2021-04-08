@@ -4,14 +4,79 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 use X\Util\Logger;
 abstract class AppController extends \X\Controller\Controller {
 
-  // protected function beforeResponse(string $referer) {
-  //   Logger::debug('$referer=', $referer);
-  //   $this->setCorsHeader('*');
-  // }
+  /**
+   * Before response
+   *
+   * @param  string $referer
+   * @return void
+   */
+  protected function beforeResponse(string $referer) {}
 
+  /**
+   * Before response JSON
+   *
+   * @param  string $referer
+   * @return void
+   */
+  protected function beforeResponseJson(string $referer) {}
+
+  /**
+   * Before response Template
+   * 
+   * @param  string $referer
+   * @return void
+   */
   protected function beforeResponseView(string $referer) {
-    if (isset($_SESSION['user'])) {
-      parent::set('user', $_SESSION['user']);
-    }
+    if (isset($_SESSION['session']))
+      parent::set('session', $_SESSION['session']);
   }
+
+
+  /**
+   * Before response HTML
+   *
+   * @param  string $referer
+   * @return void
+   */
+  protected function beforeResponseHtml(string $referer) {}
+
+  /**
+   * Before response JS
+   *
+   * @param  string $referer
+   * @return void
+   */
+  protected function beforeResponseJs(string $referer) {}
+
+  /**
+   * Before response Text
+   *
+   * @param  string $referer
+   * @return void
+   */
+  protected function beforeResponseText(string $referer) {}
+
+  /**
+   * Before download
+   *
+   * @param  string $referer
+   * @return void
+   */
+  protected function beforeDownload(string $referer) {}
+
+  /**
+   * Before response json
+   *
+   * @param  string $referer
+   * @return void
+   */
+  protected function beforeResponseImage(string $referer) {}
+
+  /**
+   * Before response json
+   *
+   * @param  string $referer
+   * @return void
+   */
+  protected function beforeInternalRedirect(string $referer) {}
 }

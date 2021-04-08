@@ -1,114 +1,53 @@
-# Sample application
+# sample
+
+This sample includes a simple user authentication process and a login page and dashboard.  
+
 
 ## Getting Started
 
-Create project.  
+See [../README.md](../README.md) for basic settings.  
 
-```sh
-mkdir -p /var/www/html;
-cd /var/www/html;
-composer create-project takuya-motoshima/codeIgniter-extension sample;
+Build the DB used by the sample application.  
+Connect to the DB and add the DB and table.
+
+```sql
+CREATE DATABASE IF NOT EXISTS `sample` DEFAULT CHARACTER SET utf8mb4;
+
+USE `sample`;
+
+DROP TABLE IF EXISTS `user`;
+CREATE TABLE `user` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `role` enum('admin', 'member') NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `password` varchar(100) NOT NULL,
+  `name` varchar(30) NOT NULL,
+  `created` datetime NOT NULL DEFAULT current_timestamp(),
+  `modified` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `ukAccount1` (`email`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+DROP TABLE IF EXISTS `session`;
+CREATE TABLE IF NOT EXISTS `session` (
+  `id` varchar(128) NOT NULL,
+  `ip_address` varchar(45) NOT NULL,
+  `timestamp` int(10) unsigned DEFAULT 0 NOT NULL,
+  `data` blob NOT NULL,
+  `email` varchar(255) DEFAULT NULL COMMENT 'A custom field dedicated to this sample application. The logged-in user name.',
+  KEY `session_timestamp` (`timestamp`)
+);
+
+INSERT INTO `user` (`role`, `email`, `password`, `name`) VALUES
+  ('admin', 'robin@example.com', 'password', 'Robin'),
+  ('member', 'taylor@example.com', 'password', 'Taylor'),
+  ('member', 'vivian@example.com', 'password', 'Vivian'),
+  ('member', 'harry@example.com', 'password', 'Harry'),
+  ('member', 'eliza@example.com', 'password', 'Eliza'),
+  ('member', 'nancy@example.com', 'password', 'Nancy'),
+  ('member', 'melinda@example.com', 'password', 'Melinda'),
+  ('member', 'harley@example.com', 'password', 'Harley');
 ```
 
-Grant log, session, and cache write permissions to the web server.  
-
-```sh
-sudo chmod -R 755 /var/www/html/sample/application/{logs,cache,session};
-sudo chown -R nginx:nginx /var/www/html/sample/application/{logs,cache,session};
-```
-
-Add the settings of the WEB server (nginx).  
-Write the following in /etc/nginx/conf.d/sample.conf.  
-
-```nginx
-server {
-  listen       80;
-  server_name  <Your host name>;
-  ssi_last_modified on;
-  ssi on;
-  charset UTF-8;
-  root /var/www/html/sample/public;
-  index index.php index.html;
-  access_log  /var/log/nginx/sample.access.log;
-  error_log  /var/log/nginx/sample.error.log  warn;
-  gzip on;
-  gzip_types application/json;
-
-  # Codeigniter index file existence check
-  location / {
-    try_files $uri $uri/ /index.php;
-    location = /index.php {
-      fastcgi_pass  unix:/run/php-fpm/www.sock;
-      include       fastcgi_params;
-      fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-      fastcgi_param CI_ENV development;
-    }
-  }
-
-  # Codeigniter request endpoint
-  location ~ ((.*\.php)(/.*)|(\.php))$ {
-    fastcgi_split_path_info ^(.+\.php)(/.+)$;
-    fastcgi_pass unix:/run/php-fpm/www.sock;
-    fastcgi_index index.php;
-    include fastcgi_params;
-    fastcgi_param SCRIPT_FILENAME $request_filename;
-  }
-
-  # Static file access is cached
-  location ~ .*\.(html?|jpe?g|gif|png|svg|css|js|ico|swf|inc) {
-    # add_header Access-Control-Allow-Origin *;
-    expires 1d;
-    access_log off;
-    #add_header X-Frame-Options DENY;
-  }
-
-  # If favicon does not exist, return an empty image
-  location = /favicon.ico {
-    empty_gif;
-    access_log  off;
-    log_not_found off;
-  }
-
-  # Checking access status
-  location = /nginx_status {
-    stub_status on;
-    access_log off;
-    allow 127.0.0.1;
-    deny all;
-  }
-}
-```
-
-Reload Nginx.  
-
-```sh
-sudo systemctl reload nginx;
-```
-
-Create a DB.  
-Connect to MariaDB and execute the following command to build the DB.  
-
-```sh
-cd /var/www/html/sample;
-mysql -u root;
-SOURCE ./ddl.sql;
-```
-Please open the URL below and check that the login screen is displayed.  
-
+If the WEB server settings have been completed, the login page will be displayed from the following URL.  
 https://<Your host name>
-
-## Command for testing
-
-Run a batch that prohibits multiple launches using file locks.  
-
-```sh
-cd /var/www/html/sample;
-CI_ENV=development php public/index.php batch/runMultipleBatch/run/filelock;
-```
-
-Run a batch that prohibits multiple launches using advisory locks.  
-
-```sh
-cd /var/www/html/sample;
-CI_ENV=development php public/index.php batch/runMultipleBatch/run/advisorylock;
-```
