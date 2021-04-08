@@ -63,7 +63,7 @@ class Users extends AppController {
    */
   public function query() {
 
-    Logger::debug('Parameters:', $this->input->get());
+    // Logger::debug('Parameters:', $this->input->get());
 
     try {
       // Get data in the specified page number range.
@@ -124,6 +124,9 @@ class Users extends AppController {
    * @Access(allow_login=true, allow_logoff=false, allow_role="admin")
    */
   public function put(int $id) {
+
+    Logger::debug('Parameters:', $this->input->put());
+
     try {
       // Check input data.
       $this->form_validation
