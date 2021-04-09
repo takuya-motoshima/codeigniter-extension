@@ -170,6 +170,28 @@ class Sample extends AppController {
 }
 ```
 
+### Template engine
+
+This extension package uses the Twig template.  
+See [here](https://twig.symfony.com/doc/3.x/) for how to use Twig.  
+
+In addition, the session of the logged-in user is automatically set in the template variable.  
+
+This is useful, for example, when displaying the login username on the screen. 
+
+```php
+// Set user data to "session" at login.
+$_SESSION['user'] = ['name' => 'John Smith'];
+```
+
+```html
+{% if session.user is not empty %}
+  Hello {{session.user.name}}!
+{% endif %}
+  Who is it?
+{% else %}
+```
+
 ## License
 
 [MIT licensed](./LICENSE.txt)

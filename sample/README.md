@@ -50,4 +50,4 @@ INSERT INTO `user` (`role`, `email`, `password`, `name`) VALUES
 ```
 
 If the WEB server settings have been completed, the login page will be displayed from the following URL.  
-https://<Your host name>
+https:\/\/<Your host name>

@@ -8,7 +8,7 @@
   {% block styles %}{% endblock %}
 </head>
 <body>
-  {% if session is not empty %}
+  {% if session.user is not empty %}
     <nav class="navbar navbar-light bg-light navbar-expand-lg">
       <div class="container-fluid">
         <a class="navbar-brand" href="/">
@@ -42,8 +42,8 @@
     globalThis.baseUrl = '{{baseUrl}}';
 
     // User session.
-    {% if session is not empty %}
-      globalThis.$$session = {{session|json_encode|raw}};
+    {% if session.user is not empty %}
+      globalThis.$$user = {{session.user|json_encode|raw}};
     {% endif %}
   </script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>

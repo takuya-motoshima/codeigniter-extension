@@ -1,5 +1,9 @@
 # Changelog
 
+## [3.9.7] - 2021-4-9
+
+* Added the process to automatically set $\_SESSION to the template variable session.
+
 ## [3.9.6] - 2021-4-8
 
 * Fix the issue text not recognized after '&' in case of PUT request.

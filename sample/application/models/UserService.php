@@ -24,7 +24,7 @@ class UserService extends \AppModel {
 
     // Store login user data in session
     unset($user['password']);
-    $_SESSION['session'] = $user;
+    $_SESSION[SESSION_NAME] = $user;
     return true;
   }
 

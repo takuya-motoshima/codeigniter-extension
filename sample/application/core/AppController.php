@@ -27,8 +27,8 @@ abstract class AppController extends \X\Controller\Controller {
    * @return void
    */
   protected function beforeResponseView(string $referer) {
-    if (isset($_SESSION['session']))
-      parent::set('session', $_SESSION['session']);
+    if (isset($_SESSION[SESSION_NAME]))
+      parent::set(SESSION_NAME, $_SESSION[SESSION_NAME]);
   }
 
 
