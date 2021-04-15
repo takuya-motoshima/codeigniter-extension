@@ -1,5 +1,9 @@
 # Changelog
 
+## [3.9.9] - 2021-4-15
+
+* Fixed README typo.
+
 ## [3.9.8] - 2021-4-15
 
 * Added form validation rule according to the [email address proposed in HTML5](https://html.spec.whatwg.org/multipage/input.html#valid-e-mail-address).

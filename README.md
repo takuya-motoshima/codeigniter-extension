@@ -223,7 +223,7 @@ class AppForm_validation extends FormValidation {}
   <tbody>
     <tr>
       <td>datetime</td>
-      <td>No</td>
+      <td>Yes</td>
       <td>If the value is other than a date, FALSE is returned..</td>
       <td>datetime[Y-m-d H:i:s]</td>
     </tr>
