@@ -192,6 +192,81 @@ $_SESSION['user'] = ['name' => 'John Smith'];
 {% else %}
 ```
 
+### Extended form validation class
+
+Add "application/libraries/AppForm_validation.php".  
+You can immediately use the extended validation rules.
+
+application/libraries/AppForm_validation.php:  
+
+```php
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+use X\Library\FormValidation;
+
+/**
+ * Inherit an existing class to extend the form validation method.
+ */
+class AppForm_validation extends FormValidation {}
+```
+
+<table>
+  <thead>
+    <tr>
+      <th>Rule</th>
+      <th>Parameter</th>
+      <th>Description</th>
+      <th>Example</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>datetime</td>
+      <td>No</td>
+      <td>If the value is other than a date, FALSE is returned..</td>
+      <td>datetime[Y-m-d H:i:s]</td>
+    </tr>
+    <tr>
+      <td>hostname</td>
+      <td>No</td>
+      <td>If the value is other than the host name, FALSE is returned.</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>ipaddress</td>
+      <td>No</td>
+      <td>If the value is other than an IP address, FALSE is returned.</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>hostname_or_ipaddress</td>
+      <td>No</td>
+      <td>If the value is other than a host name or IP address, FALSE is returned.</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>unix_username</td>
+      <td>No</td>
+      <td>If the value is other than a Unix username, FALSE is returned.</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>port</td>
+      <td>No</td>
+      <td>If the value is other than a port number, FALSE is returned.</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>email</td>
+      <td>No</td>
+      <td>If the value is other than the email suggested in HTML5, FALSE will be returned.<br><a href="https://html.spec.whatwg.org/multipage/input.html#valid-e-mail-address">https://html.spec.whatwg.org/multipage/input.html#valid-e-mail-address</a></td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+
+
 ## License
 
 [MIT licensed](./LICENSE.txt)

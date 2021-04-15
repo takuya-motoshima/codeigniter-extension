@@ -61,4 +61,17 @@ final class Validation {
   public static function port(string $input): bool {
     return preg_match('/^\d+$/', $input) && (int) $input >= 0 && (int) $input <= 65535;
   }
+
+  /**
+   * Validate email.
+   * 
+   * The verification method uses the regular expression proposed in the HTML5 specification.
+   * https://html.spec.whatwg.org/multipage/input.html#valid-e-mail-address
+   *
+   * @param  string $input Input value.
+   * @return bool          Returns true if validation succeeds, false if validation fails.
+   */
+  public static function email(string $input): bool {
+    return preg_match("/^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/", $input) === 1;
+  }
 }

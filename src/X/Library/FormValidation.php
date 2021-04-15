@@ -10,6 +10,10 @@ namespace X\Library;
 use \X\Util\Logger;
 use \X\Util\Validation;
 
+/**
+ * Extend the form validation method by inheriting the existing class.
+ * This class adds the following new validation rules.
+ */
 abstract class FormValidation extends \CI_Form_validation {
 
   // private $format = 'd-m-Y H:i:s';
@@ -25,6 +29,7 @@ abstract class FormValidation extends \CI_Form_validation {
     parent::__construct($rules);
     // $this->my_error_messages['form_validation_datetime'] = 'The {field} field must have format(' . $this->format . ').';
   }
+
 
   /**
   * Validate datetime.
@@ -46,8 +51,7 @@ abstract class FormValidation extends \CI_Form_validation {
   */
   public function datetime(string $input, string $format): bool {
     $input = str_replace(['-', '/'], '-', $input);
-    if (date($format, strtotime($input)) == $input)
-      return true;
+    if (date($format, strtotime($input)) == $input) return true;
     // $this->format = $format;
     $this->set_message('datetime', "The {field} field must have format $format.");
     return false;
@@ -112,6 +116,21 @@ abstract class FormValidation extends \CI_Form_validation {
   public function port(string $input): bool {
     if (Validation::port($input)) return true;
     $this->set_message('port', 'The {field} field must contain a valid port number.');
+    return false;
+  }
+
+  /**
+   * Validate email.
+   * 
+   * The verification method uses the regular expression proposed in the HTML5 specification.
+   * https://html.spec.whatwg.org/multipage/input.html#valid-e-mail-address
+   * 
+   * @param  string $input Input value.
+   * @return bool          Returns true if validation succeeds, false if validation fails.
+   */
+  public function email(string $input): bool {
+    if (Validation::email($input)) return true;
+    $this->set_message('email', 'The {field} field must contain a valid email address.');
     return false;
   }
 }

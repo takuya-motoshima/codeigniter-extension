@@ -24,7 +24,7 @@ class Users extends AppController {
       // Check input data.
       $this->form_validation
         ->set_data($this->input->post())
-        ->set_rules('email', 'email', 'required')
+        ->set_rules('email', 'email', 'required|email')
         ->set_rules('password', 'password', 'required');
       if (!$this->form_validation->run()) {
         Logger::error($this->form_validation->error_array());
