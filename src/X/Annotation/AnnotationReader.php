@@ -27,7 +27,7 @@
  *   // When accessed by HTTP.
  *   if ($ishttp) {
  *     // Returns an error if HTTP access is not allowed.
- *     if (!$accessibility->allow_http) throw new \RuntimeException('HTTP access is not allowed.');
+ *     if (!$accessibility->allow_http) throw new \RuntimeException('HTTP access is not allowed');
  * 
  *     // When the logged-in user calls a request that only the log-off user can access, redirect to the dashboard.
  *     // It also redirects to the login page when the log-off user calls a request that only the logged-in user can access.

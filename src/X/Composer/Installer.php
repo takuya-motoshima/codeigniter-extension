@@ -105,6 +105,7 @@ final class Installer {
     $io->write('==================================================');
     $io->write('<info>Composer update is running');
     FileHelper::copyFile('composer.json.dist', 'composer.json');
+    FileHelper::copyFile('.env.dist', '.env');
     passthru('composer update');
     $io->write('<info>Composer update is succeeded');
     $io->write('==================================================');

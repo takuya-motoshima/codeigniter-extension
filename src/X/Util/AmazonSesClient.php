@@ -5,11 +5,12 @@
  * ```php
  * use \X\Util\AmazonSesClient;
  * $sesClient  = new AmazonSesClient([
+ *   'region' => $_ENV['AMAZON_SES_REGION'],
  *   'credentials' => [
- *     'key'    => getenv('AMAZON_SES_KEY'),
- *     'secret' => getenv('AMAZON_SES_SECRET')
+ *     'key'    => $_ENV['AMAZON_SES_ACCESS_KEY'],
+ *     'secret' => $_ENV['AMAZON_SES_SECRET_KEY']
  *   ],
- *   'configuration' => getenv('AMAZON_SES_CONFIGURATION'),
+ *   'configuration' => $_ENV['AMAZON_SES_CONFIGURATION'],
  * ]);
  * $sesClient
  *   ->from('notification@sample.com', 'Sample Notifications')

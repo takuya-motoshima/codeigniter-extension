@@ -186,7 +186,7 @@ class SessionDatabaseDriver extends \CI_Session_database_driver {
         $additionalColumnValue = ArrayHelper::searchArrayByKey($additionalColumn, $unserialized);
         $insert_data[$additionalColumn] = $additionalColumnValue;
       } else {
-        throw new \RuntimeException("Column {$additionalColumn} is not found in the session table.");
+        throw new \RuntimeException("Column {$additionalColumn} is not found in the session table");
       }
     }
     return $insert_data;

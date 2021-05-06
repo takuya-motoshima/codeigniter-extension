@@ -41,14 +41,14 @@ $hook['post_controller_constructor'] = function() {
   }
 };
 
-// // pre_system callback.
-// $hook['pre_system'] = function () {
-//   // Load environment variables.
-//   $dotenv = Dotenv\Dotenv::createImmutable(ENVIRONMENT_VARIABLE);
-//   $dotenv->load();
+// pre_system callback.
+$hook['pre_system'] = function () {
+  // Load environment variables.
+  $dotenv = Dotenv\Dotenv::createImmutable(ENV_DIR);
+  $dotenv->load();
 
-//   // Check for uncaught exceptions.
-//   set_exception_handler(function ($e) {
-//     Logger::error($e);
-//   });
-// };
+  // Check for uncaught exceptions.
+  set_exception_handler(function ($e) {
+    Logger::error($e);
+  });
+};

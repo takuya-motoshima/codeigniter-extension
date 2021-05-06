@@ -190,7 +190,7 @@ final class IpUtils {
     if (isset(self::$checkedIps[$cacheKey]))
       return self::$checkedIps[$cacheKey];
     if (!((\extension_loaded('sockets') && \defined('AF_INET6')) || @inet_pton('::1')))
-      throw new \RuntimeException('Unable to check Ipv6. Check that PHP was not compiled with option "disable-ipv6".');
+      throw new \RuntimeException('Unable to check Ipv6. Check that PHP was not compiled with option "disable-ipv6"');
     if (false !== strpos($ip, '/')) {
       list($address, $netmask) = explode('/', $ip, 2);
       if ('0' === $netmask) return (bool) unpack('n*', @inet_pton($address));

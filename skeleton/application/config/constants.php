@@ -86,3 +86,6 @@ defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest auto
 
 // Login session name.
 const SESSION_NAME = 'user';
+
+// Directory with ".env" file
+const ENV_DIR = APPPATH . '..';

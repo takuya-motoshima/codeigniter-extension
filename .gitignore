@@ -79,6 +79,7 @@ sample/application/session/*
 !sample/application/session
 sample/.env
 !sample/.env.sample
+!.env.dist
 
 # Whitelisted files
 !.gitignore

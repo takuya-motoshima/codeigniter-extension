@@ -15,6 +15,7 @@
     "doctrine/common": "^2.10",
     "ext-openssl": "^7.3",
     "intervention/image": "^2.5",
+    "vlucas/phpdotenv": "^5.3",
     "mathieuviossat/arraytotexttable": "^1.0"
   },
   "license": "MIT",

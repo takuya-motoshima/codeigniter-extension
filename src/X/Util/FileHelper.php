@@ -255,7 +255,7 @@ final class FileHelper {
    */
   public static function getDirectorySize($dirs, array &$infos = []): int {
     if (is_string($dirs)) $dirs = [ $dirs ];
-    else if (!is_array($dirs)) throw new RuntimeException('The file path type only allows strings or arrays of strings.');
+    else if (!is_array($dirs)) throw new RuntimeException('The file path type only allows strings or arrays of strings');
     $size = 0;
     foreach ($dirs as $dir) {
       $it = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($dir, \FilesystemIterator::CURRENT_AS_FILEINFO | \FilesystemIterator::SKIP_DOTS));

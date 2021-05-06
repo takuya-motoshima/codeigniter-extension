@@ -18,20 +18,48 @@ class Client {
   private $debug;
  
   /**
-   * @param string       $key
-   * @param string       $secret
-   * @param bool|boolean $debug
+   * Initialize Rekognition client.
+   * 
+   * @param string $options[region]           AWS Region to connect to.The default is "ap-northeast-1".
+   * @param string $options[key]              AWS access key ID.This is required.
+   * @param string $options[secret]           AWS secret access key.This is required.
+   * @param int    $options[connect_timeout]  A float describing the number of seconds to wait while trying to connect to a server. The default is 5 (seconds).
+   * @param bool   $options[debug]            Specify true to output the result of Rekognition to the debug log.The default is false and no debug log is output.
    */
-  public function __construct(string $key, string $secret, bool $debug = false) {
-    $this->client = new RekognitionClient([
+  public function __construct(array $options) {
+  // public function __construct(string $key, string $secret, bool $debug = false) {
+    // Initialize options.
+    $options = array_merge([
       'region' => 'ap-northeast-1',
+      'key' => null,
+      'secret' => null,
+      'connect_timeout' => 5, // 5 secs
+      'debug' => false
+    ], $options);
+
+    // Option validation.
+    if (empty($options['key'])) throw new \RuntimeException('Amazon Rekognition access key is required');
+    else if (empty($options['secret']))  throw new \RuntimeException('Amazon Rekognition secret key is required');
+
+    // Debug options.
+    if ($options['debug'])
+      Logger::debug('Options: ', $options);
+
+    // Create a RekognitionClient instance.
+    $this->client = new RekognitionClient([
+      'region' => $options['region'],
       'version' => 'latest',
       'credentials' => [
-        'key' => $key,
-        'secret' => $secret
+        'key' => $options['key'],
+        'secret' => $options['secret']
+      ],
+      'http' => [
+        'connect_timeout' => $options['connect_timeout']
       ]
     ]);
-    $this->debug = $debug;
+
+    // Whether to output the result of Rekognition etc. to the debug log.
+    $this->debug = $options['debug'];
   }
 
   /**

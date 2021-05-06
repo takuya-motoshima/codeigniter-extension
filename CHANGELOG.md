@@ -1,5 +1,76 @@
 # Changelog
 
+## [4.0.0] - 2021-5-6
+
+* Added dotenv reading process to sample application (./sample).
+
+    ./sample/application/config/constants.php:  
+
+    ```php
+    // Directory with ".env" file
+    const ENV_DIR = APPPATH . '..';
+    ```
+
+    ./sample/application/config/hooks.php:  
+
+    ```php
+    // pre_system callback.
+    $hook['pre_system'] = function () {
+      // Load environment variables.
+      $dotenv = Dotenv\Dotenv::createImmutable(ENV_DIR);
+      $dotenv->load();
+
+      // Check for uncaught exceptions.
+      set_exception_handler(function ($e) {
+        Logger::error($e);
+      });
+    };
+    ```
+
+* Changed to pass the option of Amazon Rekognition (\X\Rekognition\Client) as an array.
+
+    ```php
+    use \X\Rekognition\Client;
+    $client = new Client([
+      'region'          => 'ap-northeast-1',
+      'key'             => 'Your AWS access key ID',
+      'secret'          => 'Your AWS secret access key',
+      'connect_timeout' => 5,
+      'debug'           => false
+    ]);
+    ```
+
+    <table>
+      <thead>
+        <tr>
+          <th>Option name</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>region</td>
+          <td>AWS Region to connect to.The default is &quot;ap-northeast-1&quot;.</td>
+        </tr>
+        <tr>
+          <th>key</th>
+          <th>AWS access key ID.This is required.</th>
+        </tr>
+        <tr>
+          <th>secret</th>
+          <th>AWS secret access key.This is required.</th>
+        </tr>
+        <tr>
+          <th>connect_timeout</th>
+          <th>A float describing the number of seconds to wait while trying to connect to a server. The default is 5 (seconds).</th>
+        </tr>
+        <tr>
+          <th>debug</th>
+          <th>Specify true to output the result of Rekognition to the debug log.The default is false and no debug log is output.</th>
+        </tr>
+      </tbody>
+    </table>
+
 ## [3.9.9] - 2021-4-15
 
 * Fixed README typo.
@@ -973,7 +1044,7 @@
 
     ```php
     use \X\Rekognition\Client;
-    $client = new Client('AWS_REKOGNITION_KEY', 'AWS_REKOGNITION_SECRET');
+    $client = new Client('Your AWS access key ID', 'Your AWS secret access key');
 
     // Find a single face in a collection
     $collectionId = '8e5e6f4e99f380b';
@@ -1089,7 +1160,7 @@
 
     ```php
     use \X\Rekognition\Client;
-    $client = new Client('AWS_REKOGNITION_KEY', 'AWS_REKOGNITION_SECRET');
+    $client = new Client('Your AWS access key ID', 'Your AWS secret access key');
 
     // Create new face collection
     $collectionId = $client->generateCollectionId(FCPATH . 'protected');

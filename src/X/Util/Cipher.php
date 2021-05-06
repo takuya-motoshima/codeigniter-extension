@@ -109,7 +109,7 @@ final class Cipher {
    * @return string
    */
   public static function generateKey(int $length = 32): string {
-    if ($length < 1) throw new RuntimeException('Key length must be 1 or more.');
+    if ($length < 1) throw new RuntimeException('Key length must be 1 or more');
     return base64_encode(random_bytes($length));
   }
 
