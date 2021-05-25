@@ -1,5 +1,53 @@
 # Changelog
 
+## [4.0.1] - 2021-5-25
+
+* Added the ability to cache search query results in the model.
+  
+    Learn more about model caching <a href="https://www.codeigniter.com/userguide3/database/caching.html" target="_blank">here</a>.  
+
+    This is an example of the setting (config/database.php).  
+
+    ```php
+    $db['default'] = array(
+      'cachedir' => APPPATH . 'cache'
+    );
+    ```
+
+    This is an example of caching.
+
+    ```php
+    // Cache the results of this search query.
+    // The cache is saved in the directory specified in cachedir in "config/database.php".
+    $this->UserModel->cache_on();
+
+    // Find user.
+    // If there is no cache yet, "QueryCacheTest+index/7f2b1a5f6e58f60d11f06c1635f55c17" will be created in the cache directory, and the contents will be as follows.
+    // O:12:"CI_DB_result":8:{s:7:"conn_id";N;s:9:"result_id";N;s:12:"result_array";a:1:{i:0;a:2:{s:2:"id";s:1:"1";s:4:"name";s:5:"Robin";}}s:13:"result_object";a:1:{i:0;O:8:"stdClass":2:{s:2:"id";s:1:"1";s:4:"name";s:5:"Robin";}}s:20:"custom_result_object";a:0:{}s:11:"current_row";i:0;s:8:"num_rows";i:1;s:8:"row_data";N;}
+    $user = $this->UserModel
+      ->select('id, name')
+      ->where('id', 1)
+      ->get()
+      ->row_array();
+
+    // Disable the cache.
+    $this->UserModel->cache_off();
+    ```
+
+    This is an example of deleting the cache.  
+    The caching system saves your cache files to folders that correspond to the URI of the page you are viewing.  
+    For example, if you are viewing a page at example.com/index.php/blog/comments, the caching system will put all cache files associated with it in a folder called blog+comments.  
+
+    ```php
+    $this->UserModel->cache_delete('blog', 'comments');
+    ```
+
+    This is an example of deleting all caches.
+
+    ```php
+    $this->UserModel->cache_delete_all();
+    ```
+
 ## [4.0.0] - 2021-5-6
 
 * Added dotenv reading process to sample application (./sample).

@@ -1250,4 +1250,42 @@ abstract class Model extends \CI_Model {
   public function insert_id() {
     return call_user_func_array([self::insert_id(), __FUNCTION__], func_get_args());
   }
+
+  /**
+   * Enable Query Caching
+   *
+   * @return  void
+   */
+  public function cache_on() {
+    self::db()->cache_on();
+  }
+
+  /**
+   * Disable Query Caching.
+   *
+   * @return  void
+   */
+  public function cache_off() {
+    self::db()->cache_off();
+  }
+
+  /**
+   * Delete the cache files associated with a particular URI
+   *
+   * @param string  $segment_one First URI segment.
+   * @param string  $segment_two Second URI segment.
+   * @return  bool
+   */
+  public function cache_delete(string $segment_one = '', string  $segment_two = '') {
+    self::db()->cache_delete($segment_one, $segment_two);
+  }
+
+  /**
+   * Delete All cache files.
+   *
+   * @return  bool
+   */
+  public function cache_delete_all() {
+    self::db()->cache_delete_all();
+  }
 }
