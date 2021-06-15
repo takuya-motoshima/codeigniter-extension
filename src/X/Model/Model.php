@@ -88,8 +88,8 @@ abstract class Model extends \CI_Model {
   /**
    * Exists by id
    */
-  public function exists_by_id(int $id) {
-    $count = $this->countById($id);
+  public function exists_by_id(int $id): bool {
+    $count = $this->count_by_id($id);
     return $count !== 0;
   }
 

@@ -1,5 +1,9 @@
 # Changelog
 
+## [4.0.2] - 2021-6-15
+
+* Fixed a bug in the exists_by_id method of the \X\Model\Model class.
+
 ## [4.0.1] - 2021-5-25
 
 * Added the ability to cache search query results in the model.
