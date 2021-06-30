@@ -1,5 +1,44 @@
 # Changelog
 
+## [4.0.3] - 2021-6-30
+
+* Added key pair generation processing and public key OpenSSH encoding processing.
+
+    Here is an example.  
+    You can finetune the key generation (such as specifying the number of bits) using options. See [openssl_csr_new()](https://www.php.net/manual/en/function.openssl-csr-new.php) for more information about options.  
+
+    ```php
+    use \X\Util\Cipher;
+
+    // Generate 4096bit long RSA key pair.
+    Cipher::generateKeyPair($privKey, $pubKey, [
+      'digest_alg' => 'sha512',
+      'private_key_bits' => 4096,
+      'private_key_type' => OPENSSL_KEYTYPE_RSA
+    ]);
+
+    // Debug private key.
+    // Output: -----BEGIN PRIVATE KEY-----
+    //         MIIJQgIBADANBgkqhkiG9w0BAQEFAASCCSwwggkoAgEAAoICAQCpvdXUNEfrA4T+
+    //         ...
+    //         -----END PRIVATE KEY-----
+    echo 'Private key:'. PHP_EOL . $privKey;
+
+    // Debug public key.
+    // Output: -----BEGIN PUBLIC KEY-----
+    //         MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAqb3V1DRH6wOE/oVhJWEo
+    //         ...
+    //         -----END PUBLIC KEY-----
+    echo 'Public key:' . PHP_EOL. $pubKey;
+
+    // OpenSSH encode the public key.
+    // Output: ssh-rsa AAAAB3NzaC...
+    $pubKey = Cipher::encodeOpenSshPublicKey($privKey);
+
+    // Debug OpenSSH-encoded public key.
+    echo 'OpenSSH-encoded public key:' . PHP_EOL . $pubKey;
+    ```
+
 ## [4.0.2] - 2021-6-15
 
 * Fixed a bug in the exists_by_id method of the \X\Model\Model class.
