@@ -1,8 +1,48 @@
 # Changelog
 
+## [4.0.4] - 2021-7-29
+
+- Added directory path validation rules.
+
+    ```php
+    $this->form_validation
+      ->set_data([
+        'dir1' => '/', // ok
+        'dir2' => '/abc', // ok
+        'dir3' => '/sab_', // ok
+        'dir4' => '/abc/abc/', // ng
+        'dir5' => '/sad/dfsd', // ok
+        'dir6' => 'null', // ng
+        'dir7' => '/dsf/dfsdf/dsfsf/sdfds', // ok
+        'dir8' => '/e3r/343/8437', // ok
+        'dir9' => '/4333/32#' // ng
+      ])
+      ->set_rules('dir1', 'dir1', 'directory_path')
+      ->set_rules('dir2', 'dir2', 'directory_path')
+      ->set_rules('dir3', 'dir3', 'directory_path')
+      ->set_rules('dir4', 'dir4', 'directory_path')
+      ->set_rules('dir5', 'dir5', 'directory_path')
+      ->set_rules('dir6', 'dir6', 'directory_path')
+      ->set_rules('dir7', 'dir7', 'directory_path')
+      ->set_rules('dir8', 'dir8', 'directory_path')
+      ->set_rules('dir9', 'dir9', 'directory_path');
+    if ($this->form_validation->run() != false) {
+      // put your code here
+      Logger::print('There are no errors.');
+    } else {
+      Logger::print('Error message: ', $this->form_validation->error_array());
+      // Output: Array
+      //         (
+      //            [dir4] => The dir4 field must contain a valid directory path.
+      //            [dir6] => The dir6 field must contain a valid directory path.
+      //            [dir9] => The dir9 field must contain a valid directory path.
+      //          )
+    }
+    ```
+
 ## [4.0.3] - 2021-6-30
 
-* Added key pair generation processing and public key OpenSSH encoding processing.
+- Added key pair generation processing and public key OpenSSH encoding processing.
 
     Here is an example.  
     You can finetune the key generation (such as specifying the number of bits) using options. See [openssl_csr_new()](https://www.php.net/manual/en/function.openssl-csr-new.php) for more information about options.  
@@ -41,11 +81,11 @@
 
 ## [4.0.2] - 2021-6-15
 
-* Fixed a bug in the exists_by_id method of the \X\Model\Model class.
+- Fixed a bug in the exists_by_id method of the \X\Model\Model class.
 
 ## [4.0.1] - 2021-5-25
 
-* Added the ability to cache search query results in the model.
+- Added the ability to cache search query results in the model.
   
     Learn more about model caching <a href="https://www.codeigniter.com/userguide3/database/caching.html" target="_blank">here</a>.  
 
@@ -93,7 +133,7 @@
 
 ## [4.0.0] - 2021-5-6
 
-* Added dotenv reading process to sample application (./sample).
+- Added dotenv reading process to sample application (./sample).
 
     ./sample/application/config/constants.php:  
 
@@ -118,7 +158,7 @@
     };
     ```
 
-* Changed to pass the option of Amazon Rekognition (\X\Rekognition\Client) as an array.
+- Changed to pass the option of Amazon Rekognition (\X\Rekognition\Client) as an array.
 
     ```php
     use \X\Rekognition\Client;
@@ -164,31 +204,31 @@
 
 ## [3.9.9] - 2021-4-15
 
-* Fixed README typo.
+- Fixed README typo.
 
 ## [3.9.8] - 2021-4-15
 
-* Added form validation rule according to the [email address proposed in HTML5](https://html.spec.whatwg.org/multipage/input.html#valid-e-mail-address).
+- Added form validation rule according to the [email address proposed in HTML5](https://html.spec.whatwg.org/multipage/input.html#valid-e-mail-address).
 
 ## [3.9.7] - 2021-4-9
 
-* Added the process to automatically set $\_SESSION to the template variable session.
+- Added the process to automatically set $\_SESSION to the template variable session.
 
 ## [3.9.6] - 2021-4-8
 
-* Fix the issue text not recognized after '&' in case of PUT request.
+- Fix the issue text not recognized after '&' in case of PUT request.
 
 ## [3.9.5] - 2021-4-8
 
-* Refactor sample application and skeleton.
+- Refactor sample application and skeleton.
 
 ## [3.9.4] - 2021-4-7
 
-* Fix create-project error.
+- Fix create-project error.
 
 ## [3.9.3] - 2021-3-26
 
-* Added a function to the Date helper that returns the date of the specified month.
+- Added a function to the Date helper that returns the date of the specified month.
 
     ```php
     use \X\Util\DateHelper;
@@ -200,11 +240,11 @@
 
 ## [3.9.2] - 2021-3-24
 
-* Resolved an error where the return type of the email function of the email subclass (/X/Util/Email) did not match the definition.
+- Resolved an error where the return type of the email function of the email subclass (/X/Util/Email) did not match the definition.
 
 ## [3.9.1] - 2021-3-15
 
-* Added a method that returns a table string of an array.
+- Added a method that returns a table string of an array.
 
     ```php
     use \X\Util\ArrayHelper;
@@ -232,7 +272,7 @@
 
 ## [3.9.0] - 2021-3-15
 
-* Added a log function that does not output path information.
+- Added a log function that does not output path information.
 
     ```php
     use \X\Util\Logger;
@@ -242,7 +282,7 @@
 
 ## [3.8.9] - 2021-2-24
 
-* Added batch exclusive control sample program for file lock and advisory lock to the sample application.
+- Added batch exclusive control sample program for file lock and advisory lock to the sample application.
     
     Description of the added file.  
 
@@ -287,7 +327,7 @@
 
 ## [3.8.8] - 2021-2-23
 
-* Organized readme and added batch lock test program.
+- Organized readme and added batch lock test program.
 
 ## [3.8.7] - 2021-2-19
 

@@ -74,4 +74,14 @@ final class Validation {
   public static function email(string $input): bool {
     return preg_match("/^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/", $input) === 1;
   }
+
+  /**
+   * Validate directory path.
+   * 
+   * @param  string $input Input value.
+   * @return bool          Returns true if validation succeeds, false if validation fails.
+   */
+  public static function directory_path(string $input): bool {
+    return preg_match("/^\/$|(\/[a-zA-Z_0-9-]+)+$/", $input) === 1;
+  }
 }

@@ -133,4 +133,16 @@ abstract class FormValidation extends \CI_Form_validation {
     $this->set_message('email', 'The {field} field must contain a valid email address.');
     return false;
   }
+
+  /**
+   * Validate directory path.
+   * 
+   * @param  string $input Input value.
+   * @return bool          Returns true if validation succeeds, false if validation fails.
+   */
+  public function directory_path(string $input): bool {
+    if (Validation::directory_path($input)) return true;
+    $this->set_message('directory_path', 'The {field} field must contain a valid directory path.');
+    return false;
+  }
 }
