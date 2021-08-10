@@ -1,5 +1,46 @@
 # Changelog
 
+## [4.0.5] - 2021-8-10
+
+- The file move method can now set groups and owners for the moved file.
+
+    ```php
+    use \X\Util\FileHelper;
+
+    // Move files.
+    FileHelper::move('/folder/file.txt', 'newfile.txt');
+
+    // Specify the group and owner of the moved file.
+    $group = 'nginx';
+    $user = 'nginx';
+    FileHelper::move('/folder/file.txt', 'newfile.txt', $group, $user);
+
+    // Specify the group of files after moving.
+    FileHelper::move('/folder/file.txt', 'newfile.txt', $group);
+
+    // Specify the owner of the moved file
+    FileHelper::move('/folder/file.txt', 'newfile.txt', null, $user);
+    ```
+
+- The file copy method can now set groups and owners for the moved file.
+
+    ```php
+    use \X\Util\FileHelper;
+
+    // Copy files.
+    FileHelper::copyFile('/folder/file.txt', 'newfile.txt');
+
+    // Specify the group and owner of the copied file.
+    $group = 'nginx';
+    $user = 'nginx';
+    FileHelper::copyFile('/folder/file.txt', 'newfile.txt', $group, $user);
+
+    // Specify the group of files after copying.
+    FileHelper::copyFile('/folder/file.txt', 'newfile.txt', $group);
+
+    // Specify the owner of the copied file
+    FileHelper::copyFile('/folder/file.txt', 'newfile.txt', null, $user);
+
 ## [4.0.4] - 2021-7-29
 
 - Added directory path validation rules.

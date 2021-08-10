@@ -22,8 +22,10 @@ final class FileHelper {
    */
   public static function makeDirectory(string $dir, int $mode = 0755) {
     try {
-      if (file_exists($dir)) return;
-      if (@mkdir($dir, $mode, true) === false) throw new \RuntimeException('Cant create directory ' . $dir);
+      if (file_exists($dir))
+        return;
+      if (@mkdir($dir, $mode, true) === false)
+        throw new \RuntimeException('Cant create directory ' . $dir);
     } catch (\Throwable $e) {
       Logger::info($e->getMessage());
     }
@@ -43,19 +45,27 @@ final class FileHelper {
    * ```
    * 
    * @throws RuntimeException
-   * @param string $srcFile
-   * @param string $dstFile
+   * @param string     $srcFile
+   * @param string     $dstFile
+   * @param string|int $group
+   * @param string|int $user
    * @return void
    */
-  public static function move(string $srcFile, string $dstFile) {
-    if (!file_exists($srcFile)) throw new \RuntimeException('Not found file ' . $srcFile);
+  public static function move(string $srcFile, string $dstFile, $group = null, $user = null) {
+    if (!file_exists($srcFile))
+      throw new \RuntimeException('Not found file ' . $srcFile);
     if (strpos($dstFile, '/') === false) {
-      if (strpos($dstFile, '.') === false) $dstFile = $dstFile . '.' . pathinfo($srcFile, PATHINFO_EXTENSION);
+      if (strpos($dstFile, '.') === false)
+        $dstFile = $dstFile . '.' . pathinfo($srcFile, PATHINFO_EXTENSION);
       $dstFile = pathinfo($srcFile, PATHINFO_DIRNAME) . '/' . $dstFile;
-    } else {
+    } else
       self::makeDirectory(dirname($dstFile));
-    }
-    if (rename($srcFile, $dstFile) === false) throw new \RuntimeException('Can not rename from ' . $srcFile . ' to ' . $dstFile);
+    if (rename($srcFile, $dstFile) === false)
+      throw new \RuntimeException('Can not rename from ' . $srcFile . ' to ' . $dstFile);
+    if (isset($group))
+      chgrp($dstFile, $group);
+    if (isset($user))
+      $res = chown($dstFile, $user);
   }
 
   /**
@@ -63,15 +73,24 @@ final class FileHelper {
    * Copy file
    * 
    * @throws RuntimeException
-   * @param string $srcFile
-   * @param string $dstFile
+   * @param string     $srcFile
+   * @param string     $dstFile
+   * @param string|int $group
+   * @param string|int $user
    * @return void
    */
-  public static function copyFile(string $srcFile, string $dstFile) {
-    if (!file_exists($srcFile)) throw new \RuntimeException('Not found file ' . $srcFile);
-    else if (!is_file($srcFile)) throw new \RuntimeException($srcFile . ' is not file');
+  public static function copyFile(string $srcFile, string $dstFile, $group = null, $user = null) {
+    if (!file_exists($srcFile))
+      throw new \RuntimeException('Not found file ' . $srcFile);
+    else if (!is_file($srcFile))
+      throw new \RuntimeException($srcFile . ' is not file');
     self::makeDirectory(dirname($dstFile));
-    if (copy($srcFile, $dstFile) === false) throw new \RuntimeException('Can not copy from ' . $srcFile . ' to ' . $dstFile);
+    if (copy($srcFile, $dstFile) === false)
+      throw new \RuntimeException('Can not copy from ' . $srcFile . ' to ' . $dstFile);
+    if (isset($group))
+      chgrp($dstFile, $group);
+    if (isset($user))
+      chown($dstFile, $user);
   }
 
   /**
@@ -84,13 +103,17 @@ final class FileHelper {
    * @return void
    */
   public static function copyDirectory(string $srcDir, string $dstDir) {
-    if (!file_exists($srcDir)) throw new \RuntimeException('Not found directory ' . $srcDir);
-    else if (!is_dir($srcDir)) throw new \RuntimeException($srcDir . ' is not directory');
+    if (!file_exists($srcDir))
+      throw new \RuntimeException('Not found directory ' . $srcDir);
+    else if (!is_dir($srcDir))
+      throw new \RuntimeException($srcDir . ' is not directory');
     self::makeDirectory($dstDir);
     $it = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($srcDir, \RecursiveDirectoryIterator::SKIP_DOTS), \RecursiveIteratorIterator::SELF_FIRST);
     foreach ($it as $info) {
-      if ($info->isDir()) self::makeDirectory($dstDir . '/' . $it->getSubPathName());
-      else self::copyFile($info, $dstDir . '/' . $it->getSubPathName());
+      if ($info->isDir())
+        self::makeDirectory($dstDir . '/' . $it->getSubPathName());
+      else
+        self::copyFile($info, $dstDir . '/' . $it->getSubPathName());
     }
   }
 
@@ -170,7 +193,8 @@ final class FileHelper {
    */
   public static function find(string $pattern, int $flags = 0): array {
     $files = [];
-    foreach (glob($pattern, $flags) as $file) $files[] = basename($file);
+    foreach (glob($pattern, $flags) as $file)
+      $files[] = basename($file);
     return $files;
   }
 
@@ -183,7 +207,8 @@ final class FileHelper {
    */
   public static function findOne(string $pattern): ?string {
     $files = self::find($pattern);
-    if (empty($files)) return null;
+    if (empty($files))
+      return null;
     return $files[0];
   }
 
@@ -218,8 +243,10 @@ final class FileHelper {
    * @return string
    */
   public static function getMimeByConent(string $file): string {
-    if (!file_exists($file)) throw new \RuntimeException('Not found file ' . $file);
-    else if (!is_file($file)) throw new \RuntimeException($file . ' is not file');
+    if (!file_exists($file))
+      throw new \RuntimeException('Not found file ' . $file);
+    else if (!is_file($file))
+      throw new \RuntimeException($file . ' is not file');
     $finfo = new \finfo(FILEINFO_MIME_TYPE);
     return $finfo->file($file);
   }
@@ -288,7 +315,8 @@ final class FileHelper {
   public static function humanFilesize(string $filepath, int $decimals = 2): string {
     $bytes = file_exists($filepath) ? filesize($filepath) : 0;
     $factor = floor((strlen($bytes) - 1) / 3);
-    if ($factor > 0) $sz = 'KMGT';
+    if ($factor > 0)
+      $sz = 'KMGT';
     return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . @$sz[$factor - 1] . 'B';
   }
 }
