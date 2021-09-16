@@ -216,7 +216,7 @@ final class Cipher {
    * @param string $chars  A string of all possible characters to select from.
    * @return string
    */
-  public static function rand_str(int $len = 64, string $chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'): string {
+  public static function randStr(int $len = 64, string $chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'): string {
     if ($len < 1)
       throw new \RangeException('Length must be a positive integer');
     $res = '';
@@ -232,8 +232,8 @@ final class Cipher {
    * @param string $chars  A string of all possible characters to select from.
    * @return string
    */
-  public static function rand_token68(int $len = 64): string {
+  public static function randToken68(int $len = 64): string {
     $equal = $len > 1 && random_int(0, 1) === 1 ? '=' : '';
-    return self::rand_str($len - strlen($equal), '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-._~+/') . $equal;
+    return self::randStr($len - strlen($equal), '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-._~+/') . $equal;
   }
 }
