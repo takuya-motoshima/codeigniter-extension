@@ -1,16 +1,10 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-use \X\Annotation\Access;
 use \X\Util\Logger;
 
-class ModelTest extends AppController {
-
+class Model extends AppController {
   protected $model = 'UserModel';
-
-  /**
-   * @Access(allow_login=true, allow_logoff=true)
-   */
   public function index() {
     try {
       $count = $this->UserModel->count_by_id(1);

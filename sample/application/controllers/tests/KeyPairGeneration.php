@@ -1,15 +1,10 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-use \X\Annotation\Access;
 use \X\Util\Cipher;
 use \X\Util\Logger;
 
-class KeyPairGenerationTest extends AppController {
-
-  /**
-   * @Access(allow_login=true, allow_logoff=true)
-   */
+class KeyPairGeneration extends AppController {
   public function index() {
     try {
       // Generate 4096bit long RSA key pair.

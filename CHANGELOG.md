@@ -1,5 +1,31 @@
 # Changelog
 
+All notable changes to this project will be documented in this file.
+
+## [4.0.6] - 2021-9-16
+
+- Added random string generation function.
+
+    ```php
+    use \X\Util\Cipher;
+    use \X\Util\Logger;
+
+    // YnqHuuG1VZJ1YXJC14RLmcVjg9uaa8jCyq8S8wd5uY7ox7PXEVzck2YTWGE7aftz
+    Logger::print(Cipher::rand_str());
+
+    // f1eXb3OLWq
+    Logger::print(Cipher::rand_str(10));
+
+    // 0e-k3qRu9z
+    Logger::print(Cipher::rand_str(10, '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-._~+/')); 
+
+    // 1C63SpTuQfYlNs1IAvCclo~R2xgtrdNsNSa_U28G88mEFsrbz4yu3hn6_vIP7mS=
+    Logger::print(Cipher::rand_token68());
+
+    // OSVhnIAlJ=
+    Logger::print(Cipher::rand_token68(10));
+    ```
+
 ## [4.0.5] - 2021-8-10
 
 - The file move method can now set groups and owners for the moved file.

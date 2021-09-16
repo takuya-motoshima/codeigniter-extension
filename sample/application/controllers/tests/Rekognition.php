@@ -1,15 +1,10 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-use \X\Annotation\Access;
 use \X\Util\Logger;
 use \X\Rekognition\Client;
 
-class RekognitionTest extends AppController {
-
-  /**
-   * @Access(allow_login=true, allow_logoff=true)
-   */
+class Rekognition extends AppController {
   public function index() {
     try {
       // Rekognition client instance.

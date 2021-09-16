@@ -35,8 +35,8 @@ final class Cipher {
    * @return string
    */
   public static function generateInitialVector(string $method = 'AES-256-CTR'): string {
-    $length = openssl_cipher_iv_length($method);
-    return openssl_random_pseudo_bytes($length);
+    $len = openssl_cipher_iv_length($method);
+    return openssl_random_pseudo_bytes($len);
   }
 
   /**
@@ -108,12 +108,13 @@ final class Cipher {
   /**
    * Generate a random key.
    * 
-   * @param  int $length
+   * @param  int $len
    * @return string
    */
-  public static function generateKey(int $length = 32): string {
-    if ($length < 1) throw new RuntimeException('Key length must be 1 or more');
-    return base64_encode(random_bytes($length));
+  public static function generateKey(int $len = 32): string {
+    if ($len < 1)
+      throw new RuntimeException('Key length must be 1 or more');
+    return base64_encode(random_bytes($len));
   }
 
   /**
@@ -206,5 +207,33 @@ final class Cipher {
       $buffer = "\x00" . $buffer;
     }
     return pack('Na*', $len, $buffer);
+  }
+
+  /**
+   * Generate a random string. 
+   *
+   * @param int    $len    How many characters do we want?
+   * @param string $chars  A string of all possible characters to select from.
+   * @return string
+   */
+  public static function rand_str(int $len = 64, string $chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'): string {
+    if ($len < 1)
+      throw new \RangeException('Length must be a positive integer');
+    $res = '';
+    for ($i=0; $i<$len; $i++)
+      $res .= $chars[random_int(0, strlen($chars) - 1)];
+    return $res;
+  }
+
+  /**
+   * Generate a random token68 string. 
+   *
+   * @param int    $len How many characters do we want?
+   * @param string $chars  A string of all possible characters to select from.
+   * @return string
+   */
+  public static function rand_token68(int $len = 64): string {
+    $equal = $len > 1 && random_int(0, 1) === 1 ? '=' : '';
+    return self::rand_str($len - strlen($equal), '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-._~+/') . $equal;
   }
 }

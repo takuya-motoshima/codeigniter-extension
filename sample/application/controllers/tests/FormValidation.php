@@ -1,15 +1,10 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-use \X\Annotation\Access;
 use \X\Util\Logger;
 use \X\Rekognition\Client;
 
-class FormValidationTest extends AppController {
-
-  /**
-   * @Access(allow_login=true, allow_logoff=true)
-   */
+class FormValidation extends AppController {
   public function index() {
     try {
       $this->form_validation
