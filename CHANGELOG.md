@@ -2,6 +2,111 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.0.8] - 2021-9-22
+
+- Added ip address or CIDR validation rules.
+
+    ```php
+    $this->form_validation
+      ->set_data([
+        'ip1' => '192.168.0.1',      // valid
+        'ip2' => '192.168.0.1/',     // invalid
+        'ip3' => '192.168.0.1/0',    // valid
+        'ip4' => '192.168.0.1/1',    // valid  
+        'ip5' => '192.168.0.1/2',    // valid  
+        'ip6' => '192.168.0.1/3',    // valid  
+        'ip7' => '192.168.0.1/4',    // valid  
+        'ip8' => '192.168.0.1/5',    // valid  
+        'ip9' => '192.168.0.1/6',    // valid  
+        'ip10' => '192.168.0.1/7',   // valid  
+        'ip11' => '192.168.0.1/8',   // valid  
+        'ip12' => '192.168.0.1/9',   // valid  
+        'ip13' => '192.168.0.1/10',  // valid  
+        'ip14' => '192.168.0.1/11',  // valid  
+        'ip15' => '192.168.0.1/12',  // valid  
+        'ip16' => '192.168.0.1/13',  // valid  
+        'ip17' => '192.168.0.1/14',  // valid  
+        'ip18' => '192.168.0.1/15',  // valid  
+        'ip19' => '192.168.0.1/16',  // valid  
+        'ip20' => '192.168.0.1/17',  // valid  
+        'ip21' => '192.168.0.1/18',  // valid  
+        'ip22' => '192.168.0.1/19',  // valid  
+        'ip23' => '192.168.0.1/20',  // valid  
+        'ip24' => '192.168.0.1/21',  // valid  
+        'ip25' => '192.168.0.1/22',  // valid  
+        'ip26' => '192.168.0.1/23',  // valid  
+        'ip27' => '192.168.0.1/24',  // valid  
+        'ip28' => '192.168.0.1/25',  // valid  
+        'ip29' => '192.168.0.1/26',  // valid  
+        'ip30' => '192.168.0.1/27',  // valid  
+        'ip31' => '192.168.0.1/28',  // valid  
+        'ip32' => '192.168.0.1/29',  // valid  
+        'ip33' => '192.168.0.1/30',  // valid  
+        'ip34' => '192.168.0.1/31',  // valid  
+        'ip35' => '192.168.0.1/32',  // valid  
+        'ip36' => '192.168.0.1/33',  // invalid
+        'ip37' => '192.168.0.1/34',  // invalid
+        'ip38' => '192.168.0.1/asd', // invalid
+        'ip39' => '192.168.0.1/01',  // invalid
+        'ip40' => '192.168.0.1/00',  // invalid;
+      ])
+      ->set_rules('ip1', 'ip1', 'ipaddress_or_cidr')
+      ->set_rules('ip2', 'ip2', 'ipaddress_or_cidr')
+      ->set_rules('ip3', 'ip3', 'ipaddress_or_cidr')
+      ->set_rules('ip4', 'ip4', 'ipaddress_or_cidr')
+      ->set_rules('ip5', 'ip5', 'ipaddress_or_cidr')
+      ->set_rules('ip6', 'ip6', 'ipaddress_or_cidr')
+      ->set_rules('ip7', 'ip7', 'ipaddress_or_cidr')
+      ->set_rules('ip8', 'ip8', 'ipaddress_or_cidr')
+      ->set_rules('ip9', 'ip9', 'ipaddress_or_cidr')
+      ->set_rules('ip10', 'ip10', 'ipaddress_or_cidr')
+      ->set_rules('ip11', 'ip11', 'ipaddress_or_cidr')
+      ->set_rules('ip12', 'ip12', 'ipaddress_or_cidr')
+      ->set_rules('ip13', 'ip13', 'ipaddress_or_cidr')
+      ->set_rules('ip14', 'ip14', 'ipaddress_or_cidr')
+      ->set_rules('ip15', 'ip15', 'ipaddress_or_cidr')
+      ->set_rules('ip16', 'ip16', 'ipaddress_or_cidr')
+      ->set_rules('ip17', 'ip17', 'ipaddress_or_cidr')
+      ->set_rules('ip18', 'ip18', 'ipaddress_or_cidr')
+      ->set_rules('ip19', 'ip19', 'ipaddress_or_cidr')
+      ->set_rules('ip20', 'ip20', 'ipaddress_or_cidr')
+      ->set_rules('ip21', 'ip21', 'ipaddress_or_cidr')
+      ->set_rules('ip22', 'ip22', 'ipaddress_or_cidr')
+      ->set_rules('ip23', 'ip23', 'ipaddress_or_cidr')
+      ->set_rules('ip24', 'ip24', 'ipaddress_or_cidr')
+      ->set_rules('ip25', 'ip25', 'ipaddress_or_cidr')
+      ->set_rules('ip26', 'ip26', 'ipaddress_or_cidr')
+      ->set_rules('ip27', 'ip27', 'ipaddress_or_cidr')
+      ->set_rules('ip28', 'ip28', 'ipaddress_or_cidr')
+      ->set_rules('ip29', 'ip29', 'ipaddress_or_cidr')
+      ->set_rules('ip30', 'ip30', 'ipaddress_or_cidr')
+      ->set_rules('ip31', 'ip31', 'ipaddress_or_cidr')
+      ->set_rules('ip32', 'ip32', 'ipaddress_or_cidr')
+      ->set_rules('ip33', 'ip33', 'ipaddress_or_cidr')
+      ->set_rules('ip34', 'ip34', 'ipaddress_or_cidr')
+      ->set_rules('ip35', 'ip35', 'ipaddress_or_cidr')
+      ->set_rules('ip36', 'ip36', 'ipaddress_or_cidr')
+      ->set_rules('ip37', 'ip37', 'ipaddress_or_cidr')
+      ->set_rules('ip38', 'ip38', 'ipaddress_or_cidr')
+      ->set_rules('ip39', 'ip39', 'ipaddress_or_cidr')
+      ->set_rules('ip40', 'ip40', 'ipaddress_or_cidr');
+    if ($this->form_validation->run() != false) {
+      // put your code here
+      Logger::print('There are no errors.');
+    } else {
+      Logger::print('Error message: ', $this->form_validation->error_array());
+      // Output: Array
+      //         (
+      //            [ip2] => The ip2 field must contain a valid ip address or CIDR.
+      //            [ip36] => The ip36 field must contain a valid ip address or CIDR.
+      //            [ip37] => The ip37 field must contain a valid ip address or CIDR.
+      //            [ip38] => The ip38 field must contain a valid ip address or CIDR.
+      //            [ip39] => The ip39 field must contain a valid ip address or CIDR.
+      //            [ip40] => The ip40 field must contain a valid ip address or CIDR.
+      //          )
+    }
+    ```
+
 ## [4.0.7] - 2021-9-16
 
 - Random character generation function name changed to camel case.
@@ -98,15 +203,15 @@ All notable changes to this project will be documented in this file.
     ```php
     $this->form_validation
       ->set_data([
-        'dir1' => '/', // ok
-        'dir2' => '/abc', // ok
-        'dir3' => '/sab_', // ok
-        'dir4' => '/abc/abc/', // ng
-        'dir5' => '/sad/dfsd', // ok
-        'dir6' => 'null', // ng
-        'dir7' => '/dsf/dfsdf/dsfsf/sdfds', // ok
-        'dir8' => '/e3r/343/8437', // ok
-        'dir9' => '/4333/32#' // ng
+        'dir1' => '/', // valid
+        'dir2' => '/abc', // valid
+        'dir3' => '/sab_', // valid
+        'dir4' => '/abc/abc/', // invalid
+        'dir5' => '/sad/dfsd', // valid
+        'dir6' => 'null', // invalid
+        'dir7' => '/dsf/dfsdf/dsfsf/sdfds', // valid
+        'dir8' => '/e3r/343/8437', // valid
+        'dir9' => '/4333/32#' // invalid
       ])
       ->set_rules('dir1', 'dir1', 'directory_path')
       ->set_rules('dir2', 'dir2', 'directory_path')
@@ -623,61 +728,61 @@ All notable changes to this project will be documented in this file.
     $this->form_validation
       ->set_data([
         // Datetime custom validation.
-        'datetime' => '2021-02-03 17:46:00',// ok
+        'datetime' => '2021-02-03 17:46:00',// valid
 
         // Host name custom validation.
-        'hostname1' => 'external.asd1230-123.asd_internal.asd.gm-_ail.com',// ok
-        'hostname2' => 'domain.com',// ok
-        'hostname3' => 'example.domain.com',// ok
-        'hostname4' => 'example.domain-hyphen.com',// ok
-        'hostname5' => 'www.domain.com',// ok
-        'hostname6' => 'example.museum',// ok
-        'hostname7' => 'http://example.com',// ng
-        'hostname8' => 'subdomain.-example.com',// ng
-        'hostname9' => 'example.com/parameter',// ng
-        'hostname10' => 'example.com?anything',// ng
+        'hostname1' => 'external.asd1230-123.asd_internal.asd.gm-_ail.com',// valid
+        'hostname2' => 'domain.com',// valid
+        'hostname3' => 'example.domain.com',// valid
+        'hostname4' => 'example.domain-hyphen.com',// valid
+        'hostname5' => 'www.domain.com',// valid
+        'hostname6' => 'example.museum',// valid
+        'hostname7' => 'http://example.com',// invalid
+        'hostname8' => 'subdomain.-example.com',// invalid
+        'hostname9' => 'example.com/parameter',// invalid
+        'hostname10' => 'example.com?anything',// invalid
 
         // IP address custom validation.
-        'ipaddress1' => '000.0000.00.00',// ng
-        'ipaddress2' => '192.168.1.1',// ok
-        'ipaddress3' => '912.456.123.123',// ng
+        'ipaddress1' => '000.0000.00.00',// invalid
+        'ipaddress2' => '192.168.1.1',// valid
+        'ipaddress3' => '912.456.123.123',// invalid
 
         // Host name or ip address custom validation.
-        'hostname_or_ipaddress1' => 'external.asd1230-123.asd_internal.asd.gm-_ail.com',// ok
-        'hostname_or_ipaddress2' => 'domain.com',// ok
-        'hostname_or_ipaddress3' => 'example.domain.com',// ok
-        'hostname_or_ipaddress4' => 'example.domain-hyphen.com',// ok
-        'hostname_or_ipaddress5' => 'www.domain.com',// ok
-        'hostname_or_ipaddress6' => 'example.museum',// ok
-        'hostname_or_ipaddress7' => 'http://example.com',// ng
-        'hostname_or_ipaddress8' => 'subdomain.-example.com',// ng
-        'hostname_or_ipaddress9' => 'example.com/parameter',// ng
-        'hostname_or_ipaddress10' => 'example.com?anything',// ng
-        'hostname_or_ipaddress11' => '000.0000.00.00',// ng
-        'hostname_or_ipaddress12' => '192.168.1.1',// ok
-        'hostname_or_ipaddress13' => '912.456.123.123',// ng
+        'hostname_or_ipaddress1' => 'external.asd1230-123.asd_internal.asd.gm-_ail.com',// valid
+        'hostname_or_ipaddress2' => 'domain.com',// valid
+        'hostname_or_ipaddress3' => 'example.domain.com',// valid
+        'hostname_or_ipaddress4' => 'example.domain-hyphen.com',// valid
+        'hostname_or_ipaddress5' => 'www.domain.com',// valid
+        'hostname_or_ipaddress6' => 'example.museum',// valid
+        'hostname_or_ipaddress7' => 'http://example.com',// invalid
+        'hostname_or_ipaddress8' => 'subdomain.-example.com',// invalid
+        'hostname_or_ipaddress9' => 'example.com/parameter',// invalid
+        'hostname_or_ipaddress10' => 'example.com?anything',// invalid
+        'hostname_or_ipaddress11' => '000.0000.00.00',// invalid
+        'hostname_or_ipaddress12' => '192.168.1.1',// valid
+        'hostname_or_ipaddress13' => '912.456.123.123',// invalid
 
         // UNix user name custom validation.
-        'unix_username1' => 'abcd',// ok
-        'unix_username2' => 'a123',// ok
-        'unix_username3' => 'abc-',// ok
-        'unix_username4' => 'a-bc',// ok
-        'unix_username5' => 'abc$',// ok
-        'unix_username7' => 'a-b$',// ok
-        'unix_username8' => '1234',// ng
-        'unix_username9' => '1abc',// ng
-        'unix_username10' => '-abc',// ng
-        'unix_username11' => '$abc',// ng
-        'unix_username12' => 'a$bc',// ng
+        'unix_username1' => 'abcd',// valid
+        'unix_username2' => 'a123',// valid
+        'unix_username3' => 'abc-',// valid
+        'unix_username4' => 'a-bc',// valid
+        'unix_username5' => 'abc$',// valid
+        'unix_username7' => 'a-b$',// valid
+        'unix_username8' => '1234',// invalid
+        'unix_username9' => '1abc',// invalid
+        'unix_username10' => '-abc',// invalid
+        'unix_username11' => '$abc',// invalid
+        'unix_username12' => 'a$bc',// invalid
 
         // Port number custom validation.
-        'port1' => '-1',// ng
-        'port2' => '0',// ok
-        'port3' => '1',// ok
-        'port4' => '',// ok
-        'port5' => '65534',// ok
-        'port6' => '65535',// ok
-        'port7' => '65536',// ng
+        'port1' => '-1',// invalid
+        'port2' => '0',// valid
+        'port3' => '1',// valid
+        'port4' => '',// valid
+        'port5' => '65534',// valid
+        'port6' => '65535',// valid
+        'port7' => '65536',// invalid
       ])
       ->set_rules('datetime', 'datetime', 'required|datetime[Y-m-d H:i:s]')
       ->set_rules('hostname1', 'hostname1', 'hostname')

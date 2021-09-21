@@ -82,6 +82,18 @@ abstract class FormValidation extends \CI_Form_validation {
     return false;
   }
 
+    /**
+   * Validate ip address or CIDR.
+   * 
+   * @param  string $input Input value.
+   * @return bool          Returns true if validation succeeds, false if validation fails.
+   */
+  public function ipaddress_or_cidr(string $input): bool {
+    if (Validation::ipaddress_or_cidr($input)) return true;
+    $this->set_message('ipaddress_or_cidr', 'The {field} field must contain a valid ip address or CIDR.');
+    return false;
+  }
+
   /**
    * Validate hostname or ip address.
    * 

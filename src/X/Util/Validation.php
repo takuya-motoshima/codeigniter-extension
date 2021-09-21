@@ -33,6 +33,16 @@ final class Validation {
   }
 
   /**
+   * Validate ip address or CIDR.
+   * 
+   * @param  string $input Input value.
+   * @return bool          Returns true if validation succeeds, false if validation fails.
+   */
+  public static function ipaddress_or_cidr(string $input): bool {
+    return preg_match('/^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(\d|[1-2]\d|3[0-2]))?$/', $input) === 1;
+  }
+
+  /**
    * Validate hostname or ip address.
    * 
    * @param  string $input Input value.
