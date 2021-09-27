@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.0.9] - 2021-9-27
+
+- Replace the line breaks in the SQL returned by the model's last_query method with spaces.
+  
+    ```php
+    use \X\Util\Logger;
+    $users = $this->UserModel->select('id, name')->get()->result_array();
+    $query = $this->UserModel->last_query();
+    Logger::print($query);// SELECT `id`, `name` FROM `user`
+    ```
+
 ## [4.0.8] - 2021-9-22
 
 - Added ip address or CIDR validation rules.

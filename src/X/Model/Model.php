@@ -1098,7 +1098,10 @@ abstract class Model extends \CI_Model {
    * @return  string
    */
   public function last_query() {
-    return call_user_func_array([self::db(), __FUNCTION__], func_get_args());
+    $query = call_user_func_array([self::db(), __FUNCTION__], func_get_args());
+    if (empty($query))
+      return $query;
+    return str_replace(["\n", "\r\n", "\r"], ' ', $query);
   }
 
   /**
