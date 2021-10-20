@@ -313,7 +313,11 @@ final class FileHelper {
    * @return string                File size with units 
    */
   public static function humanFilesize(string $filepath, int $decimals = 2): string {
-    $bytes = file_exists($filepath) ? filesize($filepath) : 0;
+    $bytes = 0;
+    if (file_exists($filepath)) {
+      clearstatcache(true, $filepath);
+      $bytes = filesize($filepath);
+    }
     $factor = floor((strlen($bytes) - 1) / 3);
     if ($factor > 0)
       $sz = 'KMGT';
