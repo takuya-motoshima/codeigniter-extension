@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.0.10] - 2021-10-20
+
+- Added a process to clear the file status cache before getting the file size.
+  
 ## [4.0.9] - 2021-9-27
 
 - Replace the line breaks in the SQL returned by the model's last_query method with spaces.
