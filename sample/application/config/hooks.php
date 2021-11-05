@@ -22,20 +22,33 @@ $hook['post_controller_constructor'] = function() {
   $accessibility = AnnotationReader::getAccessibility($ci->router->class, $ci->router->method);
 
   // Whether you are logged in.
-  $islogin = !empty($_SESSION[SESSION_NAME]);
+  $isLogin = !empty($_SESSION[SESSION_NAME]);
 
   // Whether it is HTTP access.
-  $ishttp = !is_cli();
+  $isHttp = !is_cli();
 
-  // When accessed by HTTP.
-  if ($ishttp) {
-    // Returns an error if HTTP access is not allowed.
-    if (!$accessibility->allow_http) throw new \RuntimeException('HTTP access is not allowed.');
+  // Requested path.
+  $curPath = lcfirst($ci->router->directory ?? '') . lcfirst($ci->router->class) . '/' . $ci->router->method;
 
-    // When the logged-in user calls a request that only the log-off user can access, redirect to the dashboard.
-    // It also redirects to the login page when the log-off user calls a request that only the logged-in user can access.
-    if ($islogin && !$accessibility->allow_login) redirect('/dashboard');
-    else if (!$islogin && !$accessibility->allow_logoff) redirect('/login');
+  // Default path.
+  $defPath = '/dashboard';
+
+  // Roles that allow access.
+  $allowRoles = !empty($accessibility->allow_role) ? array_map('trim', explode(',', $accessibility->allow_role)) : null;
+
+  if ($isHttp) {
+    // When accessed by HTTP.
+    if (!$accessibility->allow_http)
+      throw new \RuntimeException('HTTP access is not allowed');
+    else if ($isLogin && !$accessibility->allow_login)
+      redirect($defPath);
+    else if (!$isLogin && !$accessibility->allow_logoff)
+      redirect('/login');
+    else if ($isLogin && !empty($allowRoles)) {
+      $role = $_SESSION[SESSION_NAME]['role'] ?? 'undefined';
+      if (!in_array($role, $allowRoles) && $defPath !== $curPath)
+        redirect($defPath);
+    }
   } else {
     // When executed with CLI.
   }
@@ -50,5 +63,6 @@ $hook['pre_system'] = function () {
   // Check for uncaught exceptions.
   set_exception_handler(function ($e) {
     Logger::error($e);
+    show_error('This page is not working', 500);
   });
 };
