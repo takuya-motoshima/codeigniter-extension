@@ -4,7 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 use \X\Util\FileHelper;
 use \X\Util\Logger;
 
-class FileHelper extends AppController {
+class File extends AppController {
   public function index() {
     try {
       chdir(APPPATH . 'test_data');
@@ -42,6 +42,11 @@ class FileHelper extends AppController {
       // Specify the owner of the copied file
       touch('file8.txt');
       FileHelper::copyFile('file8.txt', 'newfile8.txt', null, $user);
+
+      // Lock and delete.
+      $deleteRoute = true;
+      $enableLock = true;
+      FileHelper::delete(APPPATH . 'test_data/tmp', $deleteRoute, $enableLock);
     } catch (\Throwable $e) {
       Logger::print($e->getMessage());
     }

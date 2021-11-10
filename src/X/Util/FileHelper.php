@@ -118,21 +118,45 @@ final class FileHelper {
   }
 
   /**
-   * 
    * Delete directory or file
-   *
+   * 
+   * @example
+   * use \X\Util\FileHelper;
+   * 
+   * // Delete all files and folders in "/ path"..
+   * FileHelper::delete('/test');
+   * 
+   * // Delete all files and folders in the "/ path" folder and also in the "/ path" folder.
+   * $deleteRoute = true;
+   * FileHelper::delete('/test', $deleteRoute);
+   * 
+   * // Lock before deleting, Locks are disabled by default.
+   * $deleteRoute = true;
+   * $enableLock = true;
+   * FileHelper::delete('/test', $deleteRoute, $enableLock);
+   * 
    * @param string[] $paths
    */
   public static function delete(...$paths) {
     // If the parameter path is an array rather than a variadic argument, target the first element.
-    if (is_array(reset($paths))) $paths = reset($paths);
+    if (is_array(reset($paths)))
+      $paths = reset($paths);
 
-    // Whether to delete the root directory at the end.
+    // Get options.
     $deleteRoute = true;
-    if (is_bool(end($paths))) {
+    $enableLock = false;
+    if (count($paths) > 2 && is_bool(end($paths)) && is_bool($paths[count($paths) - 2])) {
+      $enableLock = end($paths);
+      unset($paths[count($paths) - 1]);
+      $deleteRoute = end($paths);
+      unset($paths[count($paths) - 1]);
+    } else if (count($paths) > 1 && is_bool(end($paths))) {
       $deleteRoute = end($paths);
       unset($paths[count($paths) - 1]);
     }
+    // Logger::debug('$deleteRoute=', $deleteRoute ? 1 : 0);
+    // Logger::debug('$enableLock=', $enableLock ? 1 : 0);
+    // Logger::debug('$paths=', $paths);
 
     // Recursively delete the specified path.
     foreach ($paths as $path) {
@@ -147,8 +171,23 @@ final class FileHelper {
         foreach ($it as $info) {
           if ($info->isDir())
             rmdir($info);
-          else
-            unlink($info);
+          else {
+            if ($enableLock) {
+              // 'w' mode truncates file, you don't want to do that yet!
+              $fp = fopen($info->getPathname, 'c');
+
+              // blocking, but you can use LOCK_EX | LOCK_NB for nonblocking and a loop + sleep(1) for a timeout
+              flock($fp, LOCK_EX);
+
+              // truncate file to 0 length
+              ftruncate($fp, 0);
+              fclose($fp);
+              unlink($info->getPathname);
+            } else {
+              unlink($info);
+            }
+          }
+            
         }
         if ($deleteRoute)
           rmdir($path);

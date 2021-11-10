@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.0.11] - 2021-11-10
+
+- Allows you to specify whether lock is enabled or disabled when deleting a file.
+    ```php
+    use \X\Util\FileHelper;
+
+    // Delete all files and folders in "/ path"..
+    FileHelper::delete('/test');
+
+    // Delete all files and folders in the "/ path" folder and also in the "/ path" folder.
+    $deleteRoute = true;
+    FileHelper::delete('/test', $deleteRoute);
+
+    // Lock before deleting, Locks are disabled by default.
+    $deleteRoute = true;
+    $enableLock = true;
+    FileHelper::delete('/test', $deleteRoute, $enableLock);
+    ```
+
 ## [4.0.10] - 2021-10-20
 
 - Added a process to clear the file status cache before getting the file size.
