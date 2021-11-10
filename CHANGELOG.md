@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.0.12] - 2021-11-10
+
+- Fixed a bug in the file deletion function.
+
 ## [4.0.11] - 2021-11-10
 
 - Allows you to specify whether lock is enabled or disabled when deleting a file.

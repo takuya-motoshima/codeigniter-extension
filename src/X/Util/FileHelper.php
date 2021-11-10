@@ -169,12 +169,13 @@ final class FileHelper {
         // For directories, recursively delete files and directories under them.
         $it = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($path, \RecursiveDirectoryIterator::SKIP_DOTS), \RecursiveIteratorIterator::CHILD_FIRST);
         foreach ($it as $info) {
+          Logger::debug('Remove ' . $info->getPathname());
           if ($info->isDir())
             rmdir($info);
           else {
             if ($enableLock) {
               // 'w' mode truncates file, you don't want to do that yet!
-              $fp = fopen($info->getPathname, 'c');
+              $fp = fopen($info->getPathname(), 'c');
 
               // blocking, but you can use LOCK_EX | LOCK_NB for nonblocking and a loop + sleep(1) for a timeout
               flock($fp, LOCK_EX);
@@ -182,12 +183,11 @@ final class FileHelper {
               // truncate file to 0 length
               ftruncate($fp, 0);
               fclose($fp);
-              unlink($info->getPathname);
+              unlink($info->getPathname());
             } else {
               unlink($info);
             }
           }
-            
         }
         if ($deleteRoute)
           rmdir($path);
