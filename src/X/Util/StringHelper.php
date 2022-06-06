@@ -38,13 +38,12 @@ final class StringHelper {
    * @return string
    */
   public static function ellipsis(string $str, int $length = 100): string {
-    if (strlen($str) <= $length) {
+    if (mb_strlen($str) <= $length)
       return $str;
-    }
     $dot = '…';
-    $length -= strlen($dot);
+    $length -= mb_strlen($dot);
     $beforeLength = floor($length/2);
     $afterLength = $length - $beforeLength;
-    return substr($str, 0, $beforeLength) . '...' . substr($str, -$afterLength);
+    return mb_substr($str, 0, $beforeLength) . '...' . mb_substr($str, -$afterLength);
   }
 }
