@@ -5,6 +5,12 @@ use \X\Annotation\Access;
 use \X\Util\Logger;
 
 class Users extends AppController {
+  /**
+   * @Access(allow_login=false, allow_logoff=true)
+   */
+  public function login() {
+    parent::view('login');
+  }
 
   /**
    * @Access(allow_login=true, allow_logoff=false)

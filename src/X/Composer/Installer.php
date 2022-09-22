@@ -1,31 +1,16 @@
 <?php
-/**
- * Part of CodeIgniter Composer Installer
- *
- * @author     Takuya Motoshima <https://www.facebook.com/takuya.motoshima.7>
- * @license    MIT License
- * @copyright  2017 Takuya Motoshima
- */
 namespace X\Composer;
+
 use Composer\Script\Event;
 use Composer\IO\ConsoleIO;
 use X\Util\FileHelper;
 
 final class Installer {
-  /**
-   * @var string DOCUMENT_ROOT
-   */
   const DOCUMENT_ROOT = 'public/';
-
-  /**
-   * @var string FRAMEWORK_DIR
-   */
   const FRAMEWORK_DIR = 'vendor/codeigniter/framework/';
 
   /**
    * Composer post install script
-   *
-   * @param Event $event
    */
   public static function post_install(Event $event) {
     $io = $event->getIO();
@@ -45,9 +30,6 @@ final class Installer {
 
   /**
    * Update index.php
-   *
-   * @param ConsoleIO $io
-   * @return void
    */
   private static function update_index(ConsoleIO $io) {
     $io->write('==================================================');
@@ -62,33 +44,21 @@ final class Installer {
 
   /**
    * Update application/config/config.php
-   *
-   * @param ConsoleIO $io
-   * @return void
    */
   private static function update_config(ConsoleIO $io) {
     $io->write('==================================================');
     $io->write('<info>Update application/config/config.php is running');
     FileHelper::replace('application/config/config.php', [
-      // Base Site URL
       '$config[\'base_url\'] = \'\';' => 'if (!empty($_SERVER[\'HTTP_HOST\'])) {$config[\'base_url\'] = "//".$_SERVER[\'HTTP_HOST\'] . str_replace(basename($_SERVER[\'SCRIPT_NAME\']),"",$_SERVER[\'SCRIPT_NAME\']);}',
-      // Enable/Disable System Hooks
       '$config[\'enable_hooks\'] = FALSE;' => '$config[\'enable_hooks\'] = TRUE;',
-      // Allowed URL Characters
       '$config[\'permitted_uri_chars\'] = \'a-z 0-9~%.:_\-\';' => '$config[\'permitted_uri_chars\'] = \'a-z 0-9~%.:_\-,\';',
-      // Session Variables
       '$config[\'sess_save_path\'] = NULL;' => '$config[\'sess_save_path\'] = \APPPATH . \'session\';',
-      // Cookie Related Variables
       '$config[\'cookie_httponly\']  = FALSE;' => '$config[\'cookie_httponly\']  = TRUE;',
-      // Composer auto-loading
       '$config[\'composer_autoload\'] = FALSE;' => '$config[\'composer_autoload\'] = realpath(\APPPATH . \'../vendor/autoload.php\');',
-      // Index File
       '$config[\'index_page\'] = \'index.php\';' => '$config[\'index_page\'] = \'\';',
-      // Class Extension Prefix
       '$config[\'subclass_prefix\'] = \'MY_\';' => '$config[\'subclass_prefix\'] = \'App\';',
     ]);
     FileHelper::replace('application/config/autoload.php', [
-      // Auto-load Helper Files
       '$autoload[\'helper\'] = array();' => '$autoload[\'helper\'] = array(\'url\');',
     ]);
     $io->write('<info>Update application/config/config.php succeeded');
@@ -97,9 +67,6 @@ final class Installer {
 
   /**
    * Composer update
-   *
-   * @param ConsoleIO $io
-   * @return void
    */
   private static function composer_update(ConsoleIO $io) {
     $io->write('==================================================');
@@ -113,9 +80,6 @@ final class Installer {
 
   /**
    * Show message
-   *
-   * @param ConsoleIO $io
-   * @return void
    */
   private static function show_message(ConsoleIO $io) {
     $io->write('==================================================');
@@ -126,8 +90,6 @@ final class Installer {
 
   /**
    * Delete self
-   *
-   * @return void
    */
   private static function delete_self() {
     FileHelper::delete(

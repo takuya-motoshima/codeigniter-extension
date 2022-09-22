@@ -1,24 +1,11 @@
 <?php
-/**
- * Cipher class
- *
- * @author     Takuya Motoshima <https://www.facebook.com/takuya.motoshima.7>
- * @license    MIT License
- * @copyright  2017 Takuya Motoshima
- */
 namespace X\Util;
 use \X\Util\Loader;
 use \X\Util\Logger;
 
 final class Cipher {
-
   /**
-   * 
    * Encode SHA-256
-   *
-   * @param  string $plaintext
-   * @param  string $key
-   * @return string
    */
   public static function encode_sha256(string $plaintext, string $key = null): string {
     if (empty($key))
@@ -30,9 +17,6 @@ final class Cipher {
 
   /**
    * Generate initial vector.
-   * 
-   * @param string $method
-   * @return string
    */
   public static function generateInitialVector(string $method = 'AES-256-CTR'): string {
     $len = openssl_cipher_iv_length($method);
@@ -42,7 +26,8 @@ final class Cipher {
   /**
    * Encrypt.
    *
-   * ```php
+   * <code>
+   * <?php
    * use \X\Util\Cipher;
    *
    * // Get the initialization vector. This should be changed every time to make it difficult to predict.
@@ -59,13 +44,7 @@ final class Cipher {
    *
    * // Decrypt.
    * $decrypted = Cipher::decrypt($encrypted, $key, $iv);// Hello, World.
-   * ```
-   *
-   * @param  string $plaintext
-   * @param  string $key
-   * @param  string $iv
-   * @param  string $method
-   * @return string
+   * </code>
    */
   public static function encrypt(string $plaintext, string $key, string $iv, string $method = 'AES-256-CTR'): string {
     $options = 0;
@@ -74,8 +53,8 @@ final class Cipher {
 
   /**
    * Decrypt.
-   *
-   * ```php
+   * <code>
+   * <?php
    * use \X\Util\Cipher;
    *
    * // Get the initialization vector. This should be changed every time to make it difficult to predict.
@@ -92,13 +71,7 @@ final class Cipher {
    *
    * // Decrypt.
    * $decrypted = Cipher::decrypt($encrypted, $key, $iv);// Hello, World.
-   * ```
-   *
-   * @param  string $encrypted
-   * @param  string $key
-   * @param  string $iv
-   * @param  string $method
-   * @return string
+   * </code>
    */
   public static function decrypt(string $encrypted, string $key, string $iv, string $method = 'AES-256-CTR'): string {
     $options = 0;
@@ -119,8 +92,8 @@ final class Cipher {
 
   /**
    * Generate key pair.
-   *
-   * ```php
+   * <code>
+   * <?php
    * use \X\Util\Cipher;
    * 
    * // Generate 4096bit long RSA key pair.
@@ -141,7 +114,7 @@ final class Cipher {
    * 
    * // Debug OpenSSH-encoded public key.
    * echo $pubKey;
-   * ```
+   * </code>
    * 
    * @param  string &$privKey                    The generated private key is set.
    * @param  string &$pubKey                     The generated public key is set.
@@ -164,20 +137,13 @@ final class Cipher {
    *                                             The default value is none.
    */
   public static function generateKeyPair(&$privKey, &$pubKey, array $options = []) {
-    // Init options.
     $options = array_merge([
       'digest_alg' => 'sha512',
       'private_key_bits' => 4096,
       'private_key_type' => OPENSSL_KEYTYPE_RSA
     ], $options);
-
-    // Create the private and public key
     $privKeyResource = openssl_pkey_new($options);
-
-    // Extract the private key from $res to $privKey
     openssl_pkey_export($privKeyResource, $privKey);
-
-    // Extract the public key from $res to $pubKey
     $pubKey = openssl_pkey_get_details($privKeyResource)['key'];
   }
 
@@ -198,7 +164,7 @@ final class Cipher {
    * OpenSSH encode the buffer.
    * 
    * @param  string $buffer buffer
-   * @return string         SSH encoded buffer
+   * @return string SSH encoded buffer
    */
   private static function encodeOpenSshBuffer(string $buffer): string {
     $len = strlen($buffer);
@@ -226,7 +192,7 @@ final class Cipher {
   }
 
   /**
-   * Generate a random token68 string. 
+   * Generate a random token68 string.
    *
    * @param int    $len How many characters do we want?
    * @param string $chars  A string of all possible characters to select from.

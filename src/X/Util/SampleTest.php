@@ -2,7 +2,6 @@
 namespace X;
 
 class SampleTest {
-
   private $message;
 
   public function __construct(string $message) {
@@ -14,6 +13,6 @@ class SampleTest {
   }
 
   public function setMessage(string $message): void {
-      $this->message = $message;
+    $this->message = $message;
   }
 }

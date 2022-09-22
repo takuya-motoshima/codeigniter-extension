@@ -1,20 +1,12 @@
 <?php
-/**
- * Array helper class
- *
- * @author     Takuya Motoshima <https://www.facebook.com/takuya.motoshima.7>
- * @license    MIT License
- * @copyright  2018 Takuya Motoshima
- */
 namespace X\Util;
 use MathieuViossat\Util\ArrayToTextTable;
 
 final class ArrayHelper {
-
   /**
    * Searches and returns the value of the specified key from the array
-   *
-   * ```php
+   * <code>
+   * <?php
    * use \X\Util\ArrayHelper;
    *
    * // Search from a simple array
@@ -37,7 +29,7 @@ final class ArrayHelper {
    *     'USA' => 'New York'
    *   ]
    * ];
-   * ```
+   * </code>
    * 
    * ArrayHelper::searchArrayByKey('USA', $nested);
    * // New York
@@ -47,9 +39,8 @@ final class ArrayHelper {
    */
   public static function searchArrayByKey(string $needle, array $arr) {
     foreach (new \RecursiveIteratorIterator(new \RecursiveArrayIterator($arr)) as $key => $value) {
-      if ($needle === $key) {
+      if ($needle === $key)
         return $value;
-      }
     }
     return null;
   }

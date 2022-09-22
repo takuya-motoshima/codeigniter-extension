@@ -1,19 +1,11 @@
 <?php
-/**
- * URL helper class
- *
- * @author     Takuya Motoshima <https://www.facebook.com/takuya.motoshima.7>
- * @license    MIT License
- * @copyright  2017 Takuya Motoshima
- */
 namespace X\Util;
 
 final class UrlHelper {
-
   /**
-   * URL Without FileName
-   * 
-   * ```php
+   * URL Without FileName.
+   * <code>
+   * <?php
    * use \X\Util\UrlHelper;
    *
    * UrlHelper::withoutFile('https://abc.com');// "https://abc.com"
@@ -30,10 +22,7 @@ final class UrlHelper {
    * UrlHelper::withoutFile('//abc.com/?name=foo');// "//abc.com"
    * UrlHelper::withoutFile('//abc.com/index.html?name=foo');// "//abc.com"
    * UrlHelper::withoutFile('//abc.com/def/index.html?name=foo');// "//abc.com/abc"
-   * ```
-   *   
-   * @param  string $url
-   * @return string
+   * </code>
    */
   public static function withoutFile(string $url): string {
     $url = rtrim(strtok($url, '?'), '/');
@@ -42,17 +31,16 @@ final class UrlHelper {
     $path = $urlInfo['path'] ?? '';
     if (!empty($path)) {
       $pathInfo = pathinfo($path);
-      if (isset($pathInfo['extension'])) {
+      if (isset($pathInfo['extension']))
         $path = rtrim(str_replace($pathInfo['filename'] . '.' . $pathInfo['extension'], '', $path), '/');
-      }
     }
     return $scheme . $urlInfo['host'] . $path;
   }
 
   /**
    * URL home url
-   * 
-   * ```php
+   * <code>
+   * <?php
    * use \X\Util\UrlHelper;
    *
    * UrlHelper::domain('https://abc.com');// "https://abc.com"
@@ -69,10 +57,7 @@ final class UrlHelper {
    * UrlHelper::domain('//abc.com/?name=foo');// "//abc.com"
    * UrlHelper::domain('//abc.com/index.html?name=foo');// "//abc.com"
    * UrlHelper::domain('//abc.com/def/index.html?name=foo');// "//abc.com"
-   * ```
-   * 
-   * @param  string $url
-   * @return string
+   * </code>
    */
   public static function domain(string $url): string {
     $url = rtrim(strtok($url, '?'), '/');

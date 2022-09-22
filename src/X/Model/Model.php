@@ -1,18 +1,9 @@
 <?php
-/**
- * Base model class
- *
- * @author     Takuya Motoshima <https://www.facebook.com/takuya.motoshima.7>
- * @license    MIT License
- * @copyright  2017 Takuya Motoshima
- * @property CI_DB_query_builder $db
- */
 namespace X\Model;
 use X\Util\Loader;
 use X\Util\Logger;
 
 abstract class Model extends \CI_Model {
-
   /**
    * @var string $table
    */
@@ -29,7 +20,7 @@ abstract class Model extends \CI_Model {
   protected $library;
 
   /**
-   * construct
+   * Construct.
    */
   public function __construct() {
     parent::__construct();
@@ -38,21 +29,20 @@ abstract class Model extends \CI_Model {
   }
 
   /**
-   * Get database object
+   * Get database object.
    *
    * @param string $config
    * @return CI_DB
    */
   public static function db(string $config = 'default') {
     static $db;
-    if (!isset($db[$config])) {
+    if (!isset($db[$config]))
       $db[$config] = Loader::database($config, true);
-    }
     return $db[$config];
   }
 
   /**
-   * Get database object
+   * Get database object.
    *
    * @param string $config
    * @return CI_DB
@@ -65,28 +55,28 @@ abstract class Model extends \CI_Model {
   }
 
   /**
-   * Get all
+   * Get all.
    */
   public function get_all() {
     return $this->get()->result_array();
   }
 
   /**
-   * Get by id
+   * Get by id.
    */
   public function get_by_id(int $id) {
     return $this->where('id', $id)->get()->row_array();
   }
 
   /**
-   * countById
+   * countById.
    */
   public function count_by_id(int $id): int {
     return $this->where('id', $id)->count_all_results();
   }
 
   /**
-   * Exists by id
+   * Exists by id.
    */
   public function exists_by_id(int $id): bool {
     $count = $this->count_by_id($id);
@@ -96,25 +86,21 @@ abstract class Model extends \CI_Model {
   // ----------------------------------------------------------------
   /**
    * Insert_On_Duplicate_Key_Update
-   *
-   * Compiles insert strings and runs the queries
-   *
-   * ```php
-   *   $SampleModel
-   *     ->set([
-   *       'key' => '1',
-   *       'title' => 'My title',
-   *       'name' => 'My Name'
-   *     ])
-   *     ->insert_on_duplicate_update();
-   *     
-   *   // You can also
-   *   $SampleModel
-   *     ->set('key', '1')
-   *     ->set('title', 'My title')
-   *     ->set('name', 'My Name')
-   *     ->insert_on_duplicate_update();
-   * ```
+   * <code>
+   * <?php
+   * $SampleModel
+   *   ->set([
+   *     'key' => '1',
+   *     'title' => 'My title',
+   *     'name' => 'My Name'
+   *   ])
+   *   ->insert_on_duplicate_update();
+   * $SampleModel
+   *   ->set('key', '1')
+   *   ->set('title', 'My title')
+   *   ->set('name', 'My Name')
+   *   ->insert_on_duplicate_update();
+   * </code>
    *
    * @param   string $table = '' Table to insert into
    * @param   array|object $set = null an associative array of insert values
@@ -123,33 +109,22 @@ abstract class Model extends \CI_Model {
    * @return  int Insert ID
    */
   public function insert_on_duplicate_update(string $table = '', $set = null, bool $escape = null): int {
-    if (\method_exists(self::db(), 'isset_qb_from') && !self::db()->isset_qb_from() && empty($table)) {
+    if (\method_exists(self::db(), 'isset_qb_from') && !self::db()->isset_qb_from() && empty($table))
       $table = static::TABLE;
-    }
     return self::db()->insert_on_duplicate_update($table, $set, $escape);
   }
 
   /**
-   * Insert_On_Duplicate_Key_Update_Batch
-   *
-   * Compiles batch insert strings and runs the queries
-   *
-   * ```php
-   *   $SampleModel
-   *     ->set_insert_batch([
-   *       [
-   *         'key' => '1',
-   *         'title' => 'My title',
-   *         'name' => 'My Name'
-   *       ],
-   *       [
-   *         'key' => '2',
-   *         'title' => 'Another title',
-   *         'name' => 'Another Name'
-   *       ]
-   *     ])
-   *     ->insert_on_duplicate_update_batch();
-   * ```
+   * Insert_On_Duplicate_Key_Update_Batch.
+   * <code>
+   * <?php
+   * $SampleModel
+   *   ->set_insert_batch([
+   *     ['key' => '1', 'title' => 'My title', 'name' => 'My Name'],
+   *     ['key' => '2', 'title' => 'Another title', 'name' => 'Another Name']
+   *   ])
+   *   ->insert_on_duplicate_update_batch();
+   * </code>
    *
    * @param   string $table = '' Table to insert into
    * @param   array|object $set = null an associative array of insert values
@@ -158,16 +133,13 @@ abstract class Model extends \CI_Model {
    * @return  int Number of rows inserted or FALSE on failure
    */
   public function insert_on_duplicate_update_batch(string $table = '', $set = null, bool $escape = null, int $batch_size = 100): int {
-    if (\method_exists(self::db(), 'isset_qb_from') && !self::db()->isset_qb_from() && empty($table)) {
+    if (\method_exists(self::db(), 'isset_qb_from') && !self::db()->isset_qb_from() && empty($table))
       $table = static::TABLE;
-    }
     return self::db()->insert_on_duplicate_update_batch($table, $set, $escape, $batch_size);
   }
 
   /**
-   * Insert
-   *
-   * Compiles an insert string and runs the query
+   * Insert.
    *
    * @see CI_DB_query_builder::insert()
    * @throws RuntimeException
@@ -177,16 +149,13 @@ abstract class Model extends \CI_Model {
    * @return  int Insert ID
    */
   public function insert($table = '', $set = null, $escape = null): int {
-    if (\method_exists(self::db(), 'isset_qb_from') && !self::db()->isset_qb_from() && empty($table)) {
+    if (\method_exists(self::db(), 'isset_qb_from') && !self::db()->isset_qb_from() && empty($table))
       $table = static::TABLE;
-    }
     return self::db()->insert($table, $set, $escape);
   }
 
   /**
-   * Insert_Batch
-   *
-   * Compiles batch insert strings and runs the queries
+   * Insert_Batch.
    *
    * @see CI_DB_query_builder::insert_batch()
    * @throws RuntimeException
@@ -201,9 +170,7 @@ abstract class Model extends \CI_Model {
   }
 
   /**
-   * UPDATE
-   *
-   * Compiles an update string and runs the query.
+   * UPDATE.
    *
    * @see CI_DB_query_builder::update()
    * @param   string $table = '' the table to retrieve the results from
@@ -213,16 +180,13 @@ abstract class Model extends \CI_Model {
    * @return  void
    */
   public function update($table = '', $set = null, $where = null, $limit = null) {
-    if (\method_exists(self::db(), 'isset_qb_from') && !self::db()->isset_qb_from() && empty($table)) {
+    if (\method_exists(self::db(), 'isset_qb_from') && !self::db()->isset_qb_from() && empty($table))
       $table = static::TABLE;
-    }
     return self::db()->update($table, $set, $where, $limit);
   }
 
   /**
-   * Update_Batch
-   *
-   * Compiles an update string and runs the query
+   * Update_Batch.
    *
    * @see CI_DB_query_builder::update_batch()
    * @param   string $table the table to retrieve the results from
@@ -236,8 +200,7 @@ abstract class Model extends \CI_Model {
   }
 
   /**
-   * Execute the query
-   *
+   * Execute the query.
    * Accepts an SQL string as input and returns a result object upon
    * successful execution of a "read" type query. Returns boolean true
    * upon successful execution of a "write" type query. Returns boolean
@@ -256,7 +219,7 @@ abstract class Model extends \CI_Model {
   }
 
   /**
-   * Load the result drivers
+   * Load the result drivers.
    *
    * @see \DB_driver::load_rdriver()
    * @return  string the name of the result class
@@ -268,8 +231,7 @@ abstract class Model extends \CI_Model {
   // ----------------------------------------------------------------
   // Override QueryBuilder method
   /**
-   * Select
-   *
+   * Select.
    * Generates the SELECT portion of the query
    *
    * @param   string
@@ -282,8 +244,7 @@ abstract class Model extends \CI_Model {
   }
 
   /**
-   * Select Max
-   *
+   * Select Max.
    * Generates a SELECT MAX(field) portion of a query
    *
    * @param   string  the field
@@ -296,8 +257,7 @@ abstract class Model extends \CI_Model {
   }
 
   /**
-   * Select Min
-   *
+   * Select Min.
    * Generates a SELECT MIN(field) portion of a query
    *
    * @param   string  the field
@@ -310,8 +270,7 @@ abstract class Model extends \CI_Model {
   }
 
   /**
-   * Select Average
-   *
+   * Select Average.
    * Generates a SELECT AVG(field) portion of a query
    *
    * @param   string  the field
@@ -324,8 +283,7 @@ abstract class Model extends \CI_Model {
   }
 
   /**
-   * Select Sum
-   *
+   * Select Sum.
    * Generates a SELECT SUM(field) portion of a query
    *
    * @param   string  the field
@@ -338,8 +296,7 @@ abstract class Model extends \CI_Model {
   }
 
   /**
-   * DISTINCT
-   *
+   * DISTINCT.
    * Sets a flag which tells the query string compiler to add DISTINCT
    *
    * @param   bool    $val
@@ -351,8 +308,7 @@ abstract class Model extends \CI_Model {
   }
 
   /**
-   * From
-   *
+   * From.
    * Generates the FROM portion of the query
    *
    * @param   mixed   $from   can be a string or array
@@ -364,8 +320,7 @@ abstract class Model extends \CI_Model {
   }
 
   /**
-   * JOIN
-   *
+   * JOIN.
    * Generates the JOIN portion of the query
    *
    * @param   string
@@ -380,8 +335,7 @@ abstract class Model extends \CI_Model {
   }
 
   /**
-   * WHERE
-   *
+   * WHERE.
    * Generates the WHERE portion of the query.
    * Separates multiple calls with 'AND'.
    *
@@ -396,8 +350,7 @@ abstract class Model extends \CI_Model {
   }
 
   /**
-   * OR WHERE
-   *
+   * OR WHERE.
    * Generates the WHERE portion of the query.
    * Separates multiple calls with 'OR'.
    *
@@ -412,8 +365,7 @@ abstract class Model extends \CI_Model {
   }
 
   /**
-   * WHERE IN
-   *
+   * WHERE IN.
    * Generates a WHERE field IN('item', 'item') SQL query,
    * joined with 'AND' if appropriate.
    *
@@ -428,8 +380,7 @@ abstract class Model extends \CI_Model {
   }
 
   /**
-   * OR WHERE IN
-   *
+   * OR WHERE IN.
    * Generates a WHERE field IN('item', 'item') SQL query,
    * joined with 'OR' if appropriate.
    *
@@ -444,8 +395,7 @@ abstract class Model extends \CI_Model {
   }
 
   /**
-   * WHERE NOT IN
-   *
+   * WHERE NOT IN.
    * Generates a WHERE field NOT IN('item', 'item') SQL query,
    * joined with 'AND' if appropriate.
    *
@@ -460,8 +410,7 @@ abstract class Model extends \CI_Model {
   }
 
   /**
-   * OR WHERE NOT IN
-   *
+   * OR WHERE NOT IN.
    * Generates a WHERE field NOT IN('item', 'item') SQL query,
    * joined with 'OR' if appropriate.
    *
@@ -476,8 +425,7 @@ abstract class Model extends \CI_Model {
   }
 
   /**
-   * LIKE
-   *
+   * LIKE.
    * Generates a %LIKE% portion of the query.
    * Separates multiple calls with 'AND'.
    *
@@ -493,8 +441,7 @@ abstract class Model extends \CI_Model {
   }
 
   /**
-   * NOT LIKE
-   *
+   * NOT LIKE.
    * Generates a NOT LIKE portion of the query.
    * Separates multiple calls with 'AND'.
    *
@@ -510,8 +457,7 @@ abstract class Model extends \CI_Model {
   }
 
   /**
-   * OR LIKE
-   *
+   * OR LIKE.
    * Generates a %LIKE% portion of the query.
    * Separates multiple calls with 'OR'.
    *
@@ -527,8 +473,7 @@ abstract class Model extends \CI_Model {
   }
 
   /**
-   * OR NOT LIKE
-   *
+   * OR NOT LIKE.
    * Generates a NOT LIKE portion of the query.
    * Separates multiple calls with 'OR'.
    *
@@ -556,7 +501,7 @@ abstract class Model extends \CI_Model {
   }
 
   /**
-   * Starts a query group, but ORs the group
+   * Starts a query group, but ORs the group.
    *
    * @return  CI_DB_query_builder
    */
@@ -566,7 +511,7 @@ abstract class Model extends \CI_Model {
   }
 
   /**
-   * Starts a query group, but NOTs the group
+   * Starts a query group, but NOTs the group.
    *
    * @return  CI_DB_query_builder
    */
@@ -576,7 +521,7 @@ abstract class Model extends \CI_Model {
   }
 
   /**
-   * Starts a query group, but OR NOTs the group
+   * Starts a query group, but OR NOTs the group.
    *
    * @return  CI_DB_query_builder
    */
@@ -586,7 +531,7 @@ abstract class Model extends \CI_Model {
   }
 
   /**
-   * Ends a query group
+   * Ends a query group.
    *
    * @return  CI_DB_query_builder
    */
@@ -596,7 +541,7 @@ abstract class Model extends \CI_Model {
   }
 
   /**
-   * GROUP BY
+   * GROUP BY.
    *
    * @param   string  $by
    * @param   bool    $escape
@@ -608,8 +553,7 @@ abstract class Model extends \CI_Model {
   }
 
   /**
-   * HAVING
-   *
+   * HAVING.
    * Separates multiple calls with 'AND'.
    *
    * @param   string  $key
@@ -623,8 +567,7 @@ abstract class Model extends \CI_Model {
   }
 
   /**
-   * OR HAVING
-   *
+   * OR HAVING.
    * Separates multiple calls with 'OR'.
    *
    * @param   string  $key
@@ -638,7 +581,7 @@ abstract class Model extends \CI_Model {
   }
 
   /**
-   * ORDER BY
+   * ORDER BY.
    *
    * @param   string  $orderby
    * @param   string  $direction  ASC, DESC or RANDOM
@@ -651,7 +594,7 @@ abstract class Model extends \CI_Model {
   }
 
   /**
-   * LIMIT
+   * LIMIT.
    *
    * @param   int $value  LIMIT value
    * @param   int $offset OFFSET value
@@ -663,7 +606,7 @@ abstract class Model extends \CI_Model {
   }
 
   /**
-   * Sets the OFFSET value
+   * Sets the OFFSET value.
    *
    * @param   int $offset OFFSET value
    * @return  CI_DB_query_builder
@@ -674,8 +617,7 @@ abstract class Model extends \CI_Model {
   }
 
   /**
-   * The "set" function.
-   *
+   * The "set" function..
    * Allows key/value pairs to be set for inserting or updating
    *
    * @param   mixed
@@ -689,26 +631,20 @@ abstract class Model extends \CI_Model {
   }
 
   /**
-   * Get SELECT query string
-   *
-   * Compiles a SELECT query string and returns the sql.
+   * Get SELECT query string.
    *
    * @param   string  the table name to select from (optional)
    * @param   bool    TRUE: resets QB values; FALSE: leave QB values alone
    * @return  string
    */
   public function get_compiled_select($table = '', $reset = TRUE) {
-    if (\method_exists(self::db(), 'isset_qb_from') && !self::db()->isset_qb_from() && empty($table)) {
+    if (\method_exists(self::db(), 'isset_qb_from') && !self::db()->isset_qb_from() && empty($table))
       $table = static::TABLE;
-    }
     return self::db()->get_compiled_select($table, $reset);
   }
 
   /**
-   * Get
-   *
-   * Compiles the select statement based on the other functions called
-   * and runs the query
+   * Get.
    *
    * @param   string  the table
    * @param   string  the limit clause
@@ -716,15 +652,13 @@ abstract class Model extends \CI_Model {
    * @return  CI_DB_result
    */
   public function get($table = '', $limit = NULL, $offset = NULL) {
-    if (\method_exists(self::db(), 'isset_qb_from') && !self::db()->isset_qb_from() && empty($table)) {
+    if (\method_exists(self::db(), 'isset_qb_from') && !self::db()->isset_qb_from() && empty($table))
       $table = static::TABLE;
-    }
     return self::db()->get($table, $limit, $offset);
   }
 
   /**
-   * "Count All Results" query
-   *
+   * "Count All Results" query.
    * Generates a platform-specific query string that counts all records
    * returned by an Query Builder query.
    *
@@ -733,16 +667,14 @@ abstract class Model extends \CI_Model {
    * @return  int
    */
   public function count_all_results($table = '', $reset = TRUE) {
-    if (\method_exists(self::db(), 'isset_qb_from') && !self::db()->isset_qb_from() && empty($table)) {
+    if (\method_exists(self::db(), 'isset_qb_from') && !self::db()->isset_qb_from() && empty($table))
       $table = static::TABLE;
-    }
     return self::db()->count_all_results($table, $reset);
   }
 
   /**
-   * Get_Where
-   *
-   * Allows the where clause, limit and offset to be added directly
+   * Get_Where.
+   * Allows the where clause, limit and offset to be added directly.
    *
    * @param   string  $table
    * @param   string  $where
@@ -751,27 +683,13 @@ abstract class Model extends \CI_Model {
    * @return  CI_DB_result
    */
   public function get_where($table = '', $where = NULL, $limit = NULL, $offset = NULL) {
-    if (\method_exists(self::db(), 'isset_qb_from') && !self::db()->isset_qb_from() && empty($table)) {
+    if (\method_exists(self::db(), 'isset_qb_from') && !self::db()->isset_qb_from() && empty($table))
       $table = static::TABLE;
-    }
     return self::db()->get_where($table, $where, $limit, $offset);
   }
 
-  // /**
-  //  * Insert_Batch
-  //  *
-  //  * Compiles batch insert strings and runs the queries
-  //  *
-  //  * @param    string  $table  Table to insert into
-  //  * @param    array   $set    An associative array of insert values
-  //  * @param    bool    $escape Whether to escape values and identifiers
-  //  * @return   int Number of rows inserted or FALSE on failure
-  //  */
-  // public function insert_batch($table, $set = NULL, $escape = NULL, $batch_size = 100) {
-  // }
-
   /**
-   * The "set_insert_batch" function.  Allows key/value pairs to be set for batch inserts
+   * The "set_insert_batch" function.  Allows key/value pairs to be set for batch inserts.
    *
    * @param   mixed
    * @param   string
@@ -784,54 +702,33 @@ abstract class Model extends \CI_Model {
   }
 
   /**
-   * Get INSERT query string
-   *
-   * Compiles an insert query and returns the sql
+   * Get INSERT query string.
    *
    * @param   string  the table to insert into
    * @param   bool    TRUE: reset QB values; FALSE: leave QB values alone
    * @return  string
    */
   public function get_compiled_insert($table = '', $reset = TRUE) {
-    if (\method_exists(self::db(), 'isset_qb_from') && !self::db()->isset_qb_from() && empty($table)) {
+    if (\method_exists(self::db(), 'isset_qb_from') && !self::db()->isset_qb_from() && empty($table))
       $table = static::TABLE;
-    }
     return self::db()->get_compiled_insert($table, $reset);
   }
 
-  // /**
-  //  * Insert
-  //  *
-  //  * Compiles an insert string and runs the query
-  //  *
-  //  * @param    string  the table to insert data into
-  //  * @param    array   an associative array of insert values
-  //  * @param    bool    $escape Whether to escape values and identifiers
-  //  * @return   bool    TRUE on success, FALSE on failure
-  //  */
-  // public function insert($table = '', $set = NULL, $escape = NULL) {
-  // }
-
   /**
-   * Replace
-   *
-   * Compiles an replace into string and runs the query
+   * Replace.
    *
    * @param   string  the table to replace data into
    * @param   array   an associative array of insert values
    * @return  bool    TRUE on success, FALSE on failure
    */
   public function replace($table = '', $set = NULL) {
-    if (\method_exists(self::db(), 'isset_qb_from') && !self::db()->isset_qb_from() && empty($table)) {
+    if (\method_exists(self::db(), 'isset_qb_from') && !self::db()->isset_qb_from() && empty($table))
       $table = static::TABLE;
-    }
     return self::db()->replace($table, $set);
   }
 
   /**
    * Get UPDATE query string
-   *
-   * Compiles an update query and returns the sql
    *
    * @param   string  the table to update
    * @param   bool    TRUE: reset QB values; FALSE: leave QB values alone
@@ -843,33 +740,6 @@ abstract class Model extends \CI_Model {
     }
     return self::db()->get_compiled_update($table, $reset);
   }
-
-  // /**
-  //  * UPDATE
-  //  *
-  //  * Compiles an update string and runs the query.
-  //  *
-  //  * @param    string  $table
-  //  * @param    array   $set    An associative array of update values
-  //  * @param    mixed   $where
-  //  * @param    int $limit
-  //  * @return   bool    TRUE on success, FALSE on failure
-  //  */
-  // public function update($table = '', $set = NULL, $where = NULL, $limit = NULL) {
-  // }
-
-  // /**
-  //  * Update_Batch
-  //  *
-  //  * Compiles an update string and runs the query
-  //  *
-  //  * @param    string  the table to retrieve the results from
-  //  * @param    array   an associative array of update values
-  //  * @param    string  the where key
-  //  * @return   int number of rows affected or FALSE on failure
-  //  */
-  // public function update_batch($table, $set = NULL, $index = NULL, $batch_size = 100) {
-  // }
 
   /**
    * The "set_update_batch" function.  Allows key/value pairs to be set for batch updating
@@ -885,9 +755,7 @@ abstract class Model extends \CI_Model {
   }
 
   /**
-   * Empty Table
-   *
-   * Compiles a delete string and runs "DELETE FROM table"
+   * Empty Table.
    *
    * @param   string  the table to empty
    * @return  bool    TRUE on success, FALSE on failure
@@ -902,10 +770,6 @@ abstract class Model extends \CI_Model {
   /**
    * Truncate
    *
-   * Compiles a truncate string and runs the query
-   * If the database does not support the truncate() command
-   * This function maps to "DELETE FROM table"
-   *
    * @param   string  the table to truncate
    * @return  bool    TRUE on success, FALSE on failure
    */
@@ -917,9 +781,7 @@ abstract class Model extends \CI_Model {
   }
 
   /**
-   * Get DELETE query string
-   *
-   * Compiles a delete query string and returns the sql
+   * Get DELETE query string.
    *
    * @param   string  the table to delete from
    * @param   bool    TRUE: reset QB values; FALSE: leave QB values alone
@@ -933,9 +795,7 @@ abstract class Model extends \CI_Model {
   }
 
   /**
-   * Delete
-   *
-   * Compiles a delete string and runs the query
+   * Delete.
    *
    * @param   mixed   the table(s) to delete from. String or array
    * @param   mixed   the where clause
@@ -1028,7 +888,7 @@ abstract class Model extends \CI_Model {
   // ----------------------------------------------------------------
   // Override CI_DB_driver method
   /**
-   * Start Transaction
+   * Start Transaction.
    *
    * @param   bool    $test_mode = FALSE
    * @return  bool
@@ -1038,7 +898,7 @@ abstract class Model extends \CI_Model {
   }
 
   /**
-   * Begin Transaction
+   * Begin Transaction.
    *
    * @param   bool    $test_mode
    * @return  bool
@@ -1048,7 +908,7 @@ abstract class Model extends \CI_Model {
   }
 
   /**
-   * Complete Transaction
+   * Complete Transaction.
    *
    * @return  bool
    */
@@ -1057,7 +917,7 @@ abstract class Model extends \CI_Model {
   }
 
   /**
-   * Lets you retrieve the transaction flag to determine if it has failed
+   * Lets you retrieve the transaction flag to determine if it has failed.
    *
    * @return  bool
    */
@@ -1066,7 +926,7 @@ abstract class Model extends \CI_Model {
   }
 
   /**
-   * Commit Transaction
+   * Commit Transaction.
    *
    * @return  bool
    */
@@ -1075,7 +935,7 @@ abstract class Model extends \CI_Model {
   }
 
   /**
-   * Rollback Transaction
+   * Rollback Transaction.
    *
    * @return  bool
    */
@@ -1084,7 +944,7 @@ abstract class Model extends \CI_Model {
   }
 
   /**
-   * Set foreign key check
+   * Set foreign key check.
    *
    * @return  bool
    */
@@ -1093,7 +953,7 @@ abstract class Model extends \CI_Model {
   }
 
   /**
-   * Returns the last query that was executed
+   * Returns the last query that was executed.
    *
    * @return  string
    */
@@ -1105,10 +965,9 @@ abstract class Model extends \CI_Model {
   }
 
   /**
-   * "Smart" Escape String
-   *
-   * Escapes data based on type
-   * Sets boolean and null types
+   * "Smart" Escape String.
+   * Escapes data based on type.
+   * Sets boolean and null types.
    *
    * @param   string
    * @return  mixed
@@ -1129,10 +988,8 @@ abstract class Model extends \CI_Model {
   }
 
   /**
-   * Escape LIKE String
-   *
-   * Calls the individual driver for platform
-   * specific escaping for LIKE conditions
+   * Escape LIKE String.
+   * Calls the individual driver for platform specific escaping for LIKE conditions
    *
    * @param   string|string[]
    * @return  mixed
@@ -1142,39 +999,33 @@ abstract class Model extends \CI_Model {
   }
 
   /**
-   * Primary
-   *
-   * Retrieves the primary key. It assumes that the row in the first
-   * position is the primary key
+   * Primary.
+   * Retrieves the primary key. It assumes that the row in the first position is the primary key.
    *
    * @param   string  $table  Table name
    * @return  string
    */
   public function primary($table = null) {
-    if (empty($table)) {
+    if (empty($table))
       $table = static::TABLE;
-    }
     return self::db()->primary($table);
   }
 
   /**
-   * "Count All" query
-   *
-   * Generates a platform-specific query string that counts all records in
-   * the specified database
+   * "Count All" query.
+   * Generates a platform-specific query string that counts all records in the specified database.
    *
    * @param   string
    * @return  int
    */
   public function count_all($table = '') {
-    if (empty($table)) {
+    if (empty($table))
       $table = static::TABLE;
-    }
     return self::db()->count_all($table);
   }
 
   /**
-   * Returns an array of table names
+   * Returns an array of table names.
    *
    * @param   string  $constrain_by_prefix = FALSE
    * @return  array
@@ -1184,60 +1035,56 @@ abstract class Model extends \CI_Model {
   }
 
   /**
-   * Determine if a particular table exists
+   * Determine if a particular table exists.
    *
    * @param   string  $table
    * @return  bool
    */
   public function table_exists($table = null) {
-    if (empty($table)) {
+    if (empty($table))
       $table = static::TABLE;
-    }
     return self::db()->table_exists($table);
   }
 
   /**
-   * Fetch Field Names
+   * Fetch Field Names.
    *
    * @param   string  $table  Table name
    * @return  array
    */
   public function list_fields($table = null) {
-    if (empty($table)) {
+    if (empty($table))
       $table = static::TABLE;
-    }
     return self::db()->list_fields($table);
   }
 
   /**
-   * Determine if a particular field exists
+   * Determine if a particular field exists.
    *
    * @param   string
    * @param   string
    * @return  bool
    */
   public function field_exists($field_name, $table = null) {
-    if (empty($table)) {
+    if (empty($table))
       $table = static::TABLE;
-    }
     return self::db()->field_exists($field_name, $table);
   }
 
   /**
-   * Returns an object with field data
+   * Returns an object with field data.
    *
    * @param   string  $table  the table name
    * @return  array
    */
   public function field_data($table = null) {
-     if (empty($table)) {
+    if (empty($table))
       $table = static::TABLE;
-    }
     return self::db()->field_data($table);
   }
 
   /**
-   * Last error
+   * Last error.
    *
    * @return  array
    */
@@ -1246,7 +1093,7 @@ abstract class Model extends \CI_Model {
   }
 
   /**
-   * Insert ID
+   * Insert ID.
    *
    * @return  int
    */
@@ -1255,7 +1102,7 @@ abstract class Model extends \CI_Model {
   }
 
   /**
-   * Enable Query Caching
+   * Enable Query Caching.
    *
    * @return  void
    */

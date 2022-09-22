@@ -1,63 +1,19 @@
 <?php
-/**
- * Query builder class
- *
- * @author     Takuya Motoshima <https://www.facebook.com/takuya.motoshima.7>
- * @license    MIT License
- * @copyright  2017 Takuya Motoshima
- */
 namespace X\Database;
 
 abstract class QueryBuilder extends \CI_DB_query_builder {
-
-  /**
-   * @var integer The current page we are on
-   */
   protected $qb_cur_page = 1;
-
-  /**
-   * @var integer The number of rows/items per page
-   */
   protected $qb_rows_per_page  = 10;
-
-  /**
-   * @var integer Only show this many page numbers per page
-   */
   protected $qb_page_limit     = 10;
-
-  /**
-   * @var integer Max pages for this query
-   */
   protected $qb_max_pages      = 0;
-
-  /**
-   * @var integer Total rows
-   */
   protected $qb_total_rows = 0;
 
-
-  /**
-   * Query debug flag
-   *
-   * Whether to output the query to the log
-   *
-   * @var bool
-   */
-  // public $query_debug  = true;
-
-  /**
-   * construct
-   *
-   * @param   string|string[] $config
-   */
   public function __construct($config) {
     parent::__construct($config);
   }
 
   /**
-   * Insert_On_Duplicate_Key_Update
-   *
-   * Compiles an insert string and runs the query
+   * Insert_On_Duplicate_Key_Update.
    *
    * @see CI_DB_query_builder::insert()
    * @throws RuntimeException
@@ -67,17 +23,14 @@ abstract class QueryBuilder extends \CI_DB_query_builder {
    * @return  int Insert ID
    */
   public function insert_on_duplicate_update($table = '', $set = null, $escape = null): int {
-    if ($set !== null) {
+    if ($set !== null)
       parent::set($set, '', $escape);
-    }
-    if (count($this->qb_set) === 0) {
+    if (count($this->qb_set) === 0)
       // No valid data array. Folds in cases where keys and values did not match up
       return ($this->db_debug) ? parent::display_error('db_must_use_set') : false;
-    }
     if ($table === '') {
-      if (!isset($this->qb_from[0])) {
+      if (!isset($this->qb_from[0]))
         return ($this->db_debug) ? parent::display_error('db_must_set_table') : false;
-      }
       $table = $this->qb_from[0];
     }
     $sql = $this->_insert_on_duplicate_update(
@@ -91,9 +44,8 @@ abstract class QueryBuilder extends \CI_DB_query_builder {
   }
 
   /**
-   * Insert on duplicate key update  statement
-   *
-   * Generates a platform-specific insert string from the supplied data
+   * Insert on duplicate key update statement.
+   * Generates a platform-specific insert string from the supplied data.
    *
    * @param   string $table Table name
    * @param   array $keys INSERT keys
@@ -101,17 +53,13 @@ abstract class QueryBuilder extends \CI_DB_query_builder {
    * @return  string
    */
   private function _insert_on_duplicate_update(string $table, array $keys, array $values): string {
-    foreach ($keys as $key) {
+    foreach ($keys as $key)
       $update_fields[] = $key . '= VALUES(' . $key . ')';
-    }
     return 'INSERT INTO ' . $table . ' (' . implode(', ', $keys) . ') VALUES (' . implode(', ', $values) . ') ON DUPLICATE KEY UPDATE ' . implode(', ', $update_fields);
   }
 
-
   /**
-   * Insert_On_Duplicate_Key_Update_Batch
-   *
-   * Compiles batch insert strings and runs the queries
+   * Insert_On_Duplicate_Key_Update_Batch.
    *
    * @param   string $table = '' Table to insert into
    * @param   array|object $set = null an associative array of insert values
@@ -120,17 +68,14 @@ abstract class QueryBuilder extends \CI_DB_query_builder {
    * @return  int Number of rows inserted or FALSE on failure
    */
   public function insert_on_duplicate_update_batch(string $table = '', $set = null, bool $escape = null, int $batch_size = 100): int {
-    if ($set !== null) {
+    if ($set !== null)
       parent::set_insert_batch($set, '', $escape);
-    }
-    if (count($this->qb_set) === 0) {
+    if (count($this->qb_set) === 0)
       // No valid data array. Folds in cases where keys and values did not match up
       return ($this->db_debug) ? parent::display_error('db_must_use_set') : false;
-    }
     if ($table === '') {
-      if (!isset($this->qb_from[0])) {
+      if (!isset($this->qb_from[0]))
         return ($this->db_debug) ? parent::display_error('db_must_set_table') : false;
-      }
       $table = $this->qb_from[0];
     }
 
@@ -144,16 +89,14 @@ abstract class QueryBuilder extends \CI_DB_query_builder {
       );
       $this->query($sql);
       $affected_rows += $this->affected_rows();
-      // $affected_rows += parent::affected_rows();
     }
     parent::_reset_write();
     return $affected_rows;
   }
 
   /**
-   * Insert on duplicate key update batch statement
-   *
-   * Generates a platform-specific insert string from the supplied data
+   * Insert on duplicate key update batch statement.
+   * Generates a platform-specific insert string from the supplied data.
    *
    * @param   string $table Table name
    * @param   array $keys INSERT keys
@@ -161,16 +104,13 @@ abstract class QueryBuilder extends \CI_DB_query_builder {
    * @return  string
    */
   private function _insert_on_duplicate_update_batch(string $table, array $keys, array $values): string {
-    foreach ($keys as $key) {
+    foreach ($keys as $key)
       $update_fields[] = $key . '= VALUES(' . $key . ')';
-    }
     return 'INSERT INTO ' . $table . ' (' . implode(', ', $keys) . ') VALUES ' . implode(', ', $values) . ' ON DUPLICATE KEY UPDATE ' . implode(', ', $update_fields);
   }
 
   /**
-   * Insert
-   *
-   * Compiles an insert string and runs the query
+   * Insert.
    *
    * @see CI_DB_query_builder::insert()
    * @throws RuntimeException
@@ -189,9 +129,7 @@ abstract class QueryBuilder extends \CI_DB_query_builder {
   }
 
   /**
-   * Insert_Batch
-   *
-   * Compiles batch insert strings and runs the queries
+   * Insert_Batch.
    *
    * @see CI_DB_query_builder::insert_batch()
    * @throws RuntimeException
@@ -211,9 +149,7 @@ abstract class QueryBuilder extends \CI_DB_query_builder {
   }
 
   /**
-   * UPDATE
-   *
-   * Compiles an update string and runs the query.
+   * UPDATE.
    *
    * @see CI_DB_query_builder::update()
    * @param   string $table = '' the table to retrieve the results from
@@ -230,9 +166,7 @@ abstract class QueryBuilder extends \CI_DB_query_builder {
   }
 
   /**
-   * Update_Batch
-   *
-   * Compiles an update string and runs the query
+   * Update_Batch.
    *
    * @see CI_DB_query_builder::update_batch()
    * @param   string $table the table to retrieve the results from
@@ -251,13 +185,7 @@ abstract class QueryBuilder extends \CI_DB_query_builder {
   }
 
   /**
-   * Execute the query
-   *
-   * Accepts an SQL string as input and returns a result object upon
-   * successful execution of a "read" type query. Returns boolean true
-   * upon successful execution of a "write" type query. Returns boolean
-   * false upon failure, and if the $db_debug variable is set to true
-   * will raise an error.
+   * Execute the query.
    *
    * @see  CI_DB_driver::query()
    * @throws RuntimeException
@@ -268,7 +196,6 @@ abstract class QueryBuilder extends \CI_DB_query_builder {
    */
   public function query($sql, $binds = false, $return_object = null) {
     $result = parent::query($sql, $binds, $return_object);
-    // $this->query_debug === true && log_message('debug', parent::last_query());
     if ($result === false) {
       $error = parent::error();
       throw new \RuntimeException($error['message'], $error['code']);
@@ -277,7 +204,7 @@ abstract class QueryBuilder extends \CI_DB_query_builder {
   }
 
   /**
-   * Load the result drivers
+   * Load the result drivers.
    *
    * @see \DB_driver::load_rdriver()
    * @return  string the name of the result class
@@ -288,13 +215,12 @@ abstract class QueryBuilder extends \CI_DB_query_builder {
       require_once(BASEPATH.'database/DB_result.php');
       require_once(BASEPATH.'database/drivers/'.$this->dbdriver.'/'.$this->dbdriver.'_result.php');
       eval('namespace X\Database {class ' . ucfirst($this->dbdriver) . 'Driver extends \X\Database\Driver\\' . ucfirst($this->dbdriver) . '\Result {use \X\Database\Result;}}');
-      // eval('namespace X\Database {class ' . ucfirst($this->dbdriver) . 'Driver extends \CI_DB_' . $this->dbdriver . '_result {use \X\Database\Result;}}');
     }
     return $driver;
   }
 
   /**
-   * Get QB FROM data
+   * Get QB FROM data.
    *
    * @return bool
    */
@@ -302,9 +228,8 @@ abstract class QueryBuilder extends \CI_DB_query_builder {
     return isset($this->qb_from[$index]);
   }
 
-
   /**
-   * Get paginated search results
+   * Get paginated search results.
    * 
    * @return  array
    */

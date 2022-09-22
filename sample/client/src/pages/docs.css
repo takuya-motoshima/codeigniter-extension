@@ -1,0 +1,161 @@
+html,
+body {
+  font-family: "Noto Sans JP", YuGothic, "Yu Gothic", "Hiragino Sans", Helvetica, sans-serif;
+}
+
+:root {
+  --kt-text-muted: var(--kt-text-gray-700);
+  --kt-input-solid-bg-focus: var(--kt-input-solid-bg);
+  --kt-input-solid-color: var(--kt-text-gray-800);
+  --kt-light-inverse: var(--kt-gray-800);
+  --kt-input-solid-placeholder-color: var(--bs-gray-600);
+}
+
+.stepper.stepper-pills {
+  --kt-stepper-label-title-color-current: var(--kt-text-gray-700);
+  --kt-stepper-label-desc-color: var(--kt-text-gray-700);
+}
+
+::-webkit-scrollbar {
+  width: 0.4rem;
+  height: 0.4rem;
+  background-color: var(--bs-light-primary) !important;
+}
+
+  ::-webkit-scrollbar-thumb {
+    background-color: var(--bs-primary) !important;
+  }
+
+/* Hiding Collapse targets takes precedence over other CSS classes. */
+.collapse:not(.show) {
+  display: none !important;
+}
+
+/* When the Bootstrap Modal backdrop is disabled, the background color is not displayed. I don't like the transparent background, so set a black background. */
+@media (min-width: 576px) {
+  .modal.fade.show {
+    background-color: hsla(0, 0%, 0%, .2);
+  }
+}
+
+/* Font Awesome */
+.fa, .far, .fas {
+  color: inherit
+}
+
+/* Control animation. */
+/* @media (prefers-reduced-motion: reduce) {
+  .collapsing {
+    transition-property: height, visibility;
+    transition-duration: .35s;
+  }
+} */
+
+/* Animation disabled. */
+/* .notransition {
+  transition: none !important;
+} */
+
+/* Side Navigation. */
+.menu-item .menu-link .menu-title {
+  font-weight: bolder;
+}
+
+/* Sweet alert */
+.swal2-container .swal2-html-container {
+  font-weight: bolder;
+}
+
+/* Table */
+.table.dataTable.table-row-dashed th {
+  border-bottom-color: var(--bs-gray-200) !important;
+}
+
+  table.dataTable thead > tr > th.sorting:after,
+  table.dataTable thead > tr > th.sorting_asc:after,
+  table.dataTable thead > tr > th.sorting_desc:after,
+  table.dataTable thead > tr > th.sorting_asc_disabled:after,
+  table.dataTable thead > tr > th.sorting_desc_disabled:after {
+    position: relative;
+    opacity: 1;
+    display: inline-block;
+    width: 1rem;
+    height: 1rem;
+    margin-bottom: -.25rem;
+    content: " ";
+    bottom: auto;
+    right: auto;
+    left: auto;
+    margin-left: .5rem;
+  }
+
+  table.dataTable > thead .sorting_desc:after {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 9 8' fill='hsl(210deg 100%25 61%25)'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M4.42111 5.93537C4.22088 6.03839 3.9637 6.0191 3.78597 5.87137L0.177181 2.87153C-0.046034 2.68598 -0.060261 2.36951 0.145404 2.16468C0.351069 1.95985 0.698744 1.94422 0.921959 2.12977L4.14137 4.80594L7.06417 2.15586C7.27904 1.96104 7.62686 1.96165 7.84105 2.15722C8.05524 2.35279 8.05469 2.66927 7.83982 2.86409L4.54449 5.85194C4.50704 5.8859 4.46541 5.91371 4.42111 5.93537Z'/%3E%3C/svg%3E");
+  }
+
+  table.dataTable > thead .sorting_asc:after {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 9 8' fill='hsl(210deg 100%25 61%25)'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M4.42111 2.06463C4.22088 1.96161 3.9637 1.9809 3.78597 2.12863L0.177181 5.12847C-0.046034 5.31402 -0.0602611 5.63049 0.145404 5.83532C0.351069 6.04015 0.698744 6.05578 0.921959 5.87023L4.14137 3.19406L7.06417 5.84414C7.27904 6.03896 7.62686 6.03835 7.84105 5.84278C8.05524 5.64721 8.05469 5.33073 7.83982 5.13591L4.54449 2.14806C4.50704 2.1141 4.46541 2.08629 4.42111 2.06463Z'/%3E%3C/svg%3E");
+  }
+
+  @media screen and (max-width: 767px) {
+    div.dataTables_wrapper div.dataTables_paginate ul.pagination {
+      justify-content: flex-end !important;
+    }
+  }
+
+/* Bootstrap modal. */
+.modal.fade.show .modal-content {
+  animation: bootstrap-modal-show .3s
+}
+
+  @keyframes bootstrap-modal-show {
+    0% {
+      transform: scale(.7)
+    }
+    45% {
+      transform: scale(1.05)
+    }
+    80% {
+      transform: scale(.95)
+    }
+    100% {
+      transform: scale(1)
+    }
+  }
+
+/* Validation error. */
+.invalid-feedback {
+  font-weight: bolder !important;
+}
+
+
+/* Delayed image loading (imagesizes package) */
+.lazyload {
+  opacity: 0;
+}
+
+.lazyloading {
+  opacity: 1;
+  transition: opacity 300ms;
+	background:  url(/build/media/loading.svg) no-repeat center;
+}
+
+/* Form Controller */
+.form-check-input:not(:disabled) + .form-check-label:hover {
+  cursor: pointer;
+}
+
+/* noUiSlider */
+.noUi-value-horizontal {
+  color: var(--bs-dark);
+  /* color: var(--bs-gray-800); */
+}
+
+.noUi-tooltip {
+  color: var(--bs-dark);
+}
+
+/* Date Range Picker */
+.daterangepicker .drp-selected {
+  display: none;
+}

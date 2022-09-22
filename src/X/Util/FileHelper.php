@@ -1,24 +1,10 @@
 <?php
-/**
- * File helper class
- *
- * @author     Takuya Motoshima <https://www.facebook.com/takuya.motoshima.7>
- * @license    MIT License
- * @copyright  2017 Takuya Motoshima
- */
 namespace X\Util;
 use \X\Util\Logger;
 
 final class FileHelper {
-
   /**
-   * 
-   * Make directory
-   *
-   * @throws RuntimeException
-   * @param string $dir
-   * @param int $mode
-   * @return void
+   * Make directory.
    */
   public static function makeDirectory(string $dir, int $mode = 0755) {
     try {
@@ -32,24 +18,16 @@ final class FileHelper {
   }
 
   /**
-   * 
-   * Move
-   * 
-   * ```php
+   * Move.
+   * <code>
+   * <?php
    * // /tmp/old.txt -> /home/new.txt
    * \X\Util\FileHelper::move('/tmp/old.txt', '/home/new.txt');
    * // /tmp/old.txt -> ./tmp/new.txt
    * \X\Util\FileHelper::move('/tmp/old.txt', 'new.txt');
    * // /tmp/old.txt -> ./tmp/new.txt
    * \X\Util\FileHelper::move('/tmp/old.txt', 'new');
-   * ```
-   * 
-   * @throws RuntimeException
-   * @param string     $srcFile
-   * @param string     $dstFile
-   * @param string|int $group
-   * @param string|int $user
-   * @return void
+   * </code>
    */
   public static function move(string $srcFile, string $dstFile, $group = null, $user = null) {
     if (!file_exists($srcFile))
@@ -69,15 +47,7 @@ final class FileHelper {
   }
 
   /**
-   * 
-   * Copy file
-   * 
-   * @throws RuntimeException
-   * @param string     $srcFile
-   * @param string     $dstFile
-   * @param string|int $group
-   * @param string|int $user
-   * @return void
+   * Copy file.
    */
   public static function copyFile(string $srcFile, string $dstFile, $group = null, $user = null) {
     if (!file_exists($srcFile))
@@ -94,13 +64,7 @@ final class FileHelper {
   }
 
   /**
-   * 
-   * Copy directory
-   *
-   * @throws RuntimeException
-   * @param string $srcDir
-   * @param string $dstDir
-   * @return void
+   * Copy directory.
    */
   public static function copyDirectory(string $srcDir, string $dstDir) {
     if (!file_exists($srcDir))
@@ -118,9 +82,10 @@ final class FileHelper {
   }
 
   /**
-   * Delete directory or file
+   * Delete directory or file.
    * 
-   * @example
+   * <code>
+   * <?php
    * use \X\Util\FileHelper;
    * 
    * // Delete all files and folders in "/ path"..
@@ -134,15 +99,11 @@ final class FileHelper {
    * $deleteRoute = true;
    * $enableLock = true;
    * FileHelper::delete('/test', $deleteRoute, $enableLock);
-   * 
-   * @param string[] $paths
+   * </code>
    */
   public static function delete(...$paths) {
-    // If the parameter path is an array rather than a variadic argument, target the first element.
     if (is_array(reset($paths)))
       $paths = reset($paths);
-
-    // Get options.
     $deleteRoute = true;
     $enableLock = false;
     if (count($paths) > 2 && is_bool(end($paths)) && is_bool($paths[count($paths) - 2])) {
@@ -154,19 +115,12 @@ final class FileHelper {
       $deleteRoute = end($paths);
       unset($paths[count($paths) - 1]);
     }
-    // Logger::debug('$deleteRoute=', $deleteRoute ? 1 : 0);
-    // Logger::debug('$enableLock=', $enableLock ? 1 : 0);
-    // Logger::debug('$paths=', $paths);
-
-    // Recursively delete the specified path.
     foreach ($paths as $path) {
-      if (!file_exists($path)) {
+      if (!file_exists($path))
         Logger::error("{$path} not found");
-      } else if (is_file($path)) {
-        // If it's a file, simply delete it.
+      else if (is_file($path))
         unlink($path);
-      } else {
-        // For directories, recursively delete files and directories under them.
+      else {
         $it = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($path, \RecursiveDirectoryIterator::SKIP_DOTS), \RecursiveIteratorIterator::CHILD_FIRST);
         foreach ($it as $info) {
           Logger::debug('Remove ' . $info->getPathname());
@@ -176,17 +130,12 @@ final class FileHelper {
             if ($enableLock) {
               // 'w' mode truncates file, you don't want to do that yet!
               $fp = fopen($info->getPathname(), 'c');
-
-              // blocking, but you can use LOCK_EX | LOCK_NB for nonblocking and a loop + sleep(1) for a timeout
               flock($fp, LOCK_EX);
-
-              // truncate file to 0 length
               ftruncate($fp, 0);
               fclose($fp);
               unlink($info->getPathname());
-            } else {
+            } else
               unlink($info);
-            }
           }
         }
         if ($deleteRoute)
@@ -196,11 +145,7 @@ final class FileHelper {
   }
 
   /**
-   * 
-   * Replace file content
-   *
-   * @param string $path
-   * @return  void
+   * Replace file content.
    */
   public static function replace(string $path, array $replace) {
     $content = file_get_contents($path);
@@ -209,15 +154,14 @@ final class FileHelper {
   }
 
   /**
-   * Find file
-   * 
-   * ```php
+   * Find file.
+   * <code>
+   * <?php
    * use \X\Util\FileHelper;
    *
    * // Search only image files.
    * FileHelper::find('/img/*.{jpg,jpeg,png,gif}', GLOB_BRACE);
-   * ```
-   *
+   * </code>
    * @param  string      $pattern 
    * @param  int|integer $flags
    *                     Valid flags:
@@ -238,11 +182,7 @@ final class FileHelper {
   }
 
   /**
-   * 
-   * Find only one file
-   * 
-   * @param  string $pattern
-   * @return string
+   * Find only one file.
    */
   public static function findOne(string $pattern): ?string {
     $files = self::find($pattern);
@@ -252,11 +192,7 @@ final class FileHelper {
   }
 
   /**
-   * 
-   * Find random file name
-   * 
-   * @param  string $pattern
-   * @return string
+   * Find random file name.
    */
   public static function findRandomFileName(string $pattern): string {
     $files = self::find($pattern);
@@ -265,21 +201,14 @@ final class FileHelper {
   }
 
   /**
-   * 
-   * Find random file conent
-   * 
-   * @param  string $pattern
-   * @return string
+   * Find random file conent.
    */
   public static function getRandomFileContent(string $pattern): string {
     return file_get_contents(dirname($pattern) . '/' . self::findRandomFileName($pattern));
   }
 
   /**
-   * Get MimeType from file contents
-   * 
-   * @param  string $file
-   * @return string
+   * Get MimeType from file contents.
    */
   public static function getMimeByConent(string $file): string {
     if (!file_exists($file))
@@ -290,13 +219,8 @@ final class FileHelper {
     return $finfo->file($file);
   }
 
-
   /**
-   * Verify that the file is of the specified Mime type
-   * 
-   * @param  string $file
-   * @param  string $mime
-   * @return bool
+   * Verify that the file is of the specified Mime type.
    */
   public static function validationMime(string $file, string $mime): bool{
     return self::getMimeByConent($file) ===  $mime;
@@ -304,8 +228,8 @@ final class FileHelper {
 
   /**
    * Returns the total size of all files in the directory in bytes.
-   * 
-   * ```php
+   * <code>
+   * <?php
    * use \X\Util\FileHelper;
    *
    * // Returns the total size of all files in a directory
@@ -313,15 +237,13 @@ final class FileHelper {
    *
    * // Returns the total size of all files in multiple directories
    * FileHelper::getDirectorySize([ '/var/log/php-fpm' '/var/log/nginx' ]);
-   * ```
-   *
-   * @param  string|array $dirs
-   * @param  SplFileInfo[] $infos
-   * @return int
+   * </code>
    */
   public static function getDirectorySize($dirs, array &$infos = []): int {
-    if (is_string($dirs)) $dirs = [ $dirs ];
-    else if (!is_array($dirs)) throw new RuntimeException('The file path type only allows strings or arrays of strings');
+    if (is_string($dirs))
+      $dirs = [ $dirs ];
+    else if (!is_array($dirs))
+      throw new RuntimeException('The file path type only allows strings or arrays of strings');
     $size = 0;
     foreach ($dirs as $dir) {
       $it = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($dir, \FilesystemIterator::CURRENT_AS_FILEINFO | \FilesystemIterator::SKIP_DOTS));
@@ -335,8 +257,8 @@ final class FileHelper {
 
   /**
    * Returns the file size with units.
-   *
-   * ```php
+   * <code>
+   * <?php
    * use \X\Util\FileHelper;
    *
    * FileHelper::humanFilesize('/var/somefile.txt', 0);// 12B
@@ -345,17 +267,17 @@ final class FileHelper {
    * FileHelper::humanFilesize('/var/somefile.txt', 5);// 11.22833TB
    * FileHelper::humanFilesize('/var/somefile.txt', 3);// 1.177MB
    * FileHelper::humanFilesize('/var/somefile.txt');// 120.56KB
-   * ```
+   * </code>
    * 
-   * @param  string      $filepath File Path
+   * @param  string $filePath File Path
    * @param  int|integer $decimals Decimal digits
-   * @return string                File size with units 
+   * @return string File size with units 
    */
-  public static function humanFilesize(string $filepath, int $decimals = 2): string {
+  public static function humanFilesize(string $filePath, int $decimals = 2): string {
     $bytes = 0;
-    if (file_exists($filepath)) {
-      clearstatcache(true, $filepath);
-      $bytes = filesize($filepath);
+    if (file_exists($filePath)) {
+      clearstatcache(true, $filePath);
+      $bytes = filesize($filePath);
     }
     $factor = floor((strlen($bytes) - 1) / 3);
     if ($factor > 0)
@@ -363,4 +285,3 @@ final class FileHelper {
     return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . @$sz[$factor - 1] . 'B';
   }
 }
-

@@ -1,35 +1,13 @@
 <?php
-/**
- * Base controller class
- *
- * @author     Takuya Motoshima <https://www.facebook.com/takuya.motoshima.7>
- * @license    MIT License
- * @copyright  2017 Takuya Motoshima
- */
 namespace X\Controller;
 use X\Util\HttpResponse;
 use X\Util\Loader;
 
 abstract class Controller extends \CI_Controller {
-
-  /**
-   * @var string|string[] $model
-   */
   protected $model;
-
-  /**
-   * @var string|string[] $library
-   */
   protected $library;
-
-  /**
-   * @var HttpResponse $httpResponse
-   */
   protected $httpResponse;
 
-  /**
-   * Construct
-   */
   public function __construct() {
     parent::__construct();
     Loader::model($this->model);
@@ -39,28 +17,26 @@ abstract class Controller extends \CI_Controller {
   }
 
   /**
-   * Sets the CORS header
+   * Sets the CORS header.
+   * <code>
+   * <?php
+   * // Allow all origins
+   * parent::setCorsHeader('*');
    *
-   * eg.
-   *  - Allow all origins
-   *      parent::setCorsHeader('*');
-   *
-   *  - Allow a specific single origin
-   *      parent::setCorsHeader('http://www.example.jp');
+   * // Allow a specific single origin
+   * parent::setCorsHeader('http://www.example.jp');
    *   
-   *  - Allow specific multiple origins
-   *      parent::setCorsHeader('http://www.example.jp https://www.example.jp http://sub.example.jp');
+   * // Allow specific multiple origins
+   * parent::setCorsHeader('http://www.example.jp https://www.example.jp http://sub.example.jp');
    *
-   *  - To set the same Access-Control-Allow-Origin for all responses, use the hook point called before the response
-   *      // core/AppController.php: 
-   *      abstract class AppController extends \X\Controller\Controller {
-   *        protected function beforeResponse(string $referer) {
-   *          $this->setCorsHeader('*');
-   *        }
-   *      }
-   * 
-   * @param string $origin
-   * @return void
+   * // To set the same Access-Control-Allow-Origin for all responses, use the hook point called before the response
+   * // core/AppController.php: 
+   * abstract class AppController extends \X\Controller\Controller {
+   *   protected function beforeResponse(string $referer) {
+   *     $this->setCorsHeader('*');
+   *   }
+   * }
+   * </code>
    */
   protected function setCorsHeader(string $origin = '*') {
     $this->httpResponse->setCorsHeader($origin);
@@ -68,11 +44,7 @@ abstract class Controller extends \CI_Controller {
   }
 
   /**
-   * Set response
-   *
-   * @param  mixed $key
-   * @param  mixed $value
-   * @return object
+   * Set response.
    */
   protected function set($key, $value = null) {
     func_num_args() === 1 ? $this->httpResponse->set($key) : $this->httpResponse->set($key, $value);
@@ -80,21 +52,15 @@ abstract class Controller extends \CI_Controller {
   }
 
   /**
-   * Clear response
-   *
-   * @return object
+   * Clear response.
    */
   protected function clear() {
     $this->httpResponse->clear($key, $value);
     return $this;
   }
 
-
   /**
-   * Set status
-   *
-   * @param  int $status
-   * @return object
+   * Set status.
    */
   protected function status(int $status) {
     $this->httpResponse->status($status);
@@ -102,11 +68,7 @@ abstract class Controller extends \CI_Controller {
   }
 
   /**
-   * Response JSON
-   *
-   * @param  bool $forceObject
-   * @param  bool $pretty
-   * @return void
+   * Response JSON.
    */
   protected function json(bool $forceObject = false, bool $prettyrint = false) {
     $this->beforeResponse($this->getReferer());
@@ -115,10 +77,7 @@ abstract class Controller extends \CI_Controller {
   }
 
   /**
-   * Response HTML
-   *
-   * @param  string  $html
-   * @return void
+   * Response HTML.
    */
   protected function html(string $html) {
     $this->beforeResponse($this->getReferer());
@@ -127,10 +86,7 @@ abstract class Controller extends \CI_Controller {
   }
 
   /**
-   * Response template
-   *
-   * @param  string $path
-   * @return void
+   * Response template.
    */
   protected function view(string $path) {
     $this->beforeResponse($this->getReferer());
@@ -139,10 +95,7 @@ abstract class Controller extends \CI_Controller {
   }
 
   /**
-   * Response js
-   *
-   * @param  string $js
-   * @return void
+   * Response js.
    */
   protected function js(string $js) {
     $this->beforeResponse($this->getReferer());
@@ -151,10 +104,7 @@ abstract class Controller extends \CI_Controller {
   }
 
   /**
-   * Response text
-   *
-   * @param  string $text
-   * @return void
+   * Response text.
    */
   protected function text(string $text) {
     $this->beforeResponse($this->getReferer());
@@ -163,12 +113,7 @@ abstract class Controller extends \CI_Controller {
   }
 
   /**
-   * Response download
-   *
-   * @param  string $file
-   * @param  string $data
-   * @param  bool $mime
-   * @return void
+   * Response download.
    */
   protected function download(string $file, string $data = '', bool $mime = FALSE) {
     $this->beforeResponse($this->getReferer());
@@ -177,10 +122,7 @@ abstract class Controller extends \CI_Controller {
   }
 
   /**
-   * Response image
-   *
-   * @param  string $path
-   * @return void
+   * Response image.
    */
   protected function image(string $path) {
     $this->beforeResponse($this->getReferer());
@@ -189,10 +131,7 @@ abstract class Controller extends \CI_Controller {
   }
 
   /**
-   * Internal redirect
-   *  
-   * @param  string $internalRedirectPath
-   * @return void
+   * Internal redirect.
    */
   public function internalRedirect(string $internalRedirectPath) {
     $this->beforeResponse($this->getReferer());
@@ -201,94 +140,63 @@ abstract class Controller extends \CI_Controller {
   }
 
   /**
-   * Response error
-   *
-   * @param  string $errorMessage
-   * @param  int $status
-   * @return void
+   * Response error.
    */
   protected function error(string $message, int $status = \X\Constant\HTTP_INTERNAL_SERVER_ERROR) {
     $this->httpResponse->error($message, $status);
   }
 
+  /**
+   * Get referrer.
+   */
   private function getReferer() {
     return !empty($_SERVER['HTTP_REFERER'])
       ? $_SERVER['HTTP_REFERER']
       : (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
   }
 
-  // ----------------------------------------------------------------
-
   /**
-   * Before response
-   *
-   * @param  string $referer
-   * @return void
+   * Before response.
    */
   protected function beforeResponse(string $referer) {}
 
   /**
-   * Before response JSON
-   *
-   * @param  string $referer
-   * @return void
+   * Before response JSON.
    */
   protected function beforeResponseJson(string $referer) {}
 
   /**
-   * Before response Template
-   * 
-   * @param  string $referer
-   * @return void
+   * Before response Template.
    */
   protected function beforeResponseView(string $referer) {}
 
-
   /**
-   * Before response HTML
-   *
-   * @param  string $referer
-   * @return void
+   * Before response HTML.
    */
   protected function beforeResponseHtml(string $referer) {}
 
   /**
-   * Before response JS
-   *
-   * @param  string $referer
-   * @return void
+   * Before response JS.
    */
   protected function beforeResponseJs(string $referer) {}
 
   /**
-   * Before response Text
-   *
-   * @param  string $referer
-   * @return void
+   * Before response Text.
    */
   protected function beforeResponseText(string $referer) {}
 
   /**
-   * Before download
-   *
-   * @param  string $referer
-   * @return void
+   * Before download.
    */
   protected function beforeDownload(string $referer) {}
 
   /**
-   * Before response json
-   *
-   * @param  string $referer
-   * @return void
+   * Before response json.
    */
   protected function beforeResponseImage(string $referer) {}
 
   /**
-   * Before response json
-   *
-   * @param  string $referer
-   * @return void
+   * Before response json.
    */
   protected function beforeInternalRedirect(string $referer) {}
 }

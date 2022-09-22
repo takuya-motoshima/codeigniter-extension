@@ -1,21 +1,11 @@
 <?php
-/**
- * Session model class
- *
- * @author     Takuya Motoshima <https://www.facebook.com/takuya.motoshima.7>
- * @license    MIT License
- * @copyright  2017 Takuya Motoshima
- * @property CI_DB_query_builder $db
- */
 namespace X\Model;
 
 abstract class SessionModel implements SessionModelInterface {
-
   const SESSION_NAME = 'user';
 
   /**
-   *
-   * Callback set session 
+   * Callback set session.
    *
    * @param string  $id
    * @return void
@@ -23,21 +13,19 @@ abstract class SessionModel implements SessionModelInterface {
   abstract protected static function getUser(string $id): array;
 
   /**
-   *
-   * Set session 
+   * Set session.
    *
    * @param string $id It is ID if there is only one argument, column name if there are two arguments
    * @param mixed $value
    * @return string
    */
   public final static function set(string $id, $value = null): string {
-    if (count(func_get_args()) === 1) {
+    if (count(func_get_args()) === 1)
       $_SESSION[self::SESSION_NAME] = static::getUser($id);
-    } else {
+    else {
       $field = $id;
-      if (!array_key_exists($field, $_SESSION[self::SESSION_NAME])) {
+      if (!array_key_exists($field, $_SESSION[self::SESSION_NAME]))
         throw new \RuntimeException($field . ' column does not exist');
-      }
       $_SESSION[self::SESSION_NAME][$field] = $value;
     }
     return get_called_class();
@@ -45,7 +33,7 @@ abstract class SessionModel implements SessionModelInterface {
 
   /**
    *
-   * Unset session 
+   * Unset session.
    * 
    * @return string
    */
@@ -55,8 +43,7 @@ abstract class SessionModel implements SessionModelInterface {
   }
 
   /**
-   *
-   * Isset session 
+   * Isset session .
    * 
    * @return void
    */
@@ -65,15 +52,13 @@ abstract class SessionModel implements SessionModelInterface {
   }
 
   /**
-   *
-   * Get session
+   * Get session.
    * 
    * @return stdClass|string
    */
   public final static function get(string $field = null) {
-    if (!self::isset()) {
+    if (!self::isset())
       return null;
-    }
     $user = json_decode(json_encode($_SESSION[self::SESSION_NAME]));
     return empty($field) ? $user : $user->$field;
   }

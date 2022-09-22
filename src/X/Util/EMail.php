@@ -1,16 +1,7 @@
 <?php
-/**
- * Email util class
- *
- * @author     Takuya Motoshima <https://www.facebook.com/takuya.motoshima.7>
- * @license    MIT License
- * @copyright  2017 Takuya Motoshima
- */
 namespace X\Util;
-// use \X\Util\Logger;
 
 abstract class EMail {
-
   private static $default = [
     // 'useragent' => 'CodeIgniter',
     // 'protocol' => 'mail',
@@ -36,10 +27,7 @@ abstract class EMail {
   ];
 
   /**
-   * Initialize preferences
-   *
-   * @param   string
-   * @return  string
+   * Initialize preferences.
    */
   public static function initialize(array $config = array()): string {
     self::email()->initialize(array_merge(self::$default, $config));
@@ -47,23 +35,14 @@ abstract class EMail {
   }
 
   /**
-   * Send Email
-   *
-   * @param   bool    $auto_clear = TRUE
-   * @return  array
+   * Send Email.
    */
   public static function send($auto_clear = TRUE) {
-  // public static function send($auto_clear = TRUE): bool {
     return call_user_func_array([self::email(), __FUNCTION__], func_get_args());
   }
 
   /**
-   * Set FROM
-   *
-   * @param   string  $from
-   * @param   string  $name
-   * @param   string  $return_path = NULL Return-Path
-   * @return  string
+   * Set FROM.
    */
   public static function from($from, $name = '', $return_path = NULL): string {
     call_user_func_array([self::email(), __FUNCTION__], func_get_args());
@@ -71,10 +50,7 @@ abstract class EMail {
   }
 
   /**
-   * Set Recipients
-   *
-   * @param   string
-   * @return  string
+   * Set Recipients.
    */
   public static function to($to): string {
     call_user_func_array([self::email(), __FUNCTION__], func_get_args());
@@ -82,11 +58,7 @@ abstract class EMail {
   }
 
   /**
-   * Set BCC
-   *
-   * @param   string
-   * @param   string
-   * @return  string
+   * Set BCC.
    */
   public static function bcc($bcc, $limit = ''): string {
     call_user_func_array([self::email(), __FUNCTION__], func_get_args());
@@ -94,10 +66,7 @@ abstract class EMail {
   }
 
   /**
-   * Set Email Subject
-   *
-   * @param   string
-   * @return  string
+   * Set Email Subject.
    */
   public static function subject($subject): string {
     call_user_func_array([self::email(), __FUNCTION__], func_get_args());
@@ -105,10 +74,7 @@ abstract class EMail {
   }
 
   /**
-   * Set Body
-   *
-   * @param   string
-   * @return  string
+   * Set Body.
    */
   public static function message($body): string {
     call_user_func_array([self::email(), __FUNCTION__], func_get_args());
@@ -116,11 +82,7 @@ abstract class EMail {
   }
 
   /**
-   * Set Body
-   *
-   * @param   string $templatePath
-   * @param   array $templateVars
-   * @return  string
+   * Set Body.
    */
   public static function messageFromTemplate(string $templatePath, array $templateVars = []): string {
     self::message(self::template()->load($templatePath, $templateVars));
@@ -128,11 +90,7 @@ abstract class EMail {
   }
 
   /**
-   * Set Body
-   *
-   * @param   string $xmlPath
-   * @param   array $xmlVars
-   * @return  string
+   * Set Body.
    */
   public static function messageFromXml(string $xmlPath, array $xmlVars = []): string {
     $xml = new \SimpleXMLElement(self::template()->load($xmlPath, $xmlVars, 'xml'));
@@ -143,10 +101,7 @@ abstract class EMail {
   }
 
   /**
-   * Set mail type
-   *
-   * @param   string
-   * @return  string
+   * Set mail type.
    */
   public static function setMailType($type = 'text'): string {
     call_user_func_array([self::email(), 'set_mailtype'], func_get_args());
@@ -154,7 +109,7 @@ abstract class EMail {
   }
 
   /**
-   * Assign file attachments
+   * Assign file attachments.
    *
    * @param string  $file Can be local path, URL or buffered content
    * @param string  $disposition = 'attachment'
@@ -168,24 +123,17 @@ abstract class EMail {
   }
 
   /**
-   * Set and return attachment Content-ID
-   *
-   * Useful for attached inline pictures
-   *
-   * @param string  $filename
-   * @return  string
+   * Set and return attachment Content-ID.
+   * Useful for attached inline pictures.
    */
-  public static function attachmentCid($filename) {
+  public static function attachmentCid($fileName) {
     return call_user_func_array([self::email(), 'attachment_cid'], func_get_args());
   }
 
   /**
-   * Get CI_Email instance
-   *
-   * @return \CI_Email
+   * Get CI_Email instance.
    */
   private static function email() {
-  // private static function email(): \CI_Email {
     static $instance;
     if (!isset($$instance)) {
       $ci =& \get_instance();
@@ -196,9 +144,7 @@ abstract class EMail {
   }
 
   /**
-   * Get Template instance
-   *
-   * @return \X\Util\Template
+   * Get Template instance.
    */
   private static function template(): \X\Util\Template {
     static $template;
@@ -231,7 +177,7 @@ abstract class EMail {
   /**
    * @deprecated Not recommended. It is obsolete in version 3.0.0 or later.
    */
-  public static function attachment_cid($filename) {
-    return self::attachmentCid($filename);
+  public static function attachment_cid($fileName) {
+    return self::attachmentCid($fileName);
   }
 }

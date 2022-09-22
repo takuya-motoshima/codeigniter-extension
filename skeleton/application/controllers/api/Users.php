@@ -9,7 +9,7 @@ use const \X\Constant\HTTP_NO_CONTENT;
 
 class Users extends AppController {
 
-  protected $model = 'UserService';
+  protected $model = 'UserModel';
 
   /**
    * Authenticate with username and password.
@@ -32,7 +32,7 @@ class Users extends AppController {
       }
 
       // Authentication.
-      $res = $this->UserService->login($this->input->post('email'), $this->input->post('password'));
+      $res = $this->UserModel->login($this->input->post('email'), $this->input->post('password'));
 
       // Login failure.
       if (!$res)
@@ -51,8 +51,8 @@ class Users extends AppController {
    */
   public function logout() {
     try {
-      $this->UserService->logout();
-      redirect('/login');
+      $this->UserModel->logout();
+      redirect('/users/login');
     } catch (\Throwable $e) {
       parent::error($e->getMessage(), HTTP_BAD_REQUEST);
     }
@@ -67,7 +67,7 @@ class Users extends AppController {
 
     try {
       // Get data in the specified page number range.
-      $data = $this->UserService->paginate(
+      $data = $this->UserModel->paginate(
         $this->input->get('start'),
         $this->input->get('length'),
         $this->input->get('order'),
@@ -88,7 +88,7 @@ class Users extends AppController {
   public function get(int $id) {
     try {
       parent
-        ::set($this->UserService->getUserById($id))
+        ::set($this->UserModel->getUserById($id))
         ::json();
     } catch (\Throwable $e) {
       parent::error($e->getMessage(), HTTP_BAD_REQUEST);
@@ -110,7 +110,7 @@ class Users extends AppController {
         Logger::error($this->form_validation->error_array());
         return parent::set('error', 'input_error')::set('error_description', $this->form_validation->error_array())::json();
       }
-      $id = $this->UserService->addUser($this->input->post());
+      $id = $this->UserModel->createUser($this->input->post());
       parent
         ::status(HTTP_CREATED)
         ::set($id)
@@ -134,7 +134,7 @@ class Users extends AppController {
         Logger::error($this->form_validation->error_array());
         return parent::set('error', 'input_error')::set('error_description', $this->form_validation->error_array())::json();
       }
-      $this->UserService->updateUser($id, $this->input->put());
+      $this->UserModel->updateUser($id, $this->input->put());
       parent::status(HTTP_NO_CONTENT)::json();
     } catch (\Throwable $e) {
       parent::error($e->getMessage(), HTTP_BAD_REQUEST);
@@ -146,7 +146,7 @@ class Users extends AppController {
    */
   public function delete(int $id) {
     try {
-      $this->UserService->deleteUser($id);
+      $this->UserModel->deleteUser($id);
       parent::status(HTTP_NO_CONTENT)::json();
     } catch (\Throwable $e) {
       parent::error($e->getMessage(), HTTP_BAD_REQUEST);

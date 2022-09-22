@@ -1,5 +1,4 @@
 # codeigniter-extension
-
 You can use extended core classes (controllers, models, views) and utility classes in this package.  
 This application requires the following packages.  
 * PHP 7.3.0 or later
@@ -9,50 +8,37 @@ This application requires the following packages.
 * php-xml
 
 ## Changelog
-
 See [CHANGELOG.md](./CHANGELOG.md).
 
 ## Examples
-
-![screencap.jpg](https://raw.githubusercontent.com/takuya-motoshima/codeigniter-extension/master/documents/screencap.jpg)
+![screencap.jpg](https://raw.githubusercontent.com/takuya-motoshima/codeigniter-extension/master/docs/screencap.jpg)
 
 There is a sample application in [./sample](./sample).  
 Please use it as a reference for your development.
 
 ## Getting Started
+1. Create project.  
+    ```sh
+    composer create-project takuya-motoshima/codeIgniter-extension myapp
+    ```
+1. Grant write permission to logs, cache, session to WEB server.  
+    ```sh
+    sudo chmod -R 755 public/upload application/{logs,cache,session}
+    sudo chown -R nginx:nginx public/upload application/{logs,cache,session}
+    ```
+1. Set up a web server (nginx).  
+    If you are using Nginx, copy [nginx.sample.conf](./nginx.sample.conf) to "/etc/nginx/conf.d/Your application name.conf".  
 
-Create project.  
-
-```sh
-composer create-project takuya-motoshima/codeIgniter-extension myapp;
-```
-
-Grant write permission to logs, cache, session to WEB server.  
-
-```sh
-sudo chmod -R 755 ./application/{logs,cache,session};
-sudo chown -R nginx:nginx ./application/{logs,cache,session};
-```
-
-If you are using Nginx, copy [nginx.sample.conf](./nginx.sample.conf) to "/etc/nginx/conf.d/<Your application name> .conf".  
-You can start the application immediately.  
-
-Restart Nginx.  
-
-```sh
-sudo systemctl restart nginx;
-```
-
-That's all for the settings.
+    Restart Nginx.  
+    ```sh
+    sudo systemctl restart nginx
+    ```
+    That's all for the settings.
 
 ## Usage
-
 See [https://codeigniter.com/](https://codeigniter.com/) for basic usage.  
 
-### About config
-
-application/config/config.php:  
-
+### About config (application/config/config.php)
 <table>
   <thead>
     <tr>
@@ -100,90 +86,73 @@ application/config/config.php:
   </tbody>
 </table>
 
-### Access control with annotations
+### Control of accessible URLs
+1. Define a controller to be executed when the root URL is accessed.  
+    In the example below, the login page is set to open when the root URL is accessed.  
 
-The following is an example of access control using annotations.  
+    application/config/routes.php:
+    ```php
+    $route['default_controller'] = 'users/login';
+    ```
+1. Define login session name.  
+    application/config/constants.php:
+    ```php
+    const SESSION_NAME = 'session';
+    ```
+1. Create control over which URLs can be accessed depending on the user's login status.  
+    At the same time, add env loading and error handling in "pre_system".  
 
-application/config/constants.php:  
+    application/config/hooks.php:
+    ```php
+    use \X\Annotation\AnnotationReader;
+    use \X\Util\Logger;
 
-```php
-// Login session name.
-const SESSION_NAME = 'session';
-```
+    $hook['post_controller_constructor'] = function() {
+      $ci =& get_instance();
+      $accessibility = AnnotationReader::getAccessibility($ci->router->class, $ci->router->method);
+      $isLogin = !empty($_SESSION[SESSION_NAME]);
+      $currentPath = lcfirst($ci->router->directory ?? '') . lcfirst($ci->router->class) . '/' . $ci->router->method;
+      $defaultPath = '/users/index';
+      $allowRoles = !empty($accessibility->allow_role) ? array_map('trim', explode(',', $accessibility->allow_role)) : null;
+      if (!is_cli()) {
+        if (!$accessibility->allow_http)
+          throw new \RuntimeException('HTTP access is not allowed');
+        else if ($isLogin && !$accessibility->allow_login)
+          redirect($defaultPath);
+        else if (!$isLogin && !$accessibility->allow_logoff)
+          redirect('/users/login');
+        else if ($isLogin && !empty($allowRoles)) {
+          $role = $_SESSION[SESSION_NAME]['role'] ?? 'undefined';
+          if (!in_array($role, $allowRoles) && $defaultPath !== $currentPath)
+            redirect($defaultPath);
+        }
+      }
+    };
 
-application/config/hooks.php:  
+    $hook['pre_system'] = function () {
+      $dotenv = Dotenv\Dotenv::createImmutable(ENV_DIR);
+      $dotenv->load();
+      set_exception_handler(function ($e) {
+        Logger::error($e);
+        show_error($e->getMessage(), 500);
+      });
+    };
+    ```
+1. After this, you will need to create controllers, models, and views, see the sample for details.  
 
-```php
-use \X\Annotation\AnnotationReader;
-
-// post_controller_constructor callback.
-$hook['post_controller_constructor'] = function() {
-  $ci =& get_instance();
-
-  // Get access from annotations.
-  $accessibility = AnnotationReader::getAccessibility($ci->router->class, $ci->router->method);
-
-  // Whether you are logged in.
-  $islogin = !empty($_SESSION[SESSION_NAME]);
-
-  // Whether it is HTTP access.
-  $ishttp = !is_cli();
-
-  // When accessed by HTTP.
-  if ($ishttp) {
-    // Returns an error if HTTP access is not allowed.
-    if (!$accessibility->allow_http) throw new \RuntimeException('HTTP access is not allowed.');
-
-    // When the logged-in user calls a request that only the log-off user can access, redirect to the dashboard.
-    // It also redirects to the login page when the log-off user calls a request that only the logged-in user can access.
-    if ($islogin && !$accessibility->allow_login) redirect('/dashboard');
-    else if (!$islogin && !$accessibility->allow_logoff) redirect('/login');
-  } else {
-    // When executed with CLI.
-  }
-};
-```
-
-application/ccontrollers/Sample.php:  
-
-```php
-use \X\Annotation\Access;
-class Sample extends AppController {
-  
-  /**
-   * Only log-off users can access it.
-   * @Access(allow_login=false, allow_logoff=true)
-   */
-  public function login() {}
-  
-  /**
-   * Only logged-in users can access it..
-   * @Access(allow_login=true, allow_logoff=false)
-   */
-  public function dashboard() {}
-  
-  /**
-   * It can only be done with the CLI.
-   * @Access(allow_http=false)
-   */
-  public function batch() {}
-}
-```
-
-### Template engine
-
+### About Twig Template Engine.
 This extension package uses the Twig template.  
 See [here](https://twig.symfony.com/doc/3.x/) for how to use Twig.  
 
 In addition, the session of the logged-in user is automatically set in the template variable.  
-
 This is useful, for example, when displaying the login username on the screen. 
 
+PHP: 
 ```php
-// Set user data to "session" at login.
 $_SESSION['user'] = ['name' => 'John Smith'];
 ```
 
+HTML: 
 ```html
 {% if session.user is not empty %}
   Hello {{session.user.name}}!
@@ -192,25 +161,23 @@ $_SESSION['user'] = ['name' => 'John Smith'];
 {% else %}
 ```
 
-### Extended form validation class
-
-Add "application/libraries/AppForm_validation.php".  
-You can immediately use the extended validation rules.
-
-application/libraries/AppForm_validation.php:  
-
+### To extend form validation.
+You can create a new validation rule by creating "application/libraries/AppForm_validation.php" as follows and adding a validation method.
 ```php
-<?php
-defined('BASEPATH') OR exit('No direct script access allowed');
-
 use X\Library\FormValidation;
 
-/**
- * Inherit an existing class to extend the form validation method.
- */
-class AppForm_validation extends FormValidation {}
+class AppForm_validation extends FormValidation {
+  public function is_numeric(string $input): bool {
+    if (!is_numeric($input)) {
+      $this->set_message('is_numeric', 'Please enter a numerical value');
+      return false;
+    }
+    return true;
+  }
+}
 ```
 
+The following extended validations are available in the CodeIgniter extension from the start.  
 <table>
   <thead>
     <tr>
@@ -266,7 +233,12 @@ class AppForm_validation extends FormValidation {}
   </tbody>
 </table>
 
+## Author
+**Takuya Motoshima**
+
+* [github/takuya-motoshima](https://github.com/takuya-motoshima)
+* [twitter/TakuyaMotoshima](https://twitter.com/TakuyaMotoshima)
+* [facebook/takuya.motoshima.7](https://www.facebook.com/takuya.motoshima.7)
 
 ## License
-
-[MIT licensed](./LICENSE.txt)
+[MIT](LICENSE)

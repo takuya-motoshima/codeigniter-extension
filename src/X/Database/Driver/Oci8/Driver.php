@@ -4,10 +4,6 @@
  *
  * This is a modification of the DB_driver class to
  * permit access to oracle databases
- *
- * @author     Takuya Motoshima <https://www.facebook.com/takuya.motoshima.7>
- * @license    MIT License
- * @copyright  2017 Takuya Motoshima
  */
 namespace X\Database\Driver\Oci8;
 class Driver extends \X_DB {

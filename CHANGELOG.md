@@ -1,14 +1,16 @@
 # Changelog
-
 All notable changes to this project will be documented in this file.
 
-## [4.0.13] - 2022-6-6
+## [4.0.14] - 2022/9/21
+- The hostname and hostname_or_ipaddress validations now allow the string "localhost".
+
+## [4.0.13] - 2022/6/6
 - Methods for omitting long strings (\X\UtilStringHelper#ellipsis) have been fixed to support Unicode.
 
-## [4.0.12] - 2021-11-10
+## [4.0.12] - 2021/11/10
 - Fixed a bug in the file deletion function.
 
-## [4.0.11] - 2021-11-10
+## [4.0.11] - 2021/11/10
 - Allows you to specify whether lock is enabled or disabled when deleting a file.
     ```php
     use \X\Util\FileHelper;
@@ -26,12 +28,11 @@ All notable changes to this project will be documented in this file.
     FileHelper::delete('/test', $deleteRoute, $enableLock);
     ```
 
-## [4.0.10] - 2021-10-20
+## [4.0.10] - 2021/10/20
 - Added a process to clear the file status cache before getting the file size.
   
-## [4.0.9] - 2021-9-27
+## [4.0.9] - 2021/9/27
 - Replace the line breaks in the SQL returned by the model's last_query method with spaces.
-  
     ```php
     use \X\Util\Logger;
     $users = $this->UserModel->select('id, name')->get()->result_array();
@@ -39,9 +40,8 @@ All notable changes to this project will be documented in this file.
     Logger::print($query);// SELECT `id`, `name` FROM `user`
     ```
 
-## [4.0.8] - 2021-9-22
+## [4.0.8] - 2021/9/22
 - Added ip address or CIDR validation rules.
-
     ```php
     $this->form_validation
       ->set_data([
@@ -143,9 +143,8 @@ All notable changes to this project will be documented in this file.
     }
     ```
 
-## [4.0.7] - 2021-9-16
+## [4.0.7] - 2021/9/16
 - Random character generation function name changed to camel case.
-
     ```php
     use \X\Util\Cipher;
     use \X\Util\Logger;
@@ -166,9 +165,8 @@ All notable changes to this project will be documented in this file.
     Logger::print(Cipher::randToken68(10));
     ```
 
-## [4.0.6] - 2021-9-16
+## [4.0.6] - 2021/9/16
 - Added random string generation function.
-
     ```php
     use \X\Util\Cipher;
     use \X\Util\Logger;
@@ -189,9 +187,8 @@ All notable changes to this project will be documented in this file.
     Logger::print(Cipher::rand_token68(10));
     ```
 
-## [4.0.5] - 2021-8-10
+## [4.0.5] - 2021/8/10
 - The file move method can now set groups and owners for the moved file.
-
     ```php
     use \X\Util\FileHelper;
 
@@ -211,7 +208,6 @@ All notable changes to this project will be documented in this file.
     ```
 
 - The file copy method can now set groups and owners for the moved file.
-
     ```php
     use \X\Util\FileHelper;
 
@@ -229,9 +225,8 @@ All notable changes to this project will be documented in this file.
     // Specify the owner of the copied file
     FileHelper::copyFile('/folder/file.txt', 'newfile.txt', null, $user);
 
-## [4.0.4] - 2021-7-29
+## [4.0.4] - 2021/7/29
 - Added directory path validation rules.
-
     ```php
     $this->form_validation
       ->set_data([
@@ -268,12 +263,10 @@ All notable changes to this project will be documented in this file.
     }
     ```
 
-## [4.0.3] - 2021-6-30
-- Added key pair generation processing and public key OpenSSH encoding processing.
-
+## [4.0.3] - 2021/6/30
+- Added key pair generation processing and public key OpenSSH encoding processing.  
     Here is an example.  
     You can finetune the key generation (such as specifying the number of bits) using options. See [openssl_csr_new()](https://www.php.net/manual/en/function.openssl-csr-new.php) for more information about options.  
-
     ```php
     use \X\Util\Cipher;
 
@@ -306,16 +299,14 @@ All notable changes to this project will be documented in this file.
     echo 'OpenSSH-encoded public key:' . PHP_EOL . $pubKey;
     ```
 
-## [4.0.2] - 2021-6-15
+## [4.0.2] - 2021/6/15
 - Fixed a bug in the exists_by_id method of the \X\Model\Model class.
 
-## [4.0.1] - 2021-5-25
-- Added the ability to cache search query results in the model.
-  
+## [4.0.1] - 2021/5/25
+- Added the ability to cache search query results in the model.  
     Learn more about model caching <a href="https://www.codeigniter.com/userguide3/database/caching.html" target="_blank">here</a>.  
 
     This is an example of the setting (config/database.php).  
-
     ```php
     $db['default'] = array(
       'cachedir' => APPPATH . 'cache'
@@ -323,7 +314,6 @@ All notable changes to this project will be documented in this file.
     ```
 
     This is an example of caching.
-
     ```php
     // Cache the results of this search query.
     // The cache is saved in the directory specified in cachedir in "config/database.php".
@@ -356,34 +346,24 @@ All notable changes to this project will be documented in this file.
     $this->UserModel->cache_delete_all();
     ```
 
-## [4.0.0] - 2021-5-6
-- Added dotenv reading process to sample application (./sample).
-
+## [4.0.0] - 2021/5/6
+- Added dotenv reading process to sample application (./sample).  
     ./sample/application/config/constants.php:  
-
     ```php
-    // Directory with ".env" file
     const ENV_DIR = APPPATH . '..';
     ```
 
     ./sample/application/config/hooks.php:  
-
     ```php
-    // pre_system callback.
     $hook['pre_system'] = function () {
-      // Load environment variables.
       $dotenv = Dotenv\Dotenv::createImmutable(ENV_DIR);
       $dotenv->load();
-
-      // Check for uncaught exceptions.
       set_exception_handler(function ($e) {
         Logger::error($e);
       });
     };
     ```
-
 - Changed to pass the option of Amazon Rekognition (\X\Rekognition\Client) as an array.
-
     ```php
     use \X\Rekognition\Client;
     $client = new Client([
@@ -394,7 +374,6 @@ All notable changes to this project will be documented in this file.
       'debug'           => false
     ]);
     ```
-
     <table>
       <thead>
         <tr>
@@ -426,27 +405,26 @@ All notable changes to this project will be documented in this file.
       </tbody>
     </table>
 
-## [3.9.9] - 2021-4-15
+## [3.9.9] - 2021/4/15
 - Fixed README typo.
 
-## [3.9.8] - 2021-4-15
+## [3.9.8] - 2021/4/15
 - Added form validation rule according to the [email address proposed in HTML5](https://html.spec.whatwg.org/multipage/input.html#valid-e-mail-address).
 
-## [3.9.7] - 2021-4-9
+## [3.9.7] - 2021/4/9
 - Added the process to automatically set $\_SESSION to the template variable session.
 
-## [3.9.6] - 2021-4-8
+## [3.9.6] - 2021/4/8
 - Fix the issue text not recognized after '&' in case of PUT request.
 
-## [3.9.5] - 2021-4-8
+## [3.9.5] - 2021/4/8
 - Refactor sample application and skeleton.
 
-## [3.9.4] - 2021-4-7
+## [3.9.4] - 2021/4/7
 - Fix create-project error.
 
-## [3.9.3] - 2021-3-26
+## [3.9.3] - 2021/3/26
 - Added a function to the Date helper that returns the date of the specified month.
-
     ```php
     use \X\Util\DateHelper;
 
@@ -455,15 +433,14 @@ All notable changes to this project will be documented in this file.
     // ["2021-03-01", "2021-03-02", "2021-03-03", "2021-03-04", "2021-03-05", "2021-03-06", "2021-03-07", "2021-03-08", "2021-03-09", "2021-03-10", "2021-03-11", "2021-03-12", "2021-03-13", "2021-03-14", "2021-03-15", "2021-03-16", "2021-03-17", "2021-03-18", "2021-03-19", "2021-03-20", "2021-03-21", "2021-03-22", "2021-03-23", "2021-03-24", "2021-03-25", "2021-03-26", "2021-03-27", "2021-03-28", "2021-03-29", "2021-03-30", "2021-03-31"]
     ```
 
-## [3.9.2] - 2021-3-24
+## [3.9.2] - 2021/3/24
 - Resolved an error where the return type of the email function of the email subclass (/X/Util/Email) did not match the definition.
 
-## [3.9.1] - 2021-3-15
+## [3.9.1] - 2021/3/15
 - Added a method that returns a table string of an array.
-
     ```php
     use \X\Util\ArrayHelper;
-    
+
     $arr = [
       [
         'firstname' => 'John',
@@ -485,20 +462,17 @@ All notable changes to this project will be documented in this file.
     └───────────┴──────────┴─────────────────────┘
     ```
 
-## [3.9.0] - 2021-3-15
+## [3.9.0] - 2021/3/15
 - Added a log function that does not output path information.
-
     ```php
     use \X\Util\Logger;
 
     Logger::printHidepath('I told you so');
     ```
 
-## [3.8.9] - 2021-2-24
-- Added batch exclusive control sample program for file lock and advisory lock to the sample application.
-    
+## [3.8.9] - 2021/2/24
+- Added batch exclusive control sample program for file lock and advisory lock to the sample application.  
     Description of the added file.  
-
     <table>
       <thead>
         <tr>
@@ -523,27 +497,23 @@ All notable changes to this project will be documented in this file.
     </table>
 
     How to do it.  
-
     Run a batch that prohibits multiple launches using file locks.  
-
     ```sh
     cd /var/www/html/sampleapp;
     CI_ENV=development php public/index.php batch/runMultipleBatch/run/filelock;
     ```
 
     Run a batch that prohibits multiple launches using advisory locks.  
-
     ```sh
     cd /var/www/html/sampleapp;
     CI_ENV=development php public/index.php batch/runMultipleBatch/run/advisorylock;
     ```
 
-## [3.8.8] - 2021-2-23
+## [3.8.8] - 2021/2/23
 - Organized readme and added batch lock test program.
 
-## [3.8.7] - 2021-2-19
+## [3.8.7] - 2021/2/19
 - Added a method to the file helper that returns a file size with units.
-
     ```php
     use \X\Util\FileHelper;
 
@@ -555,84 +525,59 @@ All notable changes to this project will be documented in this file.
     FileHelper::humanFilesize('/var/somefile.txt');// 120.56KB
     ```
 
-## [3.8.6] - 2021-2-18
+## [3.8.6] - 2021/2/18
 - Fixed changelog typos.
 
-## [3.8.5] - 2021-2-18
-- Added HTTP / CLI access control to controller public method annotation.
-
+## [3.8.5] - 2021/2/18
+- Added HTTP / CLI access control to controller public method annotation.  
     Step 1: Add access control to the hook(application/config/hooks.php).  
-
     ```php
     use \X\Annotation\AnnotationReader;
 
-    // Add access control to hooks.
     $hook['post_controller_constructor'] = function() {
       $ci =& get_instance();
-
-      // Get access from annotations.
       $accessibility = AnnotationReader::getAccessibility($ci->router->class, $ci->router->method);
-
-      // Whether you are logged in.
-      $islogin = !empty($_SESSION['user']);
-
-      // Whether it is HTTP access.
-      $ishttp = !is_cli();
-
-      // Request URL.
-      $requesturl = $ci->router->directory . $ci->router->class . '/' . $ci->router->method;
-
-      // When accessed by HTTP.
-      if ($ishttp) {
-        // Returns an error if HTTP access is not allowed.
-        if (!$accessibility->allow_http) throw new \RuntimeException('HTTP access is not allowed.');
-
-        // When the logged-in user calls a request that only the log-off user can access, redirect to the dashboard.
-        // It also redirects to the login page when the log-off user calls a request that only the logged-in user can access.
-        if ($islogin && !$accessibility->allow_login) redirect('/dashboard');
-        else if (!$islogin && !$accessibility->allow_logoff) redirect('/login');
-      } else {
-        // When executed with CLI.
+      $isLogin = !empty($_SESSION['user']);
+      if (!is_cli()) {
+        if (!$accessibility->allow_http)
+          throw new \RuntimeException('HTTP access is not allowed.');
+        if ($isLogin && !$accessibility->allow_login)
+          redirect('/users/index');
+        else if (!$isLogin && !$accessibility->allow_logoff)
+          redirect('/users/login');
       }
     };
     ```
 
     Step 2: Define annotations for public methods on each controller.  
-
     ```php
     use \X\Annotation\Access;
 
     /**
      * Only log-off users can access it.
-     *
      * @Access(allow_login=false, allow_logoff=true)
      */
     public function login() {}
 
     /**
      * Only logged-in users can access it.
-     *
      * @Access(allow_login=true, allow_logoff=false)
      */
     public function dashboard() {}
 
     /**
      * It can only be done with the CLI.
-     *
      * @Access(allow_http=false)
      */
     public function batch() {}
     ```
 
-
-## [3.8.4] - 2021-2-17
+## [3.8.4] - 2021/2/17
 - Changed to return SES mail sending result object.(\X\Util\AmazonSesClient).
 
-## [3.8.3] - 2021-2-11
-- Added form validation class.The reason I added it is that I want to validate it with the model(\X\Util\Validation).
-
+## [3.8.3] - 2021/2/11
+- Added form validation class.The reason I added it is that I want to validate it with the model(\X\Util\Validation).  
     Define the SES "access key" and "secret" in sampleapp/.env.  
-
     ```php
     use \X\Util\AmazonSesClient;
 
@@ -657,12 +602,11 @@ All notable changes to this project will be documented in this file.
     Logger::print("Email sent! Message ID: $messageId");
     ```
 
-## [3.8.2] - 2021-2-10
+## [3.8.2] - 2021/2/10
 - Fixed README.
 
-## [3.8.1] - 2021-2-10
-- Added an empty judgment method for characters trimmed with left and right spaces(\X\Util\StringHelper).
-
+## [3.8.1] - 2021/2/10
+- Added an empty judgment method for characters trimmed with left and right spaces(\X\Util\StringHelper).  
     ```php
     use \X\Util\StringHelper;
 
@@ -675,12 +619,11 @@ All notable changes to this project will be documented in this file.
     StringHelper::empty([]);// true
     ```
 
-## [3.8.0] - 2021-2-10
+## [3.8.0] - 2021/2/10
 - Added nginxn configuration sample file to REAME.
 
-## [3.7.9] - 2021-2-9
-- Added the following rules to form validation.
-
+## [3.7.9] - 2021/2/9
+- Added the following rules to form validation.  
     <table>
       <thead>
         <tr>
@@ -729,7 +672,6 @@ All notable changes to this project will be documented in this file.
         </tr>
       </tbody>
     </table>
-
 
     ```php
     $this->form_validation
@@ -845,9 +787,8 @@ All notable changes to this project will be documented in this file.
     }
     ```
 
-## [3.7.8] - 2021-2-6
+## [3.7.8] - 2021/2/6
 - Added a method to group associative arrays by key to ArrayHelper.(\X\Util\ArrayHelper).
-
     ```php
     use \X\Util\ArrayHelper;
 
@@ -877,12 +818,10 @@ All notable changes to this project will be documented in this file.
     // ]
     ```
 
-## [3.7.7] - 2021-2-3
-- Create a form validation class and add a datetime validation method(\X\Library\FormValidation).
-
+## [3.7.7] - 2021/2/3
+- Create a form validation class and add a datetime validation method(\X\Library\FormValidation).  
     Override form validation.  
     application/libraries/AppForm_validation.php:  
-
     ```php
     <?php
     defined('BASEPATH') OR exit('No direct script access allowed');
@@ -893,7 +832,6 @@ All notable changes to this project will be documented in this file.
     ```
 
     This is an example of Datetime verification.  
-
     ```php
     $this->form_validation
       ->set_data(['datetime' => '2021-02-03 17:46:00'])
@@ -905,15 +843,14 @@ All notable changes to this project will be documented in this file.
     }
     ```
 
-## [3.7.6] - 2021-1-27
+## [3.7.6] - 2021/1/27
 - Delete debug log.
 
-## [3.7.5] - 2021-1-22
+## [3.7.5] - 2021/1/22
 - Fixed a bug that Annotation could not be read.
 
-## [3.7.4] - 2021-1-22
+## [3.7.4] - 2021/1/22
 - Change image resizing features(\X\Util\ImageHelper).
-
     ```php
     use \X\Util\ImageHelper;
 
@@ -930,9 +867,8 @@ All notable changes to this project will be documented in this file.
     ImageHelper::resize('img.jpg', 'thumb.jpg', null, 100, true);
     ```
 
-## [3.7.3] - 2020-12-25
+## [3.7.3] - 2020/12/25
 - Added search options to file search(\X\Util\FileHelper).
-
     ```php
     use \X\Util\FileHelper;
 
@@ -940,42 +876,40 @@ All notable changes to this project will be documented in this file.
     FileHelper::find('/img/*.{jpg,jpeg,png,gif}', GLOB_BRACE);
     ```
 
-## [3.7.2] - 2020-11-17
+## [3.7.2] - 2020/11/17
 - Remove unused paginate method from Model class.
 
-## [3.7.1] - 2020-11-17
+## [3.7.1] - 2020/11/17
 - Fixed a bug in the project creation command.
 
-## [3.7.0] - 2020-11-17
+## [3.7.0] - 2020/11/17
 - Fix skeleton.
 
-## [3.6.9] - 2020-11-17
+## [3.6.9] - 2020/11/17
 - Fix README.md.
 
-## [3.6.8] - 2020-11-17
+## [3.6.8] - 2020/11/17
 - Fix project creation process.
 
-## [3.6.7] - 2020-11-16
-- Prepend a slash to the PID of the log(\X\Util\Logger).
-
+## [3.6.7] - 2020/11/16
+- Prepend a slash to the PID of the log(\X\Util\Logger).  
     Here is an example of a log.
 
     ```php
-    DEBUG - 2020-11-16 10:04:38 --> #7567 application/controllers/Sample.php(20):Message here.
+    DEBUG - 2020/11/16 10:04:38 --> #7567 application/controllers/Sample.php(20):Message here.
     ```
 
-## [3.6.6] - 2020-11-10
+## [3.6.6] - 2020/11/10
 - Add PID to log message(\X\Util\Logger).
 
-## [3.6.5] - 2020-11-9
+## [3.6.5] - 2020/11/9
 - Fixed to ignore directory creation error (\X\Util\FileHelper::makeDirectory).
 
-## [3.6.4] - 2020-11-6
+## [3.6.4] - 2020/11/6
 - Remove class and function names from the log(\X\Util\Logger).
 
-## [3.6.3] - 2020-11-2
+## [3.6.3] - 2020/11/2
 - Changed to be able to specify multiple Amazon SES email destinations in an array.(\X\Util\AmazonSesClient)
-
     ```php
     use \X\Util\AmazonSesClient;
 
@@ -999,9 +933,8 @@ All notable changes to this project will be documented in this file.
       ->send();
     ```
 
-## [3.6.2] - 2020-10-29
+## [3.6.2] - 2020/10/29
 - Fixed OpenSSL encryption/decryption method.
-
     ```php
     use \X\Util\Cipher;
 
@@ -1020,9 +953,8 @@ All notable changes to this project will be documented in this file.
     $decrypted = Cipher::decrypt($encrypted, $password, $iv);// Hello, World.
     ```
 
-## [3.6.1] - 2020-10-23
+## [3.6.1] - 2020/10/23
 - Added IP utility class(\X\Util\IpUtils). And since \X\Util\HttpSecurity has moved to IPUtils, I deleted it.
-
     ```php
     // Get client ip.
     IpUtils::getClientIpFromXFF();//  202.210.220.78
@@ -1088,21 +1020,20 @@ All notable changes to this project will be documented in this file.
 
     ```
 
-## [3.6.0] - 2020-10-20
+## [3.6.0] - 2020/10/20
 - Add a time stamp to the log message output to the CLI(\X\Util\Logger#printWithoutPath).
 
-## [3.5.9] - 2020-10-19
+## [3.5.9] - 2020/10/19
 - Added log output method without file path(\X\Util\Logger#printWithoutPath).
 
-## [3.5.8] - 2020-10-16
+## [3.5.8] - 2020/10/16
 - Fixed a bug that IP acquisition fails when XFF is empty(\X\Util\HttpSecurity#getIpFromXFF).
 
-## [3.5.7] - 2020-10-15
+## [3.5.7] - 2020/10/15
 - Added method to get IP from XFF(\X\Util\HttpSecurity#getIpFromXFF).
 
-## [3.5.5] - 2020-6-4
+## [3.5.5] - 2020/6/4
 - Added a method to AA that returns the size of all files in a directory.
-
     ```php
     // Returns the total size of all files in a directory
     FileHelper::getDirectorySize('/var/log');
@@ -1111,9 +1042,8 @@ All notable changes to this project will be documented in this file.
     FileHelper::getDirectorySize([ '/var/log/php-fpm' '/var/log/nginx' ]);
     ```
 
-## [3.5.4] - 2020-6-4
+## [3.5.4] - 2020/6/4
 - Add encryption key to the parameter of hash conversion method
-
     ```php
     use \X\Util\Cipher;
 
@@ -1121,65 +1051,45 @@ All notable changes to this project will be documented in this file.
     Cipher::encode_sha256('tiger', $password);// c30675022a22cf76c622b7982e8894dd5ac03c4bb2f17ac13a5da01a76acbe6c
     ```
 
-## [3.5.3] - 2020-5-20
-- Added a process to log out a user who is logged in with the same ID on another device when logging in
-
+## [3.5.3] - 2020/5/20
+- Added a process to log out a user who is logged in with the same ID on another device when logging in  
     config/hooks.php:  
-
     ```php
     use \X\Annotation\AnnotationReader;
-
     $hook['post_controller_constructor'] = function() {
       isset($_SESSION['user']) ? handlingLoggedIn() : handlingLogOff();
     };
 
-    /**
-     * Process for logged-in user
-     */
     function handlingLoggedIn() {
       $ci =& get_instance();
-      // If it is BAN, call the logoff process
-      $ci->load->model('UserService');
-      if ($ci->UserService->isBanUser(session_id())) {
+      $ci->load->model('UserModel');
+      if ($ci->UserModel->isBanUser(session_id())) {
         // Sign out
-        $ci->UserService->signout();
-        // Set ban message display flag
+        $ci->UserModel->signout();
         $ci->load->helper('cookie');
         set_cookie('show_ban_message', true, 10);
         // To logoff processing
         return handlingLogOff();
       }
-      // Check if the request URL has access privileges
       $accessibility = AnnotationReader::getAccessibility($ci->router->class, $ci->router->method);
       if (!$accessibility->allow_login || ($accessibility->allow_role && $accessibility->allow_role !== $session['role'])) {
-        // In case of access prohibition action, redirect to the dashboard page
-        redirect('/dashboard');
+        redirect('/users/index');
       }
     }
 
-    /**
-     * Process for logoff user
-     */
     function handlingLogOff() {
       $ci =& get_instance();
-      // Check if the request URL has access privileges
       $accessibility = AnnotationReader::getAccessibility($ci->router->class, $ci->router->method);
       if (!$accessibility->allow_logoff) {
-        // In case of access prohibition action, redirect to the login page
         redirect('/signin');
       }
     }
     ```
 
-    models/UserService.php:  
-
+    models/UserModel.php:  
     ```php
-    class UserService extends \AppModel {
-
-      protected $model = [
-        'UserModel',
-        'SessionModel'
-      ];
+    class UserModel extends \AppModel {
+      protected $model = 'SessionModel';
 
       public function signin(string $username, string $password): bool {
         // Find data matching ID and password
@@ -1230,7 +1140,6 @@ All notable changes to this project will be documented in this file.
     ```
 
     controllers/api/User.php:  
-
     ```php
     use \X\Annotation\Access;
     use const \X\Constant\HTTP_BAD_REQUEST;
@@ -1238,11 +1147,7 @@ All notable changes to this project will be documented in this file.
     use const \X\Constant\HTTP_NO_CONTENT;
 
     class User extends AppController {
-
-      protected $model = [
-        'UserService',
-        'UserModel',
-      ];
+      protected $model = 'UserModel';
 
       /**
        * @Access(allow_login=false, allow_logoff=true)
@@ -1256,7 +1161,7 @@ All notable changes to this project will be documented in this file.
           if (!$this->form_validation->run()) {
             return parent::error(print_r($this->form_validation->error_array(), true), HTTP_BAD_REQUEST);
           }
-          $result = $this->UserService->signin($this->input->post('username'), $this->input->post('password'));
+          $result = $this->UserModel->signin($this->input->post('username'), $this->input->post('password'));
           parent
             ::set($result)
             ::json();
@@ -1270,7 +1175,7 @@ All notable changes to this project will be documented in this file.
        */
       public function signout() {
         try {
-          $this->UserService->signout();
+          $this->UserModel->signout();
           redirect('/signin');
         } catch (\Throwable $e) {
           parent::error($e->getMessage(), HTTP_BAD_REQUEST);
@@ -1280,14 +1185,8 @@ All notable changes to this project will be documented in this file.
     ```
 
     public/assets/signin.js:
-
     ```js
     (() => {
-      /**
-       * Set up login form
-       *
-       * @return {void}
-       */
       function setupLoginForm() {
         const validator = $('#signupForm').validate({
           submitHandler: async (form, event) => {
@@ -1319,12 +1218,11 @@ All notable changes to this project will be documented in this file.
     })();
     ````
 
-## [3.5.0] - 2020-5-19
+## [3.5.0] - 2020/5/19
 - Fixed a bug that DB class does not inherit \X\Database\QueryBuilder when making session DB
 
-## [3.4.8] - 2020-4-28
+## [3.4.8] - 2020/4/28
 - Make the IP range check method of "\X\Util\HttpSecurity" class do correct check when subnet mask is 32.
-
     ```php
     use \X\Util\HttpSecurity;
 
@@ -1345,9 +1243,8 @@ All notable changes to this project will be documented in this file.
     HttpSecurity::isAllowIp('118.238.251.131',  '118.238.251.130/32');// false
     ```
 
-## [3.4.7] - 2020-4-27
+## [3.4.7] - 2020/4/27
 - Added feature to face detector to find multiple faces from collection
-
     ```php
     use \X\Rekognition\Client;
     $client = new Client('Your AWS access key ID', 'Your AWS secret access key');
@@ -1386,12 +1283,10 @@ All notable changes to this project will be documented in this file.
     // )
     ```
 
-## [3.4.6] - 2020-4-23
-- Added a feature to add arbitrary columns to the session table
-
-    Set the columns you want to add to the session table in "application/confi /config.php".
+## [3.4.6] - 2020/4/23
+- Added a feature to add arbitrary columns to the session table  
+    Set the columns you want to add to the session table in "application/confi /config.php".  
     The example adds the username column to the session table.
-
     <p class="alert">Be sure to allow NULL for your own extra columns. This is because the session created when you are not logged in has no extra column values.</p>
 
     ```php
@@ -1400,8 +1295,7 @@ All notable changes to this project will be documented in this file.
     $config['sess_table_additional_columns'] = ['username'];
     ```
 
-    Create a session table.
-
+    Create a session table.  
     ```sql
     CREATE TABLE IF NOT EXISTS `ci_sessions` (
         `id` varchar(128) NOT NULL,
@@ -1413,8 +1307,7 @@ All notable changes to this project will be documented in this file.
     );
     ```
 
-    Create a session database class (application/libraries/Session/drivers/AppSession_database_driver.php) in your application.
-
+    Create a session database class (application/libraries/Session/drivers/AppSession_database_driver.php) in your application.  
     ```php
     <?php
     defined('BASEPATH') OR exit('No direct script access allowed');
@@ -1424,11 +1317,9 @@ All notable changes to this project will be documented in this file.
     class AppSession_database_driver extends SessionDatabaseDriver {}
     ```
 
-    The user name of the logged-in user will be added to the session table.
-
+    The user name of the logged-in user will be added to the session table.  
     ```sql
     SELECT * FROM session WHERE username='admin'\G;
-
     *************************** 1. row ***************************
             id: 78g8c230pe8onb93jkpbbkatcii3h7ss
       username: admin
@@ -1438,10 +1329,10 @@ All notable changes to this project will be documented in this file.
     1 rows in set (0.000 sec)
     ```
 
-## [3.4.5] - 2020-4-10
+## [3.4.5] - 2020/4/10
 - Changed to return an empty string when there is no key value to get from the config with "\X\Utils\Loader::config()".
 
-## [3.4.2] - 2020-3-16
+## [3.4.2] - 2020/3/16
 - Added setting of template cache in application config (application/config/config.php).
 
     You can configure the template cache in "application/config/config.php".
@@ -1457,9 +1348,8 @@ All notable changes to this project will be documented in this file.
     $config['cache_templates'] = false;
     ```
 
-## [3.3.9] - 2020-3-16
+## [3.3.9] - 2020/3/16
 - Added client class that summarizes face detection processing. Remove old face detection class.
-
     ```php
     use \X\Rekognition\Client;
     $client = new Client('Your AWS access key ID', 'Your AWS secret access key');
@@ -1477,9 +1367,8 @@ All notable changes to this project will be documented in this file.
     $faceId = $client->addFaceToCollection($collectionId, $faceImageFile);
     ```
 
-## [3.3.8] - 2020-3-14
+## [3.3.8] - 2020/3/14
 - Added insert_on_duplicate_update.
-
     ```php
     // Here is an example of insert_on_duplicate_update.
     $SampleModel
@@ -1497,9 +1386,7 @@ All notable changes to this project will be documented in this file.
       ->set('name', 'My Name')
       ->insert_on_duplicate_update();
     ```
-
 - Added insert_on_duplicate_update_batch.
-
     ```php
     // Here is an example of insert_on_duplicate_update_batch
     $SampleModel

@@ -53,11 +53,11 @@ $route['default_controller'] = 'login';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
 
-// Custom URL
+// Custom URL.
 $route['^api/users/login$']['POST'] = 'api/users/login';
 $route['^api/users/logout$']['GET'] = 'api/users/logout';
 
-// API basic routing
+// The basic URL of the API.
 $route['^api/(:any)/(:num)$']['GET'] = 'api/$1/get/$2';
 $route['^api/(:any)\??']['GET'] = 'api/$1/query';
 $route['^api/(:any)$']['POST'] = 'api/$1/post';

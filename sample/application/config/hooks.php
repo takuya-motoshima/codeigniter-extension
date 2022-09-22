@@ -14,55 +14,33 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 use \X\Annotation\AnnotationReader;
 use \X\Util\Logger;
 
-// post_controller_constructor callback.
 $hook['post_controller_constructor'] = function() {
   $ci =& get_instance();
-
-  // Get access from annotations.
   $accessibility = AnnotationReader::getAccessibility($ci->router->class, $ci->router->method);
-
-  // Whether you are logged in.
   $isLogin = !empty($_SESSION[SESSION_NAME]);
-
-  // Whether it is HTTP access.
-  $isHttp = !is_cli();
-
-  // Requested path.
-  $curPath = lcfirst($ci->router->directory ?? '') . lcfirst($ci->router->class) . '/' . $ci->router->method;
-
-  // Default path.
-  $defPath = '/dashboard';
-
-  // Roles that allow access.
+  $currentPath = lcfirst($ci->router->directory ?? '') . lcfirst($ci->router->class) . '/' . $ci->router->method;
+  $defaultPath = '/users/index';
   $allowRoles = !empty($accessibility->allow_role) ? array_map('trim', explode(',', $accessibility->allow_role)) : null;
-
-  if ($isHttp) {
-    // When accessed by HTTP.
+  if (!is_cli()) {
     if (!$accessibility->allow_http)
       throw new \RuntimeException('HTTP access is not allowed');
     else if ($isLogin && !$accessibility->allow_login)
-      redirect($defPath);
+      redirect($defaultPath);
     else if (!$isLogin && !$accessibility->allow_logoff)
-      redirect('/login');
+      redirect('/users/login');
     else if ($isLogin && !empty($allowRoles)) {
       $role = $_SESSION[SESSION_NAME]['role'] ?? 'undefined';
-      if (!in_array($role, $allowRoles) && $defPath !== $curPath)
-        redirect($defPath);
+      if (!in_array($role, $allowRoles) && $defaultPath !== $currentPath)
+        redirect($defaultPath);
     }
-  } else {
-    // When executed with CLI.
   }
 };
 
-// pre_system callback.
 $hook['pre_system'] = function () {
-  // Load environment variables.
   $dotenv = Dotenv\Dotenv::createImmutable(ENV_DIR);
   $dotenv->load();
-
-  // Check for uncaught exceptions.
   set_exception_handler(function ($e) {
     Logger::error($e);
-    show_error('This page is not working', 500);
+    show_error($e->getMessage(), 500);
   });
 };

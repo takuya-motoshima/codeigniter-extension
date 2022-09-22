@@ -1,19 +1,10 @@
 <?php
-/**
- * Database Result Trait
- *
- * @author     Takuya Motoshima <https://www.facebook.com/takuya.motoshima.7>
- * @license    MIT License
- * @copyright  2017 Takuya Motoshima
- */
 namespace X\Database;
-
 trait Result {
-
   /**
    * Query result. "array of the form KeyValue" version.
-   *
-   * ```php
+   * <code>
+   * <?php
    * $rows = parent
    *   select('id,name')::
    *   from('user')::
@@ -32,7 +23,7 @@ trait Result {
    * //     'department' => 'Marketing',
    * //   ),
    * // )
-   * ```
+   * </code>
    *
    * @throws RuntimeException
    * @param  string $key = 'id'
@@ -40,12 +31,10 @@ trait Result {
    */
   public function result_keyvalue(string $key = 'id'):array {
     $rows = $this->result_array();
-    if (empty($rows)) {
+    if (empty($rows))
       return [];
-    }
-    if (array_key_exists($key, $rows[0]) === false) {
+    if (array_key_exists($key, $rows[0]) === false)
       throw new RuntimeException('result has no ' . $key . 'key');
-    }
     return array_combine(array_column($rows, $key), $rows);
   }
 }

@@ -1,8 +1,7 @@
 <?php
 /**
- * Email Amazon SES util class
- * 
- * ```php
+ * <code>
+ * <?php
  * use \X\Util\AmazonSesClient;
  * $sesClient  = new AmazonSesClient([
  *   'region' => $_ENV['AMAZON_SES_REGION'],
@@ -17,11 +16,9 @@
  *   ->to('who@sample.org')
  *   ->message_from_xml('sample', ['name' => 'Sample'])
  *   ->send();
- * ```
+ * </code>
  *
  * Email body and subject: views/email/sample.xml.
- *
- * ```xml
  * <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
  * <mail>
  * <subject>Email subject</subject>
@@ -31,50 +28,22 @@
  * Email body
  * </message>
  * </mail>
- * ```
- * 
- * @author     Takuya Motoshima <https://www.facebook.com/takuya.motoshima.7>
- * @license    MIT License
- * @copyright  2017 Takuya Motoshima
  */
 namespace X\Util;
 use \X\Util\Logger;
 use \X\Util\Template;
 
 class AmazonSesClient {
-  /** @var array */
   private $option = null;
-
-  /** @var string */
   private $charset = 'UTF-8';
-
-  /** @var string */
   private $from = null;
-
-  /** @var string */
   private $from_name = null;
-
-  /** @var string|array */
   private $to = null;
-
-  /** @var string|array */
   private $bcc = null;
-
-  /** @var string|array */
   private $cc = null;
-
-  /** @var string */
   private $subject = null;
-
-  /** @var string */
   private $message = null;
 
-  /**
-   * 
-   * construct
-   *
-   * @param array $option
-   */
   public function __construct(array $option = []) {
     $this->option = array_replace_recursive([
       'credentials' => [
@@ -88,11 +57,7 @@ class AmazonSesClient {
   }
 
   /**
-   * 
-   * Set charset
-   * 
-   * @param  string $charset
-   * @return AmazonSesClient
+   * Set charset.
    */
   public function charset(string $charset): AmazonSesClient {
     $this->charset = $charset;
@@ -100,12 +65,7 @@ class AmazonSesClient {
   }
 
   /**
-   * 
-   * Set the sender
-   * 
-   * @param  string $from
-   * @param  string $from_name
-   * @return AmazonSesClient
+   * Set the sender.
    */
   public function from(string $from, string $from_name = null): AmazonSesClient {
     $this->from = $from;
@@ -114,11 +74,7 @@ class AmazonSesClient {
   }
 
   /**
-   * 
-   * Set destination
-   *
-   * @param string|array $to
-   * @return AmazonSesClient
+   * Set destination.
    */
   public function to($to): AmazonSesClient {
     $this->to = $to;
@@ -126,11 +82,7 @@ class AmazonSesClient {
   }
 
   /**
-   * 
-   * Set destination
-   *
-   * @param string|array $bcc
-   * @return AmazonSesClient
+   * Set destination.
    */
   public function bcc($bcc): AmazonSesClient {
     $this->bcc = $bcc;
@@ -138,11 +90,7 @@ class AmazonSesClient {
   }
 
   /**
-   * 
-   * Set destination
-   *
-   * @param string|array $cc
-   * @return AmazonSesClient
+   * Set destination.
    */
   public function cc($cc): AmazonSesClient {
     $this->cc = $cc;
@@ -150,11 +98,7 @@ class AmazonSesClient {
   }
 
   /**
-   *
-   * Set up outgoing subject
-   *
-   * @param string $subject
-   * @return AmazonSesClient
+   * Set up outgoing subject.
    */
   public function subject(string $subject): AmazonSesClient {
     $this->subject = $subject;
@@ -162,11 +106,7 @@ class AmazonSesClient {
   }
 
   /**
-   *
-   * Set up outgoing messages
-   *
-   * @param string $message
-   * @return AmazonSesClient
+   * Set up outgoing messages.
    */
   public function message(string $message): AmazonSesClient {
     $this->message = $message;
@@ -174,17 +114,12 @@ class AmazonSesClient {
   }
 
   /**
-   * Set up outgoing messages
-   *
-   * @param   string
-   * @param   array
-   * @return  string
+   * Set up outgoing messages.
    */
   public function messageFromXml(string $path, array $vars = []): AmazonSesClient {
     static $template;
-    if (!isset($template)) {
+    if (!isset($template))
       $template = new Template();
-    }
     $xml = new \SimpleXMLElement($template->load($path, $vars, 'xml'));
     $this
       ->subject((string) $xml->subject)
@@ -193,10 +128,7 @@ class AmazonSesClient {
   }
 
   /**
-   *
-   * Send
-   *
-   * @return \Aws\Result
+   * Send.
    */
   public function send(): \Aws\Result {
     $ci =& get_instance();
@@ -208,9 +140,8 @@ class AmazonSesClient {
       ])
       // ->set_rules('to', 'To Email', 'required|valid_email')
       ->set_rules('from', 'From Email', 'required|valid_email');
-    if (!$ci->form_validation->run()) {
+    if (!$ci->form_validation->run())
       throw new \InvalidArgumentException(implode('', $ci->form_validation->error_array()));
-    }
     $destination['ToAddresses'] = is_array($this->to) ? $this->to : [$this->to];
     isset($this->cc) && $destination['CcAddresses'] = $this->cc;
     isset($this->bcc) && $destination['BccAddresses'] = $this->bcc;
@@ -241,28 +172,21 @@ class AmazonSesClient {
   }
 
   /**
-   * 
-   * Get SES client object
-   *
-   * @return \Aws\Ses\SesClient
+   * Get SES client object.
    */
   private function client(): \Aws\Ses\SesClient {
     static $client;
-    if (!isset($client)) {
+    if (!isset($client))
       $client = new \Aws\Ses\SesClient([
         'credentials' => $this->option['credentials'],
         'version' => $this->option['version'],
         'region'  => $this->option['region'],
       ]);
-    }
     return $client;
   }
 
   /**
-   * 
-   * Reset option
-   *
-   * @return void
+   * Reset option.
    */
   private function reset() {
     $this->charset = 'UTF-8';

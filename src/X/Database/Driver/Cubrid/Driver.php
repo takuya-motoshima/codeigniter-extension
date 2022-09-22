@@ -5,10 +5,6 @@
  * Note: _DB is an extender class that the app controller
  * creates dynamically based on whether the query builder
  * class is being used or not.
- *
- * @author     Takuya Motoshima <https://www.facebook.com/takuya.motoshima.7>
- * @license    MIT License
- * @copyright  2017 Takuya Motoshima
  */
 namespace X\Database\Driver\Cubrid;
 class Driver extends \X_DB {

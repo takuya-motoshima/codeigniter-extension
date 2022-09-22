@@ -1,46 +1,19 @@
 <?php
-/**
- * HTTP Response util class
- *
- * @author     Takuya Motoshima <https://www.facebook.com/takuya.motoshima.7>
- * @license    MIT License
- * @copyright  2017 Takuya Motoshima
- */
 namespace X\Util;
 use X\Constant\HttpStatus;
 use X\Util\Loader;
-use X\Util\Logger;
 
 final class HttpResponse {
-
-  /**
-   * @var array $data
-   */
   private $data = [];
-
-  /**
-   * @var int $status
-   */
   private $status;
-
-  /**
-   * @var CI_Controller $ci
-   */
   private $ci;
 
-  /**
-   * Construct
-   */
   public function __construct() {
     $this->ci =& \get_instance();
   }
 
   /**
-   * Set data
-   *
-   * @param  mixed $key
-   * @param  mixed $value
-   * @return object
+   * Set data.
    */
   public function set($key, $value = null) {
     if (func_num_args() === 2) {
@@ -55,9 +28,7 @@ final class HttpResponse {
   }
 
   /**
-   * Clear data
-   *
-   * @return object
+   * Clear data.
    */
   public function clear() {
     $this->data = [];
@@ -65,10 +36,7 @@ final class HttpResponse {
   }
 
   /**
-   * Set status
-   *
-   * @param  int $status
-   * @return object
+   * Set status.
    */
   public function status(int $status) {
     $this->status = $status;
@@ -76,25 +44,17 @@ final class HttpResponse {
   }
 
   /**
-   * Response JSON
-   *
-   * @throws LogicException
-   * @param  bool $forceObject
-   * @param  bool $prettyrint
-   * @return void
+   * Response JSON.
    */
  public function json(bool $forceObject = false, bool $prettyrint = false) {
     $options = JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE;
-    if ($forceObject) {
+    if ($forceObject)
       $options = $options | JSON_FORCE_OBJECT;
-    }
-    if ($prettyrint) {
+    if ($prettyrint)
       $options = $options | JSON_PRETTY_PRINT;
-    }
     $json = json_encode($this->data, $options);
-    if ($json === false) {
+    if ($json === false)
       throw new \LogicException(sprintf('Failed to parse json string \'%s\', error: \'%s\'', $this->data, json_last_error_msg()));
-    }
     ob_clean();
     // $this->setCorsHeader('*');
     $this->ci->output
@@ -104,10 +64,7 @@ final class HttpResponse {
   }
 
   /**
-   * Response HTML
-   *
-   * @param  string  $html
-   * @return void
+   * Response HTML.
    */
   public function html(string $html) {
     // $this->setCorsHeader('*');
@@ -117,10 +74,7 @@ final class HttpResponse {
   }
 
   /**
-   * Response template
-   *
-   * @param  string $path
-   * @return void
+   * Response template.
    */
   public function view(string $path) {
     static $template;
@@ -129,10 +83,7 @@ final class HttpResponse {
   }
 
   /**
-   * Response js
-   *
-   * @param  string $js
-   * @return void
+   * Response js.
    */
   public function js(string $js) {
     ob_clean();
@@ -143,10 +94,7 @@ final class HttpResponse {
   }
 
   /**
-   * Response text
-   *
-   * @param  string $text
-   * @return void
+   * Response text.
    */
   public function text(string $text) {
     ob_clean();
@@ -157,12 +105,7 @@ final class HttpResponse {
   }
 
   /**
-   * Response download
-   *
-   * @param  string $file
-   * @param  string $data
-   * @param  bool $mime
-   * @return void
+   * Response download.
    */
   public function download(string $file, string $data = '', bool $mime = FALSE) {
     ob_clean();
@@ -171,10 +114,7 @@ final class HttpResponse {
   }
 
   /**
-   * Response image
-   *
-   * @param  string $path
-   * @return void
+   * Response image.
    */
   public function image(string $path) {
     ob_clean();
@@ -185,11 +125,7 @@ final class HttpResponse {
   }
 
   /**
-   * Response error
-   *
-   * @param  string $message
-   * @param  int $status
-   * @return void
+   * Response error.
    */
   public function error(string $message, int $status = \X\Constant\HTTP_INTERNAL_SERVER_ERROR) {
     if ($this->ci->input->is_ajax_request()) {
@@ -205,36 +141,29 @@ final class HttpResponse {
   }
 
   /**
-   * Internal redirect
-   *
+   * Internal redirect.
    * Allows for internal redirection to a location determined by a header returned from a backend.
    * This allows the backend to authenticate and perform any other processing,
    * provide content to the end user from the internally redirected location,
    * and free up the backend to handle other requests.
    *
-   * Nginx configuration example.
-   *
-   * ```nginx
+   * Nginx configuration example: 
    * # Will serve /var/www/files/myfile
    * # When passed URI /protected_files/myfile
    * location /protected_files {
    *   internal;
    *   alias /var/www/files;
    * }
-   * ```
    * 
-   *  Codeigniter controller example.
-   *
-   * ```php
+   * Codeigniter controller example.
+   * <code>
+   * <?php
    * class Files extends \X\Controller\Controller {
    *   public function index(string $fileName) {
    *     parent::internalRedirect('/protected_files/myfile');
    *   }
    * }
-   * ```
-   *  
-   * @param  string $internalRedirectPath
-   * @return void
+   * </code>
    */
   public function internalRedirect(string $internalRedirectPath) {
     // $this->setCorsHeader('*');
@@ -245,30 +174,26 @@ final class HttpResponse {
   }
 
   /**
-   * Sets the CORS header
+   * Sets the CORS header.
    *
-   * eg.
-   *   // Allow all origins
-   *   $httpResponse->setCorsHeader('*');
+   * <code>
+   * <?php
+   * // Allow all origins
+   * $httpResponse->setCorsHeader('*');
    *
-   *   // Allow a specific single origin
-   *   $httpResponse->setCorsHeader('http://www.example.jp');
-   *   
-   *   // Allow specific multiple origins
-   *   $httpResponse->setCorsHeader('http://www.example.jp https://www.example.jp http://sub.example.jp');
-   *
-   * @param string $origin
-   * @return void
+   * // Allow a specific single origin
+   * $httpResponse->setCorsHeader('http://www.example.jp');
+   * 
+   * // Allow specific multiple origins
+   * $httpResponse->setCorsHeader('http://www.example.jp https://www.example.jp http://sub.example.jp');
    */
   public function setCorsHeader(string $origin) {
     if ($origin === '*') {
-      if (!empty($_SERVER['HTTP_ORIGIN'])) {
+      if (!empty($_SERVER['HTTP_ORIGIN']))
         $origin = $_SERVER['HTTP_ORIGIN'];
-      } else if (!empty($_SERVER['HTTP_REFERER'])) {
+      else if (!empty($_SERVER['HTTP_REFERER']))
         $origin = parse_url($_SERVER['HTTP_REFERER'], PHP_URL_SCHEME) . '://' . parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST);
-      }
     }
-    // Logger::debug('$origin=', $origin);
     $this->ci->output
       ->set_header('Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Authorization')
       ->set_header('Access-Control-Allow-Methods: GET, POST, OPTIONS')
