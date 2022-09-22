@@ -1,0 +1,87 @@
+{% extends 'layout/default.html' %}
+{% block title %}個人設定{% endblock %}
+{% block content %}
+<!--begin::details View-->
+<div class="card mb-5 mb-xl-10">
+  <!--begin::Card header-->
+  <div class="card-header cursor-pointer justify-content-end">
+    <!--begin::Action-->
+    <a href="/administrators/edit-personal" class="btn btn-primary align-self-center">プロフィールを編集</a>
+    <!--end::Action-->
+  </div>
+  <!--begin::Card header-->
+  <!--begin::Card body-->
+  <div class="card-body p-9">
+    <!--begin::Row-->
+    <div class="row mb-7">
+      <!--begin::Label-->
+      <label class="col-lg-4 fw-bolder text-muted">権限</label>
+      <!--end::Label-->
+      <!--begin::Col-->
+      <div class="col-lg-8">
+        <span class="fw-bolder fs-6 text-gray-800">
+          {% if administrator.role == 'super_admin' %}
+            システム管理者
+          {% endif %}
+        </span>
+      </div>
+      <!--end::Col-->
+    </div>
+    <!--end::Row-->
+
+    <!--begin::Row-->
+    <div class="row mb-7">
+      <!--begin::Label-->
+      <label class="col-lg-4 fw-bolder text-muted">Eメール（ログインID）</label>
+      <!--end::Label-->
+      <!--begin::Col-->
+      <div class="col-lg-8">
+        <span class="fw-bolder fs-6 text-gray-800">{{administrator.email}}</span>
+      </div>
+      <!--end::Col-->
+    </div>
+    <!--end::Row-->
+
+    <!--begin::Row-->
+    <div class="row mb-7">
+      <!--begin::Label-->
+      <label class="col-lg-4 fw-bolder text-muted">アカウント名</label>
+      <!--end::Label-->
+      <!--begin::Col-->
+      <div class="col-lg-8">
+        <span class="fw-bolder fs-6 text-gray-800">{{administrator.name}}</span>
+      </div>
+      <!--end::Col-->
+    </div>
+    <!--end::Row-->
+
+    <!--begin::Row-->
+    <div class="row mb-7">
+      <!--begin::Label-->
+      <label class="col-lg-4 fw-bolder text-muted">作成日時</label>
+      <!--end::Label-->
+      <!--begin::Col-->
+      <div class="col-lg-8">
+        <span class="fw-bolder fs-6 text-gray-800">{{administrator.created|date('Y年n月j日 H:i:s')}}</span>
+      </div>
+      <!--end::Col-->
+    </div>
+    <!--end::Row-->
+
+    <!--begin::Row-->
+    <div class="row mb-7">
+      <!--begin::Label-->
+      <label class="col-lg-4 fw-bolder text-muted">更新日時</label>
+      <!--end::Label-->
+      <!--begin::Col-->
+      <div class="col-lg-8">
+        <span class="fw-bolder fs-6 text-gray-800">{{administrator.modified|date('Y年n月j日 H:i:s')}}</span>
+      </div>
+      <!--end::Col-->
+    </div>
+    <!--end::Row-->
+  </div>
+  <!--end::Card body-->
+</div>
+<!--end::details View-->
+{% endblock %}

@@ -19,4 +19,11 @@ class Users extends AppController {
   public function index() {
     parent::view('users');
   }
+
+  /**
+   * @Access(allow_login=true, allow_logoff=false)
+   */
+  public function personal() {
+    parent::view('personal');
+  }
 }
