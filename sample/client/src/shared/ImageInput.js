@@ -51,6 +51,7 @@ export default class {
       resize: true,
       maxWidth: 960
     }, options);
+    console.log('this.options=', this.options);
 
     // Attach uploader UI.
     this.attach(context);
@@ -66,8 +67,8 @@ export default class {
 
     // If the default image and the displayed image are the same, the image change cancel button is not displayed in the initial display.
     if (this.options.currentImage && this.options.defaultImage) {
-      const useDef = await compareImg(this.options.currentImage, this.options.defaultImage);
-      if (useDef)
+      const hasDifference = await compareImg(this.options.currentImage, this.options.defaultImage);
+      if (hasDifference)
         this.options.currentImage = null;
     }
 
@@ -75,7 +76,7 @@ export default class {
     if (this.options.defaultImage || this.options.currentImage) {
       let src = this.options.defaultImageBase64;
       if (this.options.currentImage) {
-        const dataUrl = await fetchDataUrl(this.options.currentImage);
+        const dataUrl = await fetchDataUrl(`${this.options.currentImage}?${+new Date}`);
         if (dataUrl)
           src = dataUrl;
         else
@@ -144,8 +145,16 @@ export default class {
    * Draw image uploader element.
    */
   render(context, options) {
-    const html = `
-      <div class="image-input-wrapper bgi-position-center" style="background-size: {{fit}}; {{#if currentImage}}background-image: url({{currentImage}});{{/if}} width: {{width}}px; height: {{height}}px;"></div>
+    context.classList.add('image-input', 'image-input-outline', options.currentImage ?
+      'image-input-changed' :
+      'image-input-empty', 'bg-body');
+    // context.style.backgroundColor = '#babbbe';
+    context.style.width = 'fit-content';
+    context.style.backgroundImage = `url(${options.defaultImage})`;
+    context.setAttribute('data-kt-image-input', 'false');
+    context.insertAdjacentHTML('afterbegin', hbs.compile(
+      `<div class="image-input-wrapper bgi-position-center"
+        style="background-size: {{fit}}; {{#if currentImage}}background-image: url({{currentImage}}?{{timestamp}});{{/if}} width: {{width}}px; height: {{height}}px;"></div>
       <label class="btn btn-icon btn-circle btn-color-muted btn-active-color-primary w-25px h-25px bg-body shadow {{ifx readonly 'd-none'}}"
               data-kt-image-input-action="change"
               data-bs-toggle="tooltip" data-bs-dismiss="click" title="{{language.change}}">
@@ -164,13 +173,7 @@ export default class {
             data-kt-image-input-action="remove"
             data-bs-toggle="tooltip" data-bs-dismiss="click" title="{{language.remove}}">
             <i class="bi bi-x fs-2"></i>
-      </span>`;
-    context.classList.add('image-input', 'image-input-outline', options.currentImage ? 'image-input-changed' : 'image-input-empty', 'bg-body');
-    // context.style.backgroundColor = '#babbbe';
-    context.style.width = 'fit-content';
-    context.style.backgroundImage = `url(${options.defaultImage})`;
-    context.setAttribute('data-kt-image-input', 'false');
-    context.insertAdjacentHTML('afterbegin', hbs.compile(html)(options));
+      </span>`)({...options, timestamp: +new Date}));
     initTooltip(context);
     const instance = new KTImageInput(context);
     if (options.currentImage && !options.enableCancel)

@@ -82,6 +82,7 @@ class Users extends AppController {
       $set = $this->input->post();
       $this->formValidation($set, 'create');
       $this->UserModel->createUser($set['user']);
+      $this->UserLogModel->createUserLog($_SESSION[SESSION_NAME]['name'], 'Created user ' . $set['user']['name']);
       parent::set(true)::json();
     } catch (\Throwable $e) {
       Logger::error($e);
@@ -94,7 +95,9 @@ class Users extends AppController {
    */
   public function emailExists() {
     try {
-      $exists = $this->UserModel->emailExists($this->input->get('user')['email']);
+      $exists = $this->UserModel->emailExists(
+        $this->input->get('user')['email'],
+        $this->input->get('excludeUserId') ?? null);
       parent::set(['valid' => !$exists])::json();
     } catch (\Throwable $e) {
       Logger::error($e);
@@ -102,36 +105,56 @@ class Users extends AppController {
     }
   }
 
-  // /**
-  //  * @Access(allow_login=true, allow_logoff=false, allow_role="admin")
-  //  */
-  // public function get(int $userId) {
-  //   parent::set($this->UserModel->getUserById($userId))::json();
-  // }
+  /**
+   * @Access(allow_login=true, allow_logoff=false, allow_role="admin")
+   */
+  public function get(int $userId) {
+    try {
+      parent::set($this->UserModel->getUserById($userId))::json();
+    } catch (\Throwable $e) {
+      Logger::error($e);
+      parent::error($e->getMessage(), HTTP_BAD_REQUEST);
+    }
+  }
 
-  // /**
-  //  * @Access(allow_login=true, allow_logoff=false, allow_role="admin")
-  //  */
-  // public function put(int $userId) {
-  //   $this->form_validation
-  //     ->set_data($this->input->post())
-  //     ->set_rules('role', 'role', 'required|in_list[admin,member]')
-  //     ->set_rules('email', 'email', 'required');
-  //   if (!$this->form_validation->run()) {
-  //     Logger::error($this->form_validation->error_array());
-  //     return parent::set('error', 'input_error')::set('error_description', $this->form_validation->error_array())::json();
-  //   }
-  //   $this->UserModel->updateUser($userId, $this->input->put());
-  //   parent::status(HTTP_NO_CONTENT)::json();
-  // }
+  /**
+   * @Access(allow_login=true, allow_logoff=false, allow_role="admin")
+   */
+  public function put(int $userId) {
+    try {
+      $set = $this->input->put();
+      $this->formValidation($set, 'update');
+      $this->UserModel->updateUser($userId, $set['user']);
+      $this->UserLogModel->createUserLog($_SESSION[SESSION_NAME]['name'], 'Updated User ' . $set['user']['name']);
+      parent::set(true)::json();
+    } catch (UserNotFoundException $e) {
+      parent::set('error', 'userNotFound')::json();
+    } catch (\Throwable $e) {
+      Logger::error($e);
+      parent::error($e->getMessage(), HTTP_BAD_REQUEST);
+    }
+  }
 
-  // /**
-  //  * @Access(allow_login=true, allow_logoff=false, allow_role="admin")
-  //  */
-  // public function delete(int $userId) {
-  //   $this->UserModel->deleteUser($userId);
-  //   parent::status(HTTP_NO_CONTENT)::json();
-  // }
+  /**
+   * @Access(allow_login=true, allow_logoff=false, allow_role="admin")
+   */
+  public function delete(int $userId) {
+    try {
+      $userName = $this->UserModel
+        ->select('name')
+        ->where('id', $userId)
+        ->get()
+        ->row_array()['name'] ?? null;
+      $this->UserModel->deleteUser($userId);
+      $this->UserLogModel->createUserLog($_SESSION[SESSION_NAME]['name'], "User {$userName} is deleted");
+      parent::set(true)::json();
+    } catch (UserNotFoundException $e) {
+      parent::set('error', 'userNotFound')::json();
+    } catch (\Throwable $e) {
+      Logger::error($e);
+      parent::error($e->getMessage(), HTTP_BAD_REQUEST);
+    }
+  }
 
   private function formValidation(array $set, string $mode) {
     $this->form_validation

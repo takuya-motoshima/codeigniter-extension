@@ -16,8 +16,17 @@ sample/application/cache/*
 !sample/application/session/
 sample/application/session/*
 sample/public/build/
-# !sample/public/upload/
-# sample/public/upload/*
+!sample/public/upload/
+sample/public/upload/*
+!sample/public/upload/1.png
+!sample/public/upload/2.png
+!sample/public/upload/3.png
+!sample/public/upload/4.png
+!sample/public/upload/5.png
+!sample/public/upload/6.png
+!sample/public/upload/7.png
+!sample/public/upload/8.png
+
 sample/.env
 !sample/.env.sample
 

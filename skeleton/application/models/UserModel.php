@@ -74,16 +74,6 @@ class UserModel extends \AppModel {
   }
 
   /**
-   * Returns all users.
-   */
-  public function getUsers(): array {
-    return $this
-      ->select('id, role, email, name, modified')
-      ->get()
-      ->result_array();
-  }
-
-  /**
    * Returns the data of the specified page number.
    */
   public function paginate(int $offset, int $limit, string $order, string $direction, ?string $search): array {

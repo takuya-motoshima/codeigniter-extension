@@ -22,7 +22,7 @@ function initTable() {
       {targets: 0, data: 'name', className: 'd-flex align-items-center', render: (data, type, row) => hbs.compile(
         `<div class="symbol symbol-circle symbol-50px overflow-hidden me-3">
           <div class="symbol-label">
-            <img src="/upload/{{row.id}}.png" class="w-100">
+            <img src="/upload/{{row.id}}.png?{{formatDate 'x' row.modified}}" class="w-100">
           </div>
         </div>
         <span class="text-gray-800">{{row.name}}</span>`)({row})
@@ -86,7 +86,7 @@ function initForm() {
           return;
         const {data} = await userApi.deleteUser(evnt.currentTarget.dataset.id);
         if (data.error)
-          if (data.error === 'user_not_found') {
+          if (data.error === 'userNotFound') {
             await Dialog.warning('The user has already been deleted.');
             return void userTable.reload();
           } else

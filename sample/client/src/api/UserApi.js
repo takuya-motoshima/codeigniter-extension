@@ -25,19 +25,7 @@ export default class extends Api {
     return this.client.put(`/${userId}`, formData);
   }
 
-  // async updatePersonal(formData) {
-  //   return this.client.put('update-personal', formData);
-  // }
-
-  // async deleteUser(userId) {
-  //   return this.client.delete(`/${userId}`);
-  // }
-
-  // async sendPasswordResetEmail(clientNumber, formData) {
-  //   return this.client.post(`/send-password-reset-email/${clientNumber}`, formData);
-  // }
-
-  // async resetPassword(formData) {
-  //   return this.client.post('reset-password', formData);
-  // }
+  async deleteUser(userId) {
+    return this.client.delete(`/${userId}`);
+  }
 }

@@ -91,8 +91,8 @@ export default class extends Modal {
                     <!--begin::Input-->
                     <select name="user[role]" class="form-select form-select-solid">
                       <option value="">Select roll</option>
-                      <option value="admin">Admin</option>
-                      <option value="member">General User</option>
+                      <option value="admin"{{#if (eq user.role 'admin')}} selected{{/if}}>Admin</option>
+                      <option value="member"{{#if (eq user.role 'member')}} selected{{/if}}>General User</option>
                     </select>
                     <!--end::Input-->
                   </div>
@@ -200,9 +200,7 @@ export default class extends Modal {
           remote: {
             url: '/api/users/email-exists',
             method: 'GET',
-            data: () => {
-              return this.#mode === 'update' ? {excludeId: this.#userId} : {};
-            },
+            data: () => this.#mode === 'update' ? {excludeUserId: this.#userId} : {},
             message: 'This email is in use by another user.'
           }
         }
@@ -237,7 +235,7 @@ export default class extends Modal {
           await this.#userApi.updateUser(this.#userId, new FormData(this.#validation.form));
         this.#validation.offIndicator();
         if (data.error)
-          if (data.error === 'user_not_found') {
+          if (data.error === 'userNotFound') {
             await Dialog.warning('This user has been deleted.');
             return void super.hide(true);
           } else

@@ -4,6 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 use \X\Util\Logger;
 use \X\Util\Cipher;
 use \X\Util\ImageHelper;
+use \X\Util\FileHelper;
 
 class UserModel extends \AppModel {
   const TABLE = 'user';
@@ -50,12 +51,12 @@ class UserModel extends \AppModel {
 
   public function createUser(array $set) {
     try {
-      Logger::debug('$set=', $set);
+      // Logger::debug('$set=', $set);
       parent::trans_begin();
       $userId = $this
         ->set('role', $set['role'])
-        ->set('name', $set['name'])
         ->set('email', $set['email'])
+        ->set('name', $set['name'])
         ->set('password', Cipher::encode_sha256($set['password']))
         ->insert();
       $this->writeUserIconImage($userId, $set['icon']);
@@ -67,8 +68,7 @@ class UserModel extends \AppModel {
   }
 
   public function emailExists(string $email, int $excludeUserId = null): bool {
-    Logger::debug('$email=', $email);
-    Logger::debug('$excludeUserId=', $excludeUserId);
+    // Logger::debug('$email=', $email, ', $excludeUserId=', $excludeUserId);
     if (!empty($excludeUserId))
       $this->where('id !=', $excludeUserId);
     return $this
@@ -76,36 +76,71 @@ class UserModel extends \AppModel {
       ->count_all_results() > 0;
   }
 
-  public function updateUser(int $id, array $set) {
-    $this
-      ->set($set)
-      ->where('id', $id)
-      ->update();
-  }
-
-  public function deleteUser(int $id) {
-    $this
-      ->where('id', $id)
-      ->delete();
-  }
-
-  public function getUserById(int $id): ?array {
+  public function getUserById(int $userId): ?array {
     return $this
-      ->where('id', $id)
+      ->select('id, role, email, name, created, modified')
+      ->where('id', $userId)
       ->get()
       ->row_array();
   }
 
-  public function getUsers(): array {
-    return $this
-      ->select('id, role, email, name, modified')
-      ->get()
-      ->result_array();
+  public function updateUser(int $userId, array $set) {
+    try {
+      parent::trans_begin();
+      if (!$this->userIdExists($userId))
+        throw new UserNotFoundException();
+      if (!empty($set['changePassword'])) {
+        $this->set('password', Cipher::encode_sha256($set['password']));
+        Logger::debug("Change the password whose user ID is {$userId}");
+      }
+      $this
+        ->set('role', $set['role'])
+        ->set('email', $set['email'])
+        ->set('name', $set['name'])
+        // NOTE: If the record is not changed and only the image is changed, the modification date is not updated.
+        // Explicitly update the modification date.
+        ->set('modified', 'NOW()', FALSE)
+        ->where('id', $userId)
+        ->update();
+      $this->writeUserIconImage($userId, $set['icon']);
+      parent::trans_commit();
+    } catch (\Throwable $e) {
+      parent::trans_rollback();
+      throw $e;
+    }
+  }
+
+  public function deleteUser(int $userId) {
+    try {
+      if (!$this->userIdExists($userId))
+        throw new UserNotFoundException();
+      parent::trans_begin();
+      $this
+        ->where('id', $userId)
+        ->delete();
+      $this->deleteUserIconImage($userId);
+      parent::trans_commit();
+    } catch (\Throwable $e) {
+      parent::trans_rollback();
+      throw $e;
+    }
   }
 
   private function writeUserIconImage(int $userId, string $dataUrl) {
     $filePath = FCPATH . "upload/{$userId}.png";
     ImageHelper::putBase64($dataUrl, $filePath);
     Logger::debug("Write {$filePath}");
+  }
+
+  private function userIdExists(int $userId): bool {
+    return $this
+      ->where('id', $userId)
+      ->count_all_results() > 0;
+  }
+
+  private function deleteUserIconImage(int $userId) {
+    $filePath = FCPATH . "upload/{$userId}.png";
+    FileHelper::delete($dataUrl, $filePath);
+    Logger::debug("Delete {$filePath}");
   }
 }
