@@ -55,6 +55,7 @@ $route['translate_uri_dashes'] = FALSE;
 
 // Custom URL.
 $route['^api/users/email-exists$']['GET'] = 'api/users/emailExists';
+$route['^users/edit-personal$']['GET'] = 'users/editPersonal';
 
 // The basic URL of the API.
 $route['^api/(:any)/(:num)$']['GET'] = 'api/$1/get/$2';

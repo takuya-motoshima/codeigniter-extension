@@ -1,0 +1,94 @@
+{% extends 'layout/default.html' %}
+{% block title %}Edit personal settings{% endblock %}
+{% block style %}<link rel="stylesheet" type="text/css" href="{{cache_busting('/build/editPersonal.css')}}">{% endblock %}
+{% block script %}<script src="{{cache_busting('/build/editPersonal.js')}}"></script>{% endblock %}
+{% block content %}
+<!--begin::Basic info-->
+<div class="card mb-5 mb-xl-10">
+  <!--begin::Form-->
+  <form data-ref="personalForm" class="form" novalidate="novalidate">
+    <!--begin::Card body-->
+    <div class="card-body p-9">
+      <!--begin::Input group-->
+      <div class="row mb-6">
+        <!--begin::Label-->
+        <label class="col-lg-4 col-form-label fw-bolder fs-6">Role</label>
+        <!--end::Label-->
+        <!--begin::Col-->
+        <div class="col-lg-8">
+          <span class="fw-bolder fs-6 text-gray-800 form-control-plaintext">
+            {% if user.role == 'admin' %}
+              Admin
+            {% else %}
+              General User
+            {% endif %}
+          </span>
+        </div>
+        <!--end::Col-->
+      </div>
+      <!--end::Input group-->
+      <!--begin::Input group-->
+      <div class="row mb-6">
+        <!--begin::Label-->
+        <label class="col-lg-4 col-form-label fw-bolder fs-6 required">Email (login ID)</label>
+        <!--end::Label-->
+        <!--begin::Col-->
+        <div class="col-lg-8 fv-row">
+          <input data-ref="email" type="email" name="user[email]" class="form-control form-control-lg form-control-solid" value="{{user.email}}" maxlength="255" />
+        </div>
+        <!--end::Col-->
+      </div>
+      <!--end::Input group-->
+      <!--begin::Input group-->
+      <div class="row mb-6">
+        <!--begin::Label-->
+        <label class="col-lg-4 col-form-label fw-bolder fs-6 required">Name</label>
+        <!--end::Label-->
+        <!--begin::Col-->
+        <div class="col-lg-8 fv-row">
+          <input type="text" name="user[name]" class="form-control form-control-lg form-control-solid" value="{{user.name}}" maxlength="20" />
+        </div>
+        <!--end::Col-->
+      </div>
+      <!--end::Input group-->
+      <!--begin::Input group-->
+      <div class="row mb-6">
+        <!--begin::Label-->
+        <label class="col-lg-4 col-form-label fw-bolder fs-6 required">Password</label>
+        <!--end::Label-->
+        <!--begin::Col-->
+        <div class="col-lg-8">
+          <!--begin::Action-->
+          <label class="form-check form-check-inline form-check-solid mb-5">
+            <input data-ref="changePassword" data-bs-toggle="collapse" data-bs-target="#passwordCollapse" class="form-check-input" name="user[changePassword]" type="checkbox" value="1">
+            <span class="fw-bolder ps-2 fs-6">Change your password</span>
+          </label>
+          <!--end::Action-->
+          <div data-ref="passwordCollapse" class="fv-row collapse" id="passwordCollapse">
+            <!--begin::Input wrapper-->
+            <div class="position-relative">
+              <input data-ref="password" type="password" name="user[password]" class="form-control form-control-lg form-control-solid" value="" autocomplete="off" maxlength="128"  style="background-image: none !important;" />
+              <span data-on-toggle-password-visibility class="btn btn-sm btn-icon position-absolute translate-middle top-50 end-0 me-n2">
+                <i class="bi bi-eye-slash fs-2"></i>
+                <i class="bi bi-eye fs-2 d-none"></i>
+              </span>
+            </div>
+            <!--end::Input wrapper-->
+          </div>
+        </div>
+        <!--end::Col-->
+      </div>
+      <!--end::Input group-->
+    </div>
+    <!--end::Card body-->
+    <!--begin::Actions-->
+    <div class="card-footer d-flex justify-content-end py-6 px-9">
+      <button type="reset" class="btn btn-light btn-active-light-primary me-2">Undo</button>
+      <button type="submit" class="btn btn-primary">Update Profile</button>
+    </div>
+    <!--end::Actions-->
+  </form>
+  <!--end::Form-->
+</div>
+<!--end::Basic info-->
+{% endblock %}
