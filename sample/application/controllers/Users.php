@@ -5,6 +5,8 @@ use \X\Annotation\Access;
 use \X\Util\Logger;
 
 class Users extends AppController {
+  protected $model = 'UserModel';
+
   /**
    * @Access(allow_login=false, allow_logoff=true)
    */
@@ -24,6 +26,8 @@ class Users extends AppController {
    * @Access(allow_login=true, allow_logoff=false)
    */
   public function personal() {
-    parent::view('personal');
+    parent
+      ::set('user', $this->UserModel->getUserById($_SESSION[SESSION_NAME]['id']))
+      ::view('personal');
   }
 }

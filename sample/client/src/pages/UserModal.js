@@ -79,7 +79,7 @@ export default class extends Modal {
                     <input data-ref="icon" name="user[icon]" type="hidden">
                     <!--end::Image input-->
                     <!--begin::Hint-->
-                    <div class="form-text text-gray-700">ファイル形式はJPG、JPEGもしくはPNGがお使いいただけます。</div>
+                    <div class="form-text text-gray-700">JPG, JPEG or PNG file formats are accepted.</div>
                     <!--end::Hint-->
                   </div>
                   <!--end::Input group-->

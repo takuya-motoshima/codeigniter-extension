@@ -1,12 +1,12 @@
 {% extends 'layout/default.html' %}
-{% block title %}個人設定{% endblock %}
+{% block title %}Personal settings{% endblock %}
 {% block content %}
 <!--begin::details View-->
 <div class="card mb-5 mb-xl-10">
   <!--begin::Card header-->
   <div class="card-header cursor-pointer justify-content-end">
     <!--begin::Action-->
-    <a href="/administrators/edit-personal" class="btn btn-primary align-self-center">プロフィールを編集</a>
+    <a href="/administrators/edit-personal" class="btn btn-primary align-self-center">Edit Profile</a>
     <!--end::Action-->
   </div>
   <!--begin::Card header-->
@@ -15,13 +15,15 @@
     <!--begin::Row-->
     <div class="row mb-7">
       <!--begin::Label-->
-      <label class="col-lg-4 fw-bolder text-muted">権限</label>
+      <label class="col-lg-4 fw-bolder text-muted">role</label>
       <!--end::Label-->
       <!--begin::Col-->
       <div class="col-lg-8">
         <span class="fw-bolder fs-6 text-gray-800">
-          {% if administrator.role == 'super_admin' %}
-            システム管理者
+          {% if user.role == 'admin' %}
+            Admin
+          {% else %}
+            General User
           {% endif %}
         </span>
       </div>
@@ -32,11 +34,11 @@
     <!--begin::Row-->
     <div class="row mb-7">
       <!--begin::Label-->
-      <label class="col-lg-4 fw-bolder text-muted">Eメール（ログインID）</label>
+      <label class="col-lg-4 fw-bolder text-muted">Email (login ID)</label>
       <!--end::Label-->
       <!--begin::Col-->
       <div class="col-lg-8">
-        <span class="fw-bolder fs-6 text-gray-800">{{administrator.email}}</span>
+        <span class="fw-bolder fs-6 text-gray-800">{{user.email}}</span>
       </div>
       <!--end::Col-->
     </div>
@@ -45,11 +47,11 @@
     <!--begin::Row-->
     <div class="row mb-7">
       <!--begin::Label-->
-      <label class="col-lg-4 fw-bolder text-muted">アカウント名</label>
+      <label class="col-lg-4 fw-bolder text-muted">Name</label>
       <!--end::Label-->
       <!--begin::Col-->
       <div class="col-lg-8">
-        <span class="fw-bolder fs-6 text-gray-800">{{administrator.name}}</span>
+        <span class="fw-bolder fs-6 text-gray-800">{{user.name}}</span>
       </div>
       <!--end::Col-->
     </div>
@@ -58,11 +60,11 @@
     <!--begin::Row-->
     <div class="row mb-7">
       <!--begin::Label-->
-      <label class="col-lg-4 fw-bolder text-muted">作成日時</label>
+      <label class="col-lg-4 fw-bolder text-muted">Date created</label>
       <!--end::Label-->
       <!--begin::Col-->
       <div class="col-lg-8">
-        <span class="fw-bolder fs-6 text-gray-800">{{administrator.created|date('Y年n月j日 H:i:s')}}</span>
+        <span class="fw-bolder fs-6 text-gray-800">{{user.created|date('Y/n/j H:i:s')}}</span>
       </div>
       <!--end::Col-->
     </div>
@@ -71,11 +73,11 @@
     <!--begin::Row-->
     <div class="row mb-7">
       <!--begin::Label-->
-      <label class="col-lg-4 fw-bolder text-muted">更新日時</label>
+      <label class="col-lg-4 fw-bolder text-muted">Date updated</label>
       <!--end::Label-->
       <!--begin::Col-->
       <div class="col-lg-8">
-        <span class="fw-bolder fs-6 text-gray-800">{{administrator.modified|date('Y年n月j日 H:i:s')}}</span>
+        <span class="fw-bolder fs-6 text-gray-800">{{administrator.modified|date('Y年n/j H:i:s')}}</span>
       </div>
       <!--end::Col-->
     </div>
