@@ -26,7 +26,7 @@ sftp-config.json
 
 # Ignore log files and databases
 *.log
-*.sql
+# *.sql
 *.sqlite
 
 # Ignore compiled files
@@ -48,29 +48,19 @@ sftp-config.json
 *.zip
 
 # Ignore codeIgniter
-*application/logs/*
-!application/logs/index.html
-!application/logs/.htaccess
+!application/logs/
+application/logs/*
+!application/cache/
 application/cache/*
-!application/cache/index.html
-!application/cache/.htaccess
+!application/session/
 application/session/*
-!application/session/index.html
-!application/session/.htaccess
-user_guide_src/build/*
-user_guide_src/cilexer/build/*
-user_guide_src/cilexer/dist/*
-user_guide_src/cilexer/pycilexer.egg-info/*
+public/build/
+!public/upload/
+public/upload/*
 
 # Ignore phpstorm
 .idea/
 .idea_modules/
-
-# Ignore webpack
-dist/*
-!dist/
-
-# Ignore my appplication
 
 # Whitelisted files
 !.gitignore
