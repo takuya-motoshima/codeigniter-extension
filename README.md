@@ -18,7 +18,7 @@ Please use it as a reference for your development.
 ![list-of-users.png](https://raw.githubusercontent.com/takuya-motoshima/codeigniter-extension/master/screencaps/list-of-users.png)
 ![update-user.png](https://raw.githubusercontent.com/takuya-motoshima/codeigniter-extension/master/screencaps/update-user.png)
 ![personal-settings.png](https://raw.githubusercontent.com/takuya-motoshima/codeigniter-extension/master/screencaps/personal-settings.png)
-![edit-personal-settings.png](https://raw.githubusercontent.com/takuya-motoshima/codeigniter-extension/master/screencaps/edit-personal-settings.png)
+<!-- ![edit-personal-settings.png](https://raw.githubusercontent.com/takuya-motoshima/codeigniter-extension/master/screencaps/edit-personal-settings.png) -->
 
 ## Getting Started
 1. Create project.  
