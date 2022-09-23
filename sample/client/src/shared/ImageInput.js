@@ -51,7 +51,7 @@ export default class {
       resize: true,
       maxWidth: 960
     }, options);
-    console.log('this.options=', this.options);
+    // console.log('this.options=', this.options);
 
     // Attach uploader UI.
     this.attach(context);

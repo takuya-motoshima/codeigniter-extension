@@ -15,20 +15,6 @@
     <!--begin::Row-->
     <div class="row mb-7">
       <!--begin::Label-->
-      <label class="col-lg-4 fw-bolder text-muted">Profile image.</label>
-      <!--end::Label-->
-      <!--begin::Col-->
-      <div class="col-lg-8">
-        <div class="symbol symbol-125px symbol-fixed">
-          <img src="/upload/{{user.id}}.png" alt="image">
-        </div>
-      </div>
-      <!--end::Col-->
-    </div>
-    <!--end::Row-->
-    <!--begin::Row-->
-    <div class="row mb-7">
-      <!--begin::Label-->
       <label class="col-lg-4 fw-bolder text-muted">Role</label>
       <!--end::Label-->
       <!--begin::Col-->
@@ -40,6 +26,20 @@
             General User
           {% endif %}
         </span>
+      </div>
+      <!--end::Col-->
+    </div>
+    <!--end::Row-->
+    <!--begin::Row-->
+    <div class="row mb-7">
+      <!--begin::Label-->
+      <label class="col-lg-4 fw-bolder text-muted">Profile image</label>
+      <!--end::Label-->
+      <!--begin::Col-->
+      <div class="col-lg-8">
+        <div class="symbol symbol-125px symbol-fixed">
+          <img src="/upload/{{user.id}}.png?{{user.modified|date('U')}}" alt="image">
+        </div>
       </div>
       <!--end::Col-->
     </div>

@@ -59,12 +59,14 @@ class Users extends AppController {
         ->set_rules('dir', 'dir', 'required|in_list[asc,desc]');
       if (!$this->form_validation->run())
         throw new \RuntimeException('Invalid parameter');
+      $loginUserId = $_SESSION[SESSION_NAME]['id'];
       $data = $this->UserModel->paginate(
         $this->input->get('start'),
         $this->input->get('length'),
         $this->input->get('order'),
         $this->input->get('dir'),
-        $this->input->get('search')
+        $this->input->get('search'),
+        $loginUserId
       );
       $data['draw'] = $this->input->get('draw');
       parent::set($data)::json();
@@ -162,7 +164,7 @@ class Users extends AppController {
   public function passwordSecurityCheck() {
     try {
       $set = $this->input->get();
-      Logger::debug('$set=', $set);
+      // Logger::debug('$set=', $set);
       $this->form_validation
         ->set_data($set)
         ->set_rules('user[password]', 'user[password]', 'required');
@@ -183,8 +185,9 @@ class Users extends AppController {
   public function updateProfile() {
     try {
       $set = $this->input->put();
+      // Logger::debug('$set=', $set);
       $this->formValidation($set, 'updateProfile');
-      $this->UserModel->updateUser($userId, $set['user']);
+      $this->UserModel->updateUser($_SESSION[SESSION_NAME]['id'], $set['user']);
       $this->UserLogModel->createUserLog($_SESSION[SESSION_NAME]['name'], 'Updated profile');
       parent::set(true)::json();
     } catch (UserNotFoundException $e) {

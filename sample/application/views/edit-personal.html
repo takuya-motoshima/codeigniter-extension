@@ -30,6 +30,24 @@
       <!--begin::Input group-->
       <div class="row mb-6">
         <!--begin::Label-->
+        <label class="col-lg-4 col-form-label fw-bolder fs-6">Profile image</label>
+        <!--end::Label-->
+        <!--begin::Col-->
+        <div class="col-lg-8">
+          <!--begin::Image input-->
+          <div data-ref="uploader" style="width: 125px; height: 125px;"></div>
+          <input data-ref="icon" name="user[icon]" type="hidden">
+          <!--end::Image input-->
+          <!--begin::Hint-->
+          <div class="form-text text-gray-700">JPG, JPEG or PNG file formats are accepted.</div>
+          <!--end::Hint-->
+        </div>
+        <!--end::Col-->
+      </div>
+      <!--end::Input group-->
+      <!--begin::Input group-->
+      <div class="row mb-6">
+        <!--begin::Label-->
         <label class="col-lg-4 col-form-label fw-bolder fs-6 required">Email (login ID)</label>
         <!--end::Label-->
         <!--begin::Col-->
@@ -83,7 +101,7 @@
     <!--end::Card body-->
     <!--begin::Actions-->
     <div class="card-footer d-flex justify-content-end py-6 px-9">
-      <button type="reset" class="btn btn-light btn-active-light-primary me-2">Undo</button>
+      <a href="/users/personal" class="btn btn-light btn-active-light-primary me-2">Back to Profile</a>
       <button type="submit" class="btn btn-primary">Update Profile</button>
     </div>
     <!--end::Actions-->

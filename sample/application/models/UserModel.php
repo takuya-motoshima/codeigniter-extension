@@ -27,8 +27,9 @@ class UserModel extends \AppModel {
     return true;
   }
 
-  public function paginate(int $offset, int $limit, string $order, string $direction, ?array $search): array {
-    function setWhere(CI_Model $model, ?array $search) {
+  public function paginate(int $offset, int $limit, string $order, string $direction, ?array $search, int $loginUserId): array {
+    function setWhere(CI_Model $model, ?array $search, int $loginUserId) {
+      $model->where('id !=', $loginUserId);
       if (!empty($search['keyword']))
         $model
           ->group_start()
@@ -36,16 +37,18 @@ class UserModel extends \AppModel {
           ->or_like('name', $search['keyword'])
           ->group_end();
     }
-    setWhere($this, $search);
+    setWhere($this, $search, $loginUserId);
     $rows = $this
       ->select('id, role, email, name, modified')
       ->order_by($order, $direction)
       ->limit($limit, $offset)
       ->get()
       ->result_array();
-    setWhere($this, $search);
+    setWhere($this, $search, $loginUserId);
     $recordsFiltered = $this->count_all_results();
-    $recordsTotal = $this->count_all_results();
+    $recordsTotal = $this
+      ->where('id !=', $loginUserId)
+      ->count_all_results();
     return ['recordsTotal' => $recordsTotal, 'recordsFiltered' => $recordsFiltered, 'data' => $rows];
   }
 
@@ -93,8 +96,9 @@ class UserModel extends \AppModel {
         $this->set('password', Cipher::encode_sha256($set['password']));
         Logger::debug("Change the password whose user ID is {$userId}");
       }
+      if (!empty($set['role']))
+        $this->set('role', $set['role']);
       $this
-        ->set('role', $set['role'])
         ->set('email', $set['email'])
         ->set('name', $set['name'])
         // NOTE: If the record is not changed and only the image is changed, the modification date is not updated.

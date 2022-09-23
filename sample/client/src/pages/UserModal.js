@@ -72,7 +72,7 @@ export default class extends Modal {
                   <!--begin::Input group-->
                   <div class="fv-row mb-10 d-flex flex-column">
                     <!--begin::Label-->
-                    <label class="fs-5 fw-bolder form-label mb-2"><span class="required">Profile photo</span></label>
+                    <label class="fs-5 fw-bolder form-label mb-2"><span class="required">Profile image</span></label>
                     <!--end::Label-->
                     <!--begin::Image input-->
                     <div data-ref="uploader" style="width: 125px; height: 125px;"></div>

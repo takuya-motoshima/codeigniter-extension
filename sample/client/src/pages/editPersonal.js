@@ -4,6 +4,7 @@ import Validation from '~/shared/Validation';
 import Toast from '~/shared/Toast';
 import Dialog from '~/shared/Dialog';
 import trim from '~/shared/trim';
+import ImageInput from '~/shared/ImageInput';
 import UserApi from '~/api/UserApi';
 
 function initValidation() {
@@ -15,6 +16,7 @@ function initValidation() {
         remote: {
           url: '/api/users/email-exists',
           method: 'GET',
+          data: () => ({excludeUserId: globalThis.$$session.id}),
           message: 'This email is in use by another user.'
         }
       }
@@ -88,15 +90,13 @@ function initForm() {
         span.find('.bi-eye').addClass('d-none');
         span.find('.bi-eye-slash').removeClass('d-none');
       }
-    })
-    .on('reset', () => {
-      if (ref.changePassword.prop('checked')) {
-        ref.changePassword.prop('checked', false);
-        const collapse = bootstrap.Collapse.getInstance(ref.passwordCollapse.get(0));
-        collapse.hide();
-        validation.disableValidator('user[password]');
-      }
     });
+  new ImageInput(ref.uploader.get(0), {
+    currentImage: `/upload/${globalThis.$$session.id}.png`,
+    defaultImage: '/build/media/misc/blank-user-icon.png',
+    hidden: ref.icon.get(0),
+    resize: false
+  });
 }
 
 const userApi = new UserApi();

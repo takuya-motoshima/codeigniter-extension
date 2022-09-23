@@ -10,11 +10,15 @@ This application requires the following packages.
 ## Changelog
 See [CHANGELOG.md](./CHANGELOG.md).
 
-## Examples
-![screencap.jpg](https://raw.githubusercontent.com/takuya-motoshima/codeigniter-extension/master/docs/screencap.jpg)
-
+## Sample Applications
 There is a sample application in [./sample](./sample).  
 Please use it as a reference for your development.
+
+![sign-in.png](https://raw.githubusercontent.com/takuya-motoshima/codeigniter-extension/master/screencaps/sign-in.png)
+![list-of-users.png](https://raw.githubusercontent.com/takuya-motoshima/codeigniter-extension/master/screencaps/list-of-users.png)
+![update-user.png](https://raw.githubusercontent.com/takuya-motoshima/codeigniter-extension/master/screencaps/update-user.png)
+![personal-settings.png](https://raw.githubusercontent.com/takuya-motoshima/codeigniter-extension/master/screencaps/personal-settings.png)
+![edit-personal-settings.png](https://raw.githubusercontent.com/takuya-motoshima/codeigniter-extension/master/screencaps/edit-personal-settings.png)
 
 ## Getting Started
 1. Create project.  
