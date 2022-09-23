@@ -10,7 +10,7 @@ const DOCROOT = 'public';
 
 final class Installer {
   public static function run(Event $event) {
-    $currentCwd = getcwd();
+    $cwd = getcwd();
 
     $io = $event->getIO();
     $io->write('Preparing the application file.');
@@ -28,7 +28,7 @@ final class Installer {
     $io->write('Copy the sample DB(skeletondb.sql).');
     FileHelper::copyFile('skeleton/skeletondb.sql', 'skeletondb.sql');
 
-     $io->write('Create a config (config.php).');
+    $io->write('Create a config (config.php).');
     FileHelper::replace('application/config/config.php', [
       '$config[\'base_url\'] = \'\';' => 'if (!empty($_SERVER[\'HTTP_HOST\'])) {$config[\'base_url\'] = "//".$_SERVER[\'HTTP_HOST\'] . str_replace(basename($_SERVER[\'SCRIPT_NAME\']),"",$_SERVER[\'SCRIPT_NAME\']);}',
       '$config[\'enable_hooks\'] = FALSE;' => '$config[\'enable_hooks\'] = TRUE;',
@@ -52,18 +52,17 @@ final class Installer {
     chdir('./client');
     passthru('npm install');
     passthru('npm run build');
-    chdir($currentCwd);
-
+    chdir($cwd);
     $io->write('Deleting unnecessary files.');
     FileHelper::delete(
-      'src',
-      'sample',
-      'screencaps',
-      'composer.json.dist',
-      'skeleton',
-      // 'CHANGELOG.md',
-      'README.md',
-      'LICENSE.md'
+      $cwd . '/src',
+      $cwd . '/sample',
+      $cwd . '/screencaps',
+      $cwd . '/composer.json.dist',
+      $cwd . '/skeleton',
+      $cwd . '/CHANGELOG.md',
+      $cwd . '/README.md',
+      $cwd . '/LICENSE'
     );
 
     $io->write('Installation is complete.');

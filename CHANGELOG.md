@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [4.0.16] - 2022/9/23
+### Fixed
+- Fixed a bug in the installer.
+
 ## [4.0.15] - 2022/9/23
 ### Fixed
 - Update skeleton .gitignore.

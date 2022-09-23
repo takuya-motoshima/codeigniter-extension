@@ -78,7 +78,11 @@ final class Logger {
   ): string {
     $message = '';
     if ($showPath && !empty($trace)) {
-      $message = str_replace(realpath(\FCPATH . '../') . '/', '', $trace[0]['file']) . '(' . $trace[0]['line'] . ')';
+      if (defined('FCPATH')) {
+        $docRoot = realpath(\FCPATH . '../') . '/';
+        $filePath = str_replace($docRoot, '', $trace[0]['file']);
+        $message = $filePath . '(' . $trace[0]['line'] . ')';
+      }
       if ($showFunction) {
         if (isset($trace[1]['class']))
           $message .= ' ' . $trace[1]['class'] . '.' . $trace[1]['function'];

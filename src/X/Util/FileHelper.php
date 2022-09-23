@@ -7,14 +7,10 @@ final class FileHelper {
    * Make directory.
    */
   public static function makeDirectory(string $dir, int $mode = 0755) {
-    try {
-      if (file_exists($dir))
-        return;
-      if (@mkdir($dir, $mode, true) === false)
-        throw new \RuntimeException('Cant create directory ' . $dir);
-    } catch (\Throwable $e) {
-      Logger::info($e->getMessage());
-    }
+    if (file_exists($dir))
+      return;
+    if (@mkdir($dir, $mode, true) === false)
+      Logger::error("{$dir} directory could not be created");
   }
 
   /**
@@ -117,13 +113,12 @@ final class FileHelper {
     }
     foreach ($paths as $path) {
       if (!file_exists($path))
-        Logger::error("{$path} not found");
-      else if (is_file($path))
+        continue;
+      if (is_file($path))
         unlink($path);
       else {
         $it = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($path, \RecursiveDirectoryIterator::SKIP_DOTS), \RecursiveIteratorIterator::CHILD_FIRST);
         foreach ($it as $info) {
-          Logger::debug('Remove ' . $info->getPathname());
           if ($info->isDir())
             rmdir($info);
           else {
