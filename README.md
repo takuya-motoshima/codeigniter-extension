@@ -54,7 +54,7 @@ Please use it as a reference for your development.
     ```
     That's all for the settings.
 1. Build a DB for [skeletondb.sql](skeletondb.sql) (MySQL or MariaDB).
-1.**NOTE**: The skeleton uses webpack for front module bundling.  
+1. **NOTE**: The skeleton uses webpack for front module bundling.  
     The front module is located in ". /client".  
 
     How to build the front module:  
