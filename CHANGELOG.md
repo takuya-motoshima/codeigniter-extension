@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [4.0.15] - 2022/9/23
+### Fixed
+- Update skeleton .gitignore.
+
 ## [4.0.14] - 2022/9/23
 ### Fixed
 - The hostname and hostname_or_ipaddress validations now allow the string "localhost".
