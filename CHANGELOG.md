@@ -2,15 +2,20 @@
 All notable changes to this project will be documented in this file.
 
 ## [4.0.14] - 2022/9/21
+### Fixed
 - The hostname and hostname_or_ipaddress validations now allow the string "localhost".
+- Updated [sample application](./sample).
 
 ## [4.0.13] - 2022/6/6
+### Fixed
 - Methods for omitting long strings (\X\UtilStringHelper#ellipsis) have been fixed to support Unicode.
 
 ## [4.0.12] - 2021/11/10
+### Fixed
 - Fixed a bug in the file deletion function.
 
 ## [4.0.11] - 2021/11/10
+### Fixed
 - Allows you to specify whether lock is enabled or disabled when deleting a file.
     ```php
     use \X\Util\FileHelper;
@@ -29,9 +34,11 @@ All notable changes to this project will be documented in this file.
     ```
 
 ## [4.0.10] - 2021/10/20
+### Fixed
 - Added a process to clear the file status cache before getting the file size.
   
 ## [4.0.9] - 2021/9/27
+### Fixed
 - Replace the line breaks in the SQL returned by the model's last_query method with spaces.
     ```php
     use \X\Util\Logger;
@@ -41,6 +48,7 @@ All notable changes to this project will be documented in this file.
     ```
 
 ## [4.0.8] - 2021/9/22
+### Fixed
 - Added ip address or CIDR validation rules.
     ```php
     $this->form_validation
@@ -144,50 +152,35 @@ All notable changes to this project will be documented in this file.
     ```
 
 ## [4.0.7] - 2021/9/16
+### Fixed
 - Random character generation function name changed to camel case.
     ```php
     use \X\Util\Cipher;
     use \X\Util\Logger;
-
-    // YnqHuuG1VZJ1YXJC14RLmcVjg9uaa8jCyq8S8wd5uY7ox7PXEVzck2YTWGE7aftz
-    Logger::print(Cipher::randStr());
-
-    // f1eXb3OLWq
-    Logger::print(Cipher::randStr(10));
-
-    // 0e-k3qRu9z
-    Logger::print(Cipher::randStr(10, '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-._~+/')); 
-
-    // 1C63SpTuQfYlNs1IAvCclo~R2xgtrdNsNSa_U28G88mEFsrbz4yu3hn6_vIP7mS=
-    Logger::print(Cipher::randToken68());
-
-    // OSVhnIAlJ=
-    Logger::print(Cipher::randToken68(10));
+    
+    Logger::print(Cipher::randStr());// YnqHuuG1VZJ1YXJC14RLmcVjg9uaa8jCyq8S8wd5uY7ox7PXEVzck2YTWGE7aftz
+    Logger::print(Cipher::randStr(10));// f1eXb3OLWq
+    Logger::print(Cipher::randStr(10, '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-._~+/')); // 0e-k3qRu9z
+    Logger::print(Cipher::randToken68());// 1C63SpTuQfYlNs1IAvCclo~R2xgtrdNsNSa_U28G88mEFsrbz4yu3hn6_vIP7mS=
+    Logger::print(Cipher::randToken68(10));// OSVhnIAlJ=
     ```
 
 ## [4.0.6] - 2021/9/16
+### Fixed
 - Added random string generation function.
     ```php
     use \X\Util\Cipher;
     use \X\Util\Logger;
 
-    // YnqHuuG1VZJ1YXJC14RLmcVjg9uaa8jCyq8S8wd5uY7ox7PXEVzck2YTWGE7aftz
-    Logger::print(Cipher::rand_str());
-
-    // f1eXb3OLWq
-    Logger::print(Cipher::rand_str(10));
-
-    // 0e-k3qRu9z
-    Logger::print(Cipher::rand_str(10, '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-._~+/')); 
-
-    // 1C63SpTuQfYlNs1IAvCclo~R2xgtrdNsNSa_U28G88mEFsrbz4yu3hn6_vIP7mS=
-    Logger::print(Cipher::rand_token68());
-
-    // OSVhnIAlJ=
-    Logger::print(Cipher::rand_token68(10));
+    Logger::print(Cipher::rand_str());// YnqHuuG1VZJ1YXJC14RLmcVjg9uaa8jCyq8S8wd5uY7ox7PXEVzck2YTWGE7aftz
+    Logger::print(Cipher::rand_str(10));// f1eXb3OLWq
+    Logger::print(Cipher::rand_str(10, '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-._~+/'));// 0e-k3qRu9z
+    Logger::print(Cipher::rand_token68());// 1C63SpTuQfYlNs1IAvCclo~R2xgtrdNsNSa_U28G88mEFsrbz4yu3hn6_vIP7mS=
+    Logger::print(Cipher::rand_token68(10));// OSVhnIAlJ=
     ```
 
 ## [4.0.5] - 2021/8/10
+### Fixed
 - The file move method can now set groups and owners for the moved file.
     ```php
     use \X\Util\FileHelper;
@@ -226,6 +219,7 @@ All notable changes to this project will be documented in this file.
     FileHelper::copyFile('/folder/file.txt', 'newfile.txt', null, $user);
 
 ## [4.0.4] - 2021/7/29
+### Fixed
 - Added directory path validation rules.
     ```php
     $this->form_validation
@@ -264,6 +258,7 @@ All notable changes to this project will be documented in this file.
     ```
 
 ## [4.0.3] - 2021/6/30
+### Fixed
 - Added key pair generation processing and public key OpenSSH encoding processing.  
     Here is an example.  
     You can finetune the key generation (such as specifying the number of bits) using options. See [openssl_csr_new()](https://www.php.net/manual/en/function.openssl-csr-new.php) for more information about options.  
@@ -300,9 +295,11 @@ All notable changes to this project will be documented in this file.
     ```
 
 ## [4.0.2] - 2021/6/15
+### Fixed
 - Fixed a bug in the exists_by_id method of the \X\Model\Model class.
 
 ## [4.0.1] - 2021/5/25
+### Fixed
 - Added the ability to cache search query results in the model.  
     Learn more about model caching <a href="https://www.codeigniter.com/userguide3/database/caching.html" target="_blank">here</a>.  
 
@@ -347,6 +344,7 @@ All notable changes to this project will be documented in this file.
     ```
 
 ## [4.0.0] - 2021/5/6
+### Fixed
 - Added dotenv reading process to sample application (./sample).  
     ./sample/application/config/constants.php:  
     ```php
@@ -406,24 +404,31 @@ All notable changes to this project will be documented in this file.
     </table>
 
 ## [3.9.9] - 2021/4/15
+### Fixed
 - Fixed README typo.
 
 ## [3.9.8] - 2021/4/15
+### Fixed
 - Added form validation rule according to the [email address proposed in HTML5](https://html.spec.whatwg.org/multipage/input.html#valid-e-mail-address).
 
 ## [3.9.7] - 2021/4/9
+### Fixed
 - Added the process to automatically set $\_SESSION to the template variable session.
 
 ## [3.9.6] - 2021/4/8
+### Fixed
 - Fix the issue text not recognized after '&' in case of PUT request.
 
 ## [3.9.5] - 2021/4/8
+### Fixed
 - Refactor sample application and skeleton.
 
 ## [3.9.4] - 2021/4/7
+### Fixed
 - Fix create-project error.
 
 ## [3.9.3] - 2021/3/26
+### Fixed
 - Added a function to the Date helper that returns the date of the specified month.
     ```php
     use \X\Util\DateHelper;
@@ -434,9 +439,11 @@ All notable changes to this project will be documented in this file.
     ```
 
 ## [3.9.2] - 2021/3/24
+### Fixed
 - Resolved an error where the return type of the email function of the email subclass (/X/Util/Email) did not match the definition.
 
 ## [3.9.1] - 2021/3/15
+### Fixed
 - Added a method that returns a table string of an array.
     ```php
     use \X\Util\ArrayHelper;
@@ -463,6 +470,7 @@ All notable changes to this project will be documented in this file.
     ```
 
 ## [3.9.0] - 2021/3/15
+### Fixed
 - Added a log function that does not output path information.
     ```php
     use \X\Util\Logger;
@@ -471,6 +479,7 @@ All notable changes to this project will be documented in this file.
     ```
 
 ## [3.8.9] - 2021/2/24
+### Fixed
 - Added batch exclusive control sample program for file lock and advisory lock to the sample application.  
     Description of the added file.  
     <table>
@@ -510,9 +519,11 @@ All notable changes to this project will be documented in this file.
     ```
 
 ## [3.8.8] - 2021/2/23
+### Fixed
 - Organized readme and added batch lock test program.
 
 ## [3.8.7] - 2021/2/19
+### Fixed
 - Added a method to the file helper that returns a file size with units.
     ```php
     use \X\Util\FileHelper;
@@ -526,9 +537,11 @@ All notable changes to this project will be documented in this file.
     ```
 
 ## [3.8.6] - 2021/2/18
+### Fixed
 - Fixed changelog typos.
 
 ## [3.8.5] - 2021/2/18
+### Fixed
 - Added HTTP / CLI access control to controller public method annotation.  
     Step 1: Add access control to the hook(application/config/hooks.php).  
     ```php
@@ -573,9 +586,11 @@ All notable changes to this project will be documented in this file.
     ```
 
 ## [3.8.4] - 2021/2/17
+### Fixed
 - Changed to return SES mail sending result object.(\X\Util\AmazonSesClient).
 
 ## [3.8.3] - 2021/2/11
+### Fixed
 - Added form validation class.The reason I added it is that I want to validate it with the model(\X\Util\Validation).  
     Define the SES "access key" and "secret" in sampleapp/.env.  
     ```php
@@ -603,9 +618,11 @@ All notable changes to this project will be documented in this file.
     ```
 
 ## [3.8.2] - 2021/2/10
+### Fixed
 - Fixed README.
 
 ## [3.8.1] - 2021/2/10
+### Fixed
 - Added an empty judgment method for characters trimmed with left and right spaces(\X\Util\StringHelper).  
     ```php
     use \X\Util\StringHelper;
@@ -620,9 +637,11 @@ All notable changes to this project will be documented in this file.
     ```
 
 ## [3.8.0] - 2021/2/10
+### Fixed
 - Added nginxn configuration sample file to REAME.
 
 ## [3.7.9] - 2021/2/9
+### Fixed
 - Added the following rules to form validation.  
     <table>
       <thead>
@@ -788,6 +807,7 @@ All notable changes to this project will be documented in this file.
     ```
 
 ## [3.7.8] - 2021/2/6
+### Fixed
 - Added a method to group associative arrays by key to ArrayHelper.(\X\Util\ArrayHelper).
     ```php
     use \X\Util\ArrayHelper;
@@ -819,6 +839,7 @@ All notable changes to this project will be documented in this file.
     ```
 
 ## [3.7.7] - 2021/2/3
+### Fixed
 - Create a form validation class and add a datetime validation method(\X\Library\FormValidation).  
     Override form validation.  
     application/libraries/AppForm_validation.php:  
@@ -844,12 +865,15 @@ All notable changes to this project will be documented in this file.
     ```
 
 ## [3.7.6] - 2021/1/27
+### Fixed
 - Delete debug log.
 
 ## [3.7.5] - 2021/1/22
+### Fixed
 - Fixed a bug that Annotation could not be read.
 
 ## [3.7.4] - 2021/1/22
+### Fixed
 - Change image resizing features(\X\Util\ImageHelper).
     ```php
     use \X\Util\ImageHelper;
@@ -868,6 +892,7 @@ All notable changes to this project will be documented in this file.
     ```
 
 ## [3.7.3] - 2020/12/25
+### Fixed
 - Added search options to file search(\X\Util\FileHelper).
     ```php
     use \X\Util\FileHelper;
@@ -877,21 +902,27 @@ All notable changes to this project will be documented in this file.
     ```
 
 ## [3.7.2] - 2020/11/17
+### Fixed
 - Remove unused paginate method from Model class.
 
 ## [3.7.1] - 2020/11/17
+### Fixed
 - Fixed a bug in the project creation command.
 
 ## [3.7.0] - 2020/11/17
+### Fixed
 - Fix skeleton.
 
 ## [3.6.9] - 2020/11/17
+### Fixed
 - Fix README.md.
 
 ## [3.6.8] - 2020/11/17
+### Fixed
 - Fix project creation process.
 
 ## [3.6.7] - 2020/11/16
+### Fixed
 - Prepend a slash to the PID of the log(\X\Util\Logger).  
     Here is an example of a log.
 
@@ -900,15 +931,19 @@ All notable changes to this project will be documented in this file.
     ```
 
 ## [3.6.6] - 2020/11/10
+### Fixed
 - Add PID to log message(\X\Util\Logger).
 
 ## [3.6.5] - 2020/11/9
+### Fixed
 - Fixed to ignore directory creation error (\X\Util\FileHelper::makeDirectory).
 
 ## [3.6.4] - 2020/11/6
+### Fixed
 - Remove class and function names from the log(\X\Util\Logger).
 
 ## [3.6.3] - 2020/11/2
+### Fixed
 - Changed to be able to specify multiple Amazon SES email destinations in an array.(\X\Util\AmazonSesClient)
     ```php
     use \X\Util\AmazonSesClient;
@@ -934,6 +969,7 @@ All notable changes to this project will be documented in this file.
     ```
 
 ## [3.6.2] - 2020/10/29
+### Fixed
 - Fixed OpenSSL encryption/decryption method.
     ```php
     use \X\Util\Cipher;
@@ -954,6 +990,7 @@ All notable changes to this project will be documented in this file.
     ```
 
 ## [3.6.1] - 2020/10/23
+### Fixed
 - Added IP utility class(\X\Util\IpUtils). And since \X\Util\HttpSecurity has moved to IPUtils, I deleted it.
     ```php
     // Get client ip.
@@ -1021,18 +1058,23 @@ All notable changes to this project will be documented in this file.
     ```
 
 ## [3.6.0] - 2020/10/20
+### Fixed
 - Add a time stamp to the log message output to the CLI(\X\Util\Logger#printWithoutPath).
 
 ## [3.5.9] - 2020/10/19
+### Fixed
 - Added log output method without file path(\X\Util\Logger#printWithoutPath).
 
 ## [3.5.8] - 2020/10/16
+### Fixed
 - Fixed a bug that IP acquisition fails when XFF is empty(\X\Util\HttpSecurity#getIpFromXFF).
 
 ## [3.5.7] - 2020/10/15
+### Fixed
 - Added method to get IP from XFF(\X\Util\HttpSecurity#getIpFromXFF).
 
 ## [3.5.5] - 2020/6/4
+### Fixed
 - Added a method to AA that returns the size of all files in a directory.
     ```php
     // Returns the total size of all files in a directory
@@ -1043,6 +1085,7 @@ All notable changes to this project will be documented in this file.
     ```
 
 ## [3.5.4] - 2020/6/4
+### Fixed
 - Add encryption key to the parameter of hash conversion method
     ```php
     use \X\Util\Cipher;
@@ -1052,6 +1095,7 @@ All notable changes to this project will be documented in this file.
     ```
 
 ## [3.5.3] - 2020/5/20
+### Fixed
 - Added a process to log out a user who is logged in with the same ID on another device when logging in  
     config/hooks.php:  
     ```php
@@ -1219,9 +1263,11 @@ All notable changes to this project will be documented in this file.
     ````
 
 ## [3.5.0] - 2020/5/19
+### Fixed
 - Fixed a bug that DB class does not inherit \X\Database\QueryBuilder when making session DB
 
 ## [3.4.8] - 2020/4/28
+### Fixed
 - Make the IP range check method of "\X\Util\HttpSecurity" class do correct check when subnet mask is 32.
     ```php
     use \X\Util\HttpSecurity;
@@ -1244,6 +1290,7 @@ All notable changes to this project will be documented in this file.
     ```
 
 ## [3.4.7] - 2020/4/27
+### Fixed
 - Added feature to face detector to find multiple faces from collection
     ```php
     use \X\Rekognition\Client;
@@ -1284,6 +1331,7 @@ All notable changes to this project will be documented in this file.
     ```
 
 ## [3.4.6] - 2020/4/23
+### Fixed
 - Added a feature to add arbitrary columns to the session table  
     Set the columns you want to add to the session table in "application/confi /config.php".  
     The example adds the username column to the session table.
@@ -1330,9 +1378,11 @@ All notable changes to this project will be documented in this file.
     ```
 
 ## [3.4.5] - 2020/4/10
+### Fixed
 - Changed to return an empty string when there is no key value to get from the config with "\X\Utils\Loader::config()".
 
 ## [3.4.2] - 2020/3/16
+### Fixed
 - Added setting of template cache in application config (application/config/config.php).
 
     You can configure the template cache in "application/config/config.php".
@@ -1349,6 +1399,7 @@ All notable changes to this project will be documented in this file.
     ```
 
 ## [3.3.9] - 2020/3/16
+### Fixed
 - Added client class that summarizes face detection processing. Remove old face detection class.
     ```php
     use \X\Rekognition\Client;
@@ -1368,6 +1419,7 @@ All notable changes to this project will be documented in this file.
     ```
 
 ## [3.3.8] - 2020/3/14
+### Fixed
 - Added insert_on_duplicate_update.
     ```php
     // Here is an example of insert_on_duplicate_update.

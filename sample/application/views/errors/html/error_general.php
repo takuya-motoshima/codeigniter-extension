@@ -1,64 +1,54 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 ?><!DOCTYPE html>
-<html lang="en">
+<html lang="ja" data-theme="dark">
 <head>
-<meta charset="utf-8">
-<title>Error</title>
-<style type="text/css">
-
-::selection { background-color: #E13300; color: white; }
-::-moz-selection { background-color: #E13300; color: white; }
-
-body {
-	background-color: #fff;
-	margin: 40px;
-	font: 13px/20px normal Helvetica, Arial, sans-serif;
-	color: #4F5155;
-}
-
-a {
-	color: #003399;
-	background-color: transparent;
-	font-weight: normal;
-}
-
-h1 {
-	color: #444;
-	background-color: transparent;
-	border-bottom: 1px solid #D0D0D0;
-	font-size: 19px;
-	font-weight: normal;
-	margin: 0 0 14px 0;
-	padding: 14px 15px 10px 15px;
-}
-
-code {
-	font-family: Consolas, Monaco, Courier New, Courier, monospace;
-	font-size: 12px;
-	background-color: #f9f9f9;
-	border: 1px solid #D0D0D0;
-	color: #002166;
-	display: block;
-	margin: 14px 0 14px 0;
-	padding: 12px 10px 12px 10px;
-}
-
-#container {
-	margin: 10px;
-	border: 1px solid #D0D0D0;
-	box-shadow: 0 0 8px #D0D0D0;
-}
-
-p {
-	margin: 12px 15px 12px 15px;
-}
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>This request is not working - Sample</title>
+  <link rel="shortcut icon" type="image/svg+xml" href="/build/media/logos/favicon.svg" />
+  <!--begin::Fonts-->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700" />
+  <!--end::Fonts-->
+  <!--begin::Global Stylesheets Bundle(used by all pages)-->
+  <link href="/build/theme/plugins/global/plugins.bundle.css" rel="stylesheet" type="text/css" />
+  <link href="/build/theme/css/style.bundle.css" rel="stylesheet" type="text/css" />
+  <!--end::Global Stylesheets Bundle-->
+  <!--begin::Custom Stylesheets(used by this application)-->
+  <link rel="stylesheet" href="/build/docs.css" type="text/css" >
+  <!--end::Custom Stylesheets-->
 </head>
-<body>
-	<div id="container">
-		<h1><?php echo $heading; ?></h1>
-		<?php echo $message; ?>
-	</div>
+<body id="kt_body" class="app-blank app-blank bgi-size-cover bgi-position-center bgi-no-repeat" style="background-image: url('/build/theme/media/auth/bg7-dark.jpg');">
+  <!--begin::Root-->
+  <div class="d-flex flex-column flex-root" id="kt_app_root">
+    <!--begin::Error Messagea -->
+    <div class="d-flex flex-column flex-center flex-column-fluid">
+      <!--begin::Content-->
+      <div class="d-flex flex-column flex-center text-center p-10">
+        <!--begin::Wrapper-->
+        <div class="card card-flush w-lg-650px py-5">
+          <div class="card-body py-15 py-lg-20">
+            <!--begin::Title-->
+            <h1 class="fw-bolder fs-2hx text-gray-900 mb-4">This request is not working</h1>
+            <!--end::Title-->
+            <!--begin::Illustration-->
+            <div class="mb-3">
+              <img src="/build/theme/media/auth/500-error-dark.png" class="mw-100 mh-300px" />
+            </div>
+            <!--end::Illustration-->
+            <!--begin::Link-->
+            <div class="mb-0">
+              <a href="/" class="btn btn-sm btn-primary">Back to Services</a>
+            </div>
+            <!--end::Link-->
+          </div>
+        </div>
+        <!--end::Wrapper-->
+      </div>
+      <!--end::Content-->
+    </div>
+    <!--end::Error Message-->
+  </div>
+  <!--end::Root-->
 </body>
 </html>

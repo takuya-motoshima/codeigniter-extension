@@ -19,4 +19,8 @@ class Test extends AppController {
     ImageHelper::putBase64($dataUrl, $filePath);
     Logger::print("Write {$filePath}");
   }
+
+  public function error() {
+    throw new \RuntimeException();
+  }
 }
