@@ -28,4 +28,8 @@ export default class extends Api {
   async deleteUser(userId) {
     return this.client.delete(`/${userId}`);
   }
+
+  async updateProfile(formData) {
+    return this.client.put('/profile', formData);
+  }
 }

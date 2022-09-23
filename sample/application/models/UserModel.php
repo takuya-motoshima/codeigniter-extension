@@ -126,6 +126,24 @@ class UserModel extends \AppModel {
     }
   }
 
+  public function passwordSecurityCheck(int $userId, string $newPassword) {
+    $user = $this
+      ->select('password, email')
+      ->where('id', $userId)
+      ->get()
+      ->row_array();
+    // Logger::debug('$user=', $user);
+    if ($user['password'] === Cipher::encode_sha256($newPassword))
+      return false;
+    $ci =& get_instance();
+    $ci->load->library('password_security');
+    if (!$ci->password_security->checkPasswordSimilarity($user['password'], $newPassword))
+      return false;
+    if ($user['email'] === $newPassword)
+      return false;
+    return true;
+  }
+
   private function writeUserIconImage(int $userId, string $dataUrl) {
     $filePath = FCPATH . "upload/{$userId}.png";
     ImageHelper::putBase64($dataUrl, $filePath);

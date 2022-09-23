@@ -156,13 +156,54 @@ class Users extends AppController {
     }
   }
 
+  /**
+   * @Access(allow_login=true, allow_logoff=false)
+   */
+  public function passwordSecurityCheck() {
+    try {
+      $set = $this->input->get();
+      Logger::debug('$set=', $set);
+      $this->form_validation
+        ->set_data($set)
+        ->set_rules('user[password]', 'user[password]', 'required');
+      if (!$this->form_validation->run())
+        throw new \RuntimeException('Invalid parameter');
+      parent
+        ::set('valid', $this->UserModel->passwordSecurityCheck($_SESSION[SESSION_NAME]['id'], $set['user']['password']))
+        ::json();
+    } catch (\Throwable $e) {
+      Logger::error($e);
+      parent::error($e->getMessage(), HTTP_BAD_REQUEST);
+    }
+  }
+
+  /**
+   * @Access(allow_login=true, allow_logoff=false)
+   */
+  public function updateProfile() {
+    try {
+      $set = $this->input->put();
+      $this->formValidation($set, 'updateProfile');
+      $this->UserModel->updateUser($userId, $set['user']);
+      $this->UserLogModel->createUserLog($_SESSION[SESSION_NAME]['name'], 'Updated profile');
+      parent::set(true)::json();
+    } catch (UserNotFoundException $e) {
+      parent::set('error', 'userNotFound')::json();
+    } catch (\Throwable $e) {
+      Logger::error($e);
+      parent::error($e->getMessage(), HTTP_BAD_REQUEST);
+    }
+  }
+
   private function formValidation(array $set, string $mode) {
     $this->form_validation
       ->set_data($set)
-      ->set_rules('user[role]', 'user[role]', 'required|in_list[admin,member]')
+      // ->set_rules('user[role]', 'user[role]', 'required|in_list[admin,member]')
       ->set_rules('user[email]', 'user[email]', 'required')
       ->set_rules('user[name]', 'user[name]', 'required')
       ->set_rules('user[icon]', 'user[icon]', 'required|regex_match[/^data:image\/[a-z]+;base64,[a-zA-Z0-9\/\+=]+$/]');
+    if ($mode === 'create' || $mode === 'update')
+      $this->form_validation->set_rules('user[role]', 'user[role]', 'required|in_list[admin,member]');
     if ($mode === 'create' || !empty($set['user']['changePassword']))
       $this->form_validation->set_rules('user[password]', 'user[password]', 'required|min_length[8]|max_length[128]');
     if (!$this->form_validation->run()) {
