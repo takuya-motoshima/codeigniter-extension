@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [4.0.17] - 2022/9/23
+### Fixed
+- Fix README.md.
+- Add form_validation_test action to the sample test controller.
+
 ## [4.0.16] - 2022/9/23
 ### Fixed
 - Fixed a bug in the installer.

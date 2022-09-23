@@ -23,4 +23,23 @@ class Test extends AppController {
   public function error() {
     throw new \RuntimeException();
   }
+
+  public function form_validation_test() {
+    $data = [
+      'hostname1' => 'example.com',
+      'hostname2' => 'localhost',
+      'hostname3' => 'c-61-123-45-67.hsd1.co.comcast.net',
+      'hostname4' => 'example',
+    ];
+    $isValid = $this->form_validation
+      ->set_data($data)
+      ->set_rules('hostname1', 'hostname1', 'required|hostname')
+      ->set_rules('hostname2', 'hostname2', 'required|hostname')
+      ->set_rules('hostname3', 'hostname3', 'required|hostname')
+      ->set_rules('hostname4', 'hostname4', 'required|hostname')
+      ->run();
+    Logger::print('$isValid=', $isValid ? 1 : 0);
+    $error = $this->form_validation->error_array();
+    Logger::print('$error=', $error);
+  }
 }

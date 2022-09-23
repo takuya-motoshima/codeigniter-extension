@@ -1,16 +1,30 @@
 # codeigniter-extension
 You can use extended core classes (controllers, models, views) and utility classes in this package.  
-This application requires the following packages.  
-* PHP 7.3.0 or later
-* Composer
-* php-gd
-* php-mbstring
-* php-xml
+
+- [codeigniter-extension](#codeigniter-extension)
+  - [Requirements](#requirements)
+  - [Changelog](#changelog)
+  - [Screenshots of the skeleton and samples created by create-project](#screenshots-of-the-skeleton-and-samples-created-by-create-project)
+  - [Getting Started](#getting-started)
+  - [Usage](#usage)
+    - [About config (application/config/config.php)](#about-config-applicationconfigconfigphp)
+    - [Control of accessible URLs](#control-of-accessible-urls)
+    - [About Twig Template Engine.](#about-twig-template-engine)
+    - [To extend form validation.](#to-extend-form-validation)
+  - [Author](#author)
+  - [License](#license)
+
+## Requirements
+- PHP 7.3.0 or later
+- Composer
+- php-gd
+- php-mbstring
+- php-xml
 
 ## Changelog
 See [CHANGELOG.md](./CHANGELOG.md).
 
-## Sample Applications
+## Screenshots of the skeleton and samples created by create-project
 There is a sample application in [./sample](./sample).  
 Please use it as a reference for your development.
 
@@ -39,6 +53,15 @@ Please use it as a reference for your development.
     sudo systemctl restart nginx
     ```
     That's all for the settings.
+1. Build a DB for [skeletondb.sql](skeletondb.sql) (MySQL or MariaDB).
+1.**NOTE**: The skeleton uses webpack for front module bundling.  
+    The front module is located in ". /client".  
+
+    How to build the front module:  
+    ```sh
+    cd client
+    npm run build
+    ```
 
 ## Usage
 See [https://codeigniter.com/](https://codeigniter.com/) for basic usage.  
