@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS `session` (
   `ip_address` varchar(45) NOT NULL,
   `timestamp` int(10) unsigned DEFAULT 0 NOT NULL,
   `data` blob NOT NULL,
-  `email` varchar(255) DEFAULT NULL COMMENT 'A custom field dedicated to this sample application. The logged-in user name.',
+  `email` varchar(255) DEFAULT NULL,
   KEY `session_timestamp` (`timestamp`)
 );
 

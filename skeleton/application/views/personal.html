@@ -1,0 +1,99 @@
+{% extends 'layout/default.html' %}
+{% block title %}Personal settings{% endblock %}
+{% block content %}
+<!--begin::details View-->
+<div class="card mb-5 mb-xl-10">
+  <!--begin::Card header-->
+  <div class="card-header cursor-pointer justify-content-end">
+    <!--begin::Action-->
+    <a href="/users/edit-personal" class="btn btn-primary align-self-center">Edit Profile</a>
+    <!--end::Action-->
+  </div>
+  <!--end::Card header-->
+  <!--begin::Card body-->
+  <div class="card-body p-9">
+    <!--begin::Row-->
+    <div class="row mb-7">
+      <!--begin::Label-->
+      <label class="col-lg-4 fw-bolder text-muted">Role</label>
+      <!--end::Label-->
+      <!--begin::Col-->
+      <div class="col-lg-8">
+        <span class="fw-bolder fs-6 text-gray-800">
+          {% if user.role == 'admin' %}
+            Admin
+          {% else %}
+            General User
+          {% endif %}
+        </span>
+      </div>
+      <!--end::Col-->
+    </div>
+    <!--end::Row-->
+    <!--begin::Row-->
+    <div class="row mb-7">
+      <!--begin::Label-->
+      <label class="col-lg-4 fw-bolder text-muted">Profile image</label>
+      <!--end::Label-->
+      <!--begin::Col-->
+      <div class="col-lg-8">
+        <div class="symbol symbol-125px symbol-fixed">
+          <img src="/upload/{{user.id}}.png?{{user.modified|date('U')}}" alt="image">
+        </div>
+      </div>
+      <!--end::Col-->
+    </div>
+    <!--end::Row-->
+    <!--begin::Row-->
+    <div class="row mb-7">
+      <!--begin::Label-->
+      <label class="col-lg-4 fw-bolder text-muted">Email (login ID)</label>
+      <!--end::Label-->
+      <!--begin::Col-->
+      <div class="col-lg-8">
+        <span class="fw-bolder fs-6 text-gray-800">{{user.email}}</span>
+      </div>
+      <!--end::Col-->
+    </div>
+    <!--end::Row-->
+    <!--begin::Row-->
+    <div class="row mb-7">
+      <!--begin::Label-->
+      <label class="col-lg-4 fw-bolder text-muted">Name</label>
+      <!--end::Label-->
+      <!--begin::Col-->
+      <div class="col-lg-8">
+        <span class="fw-bolder fs-6 text-gray-800">{{user.name}}</span>
+      </div>
+      <!--end::Col-->
+    </div>
+    <!--end::Row-->
+    <!--begin::Row-->
+    <div class="row mb-7">
+      <!--begin::Label-->
+      <label class="col-lg-4 fw-bolder text-muted">Date created</label>
+      <!--end::Label-->
+      <!--begin::Col-->
+      <div class="col-lg-8">
+        <span class="fw-bolder fs-6 text-gray-800">{{user.created|date('Y/n/j H:i:s')}}</span>
+      </div>
+      <!--end::Col-->
+    </div>
+    <!--end::Row-->
+    <!--begin::Row-->
+    <div class="row mb-7">
+      <!--begin::Label-->
+      <label class="col-lg-4 fw-bolder text-muted">Date updated</label>
+      <!--end::Label-->
+      <!--begin::Col-->
+      <div class="col-lg-8">
+        <span class="fw-bolder fs-6 text-gray-800">{{administrator.modified|date('Y年n/j H:i:s')}}</span>
+      </div>
+      <!--end::Col-->
+    </div>
+    <!--end::Row-->
+  </div>
+  <!--end::Card body-->
+</div>
+<!--end::details View-->
+{% endblock %}

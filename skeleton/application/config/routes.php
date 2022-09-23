@@ -49,13 +49,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | Examples:	my-controller/index	-> my_controller/index
 |		my-controller/my-method	-> my_controller/my_method
 */
-$route['default_controller'] = 'login';
+$route['default_controller'] = 'users/login';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
 
 // Custom URL.
-$route['^api/users/login$']['POST'] = 'api/users/login';
-$route['^api/users/logout$']['GET'] = 'api/users/logout';
+$route['^api/users/email-exists$']['GET'] = 'api/users/emailExists';
+$route['^api/users/password-security-check$']['GET'] = 'api/users/passwordSecurityCheck';
+$route['^api/users/profile$']['PUT'] = 'api/users/updateProfile';
+$route['^users/edit-personal$']['GET'] = 'users/editPersonal';
 
 // The basic URL of the API.
 $route['^api/(:any)/(:num)$']['GET'] = 'api/$1/get/$2';

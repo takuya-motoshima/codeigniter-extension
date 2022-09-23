@@ -1,10 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [4.0.14] - 2022/9/21
+## [4.0.14] - 2022/9/23
 ### Fixed
 - The hostname and hostname_or_ipaddress validations now allow the string "localhost".
 - Updated [sample application](./sample).
+- Updated [skeleton](./skeleton).
 
 ## [4.0.13] - 2022/6/6
 ### Fixed
@@ -925,7 +926,6 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 - Prepend a slash to the PID of the log(\X\Util\Logger).  
     Here is an example of a log.
-
     ```php
     DEBUG - 2020/11/16 10:04:38 --> #7567 application/controllers/Sample.php(20):Message here.
     ```

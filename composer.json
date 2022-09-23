@@ -22,7 +22,7 @@
   "authors": [
     {
       "name": "Takuya Motoshima",
-      "email": "takuyamotoshima@gmail.com",
+      "email": "developer.takuyamotoshima@gmail.com",
       "homepage": "https://www.facebook.com/takuya.motoshima.7"
     }
   ],
@@ -39,7 +39,7 @@
   },
   "scripts": {
     "post-create-project-cmd": [
-      "X\\Composer\\Installer::post_install"
+      "X\\Composer\\Installer::run"
     ],
     "test": [
       "./vendor/bin/phpunit"

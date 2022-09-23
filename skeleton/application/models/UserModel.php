@@ -2,117 +2,167 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 use \X\Util\Logger;
+use \X\Util\Cipher;
+use \X\Util\ImageHelper;
+use \X\Util\FileHelper;
 
 class UserModel extends \AppModel {
   const TABLE = 'user';
 
-  /**
-   * Authenticate with username and password.
-   */
   public function login(string $email, string $password): bool {
-    // Find a user that matches your ID.
     $user = $this
       ->where('email', $email)
-      ->where('password', $password)
+      ->where('password', Cipher::encode_sha256($password))
       ->get()
       ->row_array();
-
-    // Login fails if no user is found.
     if (empty($user))
       return false;
-
-    // Store login user data in session
     unset($user['password']);
     $_SESSION[SESSION_NAME] = $user;
     return true;
   }
 
-  /**
-   * Log out.
-   */
-  public function logout() {
-    session_destroy();
+  public function logout(): bool {
+    unset($_SESSION[SESSION_NAME]);
+    return true;
   }
 
-  /**
-   * Add user.
-   * @param array $set [description]
-   */
-  public function createUser(array $set): int {
-    return $this
-      ->set($set)
-      ->insert();
-  }
-
-  /**
-   * Update user.
-   */
-  public function updateUser(int $id, array $set) {
-    $this
-      ->set($set)
-      ->where('id', $id)
-      ->update();
-  }
-
-  /**
-   * Delete user.
-   */
-  public function deleteUser(int $id) {
-    $this
-      ->where('id', $id)
-      ->delete();
-  }
-
-  /**
-   * Returns the user that matches the ID.
-   */
-  public function getUserById(int $id): ?array {
-    return $this
-      ->where('id', $id)
-      ->get()
-      ->row_array();
-  }
-
-  /**
-   * Returns the data of the specified page number.
-   */
-  public function paginate(int $offset, int $limit, string $order, string $direction, ?string $search): array {
-    /**
-     * Set search conditions for list search and overall count.
-     */
-    function setWhere(CI_Model $model, ?string $search) {
-      // Exit if no search word is specified.
-      if (empty($search)) return;
-      // Filter by search word.
-      $model
-        ->group_start()
-        ->or_like('id', $search)
-        ->or_like('role', $search)
-        ->or_like('email', $search)
-        ->or_like('name', $search)
-        ->or_like('modified', $search)
-        ->group_end();
+  public function paginate(int $offset, int $limit, string $order, string $direction, ?array $search, int $loginUserId): array {
+    function setWhere(CI_Model $model, ?array $search, int $loginUserId) {
+      $model->where('id !=', $loginUserId);
+      if (!empty($search['keyword']))
+        $model
+          ->group_start()
+          ->or_like('email', $search['keyword'])
+          ->or_like('name', $search['keyword'])
+          ->group_end();
     }
-
-    // Display data.
-    setWhere($this, $search);
+    setWhere($this, $search, $loginUserId);
     $rows = $this
       ->select('id, role, email, name, modified')
       ->order_by($order, $direction)
       ->limit($limit, $offset)
       ->get()
       ->result_array();
-
-    // Total number of data matching the search conditions.
-    setWhere($this, $search);
+    setWhere($this, $search, $loginUserId);
     $recordsFiltered = $this->count_all_results();
+    $recordsTotal = $this
+      ->where('id !=', $loginUserId)
+      ->count_all_results();
+    return ['recordsTotal' => $recordsTotal, 'recordsFiltered' => $recordsFiltered, 'data' => $rows];
+  }
 
-    // Number of all data.
-    $recordsTotal = $this->count_all_results();
-    return [
-      'recordsTotal' => $recordsTotal,
-      'recordsFiltered' => $recordsFiltered,
-      'data' => $rows
-    ];
+  public function createUser(array $set) {
+    try {
+      // Logger::debug('$set=', $set);
+      parent::trans_begin();
+      $userId = $this
+        ->set('role', $set['role'])
+        ->set('email', $set['email'])
+        ->set('name', $set['name'])
+        ->set('password', Cipher::encode_sha256($set['password']))
+        ->insert();
+      $this->writeUserIconImage($userId, $set['icon']);
+      parent::trans_commit();
+    } catch (\Throwable $e) {
+      parent::trans_rollback();
+      throw $e;
+    }
+  }
+
+  public function emailExists(string $email, int $excludeUserId = null): bool {
+    // Logger::debug('$email=', $email, ', $excludeUserId=', $excludeUserId);
+    if (!empty($excludeUserId))
+      $this->where('id !=', $excludeUserId);
+    return $this
+      ->where('email', $email)
+      ->count_all_results() > 0;
+  }
+
+  public function getUserById(int $userId): ?array {
+    return $this
+      ->select('id, role, email, name, created, modified')
+      ->where('id', $userId)
+      ->get()
+      ->row_array();
+  }
+
+  public function updateUser(int $userId, array $set) {
+    try {
+      parent::trans_begin();
+      if (!$this->userIdExists($userId))
+        throw new UserNotFoundException();
+      if (!empty($set['changePassword'])) {
+        $this->set('password', Cipher::encode_sha256($set['password']));
+        Logger::debug("Change the password whose user ID is {$userId}");
+      }
+      if (!empty($set['role']))
+        $this->set('role', $set['role']);
+      $this
+        ->set('email', $set['email'])
+        ->set('name', $set['name'])
+        // NOTE: If the record is not changed and only the image is changed, the modification date is not updated.
+        // Explicitly update the modification date.
+        ->set('modified', 'NOW()', FALSE)
+        ->where('id', $userId)
+        ->update();
+      $this->writeUserIconImage($userId, $set['icon']);
+      parent::trans_commit();
+    } catch (\Throwable $e) {
+      parent::trans_rollback();
+      throw $e;
+    }
+  }
+
+  public function deleteUser(int $userId) {
+    try {
+      if (!$this->userIdExists($userId))
+        throw new UserNotFoundException();
+      parent::trans_begin();
+      $this
+        ->where('id', $userId)
+        ->delete();
+      $this->deleteUserIconImage($userId);
+      parent::trans_commit();
+    } catch (\Throwable $e) {
+      parent::trans_rollback();
+      throw $e;
+    }
+  }
+
+  public function passwordSecurityCheck(int $userId, string $newPassword) {
+    $user = $this
+      ->select('password, email')
+      ->where('id', $userId)
+      ->get()
+      ->row_array();
+    // Logger::debug('$user=', $user);
+    if ($user['password'] === Cipher::encode_sha256($newPassword))
+      return false;
+    $ci =& get_instance();
+    $ci->load->library('password_security');
+    if (!$ci->password_security->checkPasswordSimilarity($user['password'], $newPassword))
+      return false;
+    if ($user['email'] === $newPassword)
+      return false;
+    return true;
+  }
+
+  private function writeUserIconImage(int $userId, string $dataUrl) {
+    $filePath = FCPATH . "upload/{$userId}.png";
+    ImageHelper::putBase64($dataUrl, $filePath);
+    Logger::debug("Write {$filePath}");
+  }
+
+  private function userIdExists(int $userId): bool {
+    return $this
+      ->where('id', $userId)
+      ->count_all_results() > 0;
+  }
+
+  private function deleteUserIconImage(int $userId) {
+    $filePath = FCPATH . "upload/{$userId}.png";
+    FileHelper::delete($dataUrl, $filePath);
+    Logger::debug("Delete {$filePath}");
   }
 }

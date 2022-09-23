@@ -71,8 +71,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | the query builder class.
 */
 $active_group = 'default';
-$query_builder = TRUE;
-$database = 'sample';
+$query_builder = true;
+$database = 'skeleton';
 $username = 'root';
 $password = '';
 $db['default'] = array(
@@ -83,16 +83,16 @@ $db['default'] = array(
 	'database' => $database,
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
-	'pconnect' => FALSE,
+	'pconnect' => false,
 	'db_debug' => (ENVIRONMENT !== 'production'),
-	'cache_on' => FALSE,
-	'cachedir' => '',
+	'cache_on' => false,
+	'cachedir' => APPPATH . 'cache',
 	'char_set' => 'utf8',
 	'dbcollat' => 'utf8_general_ci',
 	'swap_pre' => '',
-	'encrypt' => FALSE,
-	'compress' => FALSE,
-	'stricton' => FALSE,
+	'encrypt' => false,
+	'compress' => false,
+	'stricton' => false,
 	'failover' => array(),
 	'save_queries' => (ENVIRONMENT !== 'production')
 );

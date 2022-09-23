@@ -5,49 +5,30 @@ use Composer\Script\Event;
 use Composer\IO\ConsoleIO;
 use X\Util\FileHelper;
 
+const FRAMEWORK = 'vendor/codeigniter/framework';
+const DOCROOT = 'public';
+
 final class Installer {
-  const DOCUMENT_ROOT = 'public/';
-  const FRAMEWORK_DIR = 'vendor/codeigniter/framework/';
+  public static function run(Event $event) {
+    $currentCwd = getcwd();
 
-  /**
-   * Composer post install script
-   */
-  public static function post_install(Event $event) {
     $io = $event->getIO();
-    FileHelper::copyDirectory(static::FRAMEWORK_DIR . 'application', 'application');
+    $io->write('Preparing the application file.');
+    FileHelper::copyDirectory(FRAMEWORK . '/application', 'application');
     FileHelper::copyDirectory('skeleton/application', 'application');
-    FileHelper::copyFile(static::FRAMEWORK_DIR . 'index.php', static::DOCUMENT_ROOT . 'index.php');
-    FileHelper::copyDirectory('skeleton/public', static::DOCUMENT_ROOT);
-    // FileHelper::copyFile('skeleton/public/.htaccess', static::DOCUMENT_ROOT . '.htaccess');
-    // FileHelper::copyFile('skeleton/.gitignore', '.gitignore');
-    // FileHelper::copyFile('skeleton/.gitattributes', '.gitattributes');
-    self::update_index($io);
-    self::update_config($io);
-    self::composer_update($io);
-    self::show_message($io);
-    self::delete_self();
-  }
 
-  /**
-   * Update index.php
-   */
-  private static function update_index(ConsoleIO $io) {
-    $io->write('==================================================');
-    $io->write('<info>Update public/index.php is running');
-    FileHelper::replace(static::DOCUMENT_ROOT . 'index.php', [
-      '$system_path = \'system\';' => '$system_path = \'../' . static::FRAMEWORK_DIR . 'system\';',
+    $io->write('Create an entry point (index.php).');
+    FileHelper::copyFile(FRAMEWORK . '/index.php', DOCROOT . '/index.php');
+    FileHelper::copyDirectory('skeleton/public', DOCROOT);
+    FileHelper::replace(DOCROOT . '/index.php', [
+      '$system_path = \'system\';' => '$system_path = \'../' . FRAMEWORK . '/system\';',
       '$application_folder = \'application\';' => '$application_folder = \'../application\';',
     ]);
-    $io->write('<info>Update public/index.php succeeded');
-    $io->write('==================================================');
-  }
 
-  /**
-   * Update application/config/config.php
-   */
-  private static function update_config(ConsoleIO $io) {
-    $io->write('==================================================');
-    $io->write('<info>Update application/config/config.php is running');
+    $io->write('Copy the sample DB(skeletondb.sql).');
+    FileHelper::copyFile('skeleton/skeletondb.sql', 'skeletondb.sql');
+
+     $io->write('Create a config (config.php).');
     FileHelper::replace('application/config/config.php', [
       '$config[\'base_url\'] = \'\';' => 'if (!empty($_SERVER[\'HTTP_HOST\'])) {$config[\'base_url\'] = "//".$_SERVER[\'HTTP_HOST\'] . str_replace(basename($_SERVER[\'SCRIPT_NAME\']),"",$_SERVER[\'SCRIPT_NAME\']);}',
       '$config[\'enable_hooks\'] = FALSE;' => '$config[\'enable_hooks\'] = TRUE;',
@@ -58,47 +39,34 @@ final class Installer {
       '$config[\'index_page\'] = \'index.php\';' => '$config[\'index_page\'] = \'\';',
       '$config[\'subclass_prefix\'] = \'MY_\';' => '$config[\'subclass_prefix\'] = \'App\';',
     ]);
-    FileHelper::replace('application/config/autoload.php', [
-      '$autoload[\'helper\'] = array();' => '$autoload[\'helper\'] = array(\'url\');',
-    ]);
-    $io->write('<info>Update application/config/config.php succeeded');
-    $io->write('==================================================');
-  }
+    FileHelper::replace('application/config/autoload.php', ['$autoload[\'helper\'] = array();' => '$autoload[\'helper\'] = array(\'url\');']);
 
-  /**
-   * Composer update
-   */
-  private static function composer_update(ConsoleIO $io) {
-    $io->write('==================================================');
-    $io->write('<info>Composer update is running');
+    $io->write('Updating composer.');
     FileHelper::copyFile('composer.json.dist', 'composer.json');
     FileHelper::copyFile('.env.dist', '.env');
     passthru('composer update');
-    $io->write('<info>Composer update is succeeded');
-    $io->write('==================================================');
-  }
 
-  /**
-   * Show message
-   */
-  private static function show_message(ConsoleIO $io) {
-    $io->write('==================================================');
-    $io->write('<info>`public/.htaccess` was installed. If you don\'t need it, please remove it.</info>');
-    $io->write('See <https://packagist.org/packages/takuya-motoshima/codeigniter-extensions> for details');
-    $io->write('==================================================');
-  }
+    // Preparing the frontend module.
+    $io->write('Preparing the frontend module.');
+    FileHelper::copyDirectory('skeleton/client', 'client');
+    chdir('./client');
+    passthru('npm install');
+    passthru('npm run build');
+    chdir($currentCwd);
 
-  /**
-   * Delete self
-   */
-  private static function delete_self() {
+    $io->write('Deleting unnecessary files.');
     FileHelper::delete(
       'src',
       'sample',
+      'screencaps',
       'composer.json.dist',
       'skeleton',
+      // 'CHANGELOG.md',
       'README.md',
       'LICENSE.md'
     );
+
+    $io->write('Installation is complete.');
+    $io->write('See <https://packagist.org/packages/takuya-motoshima/codeigniter-extensions> for details.');
   }
 }
