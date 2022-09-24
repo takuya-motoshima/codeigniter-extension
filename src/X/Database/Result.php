@@ -3,8 +3,7 @@ namespace X\Database;
 trait Result {
   /**
    * Query result. "array of the form KeyValue" version.
-   * <code>
-   * <?php
+   * ```php
    * $rows = parent
    *   select('id,name')::
    *   from('user')::
@@ -23,7 +22,7 @@ trait Result {
    * //     'department' => 'Marketing',
    * //   ),
    * // )
-   * </code>
+   * ```
    *
    * @throws RuntimeException
    * @param  string $key = 'id'

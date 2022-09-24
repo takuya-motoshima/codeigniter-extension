@@ -86,8 +86,7 @@ abstract class Model extends \CI_Model {
   // ----------------------------------------------------------------
   /**
    * Insert_On_Duplicate_Key_Update
-   * <code>
-   * <?php
+   * ```php
    * $SampleModel
    *   ->set([
    *     'key' => '1',
@@ -100,7 +99,7 @@ abstract class Model extends \CI_Model {
    *   ->set('title', 'My title')
    *   ->set('name', 'My Name')
    *   ->insert_on_duplicate_update();
-   * </code>
+   * ```
    *
    * @param   string $table = '' Table to insert into
    * @param   array|object $set = null an associative array of insert values
@@ -116,15 +115,14 @@ abstract class Model extends \CI_Model {
 
   /**
    * Insert_On_Duplicate_Key_Update_Batch.
-   * <code>
-   * <?php
+   * ```php
    * $SampleModel
    *   ->set_insert_batch([
    *     ['key' => '1', 'title' => 'My title', 'name' => 'My Name'],
    *     ['key' => '2', 'title' => 'Another title', 'name' => 'Another Name']
    *   ])
    *   ->insert_on_duplicate_update_batch();
-   * </code>
+   * ```
    *
    * @param   string $table = '' Table to insert into
    * @param   array|object $set = null an associative array of insert values

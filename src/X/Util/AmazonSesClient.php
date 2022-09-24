@@ -1,7 +1,6 @@
 <?php
 /**
- * <code>
- * <?php
+ * ```php
  * use \X\Util\AmazonSesClient;
  * $sesClient  = new AmazonSesClient([
  *   'region' => $_ENV['AMAZON_SES_REGION'],
@@ -16,9 +15,10 @@
  *   ->to('who@sample.org')
  *   ->message_from_xml('sample', ['name' => 'Sample'])
  *   ->send();
- * </code>
+ * ```
  *
  * Email body and subject: views/email/sample.xml.
+ * ```xml
  * <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
  * <mail>
  * <subject>Email subject</subject>
@@ -28,6 +28,7 @@
  * Email body
  * </message>
  * </mail>
+ * ```
  */
 namespace X\Util;
 use \X\Util\Logger;

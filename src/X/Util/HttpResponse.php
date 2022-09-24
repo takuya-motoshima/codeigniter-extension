@@ -156,14 +156,13 @@ final class HttpResponse {
    * }
    * 
    * Codeigniter controller example.
-   * <code>
-   * <?php
+   * ```php
    * class Files extends \X\Controller\Controller {
    *   public function index(string $fileName) {
    *     parent::internalRedirect('/protected_files/myfile');
    *   }
    * }
-   * </code>
+   * ```
    */
   public function internalRedirect(string $internalRedirectPath) {
     // $this->setCorsHeader('*');
@@ -175,9 +174,7 @@ final class HttpResponse {
 
   /**
    * Sets the CORS header.
-   *
-   * <code>
-   * <?php
+   * ```php
    * // Allow all origins
    * $httpResponse->setCorsHeader('*');
    *
@@ -186,6 +183,7 @@ final class HttpResponse {
    * 
    * // Allow specific multiple origins
    * $httpResponse->setCorsHeader('http://www.example.jp https://www.example.jp http://sub.example.jp');
+   * ```
    */
   public function setCorsHeader(string $origin) {
     if ($origin === '*') {

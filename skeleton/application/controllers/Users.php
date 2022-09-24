@@ -11,7 +11,6 @@ class Users extends AppController {
    * @Access(allow_login=false, allow_logoff=true)
    */
   public function login() {
-    Logger::debug($_SESSION);
     parent::view('login');
   }
 

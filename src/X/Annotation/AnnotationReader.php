@@ -1,8 +1,7 @@
 <?php
 /**
  * 1. Add access control to the hook(application/config/hooks.php).
- * <code>
- * <?php
+ * ```php
  * use \X\Annotation\AnnotationReader;
  * 
  * $hook['post_controller_constructor'] = function() {
@@ -18,11 +17,10 @@
  *       redirect('/users/login');
  *   }
  * };
- * </code>
+ * ```
  *
  * 2. Define annotations for public methods on each controller.
- * <code>
- * <?php
+ * ```php
  * use \X\Annotation\Access;
  * 
  * \/**
@@ -42,7 +40,7 @@
  *  * @Access(allow_http=false)
  *  *\/
  * public function batch() {}
- * </code>
+ * ```
  */
 namespace X\Annotation;
 use \X\Annotation\Access;

@@ -5,8 +5,7 @@ use MathieuViossat\Util\ArrayToTextTable;
 final class ArrayHelper {
   /**
    * Searches and returns the value of the specified key from the array
-   * <code>
-   * <?php
+   * ```php
    * use \X\Util\ArrayHelper;
    *
    * // Search from a simple array
@@ -29,7 +28,7 @@ final class ArrayHelper {
    *     'USA' => 'New York'
    *   ]
    * ];
-   * </code>
+   * ```
    * 
    * ArrayHelper::searchArrayByKey('USA', $nested);
    * // New York

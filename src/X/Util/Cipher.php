@@ -26,25 +26,15 @@ final class Cipher {
   /**
    * Encrypt.
    *
-   * <code>
-   * <?php
+   * ```php
    * use \X\Util\Cipher;
    *
-   * // Get the initialization vector. This should be changed every time to make it difficult to predict.
    * $iv = Cipher::generateInitialVector();
-   *
-   * // Plaintext.
    * $plaintext = 'Hello, World.';
-   *
-   * // Encrypted key.
    * $key = 'key';
-   *
-   * // Encrypt.
    * $encrypted = Cipher::encrypt($plaintext, $key, $iv);// UHLY5PckT7Da02e42g==
-   *
-   * // Decrypt.
    * $decrypted = Cipher::decrypt($encrypted, $key, $iv);// Hello, World.
-   * </code>
+   * ```
    */
   public static function encrypt(string $plaintext, string $key, string $iv, string $method = 'AES-256-CTR'): string {
     $options = 0;
@@ -53,25 +43,15 @@ final class Cipher {
 
   /**
    * Decrypt.
-   * <code>
-   * <?php
+   * ```php
    * use \X\Util\Cipher;
    *
-   * // Get the initialization vector. This should be changed every time to make it difficult to predict.
    * $iv = Cipher::generateInitialVector();
-   *
-   * // Plaintext.
    * $plaintext = 'Hello, World.';
-   *
-   * // Encrypted key.
    * $key = 'key';
-   *
-   * // Encrypt.
    * $encrypted = Cipher::encrypt($plaintext, $key, $iv);// UHLY5PckT7Da02e42g==
-   *
-   * // Decrypt.
    * $decrypted = Cipher::decrypt($encrypted, $key, $iv);// Hello, World.
-   * </code>
+   * ```
    */
   public static function decrypt(string $encrypted, string $key, string $iv, string $method = 'AES-256-CTR'): string {
     $options = 0;
@@ -92,29 +72,19 @@ final class Cipher {
 
   /**
    * Generate key pair.
-   * <code>
-   * <?php
+   * ```php
    * use \X\Util\Cipher;
    * 
-   * // Generate 4096bit long RSA key pair.
    * Cipher::generateKeyPair($privKey, $pubKey, [
    *   'digest_alg' => 'sha512',
    *   'private_key_bits' => 4096,
    *   'private_key_type' => OPENSSL_KEYTYPE_RSA
    * ]);
-   *
-   * // Debug private key.
    * echo $privKey;
-   *
-   * // Debug public key.
    * echo $pubKey;
-   *
-   * // OpenSSH encode the public key.
    * $pubKey = Cipher::encodeOpenSshPublicKey($privKey);
-   * 
-   * // Debug OpenSSH-encoded public key.
    * echo $pubKey;
-   * </code>
+   * ```
    * 
    * @param  string &$privKey                    The generated private key is set.
    * @param  string &$pubKey                     The generated public key is set.

@@ -7,13 +7,12 @@ use \Intervention\Image\ImageManager;
 final class ImageHelper {
   /**
    * Put base64 image.
-   * <code>
-   * <?php
+   * ```php
    * use \X\Util\ImageHelper;
    *
    * ImageHelper::putBase64('data:image/png;base64,iVBOR...', '/tmp', 'sample');
    * ImageHelper::putBase64('data:image/png;base64,iVBOR...', '/tmp/sample.png');
-   * </code>
+   * ```
    */
   public static function putBase64(string $base64, string $dir, ?string $fileName = null): string {
     if (empty($fileName)) {
@@ -39,14 +38,13 @@ final class ImageHelper {
 
   /**
    * Copy image.
-   * <code>
-   * <?php
+   * ```php
    * // /tmp/example.png -> /home/example.png
    * \X\Util\ImageHelper::copy('/tmp/example.png', '/home');
    *
    * // /tmp/old.png -> /home/new.png
    * \X\Util\ImageHelper::copy('/tmp/old.png', '/home', 'new');
-   * </code>
+   * ```
    */
   public static function copy(string $srcImgPath, string $dstDirpath, string $dstImgName = null): string {
     FileHelper::makeDirectory($dstDirpath);

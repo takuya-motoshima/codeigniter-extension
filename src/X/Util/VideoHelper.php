@@ -6,13 +6,12 @@ use \X\Util\Logger;
 final class VideoHelper {
   /**
    * Put base64 video.
-   * <code>
-   * <?php
+   * ```php
    * use \X\Util\VideoHelper;
    * 
    * VideoHelper::putBase64('data:video/mp4;base64,iVBOR...', '/tmp', 'sample');
    * VideoHelper::putBase64('data:video/mp4;base64,iVBOR...', '/tmp/sample.mp4');
-   * </code>
+   * ```
    */
   public static function putBase64(string $base64, string $dir, ?string $fileName = null): string {
     if (empty($fileName)) {

@@ -15,15 +15,16 @@ final class FileHelper {
 
   /**
    * Move.
-   * <code>
-   * <?php
+   * ```php
    * // /tmp/old.txt -> /home/new.txt
    * \X\Util\FileHelper::move('/tmp/old.txt', '/home/new.txt');
+   *
    * // /tmp/old.txt -> ./tmp/new.txt
    * \X\Util\FileHelper::move('/tmp/old.txt', 'new.txt');
+   *
    * // /tmp/old.txt -> ./tmp/new.txt
    * \X\Util\FileHelper::move('/tmp/old.txt', 'new');
-   * </code>
+   * ```
    */
   public static function move(string $srcFile, string $dstFile, $group = null, $user = null) {
     if (!file_exists($srcFile))
@@ -80,8 +81,7 @@ final class FileHelper {
   /**
    * Delete directory or file.
    * 
-   * <code>
-   * <?php
+   * ```php
    * use \X\Util\FileHelper;
    * 
    * // Delete all files and folders in "/ path"..
@@ -95,7 +95,7 @@ final class FileHelper {
    * $deleteRoute = true;
    * $enableLock = true;
    * FileHelper::delete('/test', $deleteRoute, $enableLock);
-   * </code>
+   * ```
    */
   public static function delete(...$paths) {
     if (is_array(reset($paths)))
@@ -150,13 +150,13 @@ final class FileHelper {
 
   /**
    * Find file.
-   * <code>
-   * <?php
+   * ```php
    * use \X\Util\FileHelper;
    *
    * // Search only image files.
    * FileHelper::find('/img/*.{jpg,jpeg,png,gif}', GLOB_BRACE);
-   * </code>
+   * ```
+   *
    * @param  string      $pattern 
    * @param  int|integer $flags
    *                     Valid flags:
@@ -223,8 +223,7 @@ final class FileHelper {
 
   /**
    * Returns the total size of all files in the directory in bytes.
-   * <code>
-   * <?php
+   * ```php
    * use \X\Util\FileHelper;
    *
    * // Returns the total size of all files in a directory
@@ -232,7 +231,7 @@ final class FileHelper {
    *
    * // Returns the total size of all files in multiple directories
    * FileHelper::getDirectorySize([ '/var/log/php-fpm' '/var/log/nginx' ]);
-   * </code>
+   * ```
    */
   public static function getDirectorySize($dirs, array &$infos = []): int {
     if (is_string($dirs))
@@ -252,8 +251,7 @@ final class FileHelper {
 
   /**
    * Returns the file size with units.
-   * <code>
-   * <?php
+   * ```php
    * use \X\Util\FileHelper;
    *
    * FileHelper::humanFilesize('/var/somefile.txt', 0);// 12B
@@ -262,7 +260,7 @@ final class FileHelper {
    * FileHelper::humanFilesize('/var/somefile.txt', 5);// 11.22833TB
    * FileHelper::humanFilesize('/var/somefile.txt', 3);// 1.177MB
    * FileHelper::humanFilesize('/var/somefile.txt');// 120.56KB
-   * </code>
+   * ```
    * 
    * @param  string $filePath File Path
    * @param  int|integer $decimals Decimal digits

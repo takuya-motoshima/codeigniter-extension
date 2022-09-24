@@ -4,8 +4,7 @@ namespace X\Util;
 final class UrlHelper {
   /**
    * URL Without FileName.
-   * <code>
-   * <?php
+   * ```php
    * use \X\Util\UrlHelper;
    *
    * UrlHelper::withoutFile('https://abc.com');// "https://abc.com"
@@ -22,7 +21,7 @@ final class UrlHelper {
    * UrlHelper::withoutFile('//abc.com/?name=foo');// "//abc.com"
    * UrlHelper::withoutFile('//abc.com/index.html?name=foo');// "//abc.com"
    * UrlHelper::withoutFile('//abc.com/def/index.html?name=foo');// "//abc.com/abc"
-   * </code>
+   * ```
    */
   public static function withoutFile(string $url): string {
     $url = rtrim(strtok($url, '?'), '/');
@@ -39,8 +38,7 @@ final class UrlHelper {
 
   /**
    * URL home url
-   * <code>
-   * <?php
+   * ```php
    * use \X\Util\UrlHelper;
    *
    * UrlHelper::domain('https://abc.com');// "https://abc.com"
@@ -57,7 +55,7 @@ final class UrlHelper {
    * UrlHelper::domain('//abc.com/?name=foo');// "//abc.com"
    * UrlHelper::domain('//abc.com/index.html?name=foo');// "//abc.com"
    * UrlHelper::domain('//abc.com/def/index.html?name=foo');// "//abc.com"
-   * </code>
+   * ```
    */
   public static function domain(string $url): string {
     $url = rtrim(strtok($url, '?'), '/');

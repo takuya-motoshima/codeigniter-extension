@@ -1,6 +1,15 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [4.0.19] - 2022/9/25
+### Fixed
+- Delete PID from log output from "\X\Util\Logger".
+- Delete printWithoutPath method from "\X\Util\Logger".
+- Changed "print" method name in "\X\Util\Logger" to "display".
+- Deleted unused files in the skeleton.
+- Removed printHidepath method from "\X\Util\Logger". Use "display" method instead.
+- Changed $config['log_file_permissions'] in the sample and skeleton from 0644 to 0666.
+
 ## [4.0.18] - 2022/9/24
 ### Fixed
 - Fix README.md.

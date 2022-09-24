@@ -18,8 +18,7 @@ abstract class Controller extends \CI_Controller {
 
   /**
    * Sets the CORS header.
-   * <code>
-   * <?php
+   * ```php
    * // Allow all origins
    * parent::setCorsHeader('*');
    *
@@ -36,7 +35,7 @@ abstract class Controller extends \CI_Controller {
    *     $this->setCorsHeader('*');
    *   }
    * }
-   * </code>
+   * ```
    */
   protected function setCorsHeader(string $origin = '*') {
     $this->httpResponse->setCorsHeader($origin);
