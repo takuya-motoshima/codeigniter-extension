@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [4.0.20] - 2022/9/26
+### Fixed
+- Fixed a warning about loading put data in "\X\Library\Input".
+
 ## [4.0.19] - 2022/9/25
 ### Fixed
 - Delete PID from log output from "\X\Util\Logger".

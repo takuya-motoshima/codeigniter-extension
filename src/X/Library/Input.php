@@ -10,7 +10,7 @@ abstract class Input extends \CI_Input {
     $data = file_get_contents('php://input');
     preg_match('/boundary=(.*)$/', $_SERVER['CONTENT_TYPE'], $matches);
     if (!count($matches)) {
-      if($_SERVER['CONTENT_TYPE'] != 'application/json')
+      if ($_SERVER['CONTENT_TYPE'] != 'application/json')
         parse_str($data, $data);
       return empty($index) ? $data : $data[$index] ?? '';
     }
@@ -30,8 +30,7 @@ abstract class Input extends \CI_Input {
         preg_match('/name=\"([^\"]*)\"[\n|\r]+([^\n\r].*)?\r$/s', $part, $matches);
         $name = $matches[1];
         $value = $matches[2] ?? null;
-        $isNestedNode = $this->isNestedNode($name, $parentName, $childNames);
-        if ($isNestedNode)
+        if ($this->isNestedNode($name, $parentName, $childNames))
           $this->setNestedNode($data, $value, $parentName, $childNames);
         else
           $data[$name] = $value;
@@ -65,18 +64,18 @@ abstract class Input extends \CI_Input {
     preg_match_all('/\[([a-z0-9\-_:\.]*)\]/i', $childNames, $matches);
     $names = $matches[1];
     array_unshift($names, $parentName);
-    $refData = &$data;
+    $ref = &$data;
     while(($name = array_shift($names)) !== null) {
-      if (!empty($name) && !array_key_exists($name, $refData))
-        $refData[$name] = [];
+      if (!empty($name) && !array_key_exists($name, $ref ?? []))
+        $ref[$name] = [];
       if (count($names) > 0) {
-        $refData = &$refData[$name];
+        $ref = &$ref[$name];
         continue;
       }
       if (!empty($name) || $name === 0 || $name === '0')
-        $refData[$name] = $value;
+        $ref[$name] = $value;
       else
-        $refData[] = $value;
+        $ref[] = $value;
       break;
     }
   }
