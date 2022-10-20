@@ -43,7 +43,7 @@ export default class extends Modal {
             <!--begin::Form-->
             <form data-ref="form" class="form" novalidate="novalidate">
               <!--begin::Modal header-->
-              <div class="modal-header" id="header{{uniqueId}}">
+              <div class="modal-header" id="header{{scrollIdentifier}}">
                 <!--begin::Modal title-->
                 <h2>
                   {{#if (eq mode 'create')}}
@@ -68,7 +68,15 @@ export default class extends Modal {
               <!--begin::Modal body-->
               <div class="modal-body py-10 px-lg-17">
                 <!--begin::Scroll-->
-                <div data-ref="scroll" class="scroll-y me-n7 pe-7" id="scroll{{uniqueId}}" data-kt-scroll="true" data-kt-scroll-activate="{default: false, lg: true}" data-kt-scroll-max-height="auto" data-kt-scroll-dependencies="#header{{uniqueId}}" data-kt-scroll-wrappers="#scroll{{uniqueId}}" data-kt-scroll-offset="300px">
+                <div data-ref="scroll"
+                  class="scroll-y me-n7 pe-7"
+                  id="scroll{{scrollIdentifier}}"
+                  data-kt-scroll="true"
+                  data-kt-scroll-activate="{default:false,lg:true}"
+                  data-kt-scroll-max-height="auto"
+                  data-kt-scroll-dependencies="#header{{scrollIdentifier}}"
+                  data-kt-scroll-wrappers="#scroll{{scrollIdentifier}}"
+                  data-kt-scroll-offset="300px">
                   <!--begin::Input group-->
                   <div class="fv-row mb-10 d-flex flex-column">
                     <!--begin::Label-->
@@ -181,7 +189,7 @@ export default class extends Modal {
           <!--end::Modal content-->
         </div>
         <!--end::Modal dialog-->
-      </div>`)({mode: this.#mode, user, uniqueId: +new Date});
+      </div>`)({mode: this.#mode, user, scrollIdentifier: +new Date});
     return $(html).appendTo('body');
   }
 
