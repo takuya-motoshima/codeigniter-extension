@@ -5,10 +5,8 @@ sftp-config.json
 .idea/
 .idea_modules/
 *.log
-
 node_modules/
 vendor/
-
 !sample/application/logs/
 sample/application/logs/*
 !sample/application/cache/
@@ -26,8 +24,7 @@ sample/public/upload/*
 !sample/public/upload/6.png
 !sample/public/upload/7.png
 !sample/public/upload/8.png
-
 sample/.env
 !sample/.env.sample
-
 !.gitkeep
+.phpunit.result.cache

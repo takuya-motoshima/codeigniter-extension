@@ -1,12 +1,46 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [4.0.21] - 2022/12/9
+### Changed
+- Fixed email address validation rules.
+    <table>
+      <tr><th>Email Address</th><th>Before</th><th>After</th><th>Changed</th></tr>
+      <tr><td>email@domain.com</td><td>valid</td><td>valid</td></tr>
+      <tr><td>firstname.lastname@domain.com</td><td>valid</td><td>valid</td></tr>
+      <tr><td>email@subdomain.domain.com</td><td>valid</td><td>valid</td></tr>
+      <tr><td>firstname+lastname@domain.com</td><td>valid</td><td>valid</td></tr>
+      <tr><td>email@123.123.123.123</td><td>valid</td><td>valid</td></tr>
+      <tr><td>email@[123.123.123.123]</td><td>invalid</td><td>invalid</td></tr>
+      <tr><td>“email”@domain.com</td><td>invalid</td><td>valid</td><td>Changed</td></tr>
+      <tr><td>1234567890@domain.com</td><td>valid</td><td>valid</td></tr>
+      <tr><td>email@domain-one.com</td><td>valid</td><td>valid</td></tr>
+      <tr><td>_______@domain.com</td><td>valid</td><td>valid</td></tr>
+      <tr><td>email@domain.name</td><td>valid</td><td>valid</td></tr>
+      <tr><td>email@domain.co.jp</td><td>valid</td><td>valid</td></tr>
+      <tr><td>firstname-lastname@domain.com</td><td>valid</td><td>valid</td></tr>
+      <tr><td>#@%^%#$@#$@#.com</td><td>invalid</td><td>invalid</td></tr>
+      <tr><td>@domain.com</td><td>invalid</td><td>invalid</td></tr>
+      <tr><td>Joe Smith <email@domain.com></td><td>invalid</td><td>invalid</td></tr>
+      <tr><td>email.domain.com</td><td>invalid</td><td>invalid</td></tr>
+      <tr><td>email@domain@domain.com</td><td>invalid</td><td>invalid</td></tr>
+      <tr><td>.email@domain.com</td><td>valid</td><td>invalid</td><td>Changed</td></tr>
+      <tr><td>email.@domain.com</td><td>valid</td><td>invalid</td><td>Changed</td></tr>
+      <tr><td>email..email@domain.com</td><td>valid</td><td>invalid</td><td>Changed</td></tr>
+      <tr><td>あいうえお@domain.com</td><td>invalid</td><td>valid</td><td>Changed</td></tr>
+      <tr><td>email@domain.com (Joe Smith)</td><td>invalid</td><td>invalid</td></tr>
+      <tr><td>email@domain</td><td>valid</td><td>valid</td></tr>
+      <tr><td>email@-domain.com</td><td>invalid</td><td>invalid</td></tr>
+      <tr><td>email@domain.web</td><td>valid</td><td>valid</td></tr>
+      <tr><td>email@111.222.333.44444</td><td>valid</td><td>valid</td></tr>
+      <tr><td>email@domain..com</td><td>invalid</td><td>invalid
+    </table>
 ## [4.0.20] - 2022/9/26
 ### Fixed
 - Fixed a warning about loading put data in "\X\Library\Input".
 
 ## [4.0.19] - 2022/9/25
-### Fixed
+### Changed
 - Delete PID from log output from "\X\Util\Logger".
 - Delete printWithoutPath method from "\X\Util\Logger".
 - Changed "print" method name in "\X\Util\Logger" to "display".
@@ -15,12 +49,11 @@ All notable changes to this project will be documented in this file.
 - Changed $config['log_file_permissions'] in the sample and skeleton from 0644 to 0666.
 
 ## [4.0.18] - 2022/9/24
-### Fixed
+### Changed
 - Fix README.md.
 
 ## [4.0.17] - 2022/9/23
-### Fixed
-- Fix README.md.
+### Added
 - Add form_validation_test action to the sample test controller.
 
 ## [4.0.16] - 2022/9/23
@@ -28,17 +61,15 @@ All notable changes to this project will be documented in this file.
 - Fixed a bug in the installer.
 
 ## [4.0.15] - 2022/9/23
-### Fixed
+### Changed
 - Update skeleton .gitignore.
 
 ## [4.0.14] - 2022/9/23
-### Fixed
+### Changed
 - The hostname and hostname_or_ipaddress validations now allow the string "localhost".
-- Updated [sample application](./sample).
-- Updated [skeleton](./skeleton).
 
 ## [4.0.13] - 2022/6/6
-### Fixed
+### Changed
 - Methods for omitting long strings (\X\UtilStringHelper#ellipsis) have been fixed to support Unicode.
 
 ## [4.0.12] - 2021/11/10
@@ -46,7 +77,7 @@ All notable changes to this project will be documented in this file.
 - Fixed a bug in the file deletion function.
 
 ## [4.0.11] - 2021/11/10
-### Fixed
+### Changed
 - Allows you to specify whether lock is enabled or disabled when deleting a file.
     ```php
     use \X\Util\FileHelper;
@@ -65,12 +96,12 @@ All notable changes to this project will be documented in this file.
     ```
 
 ## [4.0.10] - 2021/10/20
-### Fixed
+### Changed
 - Added a process to clear the file status cache before getting the file size.
   
 ## [4.0.9] - 2021/9/27
 ### Fixed
-- Replace the line breaks in the SQL returned by the model's last_query method with spaces.
+- Changed
     ```php
     use \X\Util\Logger;
     $users = $this->UserModel->select('id, name')->get()->result_array();
@@ -79,7 +110,7 @@ All notable changes to this project will be documented in this file.
     ```
 
 ## [4.0.8] - 2021/9/22
-### Fixed
+### Added
 - Added ip address or CIDR validation rules.
     ```php
     $this->form_validation
@@ -183,7 +214,7 @@ All notable changes to this project will be documented in this file.
     ```
 
 ## [4.0.7] - 2021/9/16
-### Fixed
+### Changed
 - Random character generation function name changed to camel case.
     ```php
     use \X\Util\Cipher;
@@ -197,7 +228,7 @@ All notable changes to this project will be documented in this file.
     ```
 
 ## [4.0.6] - 2021/9/16
-### Fixed
+### Added
 - Added random string generation function.
     ```php
     use \X\Util\Cipher;
@@ -211,7 +242,7 @@ All notable changes to this project will be documented in this file.
     ```
 
 ## [4.0.5] - 2021/8/10
-### Fixed
+### Changed
 - The file move method can now set groups and owners for the moved file.
     ```php
     use \X\Util\FileHelper;
@@ -250,7 +281,7 @@ All notable changes to this project will be documented in this file.
     FileHelper::copyFile('/folder/file.txt', 'newfile.txt', null, $user);
 
 ## [4.0.4] - 2021/7/29
-### Fixed
+### Added
 - Added directory path validation rules.
     ```php
     $this->form_validation
@@ -289,7 +320,7 @@ All notable changes to this project will be documented in this file.
     ```
 
 ## [4.0.3] - 2021/6/30
-### Fixed
+### Added
 - Added key pair generation processing and public key OpenSSH encoding processing.  
     Here is an example.  
     You can finetune the key generation (such as specifying the number of bits) using options. See [openssl_csr_new()](https://www.php.net/manual/en/function.openssl-csr-new.php) for more information about options.  
@@ -330,7 +361,7 @@ All notable changes to this project will be documented in this file.
 - Fixed a bug in the exists_by_id method of the \X\Model\Model class.
 
 ## [4.0.1] - 2021/5/25
-### Fixed
+### Added
 - Added the ability to cache search query results in the model.  
     Learn more about model caching <a href="https://www.codeigniter.com/userguide3/database/caching.html" target="_blank">here</a>.  
 
@@ -375,7 +406,7 @@ All notable changes to this project will be documented in this file.
     ```
 
 ## [4.0.0] - 2021/5/6
-### Fixed
+### Added
 - Added dotenv reading process to sample application (./sample).  
     ./sample/application/config/constants.php:  
     ```php
@@ -392,6 +423,7 @@ All notable changes to this project will be documented in this file.
       });
     };
     ```
+### Changed
 - Changed to pass the option of Amazon Rekognition (\X\Rekognition\Client) as an array.
     ```php
     use \X\Rekognition\Client;
@@ -435,15 +467,15 @@ All notable changes to this project will be documented in this file.
     </table>
 
 ## [3.9.9] - 2021/4/15
-### Fixed
+### Changed
 - Fixed README typo.
 
 ## [3.9.8] - 2021/4/15
-### Fixed
+### Added
 - Added form validation rule according to the [email address proposed in HTML5](https://html.spec.whatwg.org/multipage/input.html#valid-e-mail-address).
 
 ## [3.9.7] - 2021/4/9
-### Fixed
+### Added
 - Added the process to automatically set $\_SESSION to the template variable session.
 
 ## [3.9.6] - 2021/4/8
@@ -451,7 +483,7 @@ All notable changes to this project will be documented in this file.
 - Fix the issue text not recognized after '&' in case of PUT request.
 
 ## [3.9.5] - 2021/4/8
-### Fixed
+### Changed
 - Refactor sample application and skeleton.
 
 ## [3.9.4] - 2021/4/7
@@ -459,7 +491,7 @@ All notable changes to this project will be documented in this file.
 - Fix create-project error.
 
 ## [3.9.3] - 2021/3/26
-### Fixed
+### Added
 - Added a function to the Date helper that returns the date of the specified month.
     ```php
     use \X\Util\DateHelper;
@@ -474,7 +506,7 @@ All notable changes to this project will be documented in this file.
 - Resolved an error where the return type of the email function of the email subclass (/X/Util/Email) did not match the definition.
 
 ## [3.9.1] - 2021/3/15
-### Fixed
+### Added
 - Added a method that returns a table string of an array.
     ```php
     use \X\Util\ArrayHelper;
@@ -501,7 +533,7 @@ All notable changes to this project will be documented in this file.
     ```
 
 ## [3.9.0] - 2021/3/15
-### Fixed
+### Added
 - Added a log function that does not output path information.
     ```php
     use \X\Util\Logger;
@@ -510,7 +542,7 @@ All notable changes to this project will be documented in this file.
     ```
 
 ## [3.8.9] - 2021/2/24
-### Fixed
+### Added
 - Added batch exclusive control sample program for file lock and advisory lock to the sample application.  
     Description of the added file.  
     <table>
@@ -550,11 +582,11 @@ All notable changes to this project will be documented in this file.
     ```
 
 ## [3.8.8] - 2021/2/23
-### Fixed
+### Changed
 - Organized readme and added batch lock test program.
 
 ## [3.8.7] - 2021/2/19
-### Fixed
+### Added
 - Added a method to the file helper that returns a file size with units.
     ```php
     use \X\Util\FileHelper;
@@ -568,11 +600,11 @@ All notable changes to this project will be documented in this file.
     ```
 
 ## [3.8.6] - 2021/2/18
-### Fixed
+### Changed
 - Fixed changelog typos.
 
 ## [3.8.5] - 2021/2/18
-### Fixed
+### Added
 - Added HTTP / CLI access control to controller public method annotation.  
     Step 1: Add access control to the hook(application/config/hooks.php).  
     ```php
@@ -617,11 +649,11 @@ All notable changes to this project will be documented in this file.
     ```
 
 ## [3.8.4] - 2021/2/17
-### Fixed
+### Changed
 - Changed to return SES mail sending result object.(\X\Util\AmazonSesClient).
 
 ## [3.8.3] - 2021/2/11
-### Fixed
+### Added
 - Added form validation class.The reason I added it is that I want to validate it with the model(\X\Util\Validation).  
     Define the SES "access key" and "secret" in sampleapp/.env.  
     ```php
@@ -649,11 +681,11 @@ All notable changes to this project will be documented in this file.
     ```
 
 ## [3.8.2] - 2021/2/10
-### Fixed
+### Changed
 - Fixed README.
 
 ## [3.8.1] - 2021/2/10
-### Fixed
+### Added
 - Added an empty judgment method for characters trimmed with left and right spaces(\X\Util\StringHelper).  
     ```php
     use \X\Util\StringHelper;
@@ -668,11 +700,11 @@ All notable changes to this project will be documented in this file.
     ```
 
 ## [3.8.0] - 2021/2/10
-### Fixed
+### Added
 - Added nginxn configuration sample file to REAME.
 
 ## [3.7.9] - 2021/2/9
-### Fixed
+### Added
 - Added the following rules to form validation.  
     <table>
       <thead>
@@ -838,7 +870,7 @@ All notable changes to this project will be documented in this file.
     ```
 
 ## [3.7.8] - 2021/2/6
-### Fixed
+### Added
 - Added a method to group associative arrays by key to ArrayHelper.(\X\Util\ArrayHelper).
     ```php
     use \X\Util\ArrayHelper;
@@ -870,7 +902,7 @@ All notable changes to this project will be documented in this file.
     ```
 
 ## [3.7.7] - 2021/2/3
-### Fixed
+### Added
 - Create a form validation class and add a datetime validation method(\X\Library\FormValidation).  
     Override form validation.  
     application/libraries/AppForm_validation.php:  
@@ -896,7 +928,7 @@ All notable changes to this project will be documented in this file.
     ```
 
 ## [3.7.6] - 2021/1/27
-### Fixed
+### Changed
 - Delete debug log.
 
 ## [3.7.5] - 2021/1/22
@@ -904,7 +936,7 @@ All notable changes to this project will be documented in this file.
 - Fixed a bug that Annotation could not be read.
 
 ## [3.7.4] - 2021/1/22
-### Fixed
+### Changed
 - Change image resizing features(\X\Util\ImageHelper).
     ```php
     use \X\Util\ImageHelper;
@@ -923,7 +955,7 @@ All notable changes to this project will be documented in this file.
     ```
 
 ## [3.7.3] - 2020/12/25
-### Fixed
+### Added
 - Added search options to file search(\X\Util\FileHelper).
     ```php
     use \X\Util\FileHelper;
@@ -933,7 +965,7 @@ All notable changes to this project will be documented in this file.
     ```
 
 ## [3.7.2] - 2020/11/17
-### Fixed
+### Changed
 - Remove unused paginate method from Model class.
 
 ## [3.7.1] - 2020/11/17
@@ -941,19 +973,19 @@ All notable changes to this project will be documented in this file.
 - Fixed a bug in the project creation command.
 
 ## [3.7.0] - 2020/11/17
-### Fixed
+### Changed
 - Fix skeleton.
 
 ## [3.6.9] - 2020/11/17
-### Fixed
+### Changed
 - Fix README.md.
 
 ## [3.6.8] - 2020/11/17
-### Fixed
+### Changed
 - Fix project creation process.
 
 ## [3.6.7] - 2020/11/16
-### Fixed
+### Changed
 - Prepend a slash to the PID of the log(\X\Util\Logger).  
     Here is an example of a log.
     ```php
@@ -961,7 +993,7 @@ All notable changes to this project will be documented in this file.
     ```
 
 ## [3.6.6] - 2020/11/10
-### Fixed
+### Changed
 - Add PID to log message(\X\Util\Logger).
 
 ## [3.6.5] - 2020/11/9
@@ -969,11 +1001,11 @@ All notable changes to this project will be documented in this file.
 - Fixed to ignore directory creation error (\X\Util\FileHelper::makeDirectory).
 
 ## [3.6.4] - 2020/11/6
-### Fixed
+### Changed
 - Remove class and function names from the log(\X\Util\Logger).
 
 ## [3.6.3] - 2020/11/2
-### Fixed
+### Changed
 - Changed to be able to specify multiple Amazon SES email destinations in an array.(\X\Util\AmazonSesClient)
     ```php
     use \X\Util\AmazonSesClient;
@@ -999,7 +1031,7 @@ All notable changes to this project will be documented in this file.
     ```
 
 ## [3.6.2] - 2020/10/29
-### Fixed
+### Changed
 - Fixed OpenSSL encryption/decryption method.
     ```php
     use \X\Util\Cipher;
@@ -1020,7 +1052,7 @@ All notable changes to this project will be documented in this file.
     ```
 
 ## [3.6.1] - 2020/10/23
-### Fixed
+### Added
 - Added IP utility class(\X\Util\IpUtils). And since \X\Util\HttpSecurity has moved to IPUtils, I deleted it.
     ```php
     // Get client ip.
@@ -1088,11 +1120,11 @@ All notable changes to this project will be documented in this file.
     ```
 
 ## [3.6.0] - 2020/10/20
-### Fixed
+### Added
 - Add a time stamp to the log message output to the CLI(\X\Util\Logger#printWithoutPath).
 
 ## [3.5.9] - 2020/10/19
-### Fixed
+### Added
 - Added log output method without file path(\X\Util\Logger#printWithoutPath).
 
 ## [3.5.8] - 2020/10/16
@@ -1100,11 +1132,11 @@ All notable changes to this project will be documented in this file.
 - Fixed a bug that IP acquisition fails when XFF is empty(\X\Util\HttpSecurity#getIpFromXFF).
 
 ## [3.5.7] - 2020/10/15
-### Fixed
+### Added
 - Added method to get IP from XFF(\X\Util\HttpSecurity#getIpFromXFF).
 
 ## [3.5.5] - 2020/6/4
-### Fixed
+### Added
 - Added a method to AA that returns the size of all files in a directory.
     ```php
     // Returns the total size of all files in a directory
@@ -1115,7 +1147,7 @@ All notable changes to this project will be documented in this file.
     ```
 
 ## [3.5.4] - 2020/6/4
-### Fixed
+### Added
 - Add encryption key to the parameter of hash conversion method
     ```php
     use \X\Util\Cipher;
@@ -1125,7 +1157,7 @@ All notable changes to this project will be documented in this file.
     ```
 
 ## [3.5.3] - 2020/5/20
-### Fixed
+### Added
 - Added a process to log out a user who is logged in with the same ID on another device when logging in  
     config/hooks.php:  
     ```php
@@ -1320,7 +1352,7 @@ All notable changes to this project will be documented in this file.
     ```
 
 ## [3.4.7] - 2020/4/27
-### Fixed
+### Added
 - Added feature to face detector to find multiple faces from collection
     ```php
     use \X\Rekognition\Client;
@@ -1361,7 +1393,7 @@ All notable changes to this project will be documented in this file.
     ```
 
 ## [3.4.6] - 2020/4/23
-### Fixed
+### Added
 - Added a feature to add arbitrary columns to the session table  
     Set the columns you want to add to the session table in "application/confi /config.php".  
     The example adds the username column to the session table.
@@ -1408,15 +1440,13 @@ All notable changes to this project will be documented in this file.
     ```
 
 ## [3.4.5] - 2020/4/10
-### Fixed
+### Changed
 - Changed to return an empty string when there is no key value to get from the config with "\X\Utils\Loader::config()".
 
 ## [3.4.2] - 2020/3/16
-### Fixed
-- Added setting of template cache in application config (application/config/config.php).
-
+### Added
+- Added setting of template cache in application config (application/config/config.php).  
     You can configure the template cache in "application/config/config.php".
-
     ```php
     /*
     |--------------------------------------------------------------------------
@@ -1429,7 +1459,7 @@ All notable changes to this project will be documented in this file.
     ```
 
 ## [3.3.9] - 2020/3/16
-### Fixed
+### Added
 - Added client class that summarizes face detection processing. Remove old face detection class.
     ```php
     use \X\Rekognition\Client;
@@ -1449,7 +1479,7 @@ All notable changes to this project will be documented in this file.
     ```
 
 ## [3.3.8] - 2020/3/14
-### Fixed
+### Added
 - Added insert_on_duplicate_update.
     ```php
     // Here is an example of insert_on_duplicate_update.

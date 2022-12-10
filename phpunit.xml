@@ -1,7 +1,18 @@
-<phpunit bootstrap="tests/bootstrap.php">
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit
+  bootstrap="tests/bootstrap.php"
+  verbose="true"
+  colors="true"
+  printerClass="Codedungeon\PHPUnitPrettyResultPrinter\Printer">
   <testsuites>
-    <testsuite name="sample">
-      <directory>tests</directory>
+    <testsuite name="Sample">
+      <file>tests/SampleTest.php</file>
+    </testsuite>
+    <testsuite name="Email Validation">
+      <file>tests/EmailValidationTest.php</file>
+    </testsuite>
+    <testsuite name="Email Validation2">
+      <file>tests/EmailValidationTest2.php</file>
     </testsuite>
   </testsuites>
 </phpunit>
