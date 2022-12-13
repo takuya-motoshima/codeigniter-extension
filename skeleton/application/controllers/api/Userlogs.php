@@ -3,7 +3,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 use \X\Annotation\Access;
 use \X\Util\Logger;
-use const \X\Constant\HTTP_BAD_REQUEST;
 
 class Userlogs extends AppController {
   protected $model = 'UserLogModel';
@@ -32,7 +31,7 @@ class Userlogs extends AppController {
       parent::set($data)::json();
     } catch (\Throwable $e) {
       Logger::error($e);
-      parent::error($e->getMessage(), HTTP_BAD_REQUEST);
+      parent::error($e->getMessage(), 400);
     }
   }
 }

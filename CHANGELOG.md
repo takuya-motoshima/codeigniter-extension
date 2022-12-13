@@ -1,6 +1,23 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [4.0.22] - 2022/12/13
+### Changed
+- A forced JSON response option has been added to the controller's error response method.  
+    If this option is true, the content type of the responder is returned as application/json.  
+
+    Response data can also be set in the error response with the set method.  
+    ```php
+    class User extends AppController {
+      public function deliberateError() {
+        $forceJsonResponse = true;
+        parent
+          ::set('error', 'Deliberate error')
+          ::error('Deliberate error', 400, $forceJsonResponse);
+      }
+    }
+    ```
+
 ## [4.0.21] - 2022/12/9
 ### Changed
 - Fixed email address validation rules.
@@ -1248,9 +1265,6 @@ All notable changes to this project will be documented in this file.
     controllers/api/User.php:  
     ```php
     use \X\Annotation\Access;
-    use const \X\Constant\HTTP_BAD_REQUEST;
-    use const \X\Constant\HTTP_CREATED;
-    use const \X\Constant\HTTP_NO_CONTENT;
 
     class User extends AppController {
       protected $model = 'UserModel';
@@ -1265,14 +1279,14 @@ All notable changes to this project will be documented in this file.
             ->set_rules('username', 'username', 'required|max_length[30]')
             ->set_rules('password', 'password', 'required|max_length[30]');
           if (!$this->form_validation->run()) {
-            return parent::error(print_r($this->form_validation->error_array(), true), HTTP_BAD_REQUEST);
+            return parent::error(print_r($this->form_validation->error_array(), true), 400);
           }
           $result = $this->UserModel->signin($this->input->post('username'), $this->input->post('password'));
           parent
             ::set($result)
             ::json();
         } catch (\Throwable $e) {
-          parent::error($e->getMessage(), HTTP_BAD_REQUEST);
+          parent::error($e->getMessage(), 400);
         }
       }
 
@@ -1284,7 +1298,7 @@ All notable changes to this project will be documented in this file.
           $this->UserModel->signout();
           redirect('/signin');
         } catch (\Throwable $e) {
-          parent::error($e->getMessage(), HTTP_BAD_REQUEST);
+          parent::error($e->getMessage(), 400);
         }
       }
     }

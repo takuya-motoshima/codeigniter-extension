@@ -1,6 +1,6 @@
 <?php
 namespace X\Util;
-use X\Constant\HttpStatus;
+// use X\Constant\HttpStatus;
 use X\Util\Loader;
 
 final class HttpResponse {
@@ -58,7 +58,7 @@ final class HttpResponse {
     ob_clean();
     // $this->setCorsHeader('*');
     $this->ci->output
-      ->set_status_header($this->status ?? \X\Constant\HTTP_OK)
+      ->set_status_header($this->status ?? 200)
       ->set_content_type('application/json', 'UTF-8')
       ->set_output($json);
   }
@@ -127,14 +127,18 @@ final class HttpResponse {
   /**
    * Response error.
    */
-  public function error(string $message, int $status = \X\Constant\HTTP_INTERNAL_SERVER_ERROR) {
-    if ($this->ci->input->is_ajax_request()) {
+  public function error(string $message, int $status = 500, bool $forceJsonResponse = false) {
+    if ($forceJsonResponse || $this->ci->input->is_ajax_request()) {
       ob_clean();
       // $this->setCorsHeader('*');
+      $json = json_encode($this->data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+      if ($json === false)
+        throw new \LogicException(sprintf('Failed to parse json string \'%s\', error: \'%s\'', $this->data, json_last_error_msg()));
       $this->ci->output
         ->set_header('Cache-Control: no-cache, must-revalidate')
         ->set_status_header($status, rawurlencode($message))
-        ->set_content_type('application/json', 'UTF-8');
+        ->set_content_type('application/json', 'UTF-8')
+        ->set_output($json);
     } else {
       show_error($message, $status);
     }
@@ -169,7 +173,7 @@ final class HttpResponse {
     $this->ci->output
       ->set_header('Content-Type: true')
       ->set_header('X-Accel-Redirect: ' . $internalRedirectPath)
-      ->set_status_header(\X\Constant\HTTP_OK);
+      ->set_status_header(200);
   }
 
   /**

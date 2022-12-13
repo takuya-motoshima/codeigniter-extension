@@ -141,8 +141,8 @@ abstract class Controller extends \CI_Controller {
   /**
    * Response error.
    */
-  protected function error(string $message, int $status = \X\Constant\HTTP_INTERNAL_SERVER_ERROR) {
-    $this->httpResponse->error($message, $status);
+  protected function error(string $message, int $status = 500, bool $forceJsonResponse = false) {
+    $this->httpResponse->error($message, $status, $forceJsonResponse);
   }
 
   /**

@@ -3,7 +3,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 use \X\Annotation\Access;
 use \X\Util\Logger;
-use const \X\Constant\HTTP_BAD_REQUEST;
 
 class Users extends AppController {
   protected $model = [
@@ -28,7 +27,7 @@ class Users extends AppController {
       parent::set(true)::json();
     } catch (\Throwable $e) {
       Logger::error($e);
-      parent::error($e->getMessage(), HTTP_BAD_REQUEST);
+      parent::error($e->getMessage(), 400);
     }
   }
 
@@ -42,7 +41,7 @@ class Users extends AppController {
       redirect('/');
     } catch (\Throwable $e) {
       Logger::error($e);
-      parent::error($e->getMessage(), HTTP_BAD_REQUEST);
+      parent::error($e->getMessage(), 400);
     }
   }
 
@@ -72,7 +71,7 @@ class Users extends AppController {
       parent::set($data)::json();
     } catch (\Throwable $e) {
       Logger::error($e);
-      parent::error($e->getMessage(), HTTP_BAD_REQUEST);
+      parent::error($e->getMessage(), 400);
     }
   }
 
@@ -88,7 +87,7 @@ class Users extends AppController {
       parent::set(true)::json();
     } catch (\Throwable $e) {
       Logger::error($e);
-      parent::error($e->getMessage(), HTTP_BAD_REQUEST);
+      parent::error($e->getMessage(), 400);
     }
   }
 
@@ -103,7 +102,7 @@ class Users extends AppController {
       parent::set(['valid' => !$exists])::json();
     } catch (\Throwable $e) {
       Logger::error($e);
-      parent::error($e->getMessage(), HTTP_BAD_REQUEST);
+      parent::error($e->getMessage(), 400);
     }
   }
 
@@ -115,7 +114,7 @@ class Users extends AppController {
       parent::set($this->UserModel->getUserById($userId))::json();
     } catch (\Throwable $e) {
       Logger::error($e);
-      parent::error($e->getMessage(), HTTP_BAD_REQUEST);
+      parent::error($e->getMessage(), 400);
     }
   }
 
@@ -133,7 +132,7 @@ class Users extends AppController {
       parent::set('error', 'userNotFound')::json();
     } catch (\Throwable $e) {
       Logger::error($e);
-      parent::error($e->getMessage(), HTTP_BAD_REQUEST);
+      parent::error($e->getMessage(), 400);
     }
   }
 
@@ -154,7 +153,7 @@ class Users extends AppController {
       parent::set('error', 'userNotFound')::json();
     } catch (\Throwable $e) {
       Logger::error($e);
-      parent::error($e->getMessage(), HTTP_BAD_REQUEST);
+      parent::error($e->getMessage(), 400);
     }
   }
 
@@ -175,7 +174,7 @@ class Users extends AppController {
         ::json();
     } catch (\Throwable $e) {
       Logger::error($e);
-      parent::error($e->getMessage(), HTTP_BAD_REQUEST);
+      parent::error($e->getMessage(), 400);
     }
   }
 
@@ -194,7 +193,7 @@ class Users extends AppController {
       parent::set('error', 'userNotFound')::json();
     } catch (\Throwable $e) {
       Logger::error($e);
-      parent::error($e->getMessage(), HTTP_BAD_REQUEST);
+      parent::error($e->getMessage(), 400);
     }
   }
 
