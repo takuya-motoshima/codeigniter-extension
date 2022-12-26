@@ -135,6 +135,7 @@ class AmazonSesClient {
     $CI =& get_instance();
     $CI->load->library('form_validation'); 
     $CI->form_validation
+      ->reset_validation()
       ->set_data([
         // 'to' => $this->to,
         'from' => $this->from

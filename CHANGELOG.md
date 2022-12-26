@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [4.0.25] - 2022/12/26
+### Fixed
+- Reset validation rules, etc. before performing SES outbound validation(\X\Util\AmazonSesClient).
+
 ## [4.0.24] - 2022/12/26
 ### Changed
 - The following response headers have been added to JSON responses to mitigate the risk of XSS and RFD.
