@@ -135,12 +135,12 @@ abstract class EMail {
    */
   private static function email() {
     static $instance;
-    if (!isset($$instance)) {
+    if (!isset($instance)) {
       $CI =& \get_instance();
       $CI->load->library('email', self::$default);
-      $$instance = $CI->email;
+      $instance = $CI->email;
     }
-    return $$instance;
+    return $instance;
   }
 
   /**
