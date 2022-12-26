@@ -1,9 +1,16 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [4.0.24] - 2022/12/26
+### Changed
+- The following response headers have been added to JSON responses to mitigate the risk of XSS and RFD.
+    - X-Content-Type-Options: nosniff
+    - Content-Disposition: attachment; filename="{Base name of request URL}.json"  
+        For example, if the request URL is "https://sample.com/api/users/123", the attached file name will be "123.json".
+
 ## [4.0.23] - 2022/12/26
 ### Changed
-- Internal redirect response methods now set the appropriate response content type(\X\Controller\Controller#internalRedirect). 
+- Internal redirect response methods now set the appropriate response content type(\X\Controller\Controller#internalRedirect()). 
 
 ## [4.0.22] - 2022/12/13
 ### Changed

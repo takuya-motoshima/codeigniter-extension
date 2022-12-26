@@ -57,9 +57,15 @@ final class HttpResponse {
       throw new \LogicException(sprintf('Failed to parse json string \'%s\', error: \'%s\'', $this->data, json_last_error_msg()));
     ob_clean();
     // $this->setCorsHeader('*');
+    $this->CI->load->helper('url');
+    $attachmentFileName = basename(current_url()) . '.json';
     $this->CI->output
       ->set_status_header($this->status ?? 200)
       ->set_content_type('application/json', 'UTF-8')
+  		// Prevent mime based attacks.
+      ->set_header('X-Content-Type-Options: nosniff')
+      // Prevent the browser from rendering the file by explicitly marking it as a download file.
+      ->set_header("Content-Disposition: attachment; filename=\"{$attachmentFileName}\"")
       ->set_output($json);
   }
 
