@@ -46,7 +46,7 @@ class Users extends AppController {
   }
 
   /**
-   * @Access(allow_login=true, allow_logoff=false, allow_role="admin")
+   * @Access(allow_login=true, allow_logoff=false, allow_role="admin,member")
    */
   public function query() {
     try {
@@ -76,7 +76,7 @@ class Users extends AppController {
   }
 
   /**
-   * @Access(allow_login=true, allow_logoff=false, allow_role="admin")
+   * @Access(allow_login=true, allow_logoff=false, allow_role="admin,member")
    */
   public function post() {
     try {
@@ -92,7 +92,7 @@ class Users extends AppController {
   }
 
   /**
-   * @Access(allow_login=true, allow_logoff=false, allow_role="admin")
+   * @Access(allow_login=true, allow_logoff=false, allow_role="admin,member")
    */
   public function emailExists() {
     try {
@@ -107,7 +107,7 @@ class Users extends AppController {
   }
 
   /**
-   * @Access(allow_login=true, allow_logoff=false, allow_role="admin")
+   * @Access(allow_login=true, allow_logoff=false, allow_role="admin,member")
    */
   public function get(int $userId) {
     try {
@@ -119,7 +119,7 @@ class Users extends AppController {
   }
 
   /**
-   * @Access(allow_login=true, allow_logoff=false, allow_role="admin")
+   * @Access(allow_login=true, allow_logoff=false, allow_role="admin,member")
    */
   public function put(int $userId) {
     try {
@@ -137,7 +137,7 @@ class Users extends AppController {
   }
 
   /**
-   * @Access(allow_login=true, allow_logoff=false, allow_role="admin")
+   * @Access(allow_login=true, allow_logoff=false, allow_role="admin,member")
    */
   public function delete(int $userId) {
     try {

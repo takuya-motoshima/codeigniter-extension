@@ -5,17 +5,17 @@
  * use \X\Annotation\AnnotationReader;
  * 
  * $hook['post_controller_constructor'] = function() {
- *   $ci =& get_instance();
- *   $accessibility = AnnotationReader::getAccessibility($ci->router->class, $ci->router->method);
+ *   if (is_cli())
+ *     return;
+ *   $CI =& get_instance();
+ *   $accessibility = AnnotationReader::getAccessibility($CI->router->class, $CI->router->method);
  *   $isLogin = !empty($_SESSION['user']);
- *   if (!is_cli()) {
- *     if (!$accessibility->allow_http)
- *       throw new \RuntimeException('HTTP access is not allowed');
- *     if ($isLogin && !$accessibility->allow_login)
- *       redirect('/users/index');
- *     else if (!$isLogin && !$accessibility->allow_logoff)
- *       redirect('/users/login');
- *   }
+ *   if (!$accessibility->allow_http)
+ *     throw new \RuntimeException('HTTP access is not allowed');
+ *   if ($isLogin && !$accessibility->allow_login)
+ *     redirect('/users/index');
+ *   else if (!$isLogin && !$accessibility->allow_logoff)
+ *     redirect('/users/login');
  * };
  * ```
  *

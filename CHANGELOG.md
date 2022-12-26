@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [4.0.23] - 2022/12/26
+### Changed
+- Internal redirect response methods now set the appropriate response content type(\X\Controller\Controller#internalRedirect). 
+
 ## [4.0.22] - 2022/12/13
 ### Changed
 - A forced JSON response option has been added to the controller's error response method.  
@@ -571,15 +575,15 @@ All notable changes to this project will be documented in this file.
       </thead>
       <tbody>
         <tr>
-          <td>sampleapp/application/controllers/batch/RunMultipleBatch.php</td>
+          <td>myapp/application/controllers/batch/RunMultipleBatch.php</td>
           <td>An entry point that launches multiple batches at the same time.</td>
         </tr>
         <tr>
-          <td>sampleapp/application/controllers/batch/FileLockBatch.php</td>
+          <td>myapp/application/controllers/batch/FileLockBatch.php</td>
           <td>Batch with file locking.This is called from RunMultipleBatch.</td>
         </tr>
         <tr>
-          <td>sampleapp/application/controllers/batch/AdvisoryLockBatch.php</td>
+          <td>myapp/application/controllers/batch/AdvisoryLockBatch.php</td>
           <td>Batch with advisory lock.This is called from RunMultipleBatch.</td>
         </tr>
       </tbody>
@@ -588,13 +592,13 @@ All notable changes to this project will be documented in this file.
     How to do it.  
     Run a batch that prohibits multiple launches using file locks.  
     ```sh
-    cd /var/www/html/sampleapp;
+    cd /var/www/html/myapp;
     CI_ENV=development php public/index.php batch/runMultipleBatch/run/filelock;
     ```
 
     Run a batch that prohibits multiple launches using advisory locks.  
     ```sh
-    cd /var/www/html/sampleapp;
+    cd /var/www/html/myapp;
     CI_ENV=development php public/index.php batch/runMultipleBatch/run/advisorylock;
     ```
 
@@ -628,17 +632,17 @@ All notable changes to this project will be documented in this file.
     use \X\Annotation\AnnotationReader;
 
     $hook['post_controller_constructor'] = function() {
-      $ci =& get_instance();
-      $accessibility = AnnotationReader::getAccessibility($ci->router->class, $ci->router->method);
+      if (is_cli())
+        return;
+      $CI =& get_instance();
+      $accessibility = AnnotationReader::getAccessibility($CI->router->class, $CI->router->method);
       $isLogin = !empty($_SESSION['user']);
-      if (!is_cli()) {
-        if (!$accessibility->allow_http)
-          throw new \RuntimeException('HTTP access is not allowed.');
-        if ($isLogin && !$accessibility->allow_login)
-          redirect('/users/index');
-        else if (!$isLogin && !$accessibility->allow_logoff)
-          redirect('/users/login');
-      }
+      if (!$accessibility->allow_http)
+        throw new \RuntimeException('HTTP access is not allowed.');
+      if ($isLogin && !$accessibility->allow_login)
+        redirect('/users/index');
+      else if (!$isLogin && !$accessibility->allow_logoff)
+        redirect('/users/login');
     };
     ```
 
@@ -672,7 +676,7 @@ All notable changes to this project will be documented in this file.
 ## [3.8.3] - 2021/2/11
 ### Added
 - Added form validation class.The reason I added it is that I want to validate it with the model(\X\Util\Validation).  
-    Define the SES "access key" and "secret" in sampleapp/.env.  
+    Define the SES "access key" and "secret" in myapp/.env.  
     ```php
     use \X\Util\AmazonSesClient;
 
@@ -1184,25 +1188,25 @@ All notable changes to this project will be documented in this file.
     };
 
     function handlingLoggedIn() {
-      $ci =& get_instance();
-      $ci->load->model('UserModel');
-      if ($ci->UserModel->isBanUser(session_id())) {
+      $CI =& get_instance();
+      $CI->load->model('UserModel');
+      if ($CI->UserModel->isBanUser(session_id())) {
         // Sign out
-        $ci->UserModel->signout();
-        $ci->load->helper('cookie');
+        $CI->UserModel->signout();
+        $CI->load->helper('cookie');
         set_cookie('show_ban_message', true, 10);
         // To logoff processing
         return handlingLogOff();
       }
-      $accessibility = AnnotationReader::getAccessibility($ci->router->class, $ci->router->method);
+      $accessibility = AnnotationReader::getAccessibility($CI->router->class, $CI->router->method);
       if (!$accessibility->allow_login || ($accessibility->allow_role && $accessibility->allow_role !== $session['role'])) {
         redirect('/users/index');
       }
     }
 
     function handlingLogOff() {
-      $ci =& get_instance();
-      $accessibility = AnnotationReader::getAccessibility($ci->router->class, $ci->router->method);
+      $CI =& get_instance();
+      $accessibility = AnnotationReader::getAccessibility($CI->router->class, $CI->router->method);
       if (!$accessibility->allow_logoff) {
         redirect('/signin');
       }

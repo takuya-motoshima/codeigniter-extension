@@ -136,9 +136,9 @@ abstract class EMail {
   private static function email() {
     static $instance;
     if (!isset($$instance)) {
-      $ci =& \get_instance();
-      $ci->load->library('email', self::$default);
-      $$instance = $ci->email;
+      $CI =& \get_instance();
+      $CI->load->library('email', self::$default);
+      $$instance = $CI->email;
     }
     return $$instance;
   }

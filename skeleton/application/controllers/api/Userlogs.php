@@ -8,7 +8,7 @@ class Userlogs extends AppController {
   protected $model = 'UserLogModel';
 
   /**
-   * @Access(allow_login=true, allow_logoff=false, allow_role="admin")
+   * @Access(allow_login=true, allow_logoff=false, allow_role="admin,member")
    */
   public function query() {
     try {

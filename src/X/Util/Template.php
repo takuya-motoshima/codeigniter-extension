@@ -49,8 +49,8 @@ final class Template {
     $baseUrl = \base_url();
     $this->engine->addGlobal('baseUrl', $baseUrl);
     $this->engine->addGlobal('session', $_SESSION ?? null);
-    $ci =& get_instance();
-    $this->engine->addGlobal('action', ($ci->router->directory ?? '') . $ci->router->class . '/' . $ci->router->method);
+    $CI =& get_instance();
+    $this->engine->addGlobal('action', ($CI->router->directory ?? '') . $CI->router->class . '/' . $CI->router->method);
     $this->engine->setLexer(new \Twig_Lexer($this->engine, $option['lexer']));
   }
 

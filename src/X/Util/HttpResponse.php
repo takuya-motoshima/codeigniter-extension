@@ -6,10 +6,10 @@ use X\Util\Loader;
 final class HttpResponse {
   private $data = [];
   private $status;
-  private $ci;
+  private $CI;
 
   public function __construct() {
-    $this->ci =& \get_instance();
+    $this->CI =& \get_instance();
   }
 
   /**
@@ -57,7 +57,7 @@ final class HttpResponse {
       throw new \LogicException(sprintf('Failed to parse json string \'%s\', error: \'%s\'', $this->data, json_last_error_msg()));
     ob_clean();
     // $this->setCorsHeader('*');
-    $this->ci->output
+    $this->CI->output
       ->set_status_header($this->status ?? 200)
       ->set_content_type('application/json', 'UTF-8')
       ->set_output($json);
@@ -68,7 +68,7 @@ final class HttpResponse {
    */
   public function html(string $html) {
     // $this->setCorsHeader('*');
-    $this->ci->output
+    $this->CI->output
       ->set_content_type('text/html', 'UTF-8')
       ->set_output($html);
   }
@@ -88,7 +88,7 @@ final class HttpResponse {
   public function js(string $js) {
     ob_clean();
     // $this->setCorsHeader('*');
-    $this->ci->output
+    $this->CI->output
       ->set_content_type('application/javascript', 'UTF-8')
       ->set_output($js);
   }
@@ -99,7 +99,7 @@ final class HttpResponse {
   public function text(string $text) {
     ob_clean();
     // $this->setCorsHeader('*');
-    $this->ci->output
+    $this->CI->output
       ->set_content_type('text/plain', 'UTF-8')
       ->set_output($text);
   }
@@ -109,7 +109,7 @@ final class HttpResponse {
    */
   public function download(string $file, string $data = '', bool $mime = FALSE) {
     ob_clean();
-    $this->ci->load->helper('download');
+    $this->CI->load->helper('download');
     force_download($file, $data, $mime);
   }
 
@@ -118,8 +118,8 @@ final class HttpResponse {
    */
   public function image(string $path) {
     ob_clean();
-    $this->ci->load->helper('file');
-    $this->ci->output
+    $this->CI->load->helper('file');
+    $this->CI->output
       ->set_content_type(get_mime_by_extension($path))
       ->set_output(file_get_contents($path));
   }
@@ -128,13 +128,13 @@ final class HttpResponse {
    * Response error.
    */
   public function error(string $message, int $status = 500, bool $forceJsonResponse = false) {
-    if ($forceJsonResponse || $this->ci->input->is_ajax_request()) {
+    if ($forceJsonResponse || $this->CI->input->is_ajax_request()) {
       ob_clean();
       // $this->setCorsHeader('*');
       $json = json_encode($this->data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
       if ($json === false)
         throw new \LogicException(sprintf('Failed to parse json string \'%s\', error: \'%s\'', $this->data, json_last_error_msg()));
-      $this->ci->output
+      $this->CI->output
         ->set_header('Cache-Control: no-cache, must-revalidate')
         ->set_status_header($status, rawurlencode($message))
         ->set_content_type('application/json', 'UTF-8')
@@ -170,8 +170,12 @@ final class HttpResponse {
    */
   public function internalRedirect(string $internalRedirectPath) {
     // $this->setCorsHeader('*');
-    $this->ci->output
-      ->set_header('Content-Type: true')
+    $extension = pathinfo($internalRedirectPath, PATHINFO_EXTENSION);
+    if (!empty($extension))
+      $this->CI->output->set_content_type(strtolower($extension));
+    else 
+      $this->CI->output->set_header('Content-Type: true');
+    $this->CI->output
       ->set_header('X-Accel-Redirect: ' . $internalRedirectPath)
       ->set_status_header(200);
   }
@@ -196,7 +200,7 @@ final class HttpResponse {
       else if (!empty($_SERVER['HTTP_REFERER']))
         $origin = parse_url($_SERVER['HTTP_REFERER'], PHP_URL_SCHEME) . '://' . parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST);
     }
-    $this->ci->output
+    $this->CI->output
       ->set_header('Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Authorization')
       ->set_header('Access-Control-Allow-Methods: GET, POST, OPTIONS')
       ->set_header('Access-Control-Allow-Credentials: true')

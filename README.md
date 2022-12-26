@@ -131,24 +131,24 @@ See [https://codeigniter.com/](https://codeigniter.com/) for basic usage.
         use \X\Util\Logger;
 
         $hook['post_controller_constructor'] = function() {
-          $ci =& get_instance();
-          $accessibility = AnnotationReader::getAccessibility($ci->router->class, $ci->router->method);
+          if (is_cli())
+            return;
+          $CI =& get_instance();
+          $accessibility = AnnotationReader::getAccessibility($CI->router->class, $CI->router->method);
           $isLogin = !empty($_SESSION[SESSION_NAME]);
-          $currentPath = lcfirst($ci->router->directory ?? '') . lcfirst($ci->router->class) . '/' . $ci->router->method;
+          $currentPath = lcfirst($CI->router->directory ?? '') . lcfirst($CI->router->class) . '/' . $CI->router->method;
           $defaultPath = '/users/index';
           $allowRoles = !empty($accessibility->allow_role) ? array_map('trim', explode(',', $accessibility->allow_role)) : null;
-          if (!is_cli()) {
-            if (!$accessibility->allow_http)
-              throw new \RuntimeException('HTTP access is not allowed');
-            else if ($isLogin && !$accessibility->allow_login)
+          if (!$accessibility->allow_http)
+            throw new \RuntimeException('HTTP access is not allowed');
+          else if ($isLogin && !$accessibility->allow_login)
+            redirect($defaultPath);
+          else if (!$isLogin && !$accessibility->allow_logoff)
+            redirect('/users/login');
+          else if ($isLogin && !empty($allowRoles)) {
+            $role = $_SESSION[SESSION_NAME]['role'] ?? '';
+            if (!in_array($role, $allowRoles) && $defaultPath !== $currentPath)
               redirect($defaultPath);
-            else if (!$isLogin && !$accessibility->allow_logoff)
-              redirect('/users/login');
-            else if ($isLogin && !empty($allowRoles)) {
-              $role = $_SESSION[SESSION_NAME]['role'] ?? 'undefined';
-              if (!in_array($role, $allowRoles) && $defaultPath !== $currentPath)
-                redirect($defaultPath);
-            }
           }
         };
 

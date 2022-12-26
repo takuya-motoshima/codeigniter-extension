@@ -139,9 +139,9 @@ class UserModel extends \AppModel {
     // Logger::debug('$user=', $user);
     if ($user['password'] === Cipher::encode_sha256($newPassword))
       return false;
-    $ci =& get_instance();
-    $ci->load->library('password_security');
-    if (!$ci->password_security->checkPasswordSimilarity($user['password'], $newPassword))
+    $CI =& get_instance();
+    $CI->load->library('password_security');
+    if (!$CI->password_security->checkPasswordSimilarity($user['password'], $newPassword))
       return false;
     if ($user['email'] === $newPassword)
       return false;
