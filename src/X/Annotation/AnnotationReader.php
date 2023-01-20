@@ -8,13 +8,13 @@
  *   if (is_cli())
  *     return;
  *   $CI =& get_instance();
- *   $accessibility = AnnotationReader::getAccessibility($CI->router->class, $CI->router->method);
+ *   $meta = AnnotationReader::getAccessibility($CI->router->class, $CI->router->method);
  *   $isLogin = !empty($_SESSION['user']);
- *   if (!$accessibility->allow_http)
+ *   if (!$meta->allow_http)
  *     throw new \RuntimeException('HTTP access is not allowed');
- *   if ($isLogin && !$accessibility->allow_login)
+ *   if ($isLogin && !$meta->allow_login)
  *     redirect('/users/index');
- *   else if (!$isLogin && !$accessibility->allow_logoff)
+ *   else if (!$isLogin && !$meta->allow_logoff)
  *     redirect('/users/login');
  * };
  * ```

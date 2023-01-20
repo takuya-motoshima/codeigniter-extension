@@ -72,7 +72,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 */
 $active_group = 'default';
 $query_builder = true;
-$database = 'sample';
+$database = 'ci_sample_db';
 $username = 'root';
 $password = '';
 $db['default'] = array(

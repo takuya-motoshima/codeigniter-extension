@@ -1,6 +1,38 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [4.1.0] - 2023/1/20
+### Changed
+- Updated dependent CodeIgniter framework version from 3.1.11 to 3.1.13.  
+    The following files in the skeleton have been updated with the CodeIgniter update.  
+    - skeleton/application/config/config.php  
+        Add the following item.
+        ```php
+        $config['sess_samesite'] = 'Lax';
+        $config['cookie_samesite'] 	= 'Lax';
+        ```
+    - skeleton/application/config/mimes.php  
+        Add the following item.
+        ```php
+        'heic' 	=>	'image/heic',
+        'heif' 	=>	'image/heif',
+        ```
+
+        Change the following items with the following content
+        ```php
+        'svg'	=>	array('image/svg+xml', 'image/svg', 'application/xml', 'text/xml'),
+        ```
+    - skeleton/application/config/user_agents.php  
+        Add the following item.
+        ```php
+        'huawei'        => 'Huawei',
+        'xiaomi'        => 'Xiaomi',
+        'oppo'          => 'Oppo',
+        'vivo'          => 'Vivo',
+        'infinix'       => 'Infinix',
+        'UptimeRobot'   => 'UptimeRobot',
+        ```
+
 ## [4.0.25] - 2022/12/26
 ### Fixed
 - Reset validation rules, etc. before performing SES outbound validation(\X\Util\AmazonSesClient).
@@ -646,13 +678,13 @@ All notable changes to this project will be documented in this file.
       if (is_cli())
         return;
       $CI =& get_instance();
-      $accessibility = AnnotationReader::getAccessibility($CI->router->class, $CI->router->method);
+      $meta = AnnotationReader::getAccessibility($CI->router->class, $CI->router->method);
       $isLogin = !empty($_SESSION['user']);
-      if (!$accessibility->allow_http)
+      if (!$meta->allow_http)
         throw new \RuntimeException('HTTP access is not allowed.');
-      if ($isLogin && !$accessibility->allow_login)
+      if ($isLogin && !$meta->allow_login)
         redirect('/users/index');
-      else if (!$isLogin && !$accessibility->allow_logoff)
+      else if (!$isLogin && !$meta->allow_logoff)
         redirect('/users/login');
     };
     ```
@@ -1209,16 +1241,16 @@ All notable changes to this project will be documented in this file.
         // To logoff processing
         return handlingLogOff();
       }
-      $accessibility = AnnotationReader::getAccessibility($CI->router->class, $CI->router->method);
-      if (!$accessibility->allow_login || ($accessibility->allow_role && $accessibility->allow_role !== $session['role'])) {
+      $meta = AnnotationReader::getAccessibility($CI->router->class, $CI->router->method);
+      if (!$meta->allow_login || ($meta->allow_role && $meta->allow_role !== $session['role'])) {
         redirect('/users/index');
       }
     }
 
     function handlingLogOff() {
       $CI =& get_instance();
-      $accessibility = AnnotationReader::getAccessibility($CI->router->class, $CI->router->method);
-      if (!$accessibility->allow_logoff) {
+      $meta = AnnotationReader::getAccessibility($CI->router->class, $CI->router->method);
+      if (!$meta->allow_logoff) {
         redirect('/signin');
       }
     }

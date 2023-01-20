@@ -25,8 +25,8 @@ final class Installer {
       '$application_folder = \'application\';' => '$application_folder = \'../application\';',
     ]);
 
-    $io->write('Copy the sample DB(skeletondb.sql).');
-    FileHelper::copyFile('skeleton/skeletondb.sql', 'skeletondb.sql');
+    $io->write('Copy the sample DB(create-db.sql).');
+    FileHelper::copyFile('skeleton/create-db.sql', 'create-db.sql');
 
     $io->write('Create a config (config.php).');
     FileHelper::replace('application/config/config.php', [

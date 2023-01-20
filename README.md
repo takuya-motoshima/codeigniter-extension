@@ -1,10 +1,12 @@
 # codeigniter-extension
 You can use extended core classes (controllers, models, views) and utility classes in this package.  
+Click [here](CHANGELOG.md) to see the change log.  
+
+There is a sample application in [sample](sample).  
+Please use it as a reference for your development.
 
 - [codeigniter-extension](#codeigniter-extension)
   - [Requirements](#requirements)
-  - [Changelog](#changelog)
-  - [Screenshots of the skeleton and samples created by create-project](#screenshots-of-the-skeleton-and-samples-created-by-create-project)
   - [Getting Started](#getting-started)
   - [Usage](#usage)
   - [Unit testing](#unit-testing)
@@ -18,50 +20,46 @@ You can use extended core classes (controllers, models, views) and utility class
 - php-mbstring
 - php-xml
 
-## Changelog
-See [CHANGELOG.md](./CHANGELOG.md).
-
-## Screenshots of the skeleton and samples created by create-project
-There is a sample application in [./sample](./sample).  
-Please use it as a reference for your development.
-
-![sign-in.png](https://raw.githubusercontent.com/takuya-motoshima/codeigniter-extension/master/screencaps/sign-in.png)
-![list-of-users.png](https://raw.githubusercontent.com/takuya-motoshima/codeigniter-extension/master/screencaps/list-of-users.png)
-![update-user.png](https://raw.githubusercontent.com/takuya-motoshima/codeigniter-extension/master/screencaps/update-user.png)
-![personal-settings.png](https://raw.githubusercontent.com/takuya-motoshima/codeigniter-extension/master/screencaps/personal-settings.png)
-![page-not-found.png](https://raw.githubusercontent.com/takuya-motoshima/codeigniter-extension/master/screencaps/page-not-found.png)
-<!-- ![edit-personal-settings.png](https://raw.githubusercontent.com/takuya-motoshima/codeigniter-extension/master/screencaps/edit-personal-settings.png) -->
-
 ## Getting Started
-1. Create project.  
+1. Create project.
     ```sh
     composer create-project takuya-motoshima/codeIgniter-extension myapp
     ```
-1. Grant write permission to logs, cache, session to WEB server.  
+1. Grant write permission to logs, cache, session to WEB server.
     ```sh
     sudo chmod -R 755 public/upload application/{logs,cache,session}
     sudo chown -R nginx:nginx public/upload application/{logs,cache,session}
     ```
 1. Set up a web server (nginx).  
-    If you are using Nginx, copy [nginx.sample.conf](./nginx.sample.conf) to "/etc/nginx/conf.d/Your application name.conf".  
-
+    If you are using Nginx, copy [nginx.sample.conf](nginx.sample.conf) to "/etc/nginx/conf.d/sample.conf".  
     Restart Nginx.  
     ```sh
     sudo systemctl restart nginx
     ```
-    That's all for the settings.
-1. Build a DB for [skeletondb.sql](skeletondb.sql) (MySQL or MariaDB).
-1. **NOTE**: The skeleton uses webpack for front module bundling.  
+1. Build a DB for [create-db.sql](skeleton/create-db.sql) (MySQL or MariaDB).
+1. The skeleton uses webpack for front module bundling.  
     The front module is located in ". /client".  
-
     How to build the front module:  
     ```sh
     cd client
     npm run build
     ```
+1. Open "http://{public IP of the server}:3000/" in a browser and the following screen will appear.  
+    **NOTE**: You can log in with the username "robin@example.com" and password "password".  
+    <p align="left">
+      <img alt="sign-in.png" src="https://raw.githubusercontent.com/takuya-motoshima/codeigniter-extension/master/screencaps/sign-in.png" width="45%">
+      <img alt="list-of-users.png" src="https://raw.githubusercontent.com/takuya-motoshima/codeigniter-extension/master/screencaps/list-of-users.png" width="45%">
+    </p>
+    <p align="left">
+      <img alt="update-user.png" src="https://raw.githubusercontent.com/takuya-motoshima/codeigniter-extension/master/screencaps/update-user.png" width="45%">
+      <img alt="personal-settings.png" src="https://raw.githubusercontent.com/takuya-motoshima/codeigniter-extension/master/screencaps/personal-settings.png" width="45%">
+    </p>
+    <p align="left">
+      <img alt="page-not-found.png" src="https://raw.githubusercontent.com/takuya-motoshima/codeigniter-extension/master/screencaps/page-not-found.png" width="45%">
+    </p>
 
 ## Usage
-See [https://codeigniter.com/](https://codeigniter.com/) for basic usage.  
+See [https://codeigniter.com/userguide3/](https://codeigniter.com/userguide3/) for basic usage.  
 - About config (application/config/config.php).
     <table>
       <thead>
@@ -117,12 +115,12 @@ See [https://codeigniter.com/](https://codeigniter.com/) for basic usage.
         ```php
         $route['default_controller'] = 'users/login';
         ```
-    1. Define login session name.  
+    2. Define login session name.  
         application/config/constants.php:
         ```php
         const SESSION_NAME = 'session';
         ```
-    1. Create control over which URLs can be accessed depending on the user's login status.  
+    3. Create control over which URLs can be accessed depending on the user's login status.  
         At the same time, add env loading and error handling in "pre_system".  
 
         application/config/hooks.php:
@@ -134,16 +132,16 @@ See [https://codeigniter.com/](https://codeigniter.com/) for basic usage.
           if (is_cli())
             return;
           $CI =& get_instance();
-          $accessibility = AnnotationReader::getAccessibility($CI->router->class, $CI->router->method);
+          $meta = AnnotationReader::getAccessibility($CI->router->class, $CI->router->method);
           $isLogin = !empty($_SESSION[SESSION_NAME]);
           $currentPath = lcfirst($CI->router->directory ?? '') . lcfirst($CI->router->class) . '/' . $CI->router->method;
           $defaultPath = '/users/index';
-          $allowRoles = !empty($accessibility->allow_role) ? array_map('trim', explode(',', $accessibility->allow_role)) : null;
-          if (!$accessibility->allow_http)
+          $allowRoles = !empty($meta->allow_role) ? array_map('trim', explode(',', $meta->allow_role)) : null;
+          if (!$meta->allow_http)
             throw new \RuntimeException('HTTP access is not allowed');
-          else if ($isLogin && !$accessibility->allow_login)
+          else if ($isLogin && !$meta->allow_login)
             redirect($defaultPath);
-          else if (!$isLogin && !$accessibility->allow_logoff)
+          else if (!$isLogin && !$meta->allow_logoff)
             redirect('/users/login');
           else if ($isLogin && !empty($allowRoles)) {
             $role = $_SESSION[SESSION_NAME]['role'] ?? '';
@@ -161,7 +159,7 @@ See [https://codeigniter.com/](https://codeigniter.com/) for basic usage.
           });
         };
         ```
-    1. After this, you will need to create controllers, models, and views, see the sample for details.  
+    4. After this, you will need to create controllers, models, and views, see the sample for details.  
 - About Twig Template Engine.  
     This extension package uses the Twig template.  
     See [here](https://twig.symfony.com/doc/3.x/) for how to use Twig.  
