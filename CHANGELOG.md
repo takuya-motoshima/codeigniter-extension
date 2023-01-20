@@ -1,6 +1,24 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [4.1.1] - 2023/1/20
+### Added
+- Added utility class to read request data(\X\Util\HttpInput).  
+    Usage example:
+    ```php
+    use \X\Util\HttpInput;
+
+    // Get the entire put data in an associative array.
+    $data = HttpInput::put();
+
+    // Get a value whose key name is "name" from put data.
+    $name = HttpInput::put('name');
+
+    //  Apply XSS filtering.
+    $xssClean = true;
+    $name = HttpInput::put('name', $xssClean);
+    ```
+
 ## [4.1.0] - 2023/1/20
 ### Changed
 - Updated dependent CodeIgniter framework version from 3.1.11 to 3.1.13.  
