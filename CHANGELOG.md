@@ -1,6 +1,51 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [4.1.2] - 2023/2/10
+### Added
+- Added a method to create an associative array, or an array of only the elements of any key from an associative array list (\X\Util\ArrayHelper#filteringElements()).
+    ```php
+    use \X\Util\ArrayHelper;
+
+    $staffs = [
+      ['name' => 'Derek Emmanuel', 'regno' => 'FE/30304', 'email' => 'derekemmanuel@gmail.com'],
+      ['name' => 'Rubecca Michealson', 'regno' => 'FE/20003', 'email' => 'rmichealsongmail.com'],
+      ['name' => 'Frank Castle', 'regno' => 'FE/10002', 'email' => 'fcastle86@gmail.com'],
+    ];
+    $staffs = ArrayHelper::filteringElements($staffs, 'name', 'email');
+    print_r($staffs);
+    // Array
+    // (
+    //     [0] => Array
+    //         (
+    //             [name] => Derek Emmanuel
+    //             [email] => derekemmanuel@gmail.com
+    //         )
+    //     [1] => Array
+    //         (
+    //             [name] => Rubecca Michealson
+    //             [email] => rmichealsongmail.com
+    //         )
+    //     [2] => Array
+    //         (
+    //             [name] => Frank Castle
+    //             [email] => fcastle86@gmail.com
+    //         )
+    // )
+
+    $staff = ['name' => 'Derek Emmanuel', 'regno' => 'FE/30304', 'email' => 'derekemmanuel@gmail.com'];
+    $staff = ArrayHelper::filteringElements($staff, 'name', 'email');
+    print_r($staff);
+    // Array
+    // (
+    //     [name] => Derek Emmanuel
+    //     [email] => derekemmanuel@gmail.com
+    // )
+    ```
+
+### Fixed
+- Fixed a bug in which the REST client class (\X\Util\RestClient)was referencing a method of the deleted logger class.
+
 ## [4.1.1] - 2023/1/20
 ### Added
 - Added utility class to read request data(\X\Util\HttpInput).  

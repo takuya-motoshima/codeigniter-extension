@@ -1,5 +1,6 @@
 <?php
 namespace X\Util;
+use \X\Util\Logger;
 
 class RestClient {
   public $option;
@@ -125,14 +126,10 @@ class RestClient {
     $client->info = (object) curl_getinfo($curl);
     $client->error = curl_error($curl);
     curl_close($curl);
-    if (!($client->status >= 200 && $client->status < 400)) {
-      Logger::e(sprintf('Request failed. status=%s, url=%s %s, response=%s, error=%s', $client->status, $method, $client->url, $client->response_source, $client->error));
-      throw new \X\Exception\RestClientException(sprintf('Request failed. status=%s, url=%s %s, response=%s, error=%s', $client->status, $method, $client->url, $client->response_source, $client->error));
-    }
+    if (!($client->status >= 200 && $client->status < 400))
+      throw new \X\Exception\RestClientException(sprintf('Request failed. status=%s, url=%s %s, error=%s', $client->status, $method, $client->url, $client->error));
     if ($client->option['debug'])
-      Logger::d(sprintf('status=%s, url=%s %s, response=%s', $client->status, $method, $client->url, $client->response_source));
-    else
-      Logger::i(sprintf('status=%s, url=%s %s', $client->status, $method, $client->url));
+      Logger::debug(sprintf('status=%s, url=%s %s', $client->status, $method, $client->url));
     return $client;
   }
 

@@ -129,16 +129,8 @@ final class ArrayHelper {
    * use \X\Util\ArrayHelper;
    * 
    * $arr = [
-   *   [
-   *     'firstname' => 'John',
-   *     'lastname' => 'Mathew',
-   *     'email' => 'John.Mathew@xyz.com'
-   *   ],
-   *   [
-   *     'firstname' => 'Jim',
-   *     'lastname' => 'Parker',
-   *     'email' => 'Jim.Parker@xyz.com'
-   *   ]
+   *   ['firstname' => 'John', 'lastname' => 'Mathew', 'email' => 'John.Mathew@xyz.com'],
+   *   ['firstname' => 'Jim', 'lastname' => 'Parker', 'email' => 'Jim.Parker@xyz.com'],
    * ];
    * echo ArrayHelper::toTable($arr);
    * ┌───────────┬──────────┬─────────────────────┐
@@ -155,5 +147,64 @@ final class ArrayHelper {
   public static function toTable(array $arr): string {
     $renderer = new ArrayToTextTable(self::isVector($arr) ? $arr : [$arr]);
     return $renderer->getTable();
+  }
+
+  /**
+    * Create an associative array, or an array of only the elements of any key from an associative array list.
+    * ```php
+    * use \X\Util\ArrayHelper;
+    * 
+    * $staffs = [
+    *   ['name' => 'Derek Emmanuel', 'regno' => 'FE/30304', 'email' => 'derekemmanuel@gmail.com'],
+    *   ['name' => 'Rubecca Michealson', 'regno' => 'FE/20003', 'email' => 'rmichealsongmail.com'],
+    *   ['name' => 'Frank Castle', 'regno' => 'FE/10002', 'email' => 'fcastle86@gmail.com'],
+    * ];
+    * $staffs = ArrayHelper::filteringElements($staffs, 'name', 'email');
+    * print_r($staffs);
+    * // Array
+    * // (
+    * //     [0] => Array
+    * //         (
+    * //             [name] => Derek Emmanuel
+    * //             [email] => derekemmanuel@gmail.com
+    * //         )
+    * //     [1] => Array
+    * //         (
+    * //             [name] => Rubecca Michealson
+    * //             [email] => rmichealsongmail.com
+    * //         )
+    * //     [2] => Array
+    * //         (
+    * //             [name] => Frank Castle
+    * //             [email] => fcastle86@gmail.com
+    * //         )
+    * // )
+    * 
+    * $staff = ['name' => 'Derek Emmanuel', 'regno' => 'FE/30304', 'email' => 'derekemmanuel@gmail.com'];
+    * $staff = ArrayHelper::filteringElements($staff, 'name', 'email');
+    * print_r($staff);
+    * // Array
+    * // (
+    * //     [name] => Derek Emmanuel
+    * //     [email] => derekemmanuel@gmail.com
+    * // )
+    *
+    * @param  array $arr
+    * @param  string[] $includeKey
+    * @return array
+    */
+  public static function filteringElements(array $arr, ...$includeKey):array {
+    if (empty($arr))
+      return $arr;
+    if (isset($arr[0]))
+      return array_map(function($value) use ($includeKey) {
+        return array_filter($value, function ($key) use ($includeKey) {
+          return in_array($key, $includeKey);
+        }, ARRAY_FILTER_USE_KEY);
+      }, $arr);
+    else
+      return array_filter($arr, function ($key) use ($includeKey) {
+        return in_array($key, $includeKey);
+      }, ARRAY_FILTER_USE_KEY);
   }
 }
