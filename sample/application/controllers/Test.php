@@ -6,6 +6,8 @@ use \X\Util\Cipher;
 use \X\Util\ImageHelper;
 
 class Test extends AppController {
+  protected $model = 'UserModel';
+
   public function password_hash_test() {
     $password = 'password';
     $passwordHash = Cipher::encode_sha256($password);
@@ -53,5 +55,35 @@ class Test extends AppController {
     Logger::info('info');
     Logger::error('error');
     Logger::display('display');
+  }
+
+  /**
+   * ```sh
+   * CI_ENV=development php public/index.php test/sanitize_sql_parameters
+   * ```
+   */
+  public function sanitize_sql_parameters() {
+    $this->UserModel
+      ->where('id', 1)
+      ->get()
+      ->row_array();
+    $sql = $this->UserModel->last_query();
+    Logger::display($sql);// => SELECT * FROM `user` WHERE `id` = 1
+  
+    $this->UserModel
+      ->where('id', '\'1\' OR id=2')
+      ->get()
+      ->row_array();
+    $sql = $this->UserModel->last_query();
+    Logger::display($sql);
+    // => SELECT * FROM `user` WHERE `id` = '\'1\' OR id=2'
+
+    $this->UserModel
+      ->where('id', '\'1\' OR id=2', FALSE)
+      ->get()
+      ->row_array();
+    $sql = $this->UserModel->last_query();
+    Logger::display($sql);
+    // => SELECT * FROM `user` WHERE id =  '1' OR id=2
   }
 }
