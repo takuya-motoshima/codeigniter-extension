@@ -1,6 +1,47 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [4.1.3] - 2023/2/28
+### Added
+- Added a method to extract the first frame of a GIF in the class "\X\Util\ImageHelper".
+    ```php
+    use \X\Util\ImageHelper;
+
+    // Write the first frame of sample.gif to first-frame.gif.
+    ImageHelper::extractFirstFrameOfGif('sample.gif', 'first-frame.gif');
+
+    // Overwrite sample.gif with the first frame.
+    ImageHelper::extractFirstFrameOfGif('sample.gif');
+    ```
+- Added a method to get the number of GIF frames in the "\XFCUtil\ImageHelper" class.
+    ```php
+    use \X\Util\ImageHelper;
+
+    $numberOfFrames = ImageHelper::getNumberOfGifFrames('sample.gif');
+    ```
+### Changed
+- Added unit tests for the "\X\Util\ImageHelper" class.
+    The test case class can be found [here](tests/ImageHelperTest.php).  
+    ```sh
+    composer test
+    # > ./vendor/bin/phpunit
+    # 
+    # PHPUnit Pretty Result Printer 0.32.0 by Codedungeon and contributors.
+    # PHPUnit 8.5.15 by Sebastian Bergmann and contributors.
+    # 
+    # Runtime:       PHP 7.4.21
+    # Configuration: /var/www/html/codeigniter-extension/phpunit.xml
+    # 
+    # 
+    #  ==> SampleTest                                   PASS  PASS
+    #  # ==> EmailValidationTest                          PASS  PASS  PASS  PASS  PASS  PASS  PASS  PASS  PASS  PASS  PASS  PASS  PASS  PASS  PASS  PASS  PASS  PASS  PASS  PASS  PASS  PASS  PASS  PASS  PASS  PASS  PASS  PASS
+    #  ==> ImageHelperTest                              PASS  PASS  PASS  PASS
+    # 
+    # Time: 772 ms, Memory: 6.00 MB
+    # 
+    # OK (34 tests, 34 assertions)
+    ```
+
 ## [4.1.2] - 2023/2/10
 ### Added
 - Added a method to create an associative array, or an array of only the elements of any key from an associative array list (\X\Util\ArrayHelper#filteringElements()).

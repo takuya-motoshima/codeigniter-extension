@@ -19,6 +19,13 @@ Please use it as a reference for your development.
 - php-gd
 - php-mbstring
 - php-xml
+- php-imagick  
+    The method to extract the first frame from a GIF ("extractFirstFrameOfGif") in the "\X\Util\ImageHelper" class requires ImageMagick.   
+    To use this method, install ImageMagick and php-imagick.  
+    The following command is an example installation on my Amazon Linux2 OS.  
+    ```sh
+    sudo yum -y install ImageMagick php-imagick
+    ```
 
 ## Getting Started
 1. Create project.

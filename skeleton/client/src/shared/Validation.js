@@ -145,7 +145,6 @@ export default class {
    * Added items to verify.
    * 
    * @example
-   * 
    * // The index of row
    * let rowIndex = 0;
    * const demoForm = document.getElementById('demoForm');

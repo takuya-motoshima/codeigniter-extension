@@ -7,7 +7,7 @@ final class EmailValidationTest extends TestCase {
    * @dataProvider emailProvider
    */
   public function testEmailValidation(string $email, bool $expected): void {
-    $this->assertEquals(Validation::email($email), $expected);
+    $this->assertSame(Validation::email($email), $expected);
   }
 
   public function emailProvider(): array {

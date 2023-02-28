@@ -3,7 +3,6 @@ import hbs from 'handlebars-extd';
 /**
  * Toast display.
  * @example
- *
  * import Toast from '~/shared/Toast';
  * 
  * // Show success message.

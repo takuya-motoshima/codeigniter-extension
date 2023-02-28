@@ -19,11 +19,11 @@ final class SampleTest extends TestCase {
   }
 
   public function testGetMessage(): void {
-    $this->assertEquals('Hello world', $this->sample->getMessage());
+    $this->assertSame('Hello world', $this->sample->getMessage());
   }
 
   public function testSetMessage(): void {
     $this->sample->setMessage('Bye world');
-    $this->assertEquals('Bye world', $this->sample->getMessage());
+    $this->assertSame('Bye world', $this->sample->getMessage());
   }
 }

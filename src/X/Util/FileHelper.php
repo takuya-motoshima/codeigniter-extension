@@ -26,38 +26,38 @@ final class FileHelper {
    * \X\Util\FileHelper::move('/tmp/old.txt', 'new');
    * ```
    */
-  public static function move(string $srcFile, string $dstFile, $group = null, $user = null) {
-    if (!file_exists($srcFile))
-      throw new \RuntimeException('Not found file ' . $srcFile);
-    if (strpos($dstFile, '/') === false) {
-      if (strpos($dstFile, '.') === false)
-        $dstFile = $dstFile . '.' . pathinfo($srcFile, PATHINFO_EXTENSION);
-      $dstFile = pathinfo($srcFile, PATHINFO_DIRNAME) . '/' . $dstFile;
+  public static function move(string $srcPath, string $dstPath, $group = null, $user = null) {
+    if (!file_exists($srcPath))
+      throw new \RuntimeException('Not found file ' . $srcPath);
+    if (strpos($dstPath, '/') === false) {
+      if (strpos($dstPath, '.') === false)
+        $dstPath = $dstPath . '.' . pathinfo($srcPath, PATHINFO_EXTENSION);
+      $dstPath = pathinfo($srcPath, PATHINFO_DIRNAME) . '/' . $dstPath;
     } else
-      self::makeDirectory(dirname($dstFile));
-    if (rename($srcFile, $dstFile) === false)
-      throw new \RuntimeException('Can not rename from ' . $srcFile . ' to ' . $dstFile);
+      self::makeDirectory(dirname($dstPath));
+    if (rename($srcPath, $dstPath) === false)
+      throw new \RuntimeException('Can not rename from ' . $srcPath . ' to ' . $dstPath);
     if (isset($group))
-      chgrp($dstFile, $group);
+      chgrp($dstPath, $group);
     if (isset($user))
-      $res = chown($dstFile, $user);
+      $res = chown($dstPath, $user);
   }
 
   /**
    * Copy file.
    */
-  public static function copyFile(string $srcFile, string $dstFile, $group = null, $user = null) {
-    if (!file_exists($srcFile))
-      throw new \RuntimeException('Not found file ' . $srcFile);
-    else if (!is_file($srcFile))
-      throw new \RuntimeException($srcFile . ' is not file');
-    self::makeDirectory(dirname($dstFile));
-    if (copy($srcFile, $dstFile) === false)
-      throw new \RuntimeException('Can not copy from ' . $srcFile . ' to ' . $dstFile);
+  public static function copyFile(string $srcPath, string $dstPath, $group = null, $user = null) {
+    if (!file_exists($srcPath))
+      throw new \RuntimeException('Not found file ' . $srcPath);
+    else if (!is_file($srcPath))
+      throw new \RuntimeException($srcPath . ' is not file');
+    self::makeDirectory(dirname($dstPath));
+    if (copy($srcPath, $dstPath) === false)
+      throw new \RuntimeException('Can not copy from ' . $srcPath . ' to ' . $dstPath);
     if (isset($group))
-      chgrp($dstFile, $group);
+      chgrp($dstPath, $group);
     if (isset($user))
-      chown($dstFile, $user);
+      chown($dstPath, $user);
   }
 
   /**

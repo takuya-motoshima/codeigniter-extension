@@ -13,18 +13,18 @@ final class VideoHelper {
    * VideoHelper::putBase64('data:video/mp4;base64,iVBOR...', '/tmp/sample.mp4');
    * ```
    */
-  public static function putBase64(string $base64, string $dir, ?string $fileName = null): string {
-    if (empty($fileName)) {
-      $fileName = pathinfo($dir, PATHINFO_BASENAME);
-      $dir =  pathinfo($dir, PATHINFO_DIRNAME);
+  public static function putBase64(string $base64, string $outputDir, ?string $outputName = null): string {
+    if (empty($outputName)) {
+      $outputName = pathinfo($outputDir, PATHINFO_BASENAME);
+      $outputDir =  pathinfo($outputDir, PATHINFO_DIRNAME);
     }
-    $dir = rtrim($dir, '/')  . '/';
+    $outputDir = rtrim($outputDir, '/')  . '/';
     $blob = self::convertBase64ToBlob($base64, $mime);
-    if (empty(pathinfo($fileName, PATHINFO_EXTENSION)))
-      $fileName .= '.' . $mime;
-    FileHelper::makeDirectory($dir);
-    file_put_contents($dir . $fileName, $blob, LOCK_EX);
-    return $fileName;
+    if (empty(pathinfo($outputName, PATHINFO_EXTENSION)))
+      $outputName .= '.' . $mime;
+    FileHelper::makeDirectory($outputDir);
+    file_put_contents($outputDir . $outputName, $blob, LOCK_EX);
+    return $outputName;
   }
 
   /**

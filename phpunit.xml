@@ -11,8 +11,8 @@
     <testsuite name="Email Validation">
       <file>tests/EmailValidationTest.php</file>
     </testsuite>
-    <testsuite name="Email Validation2">
-      <file>tests/EmailValidationTest2.php</file>
+    <testsuite name="Image Helper">
+      <file>tests/ImageHelperTest.php</file>
     </testsuite>
   </testsuites>
 </phpunit>

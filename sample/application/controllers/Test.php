@@ -86,4 +86,9 @@ class Test extends AppController {
     Logger::display($sql);
     // => SELECT * FROM `user` WHERE id =  '1' OR id=2
   }
+
+  public function get_ip() {
+    $ip = $this->input->ip_address();
+    Logger::display($ip);
+  }
 }

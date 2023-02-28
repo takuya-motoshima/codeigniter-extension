@@ -6,12 +6,12 @@ final class CsvHelper {
   /**
    * Put a line in csv.
    */
-  public static function putRow(string $path, array $line) {
+  public static function putRow(string $inputPath, array $line) {
     if (empty($line))
       return;
-    $fp = fopen($path, 'a');
+    $fp = fopen($inputPath, 'a');
     if (!flock($fp, LOCK_EX))
-      throw new \RuntimeException('Unable to get file lock. path=' . $path);
+      throw new \RuntimeException('Unable to get file lock. path=' . $inputPath);
     fputcsv($fp, $line);
     flock($fp, LOCK_UN);
     fclose($fp);
@@ -20,10 +20,10 @@ final class CsvHelper {
   /**
    * Read csv.
    */
-  public static function read(string $path, callable $callback = null) {
-    if (!file_exists($path))
+  public static function read(string $inputPath, callable $callback = null) {
+    if (!file_exists($inputPath))
       return null;
-    $file = new \SplFileObject($path);
+    $file = new \SplFileObject($inputPath);
     $file->setFlags(
       \SplFileObject::READ_CSV |
       \SplFileObject::READ_AHEAD |

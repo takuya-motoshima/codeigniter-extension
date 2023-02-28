@@ -14,26 +14,26 @@ final class ImageHelper {
    * ImageHelper::putBase64('data:image/png;base64,iVBOR...', '/tmp/sample.png');
    * ```
    */
-  public static function putBase64(string $base64, string $dir, ?string $fileName = null): string {
-    if (empty($fileName)) {
-      $fileName = pathinfo($dir, PATHINFO_BASENAME);
-      $dir =  pathinfo($dir, PATHINFO_DIRNAME);
+  public static function putBase64(string $base64, string $outputDir, ?string $outputName = null): string {
+    if (empty($outputName)) {
+      $outputName = pathinfo($outputDir, PATHINFO_BASENAME);
+      $outputDir =  pathinfo($outputDir, PATHINFO_DIRNAME);
     }
-    $dir = rtrim($dir, '/')  . '/';
+    $outputDir = rtrim($outputDir, '/')  . '/';
     $blob = self::convertBase64ToBlob($base64, $mime);
-    if (empty(pathinfo($fileName, PATHINFO_EXTENSION)))
-      $fileName .= '.' . $mime;
-    FileHelper::makeDirectory($dir);
-    file_put_contents($dir . $fileName, $blob, LOCK_EX);
-    return $fileName;
+    if (empty(pathinfo($outputName, PATHINFO_EXTENSION)))
+      $outputName .= '.' . $mime;
+    FileHelper::makeDirectory($outputDir);
+    file_put_contents($outputDir . $outputName, $blob, LOCK_EX);
+    return $outputName;
   }
 
   /**
    * Put blob image.
    */
-  public static function putBlob(string $blob, string $filePath) {
-    FileHelper::makeDirectory(dirname($filePath));
-    file_put_contents($filePath, $blob, LOCK_EX);
+  public static function putBlob(string $blob, string $outputPath) {
+    FileHelper::makeDirectory(dirname($outputPath));
+    file_put_contents($outputPath, $blob, LOCK_EX);
   }
 
   /**
@@ -46,23 +46,21 @@ final class ImageHelper {
    * \X\Util\ImageHelper::copy('/tmp/old.png', '/home', 'new');
    * ```
    */
-  public static function copy(string $srcImgPath, string $dstDirpath, string $dstImgName = null): string {
-    FileHelper::makeDirectory($dstDirpath);
-    $dstImgName = empty($dstImgName) 
-      ? basename($srcImgPath) : 
-      $dstImgName . '.' . pathinfo($srcImgPath, PATHINFO_EXTENSION);
-    file_put_contents(rtrim($dstDirpath, '/')  . '/' . $dstImgName, file_get_contents($srcImgPath), LOCK_EX);
-    return $dstImgName;
+  public static function copy(string $inputPath, string $outputDir, string $outputName = null): string {
+    FileHelper::makeDirectory($outputDir);
+    $outputName = empty($outputName) ? basename($inputPath) : $outputName . '.' . pathinfo($inputPath, PATHINFO_EXTENSION);
+    file_put_contents(rtrim($outputDir, '/')  . '/' . $outputName, file_get_contents($inputPath), LOCK_EX);
+    return $outputName;
   }
 
   /**
    * Read image.
    */
-  public static function read(string $filePath): string {
-    if (!file_exists($filePath))
-      throw new \RuntimeException('Image file does not exist. Path=' . $filePath);
-    $fp = fopen($filePath, 'r');
-    $blob = fread($fp, filesize($filePath));
+  public static function read(string $inputPath): string {
+    if (!file_exists($inputPath))
+      throw new \RuntimeException('Image file does not exist. Path=' . $inputPath);
+    $fp = fopen($inputPath, 'r');
+    $blob = fread($fp, filesize($inputPath));
     fclose($fp);
     return $blob;
   }
@@ -70,9 +68,9 @@ final class ImageHelper {
   /**
    * Read image.
    */
-  public static function readAsBase64(string $filePath): string {
-    $blob = self::read($filePath);
-    $mime = mime_content_type($filePath);
+  public static function readAsBase64(string $inputPath): string {
+    $blob = self::read($inputPath);
+    $mime = mime_content_type($inputPath);
     if ($mime === 'image/svg' || $mime === 'image/svgz')
       $mime = 'image/svg+xml';
     return 'data:' . $mime . ';base64,' . base64_encode($blob);
@@ -82,20 +80,20 @@ final class ImageHelper {
    * Resize.
    */
   public static function resize(
-    string $filePath,
-    string $resizePath,
+    string $inputPath,
+    string $outputPath,
     ?int $width = null,
     ?int $height = null,
     bool $keepAspectRatio = true
   ) {
     $manager = new ImageManager(['driver' => 'gd']);
     $manager
-      ->make($filePath)
+      ->make($inputPath)
       ->resize($width, $height, function ($constraint) use($keepAspectRatio) {
         if ($keepAspectRatio)
           $constraint->aspectRatio();
       })
-      ->save($resizePath);
+      ->save($outputPath);
   }
 
   /**
@@ -118,5 +116,60 @@ final class ImageHelper {
     if ($blob === false)
       throw new \RuntimeException('Base64 decode failed');
     return $blob;
+  }
+
+  /**
+   * Extract and save the first frame of the animated GIF.
+   *
+   * ```php
+   * use \X\Util\ImageHelper;
+   *
+   * // Write the first frame of sample.gif to sample_0.gif.
+   * ImageHelper::extractFirstFrameOfGif('sample.gif', 'sample_0.gif');
+   *
+   * // Overwrite sample.gif with the first frame.
+   * ImageHelper::extractFirstFrameOfGif('sample.gif');
+   * ```
+   */
+  public static function extractFirstFrameOfGif(string $inputPath, ?string $outputPath = null) {
+    if (!file_exists($inputPath))
+      throw new \RuntimeException('Not found file ' . $inputPath);
+
+    // If the output path is unspecified, overwrite it.
+    if (empty($outputPath))
+      $outputPath = $inputPath;
+    $im = new \Imagick($inputPath);
+    $written = false;
+    if ($im->getNumberImages() > 1) {
+      // Write the first frame as an image.
+      $im = $im->coalesceImages();
+      $im->setIteratorIndex(0);
+      $im->writeImage($outputPath);
+      $written = true;
+    } else if ($outputPath !== $inputPath) {
+      FileHelper::copyFile($inputPath, $outputPath);
+      $written = true;
+    }
+
+    // The owner of the output destination is the same as the original file.
+    if ($written) {
+      chown($outputPath, fileowner($inputPath));
+      chgrp($outputPath, filegroup($inputPath));
+    }
+
+    // Destroy resources.
+    $im->clear();
+  }
+
+  /**
+   * Get the number of GIF frames.
+   */
+  public static function getNumberOfGifFrames(string $inputPath): int {
+    if (!file_exists($inputPath))
+      throw new \RuntimeException('Not found file ' . $inputPath);
+    $im = new \Imagick($inputPath);
+    $numberOfFrames = $im->getNumberImages();
+    $im->clear();
+    return $numberOfFrames;
   }
 }
