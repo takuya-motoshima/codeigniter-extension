@@ -14,5 +14,8 @@
     <testsuite name="Image Helper">
       <file>tests/ImageHelperTest.php</file>
     </testsuite>
+    <testsuite name="AWS Rekognition Client">
+      <file>tests/AwsRekognitionClientTest.php</file>
+    </testsuite>
   </testsuites>
 </phpunit>

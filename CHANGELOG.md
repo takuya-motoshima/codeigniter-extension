@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [4.1.4] - Next
+### Changed
+- Added unit test for face recognition class (\X\Rekognition\Client).
+
 ## [4.1.3] - 2023/2/28
 ### Added
 - Added a method to extract the first frame of a GIF in the class "\X\Util\ImageHelper".
@@ -1180,10 +1184,10 @@ All notable changes to this project will be documented in this file.
 
     $client = new AmazonSesClient([
       'credentials' => [
-        'key' => $_ENV['AMAZON_SES_ACCESS_KEY'],
-        'secret' => $_ENV['AMAZON_SES_SECRET_KEY']
+        'key' => $_ENV['AMS_SES_ACCESS_KEY'],
+        'secret' => $_ENV['AMS_SES_SECRET_KEY']
       ],
-      'configuration' => $_ENV['AMAZON_SES_CONFIGURATION'],
+      'configuration' => $_ENV['AMS_SES_CONFIGURATION'],
       'region' => 'us-west-2',
     ]);
 
@@ -1682,6 +1686,7 @@ All notable changes to this project will be documented in this file.
       ->insert_on_duplicate_update_batch();
     ```
 
+[4.1.4]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v4.1.3...v4.1.4
 [4.1.3]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v4.1.2...v4.1.3
 [4.1.2]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v4.1.1...v4.1.2
 [4.1.1]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v4.1.0...v4.1.1
