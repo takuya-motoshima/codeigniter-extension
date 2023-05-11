@@ -1,7 +1,7 @@
 <?php
 /**
  * ```sh
- * php prototypes/get-file-owner.php
+ * php __prototypes__/get-file-owner.php
  * ```
  * 
  * All usernames and IDs can be checked with the following command

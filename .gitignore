@@ -26,7 +26,7 @@ sample/public/upload/*
 !sample/public/upload/8.png
 sample/.env
 !sample/.env.sample
-tests/.env
-!tests/.env.sample
+__tests__/.env
+!__tests__/.env.sample
 !.gitkeep
 .phpunit.result.cache

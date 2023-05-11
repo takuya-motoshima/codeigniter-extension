@@ -1,135 +1,157 @@
 <?php
 namespace X\Util;
-use \X\Util\Logger;
+// use \X\Util\Logger;
 
 class RestClient {
-  public $option;
   public $response;
-  public $response_source;
-  public $headers;
+  public $responseRaw;
+  public $responseHeaders;
   public $info;
   public $error;
   public $status;
-
-  public function __construct(array $option = []) {
-    $defaultOption = [
+  public $options;
+  public $requestUrl;
+  
+  public function __construct(array $options = []) {
+    // Set options.
+    $this->options = array_merge([
       'headers' => [],
       'parameters' => [],
       'curl_option' => [],
-      'user_agent' => "PHP RestClient",
+      'user_agent' => 'PHP RestClient',
       'base_url' => null,
       'username' => null,
       'password' => null,
-      'debug' => false,
+      // 'debug' => false,
       'ssl' => null,
-    ];
-    $this->option = array_merge($defaultOption, $option);
-    if (!empty($option['ssl'])) {
-      $sslDefaultOption = [
+    ], $options);
+
+    // Set SSL option.
+    if (!empty($options['ssl']))
+      $this->options['ssl'] = array_merge([
         'cert_file' => '',// CURLOPT_SSLCERT
         'ca_file' => '',// CURLOPT_CAINFO
         'secret_key_file' => '',// CURLOPT_SSLKEY
         'secret_key_passphrase' => '',// CURLOPT_SSLKEYPASSWD
-      ];
-      $this->option['ssl'] = array_merge($sslDefaultOption, $option['ssl']);
-    }
+      ], $options['ssl']);
   }
 
   /**
-   * GET.
+   * Send GET request.
    */
-  public function get(string $url, $parameters = [], array $headers = []): RestClient {
-    return $this->execute($url, 'GET', $parameters, $headers);
+  public function get(string $requestUrl, $params = [], array $headers = []): RestClient {
+    return $this->send($requestUrl, 'GET', $params, $headers);
   }
 
   /**
-   * POST.
+   * Send POST request.
    */
-  public function post(string $url, $parameters = [], array $headers = []): RestClient {
-    return $this->execute($url, 'POST', $parameters, $headers);
+  public function post(string $requestUrl, $params = [], array $headers = []): RestClient {
+    return $this->send($requestUrl, 'POST', $params, $headers);
   }
 
   /**
-   * PUT.
+   * Send PUT request.
    */
-  public function put(string $url, $parameters = [], array $headers = []): RestClient {
-    return $this->execute($url, 'PUT', $parameters, $headers);
+  public function put(string $requestUrl, $params = [], array $headers = []): RestClient {
+    return $this->send($requestUrl, 'PUT', $params, $headers);
   }
 
   /**
-   * DELETE.
+   * Send DELETE request.
    */
-  public function delete(string $url, $parameters = [], array $headers = []): RestClient {
-    return $this->execute($url, 'DELETE', $parameters, $headers);
+  public function delete(string $requestUrl, $params = [], array $headers = []): RestClient {
+    return $this->send($requestUrl, 'DELETE', $params, $headers);
   }
 
   /**
-   * Request.
+   * Common Requests.
    */
-  private function execute(string $url, string $method, $parameters = [], array $headers = []): RestClient {
+  private function send(string $requestUrl, string $method, $params = [], array $headers = []): RestClient {
     $client = clone $this;
-    $client->url = $url;
+    $client->requestUrl = $requestUrl;
     $curl = curl_init();
-    $option = [
+
+    // curl option.
+    $options = [
       CURLOPT_HEADER => TRUE,
       CURLOPT_RETURNTRANSFER => TRUE,
-      CURLOPT_USERAGENT => $client->option['user_agent']
+      CURLOPT_USERAGENT => $client->options['user_agent']
     ];
-    if ($client->option['username']
-        && $client->option['password'])
-      $option[CURLOPT_USERPWD] = sprintf("%s:%s", $client->option['username'], $client->option['password']);
-    if (count($client->option['headers']) || count($headers)){
-      $option[CURLOPT_HTTPHEADER] = [];
-      $headers = array_merge($client->option['headers'], $headers);
+
+    // User name and password for basic authentication.
+    if ($client->options['username']
+        && $client->options['password'])
+      $options[CURLOPT_USERPWD] = sprintf("%s:%s", $client->options['username'], $client->options['password']);
+
+
+    // Set request header.
+    if (count($client->options['headers']) || count($headers)){
+      $options[CURLOPT_HTTPHEADER] = [];
+      $headers = array_merge($client->options['headers'], $headers);
       foreach($headers as $key => $values) {
         foreach(is_array($values)? $values : [$values] as $value)
-          $option[CURLOPT_HTTPHEADER][] = sprintf("%s:%s", $key, $value);
+          $options[CURLOPT_HTTPHEADER][] = sprintf("%s:%s", $key, $value);
       }
     }
-    if (is_array($parameters)){
-      $parameters = array_merge($client->option['parameters'], $parameters);
-      $parameters = http_build_query($parameters);
-      $parameters = preg_replace("/%5B[0-9]+%5D=/simU", "%5B%5D=", $parameters);
+
+    // Set request parameters.
+    if (is_array($params)){
+      $params = array_merge($client->options['parameters'], $params);
+      $params = http_build_query($params);
+      $params = preg_replace("/%5B[0-9]+%5D=/simU", "%5B%5D=", $params);
     } else
-      $parameters = (string) $parameters;
+      $params = (string) $params;
+
+    // Per HTTP method.
     if ($method == 'POST') {
-      $option[CURLOPT_POST] = TRUE;
-      $option[CURLOPT_POSTFIELDS] = $parameters;
+      $options[CURLOPT_POST] = TRUE;
+      $options[CURLOPT_POSTFIELDS] = $params;
     } else if ($method != 'GET') {
-      $option[CURLOPT_CUSTOMREQUEST] = $method;
-      $option[CURLOPT_POSTFIELDS] = $parameters;
-    } else if ($parameters) {
-      $client->url .= strpos($client->url, '?')? '&' : '?';
-      $client->url .= $parameters;
+      $options[CURLOPT_CUSTOMREQUEST] = $method;
+      $options[CURLOPT_POSTFIELDS] = $params;
+    } else if ($params) {
+      $client->requestUrl .= strpos($client->requestUrl, '?')? '&' : '?';
+      $client->requestUrl .= $params;
     }
-    if ($client->option['base_url']){
-      if ($client->url[0] != '/'
-          && substr($client->option['base_url'], -1) != '/')
-        $client->url = '/' . $client->url;
-      $client->url = $client->option['base_url'] . $client->url;
+
+    // Request URL.
+    if ($client->options['base_url']){
+      if ($client->requestUrl[0] != '/'
+          && substr($client->options['base_url'], -1) != '/')
+        $client->requestUrl = '/' . $client->requestUrl;
+      $client->requestUrl = $client->options['base_url'] . $client->requestUrl;
     }
-    $option[CURLOPT_URL] = $client->url;
-    if (!empty($client->option['ssl'])) {
-      $option[CURLOPT_SSL_VERIFYPEER] = FALSE;
-      $option[CURLOPT_SSL_VERIFYHOST] = FALSE;
-      $option[CURLOPT_SSLCERT] = $client->option['ssl']['cert_file'];
-      $option[CURLOPT_CAINFO] = $client->option['ssl']['ca_file'];
-      $option[CURLOPT_SSLKEY] = $client->option['ssl']['secret_key_file'];
-      $option[CURLOPT_SSLKEYPASSWD] = $client->option['ssl']['secret_key_passphrase'];
+    $options[CURLOPT_URL] = $client->requestUrl;
+
+    // SSL client authentication.
+    if (!empty($client->options['ssl'])) {
+      $options[CURLOPT_SSL_VERIFYPEER] = FALSE;
+      $options[CURLOPT_SSL_VERIFYHOST] = FALSE;
+      $options[CURLOPT_SSLCERT] = $client->options['ssl']['cert_file'];
+      $options[CURLOPT_CAINFO] = $client->options['ssl']['ca_file'];
+      $options[CURLOPT_SSLKEY] = $client->options['ssl']['secret_key_file'];
+      $options[CURLOPT_SSLKEYPASSWD] = $client->options['ssl']['secret_key_passphrase'];
     }
-    if ($client->option['curl_option']) {
-      foreach($client->option['curl_option'] as $key => $value)
-        $option[$key] = $value;
+
+    // Set other customized curl options.
+    if ($client->options['curl_option']) {
+      foreach($client->options['curl_option'] as $key => $value)
+        $options[$key] = $value;
     }
-    curl_setopt_array($curl, $option);
+
+    // Send request.
+    curl_setopt_array($curl, $options);
     $client->parse(curl_exec($curl));
+
+    // Get response.
     $client->info = (object) curl_getinfo($curl);
     $client->error = curl_error($curl);
     curl_close($curl);
     if (!($client->status >= 200 && $client->status < 400))
-      throw new \X\Exception\RestClientException(sprintf('Request failed. status=%s, url=%s %s, error=%s', $client->status, $method, $client->url, $client->error));
-    if ($client->option['debug'])
-      Logger::debug(sprintf('status=%s, url=%s %s', $client->status, $method, $client->url));
+      throw new \X\Exception\RestClientException(sprintf('Request failed. status=%s, url=%s %s, error=%s', $client->status, $method, $client->requestUrl, $client->error));
+    // if ($client->options['debug'])
+    //   Logger::debug(sprintf('status=%s, url=%s %s', $client->status, $method, $client->requestUrl));
     return $client;
   }
 
@@ -138,13 +160,13 @@ class RestClient {
    */
   private function parse(string $response) {
     $this->response = null;
-    $this->response_source = null;
-    $this->headers = [];
+    $this->responseRaw = null;
+    $this->responseHeaders = [];
     $this->status = null;
     $line = strtok($response, "\n");
     do {
       if (strlen(trim($line)) == 0) {
-        if (count($this->headers) > 0)
+        if (count($this->responseHeaders) > 0)
           break;
       } else if (strpos($line, 'HTTP') === 0){
         $this->status = (int) preg_replace('/.+(\d{3}).+/', '$1', $line);
@@ -152,16 +174,16 @@ class RestClient {
         list($key, $value) = explode(':', $line, 2);
         $key = trim(strtolower(str_replace('-', '_', $key)));
         $value = trim($value);
-        if (empty($this->headers[$key]))
-          $this->headers[$key] = $value;
-        else if (is_array($this->headers[$key]))
-          $this->headers[$key][] = $value;
+        if (empty($this->responseHeaders[$key]))
+          $this->responseHeaders[$key] = $value;
+        else if (is_array($this->responseHeaders[$key]))
+          $this->responseHeaders[$key][] = $value;
         else
-          $this->headers[$key] = [$this->headers[$key], $value];
+          $this->responseHeaders[$key] = [$this->responseHeaders[$key], $value];
       }
     } while($line = strtok("\n"));
-    $this->headers = (object) $this->headers;
-    $this->response_source = strtok("");
-    $this->response = json_decode($this->response_source, true);
+    $this->responseHeaders = (object) $this->responseHeaders;
+    $this->responseRaw = strtok("");
+    $this->response = json_decode($this->responseRaw, true);
   }
 }

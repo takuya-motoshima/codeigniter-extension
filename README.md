@@ -261,26 +261,13 @@ See [https://codeigniter.com/userguide3/](https://codeigniter.com/userguide3/) f
 
 ## Unit testing
 The unit test consists of the following files.  
-- tests/*.php: Test Case.
+- __tests__/*.php: Test Case.
 - phpunit.xml: Test setting fill.
 - phpunit-printer.yml: Test result output format.
 
 Run a test.  
 ```sh
 composer test
-# PHPUnit Pretty Result Printer 0.32.0 by Codedungeon and contributors.
-# PHPUnit 8.5.15 by Sebastian Bergmann and contributors.
-# 
-# Runtime:       PHP 7.4.21
-# Configuration: /var/www/html/codeigniter-extension/phpunit.xml
-# 
-# 
-#  ==> SampleTest                                   PASS  PASS
-#  ==> EmailValidationTest                          PASS  PASS  PASS  PASS  PASS  PASS  PASS  PASS  PASS  PASS  PASS  PASS  PASS  PASS  PASS  PASS  PASS  PASS  PASS  PASS  PASS  PASS  PASS  PASS  PASS  PASS  PASS  PASS
-# 
-# Time: 40 ms, Memory: 6.00 MB
-# 
-# OK (30 tests, 30 assertions)
 ```
 
 ## Author

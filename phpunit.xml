@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit
-  bootstrap="tests/bootstrap.php"
+  bootstrap="__tests__/bootstrap.php"
   verbose="true"
   colors="true"
   printerClass="Codedungeon\PHPUnitPrettyResultPrinter\Printer">
   <testsuites>
     <testsuite name="Sample">
-      <file>tests/SampleTest.php</file>
+      <file>__tests__/SampleTest.php</file>
     </testsuite>
     <testsuite name="Email Validation">
-      <file>tests/EmailValidationTest.php</file>
+      <file>__tests__/EmailValidationTest.php</file>
     </testsuite>
     <testsuite name="Image Helper">
-      <file>tests/ImageHelperTest.php</file>
+      <file>__tests__/ImageHelperTest.php</file>
     </testsuite>
     <testsuite name="AWS Rekognition Client">
-      <file>tests/AwsRekognitionClientTest.php</file>
+      <file>__tests__/AwsRekognitionClientTest.php</file>
     </testsuite>
   </testsuites>
 </phpunit>

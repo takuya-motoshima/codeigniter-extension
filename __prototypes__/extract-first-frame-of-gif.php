@@ -1,7 +1,7 @@
 <?php
 /**
  * ```sh
- * php prototypes/extract-first-frame-of-gif.php
+ * php __prototypes__/extract-first-frame-of-gif.php
  * ```
  */
 $im = new \Imagick(__DIR__ . '/input/sample.gif');

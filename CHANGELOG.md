@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 ## [4.1.4] - Next
 ### Changed
 - Added unit test for face recognition class (\X\Rekognition\Client).
+- Refactor Util\RestClient member variable names.
+    |Before|After|
+    |--|--|
+    |public $option|public $options|
+    |public $response_source|public $responseRaw|
+    |public $headers|public $responseHeaders|
+- Changed unit test directory from tests to __tests__.
+- Added test code for Rest client class.  
+    See [__rest-client-test__/README.md](__rest-client-test__/README.md) for details.
 
 ## [4.1.3] - 2023/2/28
 ### Added
@@ -24,26 +33,10 @@ All notable changes to this project will be documented in this file.
     $numberOfFrames = ImageHelper::getNumberOfGifFrames('sample.gif');
     ```
 ### Changed
-- Added unit tests for the "\X\Util\ImageHelper" class.
-    The test case class can be found [here](tests/ImageHelperTest.php).  
+- Added unit __tests__ for the "\X\Util\ImageHelper" class.
+    The test case class can be found [here](__tests__/ImageHelperTest.php).  
     ```sh
     composer test
-    # > ./vendor/bin/phpunit
-    # 
-    # PHPUnit Pretty Result Printer 0.32.0 by Codedungeon and contributors.
-    # PHPUnit 8.5.15 by Sebastian Bergmann and contributors.
-    # 
-    # Runtime:       PHP 7.4.21
-    # Configuration: /var/www/html/codeigniter-extension/phpunit.xml
-    # 
-    # 
-    #  ==> SampleTest                                   PASS  PASS
-    #  # ==> EmailValidationTest                          PASS  PASS  PASS  PASS  PASS  PASS  PASS  PASS  PASS  PASS  PASS  PASS  PASS  PASS  PASS  PASS  PASS  PASS  PASS  PASS  PASS  PASS  PASS  PASS  PASS  PASS  PASS  PASS
-    #  ==> ImageHelperTest                              PASS  PASS  PASS  PASS
-    # 
-    # Time: 772 ms, Memory: 6.00 MB
-    # 
-    # OK (34 tests, 34 assertions)
     ```
 
 ## [4.1.2] - 2023/2/10
