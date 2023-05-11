@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [4.1.4] - Next
+## [4.1.4] - 2023/5/11
 ### Changed
 - Added unit test for face recognition class (\X\Rekognition\Client).
 - Refactor Util\RestClient member variable names.
