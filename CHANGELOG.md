@@ -1,6 +1,45 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [4.1.5] - 2023/5/25
+## Added
+- Added a feature to convert PDF to image.  
+    Syntax:
+    ```php
+    \X\Util\ImageHelper::pdf2Image(
+      string $inputPath,
+      string $outputPath,
+      array $options = []
+    ): void;
+    ```
+
+    Parameters:  
+    - string $inputPath  
+        PDF Path.
+    - string $outputPath  
+        Image path to output.
+    - array $options = []  
+        The following options can be specified.  
+        |Item|Description|
+        |--|--|
+        |pageNumber|Page number to out. Default is null, which outputs all pages. Offset is zero.|
+        |xResolution|The horizontal resolution. Default is 288.|
+        |yResolution|The vertical resolution. Default is 288.|
+        |width|Resize width. Default is no resizing (null).|
+        |height|Resize Height. Default is no resizing (null).|
+
+    Example:
+    ```php
+    use \X\Util\ImageHelper;
+
+    // Write all pages of the PDF into the image.
+    // sample-0.jpg, sample-1.jpg... will be written.
+    ImageHelper::pdf2Image('sample.pdf', 'sample.jpg');
+
+    // Only the first page of the PDF is written on the image.
+    ImageHelper::pdf2Image('sample.pdf', 'sample.jpg', ['pageNumber' => 0]);
+    ```
+
 ## [4.1.4] - 2023/5/11
 ### Changed
 - Added unit test for face recognition class (\X\Rekognition\Client).
@@ -1679,6 +1718,7 @@ All notable changes to this project will be documented in this file.
       ->insert_on_duplicate_update_batch();
     ```
 
+[4.1.5]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v4.1.4...v4.1.5
 [4.1.4]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v4.1.3...v4.1.4
 [4.1.3]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v4.1.2...v4.1.3
 [4.1.2]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v4.1.1...v4.1.2

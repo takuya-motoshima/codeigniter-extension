@@ -172,4 +172,60 @@ final class ImageHelper {
     $im->clear();
     return $numberOfFrames;
   }
+
+  /**
+   * Convert PDF to image.
+   */
+  public static function pdf2Image(string $inputPath, string $outputPath, array $options = []): void {
+    try {
+      // Initialize options.
+      $options = array_merge([
+        'pageNumber' => null,// Page number to out. Default is null, which outputs all pages. Offset is zero.
+        'xResolution' => 288,// The horizontal resolution. Default is 288.
+        'yResolution' => 288,// The vertical resolution. Default is 288.
+        'width' => null,// Resize width. Default is no resizing (null).
+        'height' => null,// Resize Height. Default is no resizing (null).
+      ], $options);
+
+      // Imagick instance.
+      $im = new \Imagick();
+
+      // Specify the resolution.
+      $im->setResolution($options['xResolution'], $options['yResolution']);
+
+      // Write all pages?
+      $isWriteAllPages = !isset($options['pageNumber']);
+
+      // Reads image from PDF.
+      if ($isWriteAllPages) {
+        // All pages.
+        $im->readImage($inputPath);
+
+        // Get the number of pages.
+        $numberOfPages = $im->getNumberImages(); 
+      } else
+        // Only the specified page.
+        $im->readImage($inputPath . '[' . $options['pageNumber'] . ']');
+
+      // Writes an image.
+      $im->writeImages($outputPath, false);
+
+      // Destroy resources.
+      $im->clear();
+
+      // Resize the written image.
+      if (!empty($options['width']) || !empty($options['height'])) {
+        if ($isWriteAllPages) {
+          for ($i=0; $i<$numberOfPages; $i++) {
+            $path = preg_replace('/\.(..*)$/', "-{$i}.$1", $outputPath);
+            self::resize($path, $path, $options['width'], $options['height']);
+          }
+        } else
+          self::resize($outputPath, $outputPath, $options['width'], $options['height']);
+      }
+    } catch (\Throwable $e) {
+      Logger::error("Error in {$inputPath}'s PDF conversion");
+      throw $e;
+    }
+  }
 }
