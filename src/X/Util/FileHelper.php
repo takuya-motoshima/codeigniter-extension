@@ -88,27 +88,27 @@ final class FileHelper {
    * FileHelper::delete('/test');
    * 
    * // Delete all files and folders in the "/ path" folder and also in the "/ path" folder.
-   * $deleteRoute = true;
-   * FileHelper::delete('/test', $deleteRoute);
+   * $deleteSelf = true;
+   * FileHelper::delete('/test', $deleteSelf);
    * 
    * // Lock before deleting, Locks are disabled by default.
-   * $deleteRoute = true;
+   * $deleteSelf = true;
    * $enableLock = true;
-   * FileHelper::delete('/test', $deleteRoute, $enableLock);
+   * FileHelper::delete('/test', $deleteSelf, $enableLock);
    * ```
    */
   public static function delete(...$paths) {
     if (is_array(reset($paths)))
       $paths = reset($paths);
-    $deleteRoute = true;
+    $deleteSelf = true;
     $enableLock = false;
     if (count($paths) > 2 && is_bool(end($paths)) && is_bool($paths[count($paths) - 2])) {
       $enableLock = end($paths);
       unset($paths[count($paths) - 1]);
-      $deleteRoute = end($paths);
+      $deleteSelf = end($paths);
       unset($paths[count($paths) - 1]);
     } else if (count($paths) > 1 && is_bool(end($paths))) {
-      $deleteRoute = end($paths);
+      $deleteSelf = end($paths);
       unset($paths[count($paths) - 1]);
     }
     foreach ($paths as $path) {
@@ -133,8 +133,11 @@ final class FileHelper {
               unlink($info);
           }
         }
-        if ($deleteRoute)
+        if ($deleteSelf) {
+          // Clear the cache of file statuses.
+          clearstatcache();
           rmdir($path);
+        }
       }
     }
   }

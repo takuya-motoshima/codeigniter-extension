@@ -5,8 +5,8 @@ use \X\Util\FileHelper;
 use \X\Rekognition\Client;
 
 final class AwsRekognitionClientTest extends TestCase {
+  const TMP_DIR = __DIR__ . '/tmp';
   const INPUT_DIR = __DIR__ . '/input';
-  const INPUT_BAK_DIR = __DIR__ . '/input-backup';
 
   /**
    * An instance of AWS Rekognition Client.
@@ -17,8 +17,8 @@ final class AwsRekognitionClientTest extends TestCase {
 
   public static function setUpBeforeClass(): void {
     // During testing, files in the input directory are overwritten, so reset the input directory before testing.
-    FileHelper::delete(self::INPUT_DIR);
-    FileHelper::copyDirectory(self::INPUT_BAK_DIR, self::INPUT_DIR);
+    FileHelper::delete(self::TMP_DIR);
+    FileHelper::copyDirectory(self::INPUT_DIR, self::TMP_DIR);
   }
 
   protected function setUp(): void {
@@ -33,24 +33,29 @@ final class AwsRekognitionClientTest extends TestCase {
     ]);
   }
 
-  public function testTwoFacesShouldBeTheSame(): void {
-    $face1 = self::INPUT_DIR . '/face_1.jpg';
-    $face2 = self::INPUT_DIR . '/face_3.jpg';
-    $similarity = $this->client->compareFaces($face1, $face2);
-    $this->assertTrue($similarity >= 0);
+
+  public function testFacesOfSamePersonMatch(): void {
+    $similarity = $this->client->compareFaces(
+      self::TMP_DIR . '/person-1-face-1.jpg',
+      self::TMP_DIR . '/person-1-face-2.jpg'
+    );
+    $this->assertTrue($similarity > 90);
   }
 
-  public function testTwoFacesShouldBeDifferent(): void {
-    $face1 = self::INPUT_DIR . '/face_1.jpg';
-    $face2 = self::INPUT_DIR . '/face_2.jpg';
-    $similarity = $this->client->compareFaces($face1, $face2);
-    $this->assertTrue($similarity >= 0);
+  public function testFacesOfDifferentPeopleDoNotMatch(): void {
+    $similarity = $this->client->compareFaces(
+      self::TMP_DIR . '/person-1-face-1.jpg',
+      self::TMP_DIR . '/person-2-face-1.jpg'
+    );
+    $this->assertTrue($similarity < 1);
   }
 
-  public function testComparisonsOtherThanFacialShouldBeAnError(): void {
-    $this->expectException(RuntimeException::class);
-    $face = self::INPUT_DIR . '/face_1.jpg';
-    $car = self::INPUT_DIR . '/car.jpg';
-    $this->client->compareFaces($face, $car);
+  public function testZeroSimilarityForImagesWithoutFace(): void {
+    // $this->expectException(RuntimeException::class);
+    $similarity = $this->client->compareFaces(
+      self::TMP_DIR . '/person-1-face-1.jpg',
+      self::TMP_DIR . '/face-not-found.jpg'
+    );
+    $this->assertEquals($similarity, 0);
   }
 }

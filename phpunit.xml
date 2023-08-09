@@ -17,5 +17,8 @@
     <testsuite name="AWS Rekognition Client">
       <file>__tests__/AwsRekognitionClientTest.php</file>
     </testsuite>
+    <testsuite name="File Helper">
+      <file>__tests__/FileHelperTest.php</file>
+    </testsuite>
   </testsuites>
 </phpunit>

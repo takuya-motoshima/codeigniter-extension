@@ -127,6 +127,7 @@ class Client {
    * @return string
    */
   public function addFaceToCollection(string $collectionId, string $faceImage): string {
+    // If the image is a data URL, convert it to a blob.
     if (ImageHelper::isBase64($faceImage))
       $faceImage = ImageHelper::convertBase64ToBlob($faceImage);
     $numberOfFaces = $this->getNumberOfFaces($faceImage);
@@ -182,8 +183,11 @@ class Client {
    * @return array
    */
   public function getMultipleFacesFromCollectionByImage(string $collectionId, string $faceImage, int $threshold = 80, int $maxFaces = 4096): array {
+    // If the image is a file path, read it as DataURL.
     if (\preg_match('/^\//', $faceImage) && \is_file($faceImage))
       $faceImage = ImageHelper::read($faceImage);
+
+    // If the image is a data URL, convert it to a blob.
     if (ImageHelper::isBase64($faceImage))
       $faceImage = ImageHelper::convertBase64ToBlob($faceImage);
     $numberOfFaces = $this->getNumberOfFaces($faceImage);
@@ -251,10 +255,19 @@ class Client {
    * @return float
    */
   public function compareFaces(string $faceImage1, string $faceImage2): float {
+    // If the image is a file path, read it as DataURL.
     if (\preg_match('/^\//', $faceImage1) && \is_file($faceImage1))
       $faceImage1 = ImageHelper::read($faceImage1);
+
+    // If the image is a file path, read it as DataURL.
     if (\preg_match('/^\//', $faceImage2) && \is_file($faceImage2))
       $faceImage2 = ImageHelper::read($faceImage2);
+
+    // If no face is found in the image, the similarity rate returns zero.
+    if ($this->getNumberOfFaces($faceImage1) === 0 || $this->getNumberOfFaces($faceImage2) === 0)
+      return .0;
+
+    // Compare the faces in the two images.
     $response = $this->client->compareFaces([
       'SimilarityThreshold' => 0,
       'SourceImage' => [ 'Bytes' => ImageHelper::isBase64($faceImage1) ? ImageHelper::convertBase64ToBlob($faceImage1) : $faceImage1 ],
@@ -277,6 +290,7 @@ class Client {
    * @return array
    */
   public function detectionFaces(string $faceImage, int $threshold = 90, $attributes = 'DEFAULT'): array {
+    // If the image is a file path, read it as DataURL.
     if (\preg_match('/^\//', $faceImage) && \is_file($faceImage))
       $faceImage = ImageHelper::read($faceImage);
     $response = $this->client->DetectFaces([

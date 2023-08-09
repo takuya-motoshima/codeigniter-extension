@@ -1,8 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [4.1.6] - 2023/8/9
+### Changed
+- Face Comparison (<code>\X\RekognitionClient#compareFaces()</code>) previously returned a RuntimeException if there were no faces in the image, but now returns zero as the similarity rate.
+- Recursive directory deletion (<code>\X\Util\FileHelper#delete()</code>) now clears the file state cache (<code>clearstatcache</code>) before deleting its self directory.
+
 ## [4.1.5] - 2023/5/25
-## Added
+### Added
 - Added a feature to convert PDF to image.  
     Syntax:
     ```php
@@ -290,13 +295,13 @@ All notable changes to this project will be documented in this file.
     FileHelper::delete('/test');
 
     // Delete all files and folders in the "/ path" folder and also in the "/ path" folder.
-    $deleteRoute = true;
-    FileHelper::delete('/test', $deleteRoute);
+    $deleteSelf = true;
+    FileHelper::delete('/test', $deleteSelf);
 
     // Lock before deleting, Locks are disabled by default.
-    $deleteRoute = true;
+    $deleteSelf = true;
     $enableLock = true;
-    FileHelper::delete('/test', $deleteRoute, $enableLock);
+    FileHelper::delete('/test', $deleteSelf, $enableLock);
     ```
 
 ## [4.0.10] - 2021/10/20
@@ -1718,88 +1723,89 @@ All notable changes to this project will be documented in this file.
       ->insert_on_duplicate_update_batch();
     ```
 
-[4.1.5]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v4.1.4...v4.1.5
-[4.1.4]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v4.1.3...v4.1.4
-[4.1.3]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v4.1.2...v4.1.3
-[4.1.2]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v4.1.1...v4.1.2
-[4.1.1]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v4.1.0...v4.1.1
-[4.1.0]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v4.0.25...v4.1.0
-[4.0.25]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v4.0.24...v4.0.25
-[4.0.24]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v4.0.23...v4.0.24
-[4.0.23]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v4.0.22...v4.0.23
-[4.0.22]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v4.0.21...v4.0.22
-[4.0.21]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v4.0.20...v4.0.21
-[4.0.20]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v4.0.19...v4.0.20
-[4.0.19]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v4.0.18...v4.0.19
-[4.0.18]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v4.0.17...v4.0.18
-[4.0.17]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v4.0.16...v4.0.17
-[4.0.16]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v4.0.15...v4.0.16
-[4.0.15]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v4.0.14...v4.0.15
-[4.0.14]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v4.0.13...v4.0.14
-[4.0.13]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v4.0.12...v4.0.13
-[4.0.12]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v4.0.11...v4.0.12
-[4.0.11]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v4.0.10...v4.0.11
-[4.0.10]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v4.0.9...v4.0.10
-[4.0.9]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v4.0.8...v4.0.9
-[4.0.8]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v4.0.7...v4.0.8
-[4.0.7]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v4.0.6...v4.0.7
-[4.0.6]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v4.0.5...v4.0.6
-[4.0.5]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v4.0.4...v4.0.5
-[4.0.4]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v4.0.3...v4.0.4
-[4.0.3]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v4.0.2...v4.0.3
-[4.0.2]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v4.0.1...v4.0.2
-[4.0.1]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v4.0.0...v4.0.1
-[4.0.0]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.9.9...v4.0.0
-[3.9.9]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.9.8...v3.9.9
-[3.9.8]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.9.7...v3.9.8
-[3.9.7]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.9.6...v3.9.7
-[3.9.6]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.9.5...v3.9.6
-[3.9.5]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.9.4...v3.9.5
-[3.9.4]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.9.3...v3.9.4
-[3.9.3]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.9.2...v3.9.3
-[3.9.2]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.9.1...v3.9.2
-[3.9.1]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.9.0...v3.9.1
-[3.9.0]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.8.9...v3.9.0
-[3.8.9]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.8.8...v3.8.9
-[3.8.8]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.8.7...v3.8.8
-[3.8.7]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.8.6...v3.8.7
-[3.8.6]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.8.5...v3.8.6
-[3.8.5]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.8.4...v3.8.5
-[3.8.4]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.8.3...v3.8.4
-[3.8.3]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.8.2...v3.8.3
-[3.8.2]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.8.1...v3.8.2
-[3.8.1]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.8.0...v3.8.1
-[3.8.0]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.7.9...v3.8.0
-[3.7.9]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.7.8...v3.7.9
-[3.7.8]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.7.7...v3.7.8
-[3.7.7]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.7.6...v3.7.7
-[3.7.6]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.7.5...v3.7.6
-[3.7.5]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.7.4...v3.7.5
-[3.7.4]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.7.3...v3.7.4
-[3.7.3]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.7.2...v3.7.3
-[3.7.2]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.7.1...v3.7.2
-[3.7.1]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.7.0...v3.7.1
-[3.7.0]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.6.9...v3.7.0
-[3.6.9]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.6.8...v3.6.9
-[3.6.8]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.6.7...v3.6.8
-[3.6.7]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.6.6...v3.6.7
-[3.6.6]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.6.5...v3.6.6
-[3.6.5]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.6.4...v3.6.5
-[3.6.4]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.6.3...v3.6.4
-[3.6.3]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.6.2...v3.6.3
-[3.6.2]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.6.1...v3.6.2
-[3.6.1]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.6.0...v3.6.1
-[3.6.0]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.5.9...v3.6.0
-[3.5.9]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.5.8...v3.5.9
-[3.5.8]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.5.7...v3.5.8
-[3.5.7]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.5.5...v3.5.7
-[3.5.5]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.5.4...v3.5.5
-[3.5.4]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.5.3...v3.5.4
-[3.5.3]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.5.0...v3.5.3
-[3.5.0]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.4.8...v3.5.0
-[3.4.8]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.4.7...v3.4.8
-[3.4.7]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.4.6...v3.4.7
-[3.4.6]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.4.2...v3.4.6
-[3.4.2]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.3.9...v3.4.2
-[3.3.9]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.3.8...v3.3.9
 [3.3.8]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v1.0.0...v3.3.8
+[3.3.9]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.3.8...v3.3.9
+[3.4.2]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.3.9...v3.4.2
+[3.4.6]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.4.2...v3.4.6
+[3.4.7]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.4.6...v3.4.7
+[3.4.8]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.4.7...v3.4.8
+[3.5.0]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.4.8...v3.5.0
+[3.5.3]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.5.0...v3.5.3
+[3.5.4]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.5.3...v3.5.4
+[3.5.5]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.5.4...v3.5.5
+[3.5.7]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.5.5...v3.5.7
+[3.5.8]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.5.7...v3.5.8
+[3.5.9]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.5.8...v3.5.9
+[3.6.0]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.5.9...v3.6.0
+[3.6.1]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.6.0...v3.6.1
+[3.6.2]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.6.1...v3.6.2
+[3.6.3]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.6.2...v3.6.3
+[3.6.4]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.6.3...v3.6.4
+[3.6.5]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.6.4...v3.6.5
+[3.6.6]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.6.5...v3.6.6
+[3.6.7]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.6.6...v3.6.7
+[3.6.8]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.6.7...v3.6.8
+[3.6.9]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.6.8...v3.6.9
+[3.7.0]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.6.9...v3.7.0
+[3.7.1]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.7.0...v3.7.1
+[3.7.2]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.7.1...v3.7.2
+[3.7.3]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.7.2...v3.7.3
+[3.7.4]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.7.3...v3.7.4
+[3.7.5]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.7.4...v3.7.5
+[3.7.6]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.7.5...v3.7.6
+[3.7.7]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.7.6...v3.7.7
+[3.7.8]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.7.7...v3.7.8
+[3.7.9]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.7.8...v3.7.9
+[3.8.0]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.7.9...v3.8.0
+[3.8.1]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.8.0...v3.8.1
+[3.8.2]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.8.1...v3.8.2
+[3.8.3]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.8.2...v3.8.3
+[3.8.4]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.8.3...v3.8.4
+[3.8.5]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.8.4...v3.8.5
+[3.8.6]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.8.5...v3.8.6
+[3.8.7]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.8.6...v3.8.7
+[3.8.8]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.8.7...v3.8.8
+[3.8.9]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.8.8...v3.8.9
+[3.9.0]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.8.9...v3.9.0
+[3.9.1]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.9.0...v3.9.1
+[3.9.2]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.9.1...v3.9.2
+[3.9.3]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.9.2...v3.9.3
+[3.9.4]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.9.3...v3.9.4
+[3.9.5]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.9.4...v3.9.5
+[3.9.6]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.9.5...v3.9.6
+[3.9.7]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.9.6...v3.9.7
+[3.9.8]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.9.7...v3.9.8
+[3.9.9]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.9.8...v3.9.9
+[4.0.0]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v3.9.9...v4.0.0
+[4.0.1]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v4.0.0...v4.0.1
+[4.0.2]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v4.0.1...v4.0.2
+[4.0.3]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v4.0.2...v4.0.3
+[4.0.4]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v4.0.3...v4.0.4
+[4.0.5]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v4.0.4...v4.0.5
+[4.0.6]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v4.0.5...v4.0.6
+[4.0.7]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v4.0.6...v4.0.7
+[4.0.8]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v4.0.7...v4.0.8
+[4.0.9]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v4.0.8...v4.0.9
+[4.0.10]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v4.0.9...v4.0.10
+[4.0.11]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v4.0.10...v4.0.11
+[4.0.12]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v4.0.11...v4.0.12
+[4.0.13]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v4.0.12...v4.0.13
+[4.0.14]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v4.0.13...v4.0.14
+[4.0.15]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v4.0.14...v4.0.15
+[4.0.16]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v4.0.15...v4.0.16
+[4.0.17]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v4.0.16...v4.0.17
+[4.0.18]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v4.0.17...v4.0.18
+[4.0.19]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v4.0.18...v4.0.19
+[4.0.20]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v4.0.19...v4.0.20
+[4.0.21]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v4.0.20...v4.0.21
+[4.0.22]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v4.0.21...v4.0.22
+[4.0.23]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v4.0.22...v4.0.23
+[4.0.24]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v4.0.23...v4.0.24
+[4.0.25]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v4.0.24...v4.0.25
+[4.1.0]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v4.0.25...v4.1.0
+[4.1.1]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v4.1.0...v4.1.1
+[4.1.2]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v4.1.1...v4.1.2
+[4.1.3]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v4.1.2...v4.1.3
+[4.1.4]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v4.1.3...v4.1.4
+[4.1.5]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v4.1.4...v4.1.5
+[4.1.6]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v4.1.5...v4.1.6
