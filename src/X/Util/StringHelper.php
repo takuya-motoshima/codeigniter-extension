@@ -5,14 +5,14 @@ final class StringHelper {
   /**
    * Returns characters with left and right whitespace trimmed.
    */
-  public static function trim(?string $str):string {
+  public static function trim(?string $str): string {
     return trim($str, " \t\n\r\0\x0B　");
   }
 
   /**
    * Returns true if the whitespace trimmed character is empty.
    */
-  public static function empty(?string $str):bool {
+  public static function empty(?string $str): bool {
     return empty(self::trim($str));
   }
 

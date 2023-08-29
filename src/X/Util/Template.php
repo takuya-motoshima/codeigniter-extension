@@ -57,7 +57,7 @@ final class Template {
   /**
    * Load template engine.
    */
-  public function load(string $path, array $vars = [], string $extension = 'html'):string {
+  public function load(string $path, array $vars = [], string $extension = 'html'): string {
     return $this->engine->render($path . '.' . $extension, $vars);
   }
 }

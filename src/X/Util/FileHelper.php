@@ -6,11 +6,20 @@ final class FileHelper {
   /**
    * Make directory.
    */
-  public static function makeDirectory(string $dir, int $mode = 0755) {
+  public static function makeDirectory(string $dir, int $mode = 0755): bool {
+    // If the directory already exists, do nothing.
     if (file_exists($dir))
-      return;
-    if (@mkdir($dir, $mode, true) === false)
-      Logger::error("{$dir} directory could not be created");
+      return false;
+
+    // Create a directory.
+    if (@mkdir($dir, $mode, true) === false) {
+      // If the directory creation fails, get the reason.
+      $error = error_get_last();
+      $reason = !empty($error['message']) ? $error['message'] : 'unknown';
+      Logger::info("{$dir} directory creation failed, reason is \"{$reason}\"");
+      return false;
+    }
+    return true;
   }
 
   /**
@@ -220,7 +229,7 @@ final class FileHelper {
   /**
    * Verify that the file is of the specified Mime type.
    */
-  public static function validationMime(string $file, string $mime): bool{
+  public static function validationMime(string $file, string $mime): bool {
     return self::getMimeByConent($file) ===  $mime;
   }
 

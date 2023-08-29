@@ -5,7 +5,7 @@ use \X\Util\FileHelper;
 use \X\Rekognition\Client;
 
 final class AwsRekognitionClientTest extends TestCase {
-  const TMP_DIR = __DIR__ . '/tmp';
+  const INPUT_TMP_DIR = __DIR__ . '/tmp';
   const INPUT_DIR = __DIR__ . '/input';
 
   /**
@@ -17,8 +17,8 @@ final class AwsRekognitionClientTest extends TestCase {
 
   public static function setUpBeforeClass(): void {
     // During testing, files in the input directory are overwritten, so reset the input directory before testing.
-    FileHelper::delete(self::TMP_DIR);
-    FileHelper::copyDirectory(self::INPUT_DIR, self::TMP_DIR);
+    FileHelper::delete(self::INPUT_TMP_DIR);
+    FileHelper::copyDirectory(self::INPUT_DIR, self::INPUT_TMP_DIR);
   }
 
   protected function setUp(): void {
@@ -36,16 +36,16 @@ final class AwsRekognitionClientTest extends TestCase {
 
   public function testFacesOfSamePersonMatch(): void {
     $similarity = $this->client->compareFaces(
-      self::TMP_DIR . '/person-1-face-1.jpg',
-      self::TMP_DIR . '/person-1-face-2.jpg'
+      self::INPUT_TMP_DIR . '/person-1-face-1.jpg',
+      self::INPUT_TMP_DIR . '/person-1-face-2.jpg'
     );
     $this->assertTrue($similarity > 90);
   }
 
   public function testFacesOfDifferentPeopleDoNotMatch(): void {
     $similarity = $this->client->compareFaces(
-      self::TMP_DIR . '/person-1-face-1.jpg',
-      self::TMP_DIR . '/person-2-face-1.jpg'
+      self::INPUT_TMP_DIR . '/person-1-face-1.jpg',
+      self::INPUT_TMP_DIR . '/person-2-face-1.jpg'
     );
     $this->assertTrue($similarity < 1);
   }
@@ -53,8 +53,8 @@ final class AwsRekognitionClientTest extends TestCase {
   public function testZeroSimilarityForImagesWithoutFace(): void {
     // $this->expectException(RuntimeException::class);
     $similarity = $this->client->compareFaces(
-      self::TMP_DIR . '/person-1-face-1.jpg',
-      self::TMP_DIR . '/face-not-found.jpg'
+      self::INPUT_TMP_DIR . '/person-1-face-1.jpg',
+      self::INPUT_TMP_DIR . '/face-not-found.jpg'
     );
     $this->assertEquals($similarity, 0);
   }

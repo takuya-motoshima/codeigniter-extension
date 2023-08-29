@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [4.1.7] - 2023/8/29
+### Changed
+- The directory creation method is a fix that returns true if the directory creation succeeds and false if it fails.  
+    Also changed the log type of error messages in case of failure from error to info.(\X\Util\FileHelper::makeDirectory)
+
 ## [4.1.6] - 2023/8/9
 ### Changed
 - Face Comparison (<code>\X\RekognitionClient#compareFaces()</code>) previously returned a RuntimeException if there were no faces in the image, but now returns zero as the similarity rate.

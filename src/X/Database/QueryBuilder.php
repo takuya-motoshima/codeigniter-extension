@@ -209,7 +209,7 @@ abstract class QueryBuilder extends \CI_DB_query_builder {
    * @see \DB_driver::load_rdriver()
    * @return  string the name of the result class
    */
-  public function load_rdriver():string {
+  public function load_rdriver(): string {
     $driver = '\X\Database\\' . ucfirst($this->dbdriver) . 'Driver';
     if ( ! class_exists($driver, false)) {
       require_once(BASEPATH.'database/DB_result.php');

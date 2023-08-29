@@ -222,7 +222,7 @@ abstract class Model extends \CI_Model {
    * @see \DB_driver::load_rdriver()
    * @return  string the name of the result class
    */
-  public function load_rdriver():string {
+  public function load_rdriver(): string {
     return call_user_func_array([self::db(), __FUNCTION__], func_get_args());
   }
 
