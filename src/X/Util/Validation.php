@@ -59,10 +59,19 @@ final class Validation {
   /**
    * Check if it is a file (directory) path.
    */
-  public static function is_path(string $input): bool {
+  public static function is_path(string $input, bool $denyLeadingSlash = false): bool {
     // UNIX path regular expression.
     // Based on the "/^(\/|(\/[\w\s@^!#$%&-]+)+(\.[a-z]+\/?)?)$/i" regular expression, the leading and trailing slashes have been improved to be optional.
     $re = "/^(\/|(\/?[\w\s@^!#$%&-\.]+)+\/?)$/";
-    return preg_match($re, $input) === 1;
+
+    // Validate input values.
+    $valid = preg_match($re, $input) === 1;
+
+    // If leading slashes are allowed, return the result immediately.
+    if (!$denyLeadingSlash)
+      return $valid;
+
+    // If leading slashes are not allowed, an error is returned if there is a leading slash.
+    return $valid && preg_match('/^\//', $input) === 0;
   }
 }

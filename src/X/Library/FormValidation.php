@@ -102,8 +102,8 @@ abstract class FormValidation extends \CI_Form_validation {
   /**
    * Check if it is a file (directory) path.
    */
-  public function is_path(string $input): bool {
-    if (Validation::is_path($input))
+  public function is_path(string $input, $denyLeadingSlash = false): bool {
+    if (Validation::is_path($input, filter_var($denyLeadingSlash, FILTER_VALIDATE_BOOLEAN)))
       return true;
     $this->set_message('is_path', 'The {field} field must contain a valid directory path.');
     return false;

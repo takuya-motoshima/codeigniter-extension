@@ -1,6 +1,33 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [4.1.9] - 2023/9/15
+### Changed
+- Added a leading slash rejection option to the path validation function. The default is to allow leading slashes.
+
+    ```php
+    use \X\Util\Validation;
+
+    // Allow leading slashes. Both return values of this function are true.
+    Validation::is_path('/usr/lib');
+    Validation::is_path('usr/lib');
+
+    // Leading slashes are not allowed. The return value of this function is false.
+    Validation::is_path('/usr/lib', true);
+
+    // The return value of this function is true.
+    Validation::is_path('usr/lib', true);
+
+    // Form Validation.
+    $this->form_validation
+      ->set_data(['path' => '/usr/lib'])
+      // Do not allow leading slashes. The result of form validation is false.
+      ->set_rules('path', 'path', 'is_path[true]');
+    if (!$this->form_validation->run())
+      // Input error.
+      ;
+    ```
+
 ## [4.1.8] - 2023/9/15
 ### Changed
 - Changed the file (directory) path validation function name from "directory_path" to "is_path".  
@@ -1808,3 +1835,4 @@ All notable changes to this project will be documented in this file.
 [4.1.6]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v4.1.5...v4.1.6
 [4.1.7]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v4.1.6...v4.1.7
 [4.1.8]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v4.1.7...v4.1.8
+[4.1.9]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v4.1.8...v4.1.9
