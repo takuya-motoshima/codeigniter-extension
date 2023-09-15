@@ -8,18 +8,15 @@ abstract class FormValidation extends \CI_Form_validation {
     parent::__construct($rules);
   }
 
-
   /**
-  * Validate datetime.
+  * Check if it is the date and time.
   * ```php
   * $this->form_validation
   *   ->set_data(['datetime' => '2021-02-03 17:46:00'])
   *   ->set_rules('datetime', 'datetime', 'required|datetime[Y-m-d H:i:s]');
-  * if ($this->form_validation->run() != false) {
-  *   // put your code here
-  * } else {
-  *   echo validation_errors();
-  * }
+  * if (!$this->form_validation->run()) {
+  *   // Input error.
+  *   ;
   * ```
   */
   public function datetime(string $input, string $format): bool {
@@ -31,7 +28,7 @@ abstract class FormValidation extends \CI_Form_validation {
   }
 
   /**
-   * Validate hostname.
+   * Check if it is a host name.
    */
   public function hostname(string $input): bool {
     if (Validation::hostname($input))
@@ -41,7 +38,7 @@ abstract class FormValidation extends \CI_Form_validation {
   }
 
   /**
-   * Validate ip address.
+   * Check if it is an IP.
    */
   public function ipaddress(string $input): bool {
     if (Validation::ipaddress($input))
@@ -51,7 +48,7 @@ abstract class FormValidation extends \CI_Form_validation {
   }
 
   /**
-   * Validate ip address or CIDR.
+   * Check if it is IP or CIDR format.
    */
   public function ipaddress_or_cidr(string $input): bool {
     if (Validation::ipaddress_or_cidr($input))
@@ -61,7 +58,7 @@ abstract class FormValidation extends \CI_Form_validation {
   }
 
   /**
-   * Validate hostname or ip address.
+   * Check if it is a host name or IP.
    */
   public function hostname_or_ipaddress(string $input): bool {
     if (Validation::hostname_or_ipaddress($input))
@@ -71,7 +68,7 @@ abstract class FormValidation extends \CI_Form_validation {
   }
 
   /**
-   * Validate UNIX username.
+   * Check if it is a unix user name.
    */
   public function unix_username(string $input): bool {
     if (Validation::unix_username($input))
@@ -81,7 +78,7 @@ abstract class FormValidation extends \CI_Form_validation {
   }
 
   /**
-   * Validate port number.
+   * Check if it is a port number.
    */
   public function port(string $input): bool {
     if (Validation::port($input))
@@ -91,7 +88,7 @@ abstract class FormValidation extends \CI_Form_validation {
   }
 
   /**
-   * Validate email.
+   * Check if it is an e-mail.
    * The verification method uses the regular expression proposed in the HTML5 specification.
    * https://html.spec.whatwg.org/multipage/input.html#valid-e-mail-address
    */
@@ -103,12 +100,12 @@ abstract class FormValidation extends \CI_Form_validation {
   }
 
   /**
-   * Validate directory path.
+   * Check if it is a file (directory) path.
    */
-  public function directory_path(string $input): bool {
-    if (Validation::directory_path($input))
+  public function is_path(string $input): bool {
+    if (Validation::is_path($input))
       return true;
-    $this->set_message('directory_path', 'The {field} field must contain a valid directory path.');
+    $this->set_message('is_path', 'The {field} field must contain a valid directory path.');
     return false;
   }
 }

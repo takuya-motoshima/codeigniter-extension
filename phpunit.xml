@@ -8,8 +8,8 @@
     <testsuite name="Sample">
       <file>__tests__/SampleTest.php</file>
     </testsuite>
-    <testsuite name="Email Validation">
-      <file>__tests__/EmailValidationTest.php</file>
+    <testsuite name="Validation">
+      <file>__tests__/ValidationTest.php</file>
     </testsuite>
     <testsuite name="Image Helper">
       <file>__tests__/ImageHelperTest.php</file>

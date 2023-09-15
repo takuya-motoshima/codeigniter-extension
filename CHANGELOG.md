@@ -1,6 +1,26 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [4.1.8] - 2023/9/15
+### Changed
+- Changed the file (directory) path validation function name from "directory_path" to "is_path".  
+    Also, a bug in regular expressions that prevented path names with subdirectories from being validated correctly has been fixed.
+
+    ```php
+    use \X\Util\Validation;
+
+    // Replace "directory_path" in validators with "is_path".
+    Validation::is_path('/usr/lib');
+
+    // Form Validation.
+    $this->form_validation
+      ->set_data(['path' => '/usr/lib'])
+      ->set_rules('path', 'path', 'is_path');// Replace "directory_path" in validators with "is_path".
+    if (!$this->form_validation->run())
+      // Input error.
+      ;
+    ```
+
 ## [4.1.7] - 2023/8/29
 ### Changed
 - The directory creation method is a fix that returns true if the directory creation succeeds and false if it fails.  
@@ -60,8 +80,6 @@ All notable changes to this project will be documented in this file.
     |public $response_source|public $responseRaw|
     |public $headers|public $responseHeaders|
 - Changed unit test directory from tests to __tests__.
-- Added test code for Rest client class.  
-    See [__rest-client-test__/README.md](__rest-client-test__/README.md) for details.
 
 ## [4.1.3] - 2023/2/28
 ### Added
@@ -396,7 +414,7 @@ All notable changes to this project will be documented in this file.
       ->set_rules('ip24', 'ip24', 'ipaddress_or_cidr')
       ->set_rules('ip25', 'ip25', 'ipaddress_or_cidr')
       ->set_rules('ip26', 'ip26', 'ipaddress_or_cidr')
-      ->set_rules('ip27', 'ip27', 'ipaddress_or_cidr')
+      ->set_rules('ip27', 'ip27', 'ipaddress_or_cidr')form_validation->run
       ->set_rules('ip28', 'ip28', 'ipaddress_or_cidr')
       ->set_rules('ip29', 'ip29', 'ipaddress_or_cidr')
       ->set_rules('ip30', 'ip30', 'ipaddress_or_cidr')
@@ -410,21 +428,9 @@ All notable changes to this project will be documented in this file.
       ->set_rules('ip38', 'ip38', 'ipaddress_or_cidr')
       ->set_rules('ip39', 'ip39', 'ipaddress_or_cidr')
       ->set_rules('ip40', 'ip40', 'ipaddress_or_cidr');
-    if ($this->form_validation->run() != false) {
-      // put your code here
-      Logger::print('There are no errors.');
-    } else {
-      Logger::print('Error message: ', $this->form_validation->error_array());
-      // Output: Array
-      //         (
-      //            [ip2] => The ip2 field must contain a valid ip address or CIDR.
-      //            [ip36] => The ip36 field must contain a valid ip address or CIDR.
-      //            [ip37] => The ip37 field must contain a valid ip address or CIDR.
-      //            [ip38] => The ip38 field must contain a valid ip address or CIDR.
-      //            [ip39] => The ip39 field must contain a valid ip address or CIDR.
-      //            [ip40] => The ip40 field must contain a valid ip address or CIDR.
-      //          )
-    }
+    if (!$this->form_validation->run())
+      // Input error.
+      ;    
     ```
 
 ## [4.0.7] - 2021/9/16
@@ -500,37 +506,28 @@ All notable changes to this project will be documented in this file.
     ```php
     $this->form_validation
       ->set_data([
-        'dir1' => '/', // valid
-        'dir2' => '/abc', // valid
-        'dir3' => '/sab_', // valid
-        'dir4' => '/abc/abc/', // invalid
-        'dir5' => '/sad/dfsd', // valid
-        'dir6' => 'null', // invalid
-        'dir7' => '/dsf/dfsdf/dsfsf/sdfds', // valid
-        'dir8' => '/e3r/343/8437', // valid
-        'dir9' => '/4333/32#' // invalid
+        'path1' => '/', // valid
+        'path2' => '/abc', // valid
+        'path3' => '/sab_', // valid
+        'path4' => '/abc/abc/', // invalid
+        'path5' => '/sad/dfsd', // valid
+        'path6' => 'null', // invalid
+        'path7' => '/dsf/dfsdf/dsfsf/sdfds', // valid
+        'path8' => '/e3r/343/8437', // valid
+        'path9' => '/4333/32#' // invalid
       ])
-      ->set_rules('dir1', 'dir1', 'directory_path')
-      ->set_rules('dir2', 'dir2', 'directory_path')
-      ->set_rules('dir3', 'dir3', 'directory_path')
-      ->set_rules('dir4', 'dir4', 'directory_path')
-      ->set_rules('dir5', 'dir5', 'directory_path')
-      ->set_rules('dir6', 'dir6', 'directory_path')
-      ->set_rules('dir7', 'dir7', 'directory_path')
-      ->set_rules('dir8', 'dir8', 'directory_path')
-      ->set_rules('dir9', 'dir9', 'directory_path');
-    if ($this->form_validation->run() != false) {
-      // put your code here
-      Logger::print('There are no errors.');
-    } else {
-      Logger::print('Error message: ', $this->form_validation->error_array());
-      // Output: Array
-      //         (
-      //            [dir4] => The dir4 field must contain a valid directory path.
-      //            [dir6] => The dir6 field must contain a valid directory path.
-      //            [dir9] => The dir9 field must contain a valid directory path.
-      //          )
-    }
+      ->set_rules('path1', 'path1', 'directory_path')
+      ->set_rules('path2', 'path2', 'directory_path')
+      ->set_rules('path3', 'path3', 'directory_path')
+      ->set_rules('path4', 'path4', 'directory_path')
+      ->set_rules('path5', 'path5', 'directory_path')
+      ->set_rules('path6', 'path6', 'directory_path')
+      ->set_rules('path7', 'path7', 'directory_path')
+      ->set_rules('path8', 'path8', 'directory_path')
+      ->set_rules('path9', 'path9', 'directory_path');
+    if (!$this->form_validation->run())
+      // Input error.
+      ;
     ```
 
 ## [4.0.3] - 2021/6/30
@@ -1075,12 +1072,9 @@ All notable changes to this project will be documented in this file.
       ->set_rules('port5', 'port5', 'port')
       ->set_rules('port6', 'port6', 'port')
       ->set_rules('port7', 'port7', 'port');
-    if ($this->form_validation->run() != false) {
-      // put your code here
-      Logger::print('There are no errors.');
-    } else {
-      Logger::print('Error message: ', $this->form_validation->error_array());
-    }
+    if (!$this->form_validation->run())
+      // Input error.
+      ;
     ```
 
 ## [3.7.8] - 2021/2/6
@@ -1134,11 +1128,9 @@ All notable changes to this project will be documented in this file.
     $this->form_validation
       ->set_data(['datetime' => '2021-02-03 17:46:00'])
       ->set_rules('datetime', 'datetime', 'required|datetime[Y-m-d H:i:s]');
-    if ($this->form_validation->run() != false) {
-      // put your code here
-    } else {
-      echo validation_errors();
-    }
+    if (!$this->form_validation->run())
+      // Input error.
+      ;
     ```
 
 ## [3.7.6] - 2021/1/27
@@ -1475,9 +1467,9 @@ All notable changes to this project will be documented in this file.
             ->set_data($this->input->post())
             ->set_rules('username', 'username', 'required|max_length[30]')
             ->set_rules('password', 'password', 'required|max_length[30]');
-          if (!$this->form_validation->run()) {
+          if (!$this->form_validation->run())
+            // Input error.
             return parent::error(print_r($this->form_validation->error_array(), true), 400);
-          }
           $result = $this->UserModel->signin($this->input->post('username'), $this->input->post('password'));
           parent
             ::set($result)
@@ -1695,12 +1687,12 @@ All notable changes to this project will be documented in this file.
     ```php
     // Here is an example of insert_on_duplicate_update.
     $SampleModel
-    ->set([
-    'key' => '1',
-    'title' => 'My title',
-    'name' => 'My Name'
-    ])
-    ->insert_on_duplicate_update();
+      ->set([
+        'key' => '1',
+        'title' => 'My title',
+        'name' => 'My Name'
+      ])
+      ->insert_on_duplicate_update();
 
     // You can also
     $SampleModel
@@ -1814,3 +1806,5 @@ All notable changes to this project will be documented in this file.
 [4.1.4]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v4.1.3...v4.1.4
 [4.1.5]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v4.1.4...v4.1.5
 [4.1.6]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v4.1.5...v4.1.6
+[4.1.7]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v4.1.6...v4.1.7
+[4.1.8]: https://github.com/takuya-motoshima/codeigniter-extension/compare/v4.1.7...v4.1.8
