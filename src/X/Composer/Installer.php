@@ -71,14 +71,18 @@ final class Installer {
     chdir($cwd);
     $io->write('Deleting unnecessary files.');
     FileHelper::delete(
-      $cwd . '/src',
-      $cwd . '/demo',
-      $cwd . '/screencaps',
-      $cwd . '/composer.json.dist',
-      $cwd . '/skeleton',
       $cwd . '/CHANGELOG.md',
+      $cwd . '/LICENSE',
       $cwd . '/README.md',
-      $cwd . '/LICENSE'
+      $cwd . '/__prototypes__',
+      $cwd . '/__tests__',
+      $cwd . '/composer.json.dist',
+      $cwd . '/demo',
+      $cwd . '/phpunit-printer.yml',
+      $cwd . '/phpunit.xml',
+      $cwd . '/screencaps',
+      $cwd . '/skeleton',
+      $cwd . '/src',
     );
     $io->write('Installation is complete.');
     $io->write('See <https://packagist.org/packages/takuya-motoshima/codeigniter-extensions> for details.');

@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [5.0.1] - 2024/5/14
+### Changed
+- Installer program fix. Added process to remove `__prototypes__/`,`__tests__/`,`phpunit-printer.yml`,`phpunit.xml` after installation.
+- Add `client/package-lock.json` to skeleton.
+
 ## [5.0.0] - 2024/5/13
 ### Changed
 - PHP8 support. PHP8 or higher is required.  
