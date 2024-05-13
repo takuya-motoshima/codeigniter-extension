@@ -2,13 +2,19 @@
 namespace X\Util;
 use \X\Util\Logger;
 
+/**
+ * File Utility.
+ */
 final class FileHelper {
   /**
    * Make directory.
+   * @param string $dir Directory path.
+   * @param int $mode Permissions. Default is 0755.
+   * @return bool Whether the directory was successfully created or not.
    */
-  public static function makeDirectory(string $dir, int $mode = 0755): bool {
-    // If the directory already exists, do nothing.
+  public static function makeDirectory(string $dir, int $mode=0755): bool {
     if (file_exists($dir))
+      // If the directory already exists, do nothing.
       return false;
 
     // Create a directory.
@@ -23,73 +29,75 @@ final class FileHelper {
   }
 
   /**
-   * Move.
-   * ```php
-   * // /tmp/old.txt -> /home/new.txt
-   * \X\Util\FileHelper::move('/tmp/old.txt', '/home/new.txt');
-   *
-   * // /tmp/old.txt -> ./tmp/new.txt
-   * \X\Util\FileHelper::move('/tmp/old.txt', 'new.txt');
-   *
-   * // /tmp/old.txt -> ./tmp/new.txt
-   * \X\Util\FileHelper::move('/tmp/old.txt', 'new');
-   * ```
+   * Move a file or directory.
+   * @param string $src Moving source path.
+   * @param string $dest Destination path.
+   * @param string|null $group (optional) Owning group.
+   * @param string|null $user (optional) Owning user.
+   * @return void
    */
-  public static function move(string $srcPath, string $dstPath, $group = null, $user = null) {
-    if (!file_exists($srcPath))
-      throw new \RuntimeException('Not found file ' . $srcPath);
-    if (strpos($dstPath, '/') === false) {
-      if (strpos($dstPath, '.') === false)
-        $dstPath = $dstPath . '.' . pathinfo($srcPath, PATHINFO_EXTENSION);
-      $dstPath = pathinfo($srcPath, PATHINFO_DIRNAME) . '/' . $dstPath;
+  public static function move(string $src, string $dest, $group=null, $user=null): void {
+    if (!file_exists($src))
+      throw new \RuntimeException('Not found file ' . $src);
+    if (strpos($dest, '/') === false) {
+      if (strpos($dest, '.') === false)
+        $dest = $dest . '.' . pathinfo($src, PATHINFO_EXTENSION);
+      $dest = pathinfo($src, PATHINFO_DIRNAME) . '/' . $dest;
     } else
-      self::makeDirectory(dirname($dstPath));
-    if (rename($srcPath, $dstPath) === false)
-      throw new \RuntimeException('Can not rename from ' . $srcPath . ' to ' . $dstPath);
+      self::makeDirectory(dirname($dest));
+    if (rename($src, $dest) === false)
+      throw new \RuntimeException('Can not rename from ' . $src . ' to ' . $dest);
     if (isset($group))
-      chgrp($dstPath, $group);
+      chgrp($dest, $group);
     if (isset($user))
-      $res = chown($dstPath, $user);
+      $res = chown($dest, $user);
   }
 
   /**
    * Copy file.
+   * @param string $src Copy source path.
+   * @param string $dest Copy destination path.
+   * @param string|null $group (optional) Owning group.
+   * @param string|null $user (optional) Owning user.
+   * @return void
    */
-  public static function copyFile(string $srcPath, string $dstPath, $group = null, $user = null) {
-    if (!file_exists($srcPath))
-      throw new \RuntimeException('Not found file ' . $srcPath);
-    else if (!is_file($srcPath))
-      throw new \RuntimeException($srcPath . ' is not file');
-    self::makeDirectory(dirname($dstPath));
-    if (copy($srcPath, $dstPath) === false)
-      throw new \RuntimeException('Can not copy from ' . $srcPath . ' to ' . $dstPath);
+  public static function copyFile(string $src, string $dest, $group=null, $user=null): void {
+    if (!file_exists($src))
+      throw new \RuntimeException('Not found file ' . $src);
+    else if (!is_file($src))
+      throw new \RuntimeException($src . ' is not file');
+    self::makeDirectory(dirname($dest));
+    if (copy($src, $dest) === false)
+      throw new \RuntimeException('Can not copy from ' . $src . ' to ' . $dest);
     if (isset($group))
-      chgrp($dstPath, $group);
+      chgrp($dest, $group);
     if (isset($user))
-      chown($dstPath, $user);
+      chown($dest, $user);
   }
 
   /**
    * Copy directory.
+   * @param string $src Copy source path.
+   * @param string $dest Copy destination path.
+   * @return void
    */
-  public static function copyDirectory(string $srcDir, string $dstDir) {
-    if (!file_exists($srcDir))
-      throw new \RuntimeException('Not found directory ' . $srcDir);
-    else if (!is_dir($srcDir))
-      throw new \RuntimeException($srcDir . ' is not directory');
-    self::makeDirectory($dstDir);
-    $it = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($srcDir, \RecursiveDirectoryIterator::SKIP_DOTS), \RecursiveIteratorIterator::SELF_FIRST);
+  public static function copyDirectory(string $src, string $dest): void {
+    if (!file_exists($src))
+      throw new \RuntimeException('Not found directory ' . $src);
+    else if (!is_dir($src))
+      throw new \RuntimeException($src . ' is not directory');
+    self::makeDirectory($dest);
+    $it = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($src, \RecursiveDirectoryIterator::SKIP_DOTS), \RecursiveIteratorIterator::SELF_FIRST);
     foreach ($it as $info) {
       if ($info->isDir())
-        self::makeDirectory($dstDir . '/' . $it->getSubPathName());
+        self::makeDirectory($dest . '/' . $it->getSubPathName());
       else
-        self::copyFile($info, $dstDir . '/' . $it->getSubPathName());
+        self::copyFile($info, $dest . '/' . $it->getSubPathName());
     }
   }
 
   /**
    * Delete directory or file.
-   * 
    * ```php
    * use \X\Util\FileHelper;
    * 
@@ -105,8 +113,10 @@ final class FileHelper {
    * $enableLock = true;
    * FileHelper::delete('/test', $deleteSelf, $enableLock);
    * ```
+   * @param string ...$paths Path to be deleted.
+   * @return void
    */
-  public static function delete(...$paths) {
+  public static function delete(...$paths): void {
     if (is_array(reset($paths)))
       $paths = reset($paths);
     $deleteSelf = true;
@@ -153,11 +163,14 @@ final class FileHelper {
 
   /**
    * Replace file content.
+   * @param string $filePath File Path.
+   * @param array $replacement Replacement content.
+   * @return void
    */
-  public static function replace(string $path, array $replace) {
-    $content = file_get_contents($path);
-    $content = str_replace(array_keys($replace), array_values($replace), $content);
-    file_put_contents($path, $content, LOCK_EX);
+  public static function replace(string $filePath, array $replacement): void {
+    $content = file_get_contents($filePath);
+    $content = str_replace(array_keys($replacement), array_values($replacement), $content);
+    file_put_contents($filePath, $content, LOCK_EX);
   }
 
   /**
@@ -168,20 +181,17 @@ final class FileHelper {
    * // Search only image files.
    * FileHelper::find('/img/*.{jpg,jpeg,png,gif}', GLOB_BRACE);
    * ```
-   *
-   * @param  string      $pattern 
-   * @param  int|integer $flags
-   *                     Valid flags:
-   *                     GLOB_MARK - Adds a slash (a backslash on Windows) to each directory returned
-   *                     GLOB_NOSORT - Return files as they appear in the directory (no sorting). When this flag is not used, the pathnames are sorted alphabetically
-   *                     GLOB_NOCHECK - Return the search pattern if no files matching it were found
-   *                     GLOB_NOESCAPE - Backslashes do not quote metacharacters
-   *                     GLOB_BRACE - Expands {a,b,c} to match 'a', 'b', or 'c'
-   *                     GLOB_ONLYDIR - Return only directory entries which match the pattern
-   *                     GLOB_ERR - Stop on read errors (like unreadable directories), by default errors are ignored.
-   * @return array
+   * @param string $pattern Patterns of files to find.
+   * @param int $flags GLOB_MARK: Adds a slash (a backslash on Windows) to each directory returned
+   *                   GLOB_NOSORT: Return files as they appear in the directory (no sorting). When this flag is not used, the pathnames are sorted alphabetically
+   *                   GLOB_NOCHECK: Return the search pattern if no files matching it were found
+   *                   GLOB_NOESCAPE: Backslashes do not quote metacharacters
+   *                   GLOB_BRACE: Expands {a,b,c} to match 'a', 'b', or 'c'
+   *                   GLOB_ONLYDIR: Return only directory entries which match the pattern
+   *                   GLOB_ERR: Stop on read errors (like unreadable directories), by default errors are ignored.
+   * @return array List of files found.
    */
-  public static function find(string $pattern, int $flags = 0): array {
+  public static function find(string $pattern, int $flags=0): array {
     $files = [];
     foreach (glob($pattern, $flags) as $file)
       $files[] = basename($file);
@@ -190,6 +200,8 @@ final class FileHelper {
 
   /**
    * Find only one file.
+   * @param string $pattern Patterns of files to find.
+   * @return string|null Path of the found file.
    */
   public static function findOne(string $pattern): ?string {
     $files = self::find($pattern);
@@ -199,7 +211,9 @@ final class FileHelper {
   }
 
   /**
-   * Find random file name.
+   * One is taken at random from the files matching the pattern.
+   * @param string $pattern Patterns of files to find.
+   * @return string|null Path of the found file.
    */
   public static function findRandomFileName(string $pattern): string {
     $files = self::find($pattern);
@@ -208,33 +222,40 @@ final class FileHelper {
   }
 
   /**
-   * Find random file conent.
+   * Get the contents of one file taken at random from the files matching the pattern.
+   * @param string $pattern Patterns of files to find.
+   * @return string Contents of the found file.
    */
   public static function getRandomFileContent(string $pattern): string {
     return file_get_contents(dirname($pattern) . '/' . self::findRandomFileName($pattern));
   }
 
   /**
-   * Get MimeType from file contents.
+   * Get the MIME type predicted from the content of the file.
+   * @param string $filePath File Path.
+   * @return string MIME type.
    */
-  public static function getMimeByConent(string $file): string {
-    if (!file_exists($file))
-      throw new \RuntimeException('Not found file ' . $file);
-    else if (!is_file($file))
-      throw new \RuntimeException($file . ' is not file');
+  public static function getMimeByConent(string $filePath): string {
+    if (!file_exists($filePath))
+      throw new \RuntimeException('Not found file ' . $filePath);
+    else if (!is_file($filePath))
+      throw new \RuntimeException($filePath . ' is not file');
     $finfo = new \finfo(FILEINFO_MIME_TYPE);
-    return $finfo->file($file);
+    return $finfo->file($filePath);
   }
 
   /**
-   * Verify that the file is of the specified Mime type.
+   * Check if the file is of the specified Mime type.
+   * @param string $filePath File Path.
+   * @param string $mime MIME type.
+   * @return bool Whether the file is of the specified Mime type.
    */
-  public static function validationMime(string $file, string $mime): bool {
-    return self::getMimeByConent($file) ===  $mime;
+  public static function validationMime(string $filePath, string $mime): bool {
+    return self::getMimeByConent($filePath) ===  $mime;
   }
 
   /**
-   * Returns the total size of all files in the directory in bytes.
+   * Get directory size (bytes).
    * ```php
    * use \X\Util\FileHelper;
    *
@@ -244,8 +265,11 @@ final class FileHelper {
    * // Returns the total size of all files in multiple directories
    * FileHelper::getDirectorySize([ '/var/log/php-fpm' '/var/log/nginx' ]);
    * ```
+   * @param string|string[] $dirs Directory path. Multiple can also be specified in an array.
+   * @param array $infos (optional) Information on directories found.
+   * @return int Directory size in bytes.
    */
-  public static function getDirectorySize($dirs, array &$infos = []): int {
+  public static function getDirectorySize($dirs, array &$infos=[]): int {
     if (is_string($dirs))
       $dirs = [ $dirs ];
     else if (!is_array($dirs))
@@ -262,7 +286,7 @@ final class FileHelper {
   }
 
   /**
-   * Returns the file size with units.
+   * Get the file size converted to the appropriate unit.
    * ```php
    * use \X\Util\FileHelper;
    *
@@ -273,12 +297,11 @@ final class FileHelper {
    * FileHelper::humanFilesize('/var/somefile.txt', 3);// 1.177MB
    * FileHelper::humanFilesize('/var/somefile.txt');// 120.56KB
    * ```
-   * 
-   * @param  string $filePath File Path
-   * @param  int|integer $decimals Decimal digits
-   * @return string File size with units 
+   * @param string $filePath File Path.
+   * @param int $decimals (optional) Decimal digits. Default is 2.
+   * @return string File size with units.
    */
-  public static function humanFilesize(string $filePath, int $decimals = 2): string {
+  public static function humanFilesize(string $filePath, int $decimals=2): string {
     $bytes = 0;
     if (file_exists($filePath)) {
       clearstatcache(true, $filePath);

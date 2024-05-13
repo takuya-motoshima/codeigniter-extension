@@ -2,43 +2,47 @@
 namespace X\Util;
 use \X\Util\Logger;
 
+/**
+ * CSV Utility.
+ */
 final class CsvHelper {
   /**
-   * Put a line in csv.
+   * Put row.
+   * @param string $filePath CSV file path.
+   * @param array $row An array of fields.
+   * @return void
    */
-  public static function putRow(string $inputPath, array $line) {
-    if (empty($line))
+  public static function putRow(string $filePath, array $row): void {
+    if (empty($row))
       return;
-    $fp = fopen($inputPath, 'a');
+    $fp = fopen($filePath, 'a');
     if (!flock($fp, LOCK_EX))
-      throw new \RuntimeException('Unable to get file lock. path=' . $inputPath);
-    fputcsv($fp, $line);
+      throw new \RuntimeException('Unable to get file lock. path=' . $filePath);
+    fputcsv($fp, $row);
     flock($fp, LOCK_UN);
     fclose($fp);
   }
 
   /**
-   * Read csv.
+   * Read the CSV.
+   * @param string $filePath CSV file path.
+   * @param callable|null $callback Receives the rows to be registered in the result set and modifies the rows if necessary.
+   * @return array|null List of rows.
    */
-  public static function read(string $inputPath, callable $callback = null) {
-    if (!file_exists($inputPath))
+  public static function read(string $filePath, callable $callback=null) {
+    if (!file_exists($filePath))
       return null;
-    $file = new \SplFileObject($inputPath);
-    $file->setFlags(
-      \SplFileObject::READ_CSV |
-      \SplFileObject::READ_AHEAD |
-      \SplFileObject::SKIP_EMPTY |
-      \SplFileObject::DROP_NEW_LINE
-    );
-    $lines = [];
-    foreach ($file as $line) {
-      if (is_null($line[0]))
+    $file = new \SplFileObject($filePath);
+    $file->setFlags(\SplFileObject::READ_CSV | \SplFileObject::READ_AHEAD | \SplFileObject::SKIP_EMPTY | \SplFileObject::DROP_NEW_LINE);
+    $rows = [];
+    foreach ($file as $row) {
+      if (is_null($row[0]))
         break;
       if (is_callable($callback))
-        $line = $callback($line);
-      if (!empty($line))
-        $lines[] = $line;
+        $row = $callback($row);
+      if (!empty($row))
+        $rows[] = $row;
     }
-    return !empty($lines) ? $lines : null;
+    return !empty($rows) ? $rows : null;
   }
 }

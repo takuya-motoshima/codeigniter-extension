@@ -1,25 +1,34 @@
 <?php
 namespace X\Util;
 
+/**
+ * Logger. Write logs to the file defined in `application/config/config.php#log_path`.
+ */
 final class Logger {
   /**
    * Debug log.
+   * @param mixed ...$params Log Message.
+   * @return void
    */
-  public static function debug(...$params) {
+  public static function debug(...$params): void {
     log_message('debug', self::createMessage($params, debug_backtrace()));
   }
 
   /**
    * Info log.
+   * @param mixed ...$params Log Message.
+   * @return void
    */
-  public static function info(...$params) {
+  public static function info(...$params): void {
     log_message('info', self::createMessage($params, debug_backtrace()));
   }
 
   /**
    * Error log.
+   * @param mixed ...$params Log Message.
+   * @return void
    */
-  public static function error(...$params) {
+  public static function error(...$params): void {
     $message = $params[0] instanceof \Exception
       ? $params[0]->getMessage() . PHP_EOL . $params[0]->getTraceAsString()
       : self::createMessage($params, debug_backtrace());
@@ -28,8 +37,10 @@ final class Logger {
 
   /**
    * Log to browser or console.
+   * @param mixed ...$params Log Message.
+   * @return void
    */
-  public static function display(...$params) {
+  public static function display(...$params): void {
     if (!is_cli()) {
       $message = self::createMessage($params, null, true);
       echo '<p style="border-bottom:1px solid #efefef; padding:4px;">' . $message . '</p>';
@@ -42,8 +53,12 @@ final class Logger {
 
   /**
    * Create a log message.
+   * @param array $params Log Message.
+   * @param array|null $trace (optional) Stack traces.
+   * @param bool $isBrowser (optional) If true, escapes HTML special characters in log messages. Default is false.
+   * @return string Log Message.
    */
-  private static function createMessage(array $params, ?array $trace, bool $isBrowser = false): string {
+  private static function createMessage(array $params, ?array $trace, bool $isBrowser=false): string {
     $message = '';
     if (!empty($trace)) {
       if (defined('FCPATH')) {

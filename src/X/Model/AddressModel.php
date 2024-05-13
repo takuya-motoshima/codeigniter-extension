@@ -1,9 +1,14 @@
 <?php
 namespace X\Model;
 
+/**
+ * Address search model.
+ */
 class AddressModel extends Model {
   /**
-   * Get address by post code
+   * Get address by post code.
+   * @param string $postCode post code.
+   * @return array{prefectureCode: string, address: string} Address Search Results.
    */
   public function getAddressByPostCode(string $postCode): array {
     if (!preg_match('/^\d{3}-?\d{4}$/', $postCode))

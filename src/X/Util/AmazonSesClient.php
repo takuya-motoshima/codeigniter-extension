@@ -1,52 +1,104 @@
 <?php
-/**
- * ```php
- * use \X\Util\AmazonSesClient;
- * $sesClient  = new AmazonSesClient([
- *   'region' => $_ENV['AMS_SES_REGION'],
- *   'credentials' => [
- *     'key'    => $_ENV['AMS_SES_ACCESS_KEY'],
- *     'secret' => $_ENV['AMS_SES_SECRET_KEY']
- *   ],
- *   'configuration' => $_ENV['AMS_SES_CONFIGURATION'],
- * ]);
- * $sesClient
- *   ->from('notification@sample.com', 'Sample Notifications')
- *   ->to('who@sample.org')
- *   ->message_from_xml('sample', ['name' => 'Sample'])
- *   ->send();
- * ```
- *
- * Email body and subject: views/email/sample.xml.
- * ```xml
- * <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
- * <mail>
- * <subject>Email subject</subject>
- * <message>
- * To {{ name }}
- * 
- * Email body
- * </message>
- * </mail>
- * ```
- */
 namespace X\Util;
 use \X\Util\Logger;
 use \X\Util\Template;
 
+/**
+ * Amazon SES Client.
+ * ```php
+ * use \X\Util\AmazonSesClient;
+ *
+ * $ses  = new AmazonSesClient([
+ *   'region' => $_ENV['AMS_SES_REGION'],
+ *   'credentials' => [
+ *     'key' => $_ENV['AMS_SES_ACCESS_KEY'],
+ *     'secret' => $_ENV['AMS_SES_SECRET_KEY']
+ *   ],
+ *   'configuration' => $_ENV['AMS_SES_CONFIGURATION'],
+ * ]);
+ * $ses
+ *   ->from('from@example.com')
+ *   ->to('to@example.com')
+ *   ->messageFromXml('email/sample', ['name' => 'Alex'])
+ *   ->send();
+ * ```
+ *
+ * Email body and subject: application/views/email/sample.xml.
+ * ```xml
+ * <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+ * <mail>
+ * <subject>Test email.</subject>
+ * <message>
+ * Hi {{ name }}.
+ * </message>
+ * </mail>
+ * ```
+ */
 class AmazonSesClient {
-  private $option = null;
+  /**
+   * Options.
+   * @var array{credentials: {key: string, secret: string}, configuration: string|null, region: string, version: string}
+   */
+  private $options = null;
+
+  /**
+   * Character code of the email. Default is "UTF-8".
+   * @var string
+   */
   private $charset = 'UTF-8';
+
+  /**
+   * Sender's email address.
+   * @var string
+   */
   private $from = null;
-  private $from_name = null;
+
+  /**
+   * Sender name.
+   * @var string
+   */
+  private $fromName = null;
+
+  /**
+   * Destination email address.
+   * @var string
+   */
   private $to = null;
+
+  /**
+   * BCC email address.
+   * @var string
+   */
   private $bcc = null;
+
+  /**
+   * CC email address.
+   * @var string
+   */
   private $cc = null;
+
+  /**
+   * Subject.
+   * @var string
+   */
   private $subject = null;
+
+  /**
+   * Body.
+   * @var string
+   */
   private $message = null;
 
-  public function __construct(array $option = []) {
-    $this->option = array_replace_recursive([
+  /**
+   * Initialize AmazonSesClient.
+   * @param string $options[credentials][key] AWS access key ID.
+   * @param string $options[credentials][secret] AWS secret access key.
+   * @param string $options[configuration] The name of the configuration set to use when sending the email. Default is null.
+   * @param string $options[region] The region to send service requests to.
+   * @param string $options[version] Amazon SES Version. Default is "latest".
+   */
+  public function __construct(array $options=[]) {
+    $this->options = array_replace_recursive([
       'credentials' => [
         'key' => null,
         'secret' => null,
@@ -54,11 +106,13 @@ class AmazonSesClient {
       'configuration' => null,
       'region' => null,
       'version' => 'latest',
-    ], $option);
+    ], $options);
   }
 
   /**
    * Set charset.
+   * @param string $charset Character code of the email.
+   * @return AmazonSesClient
    */
   public function charset(string $charset): AmazonSesClient {
     $this->charset = $charset;
@@ -67,15 +121,20 @@ class AmazonSesClient {
 
   /**
    * Set the sender.
+   * @param string $from Sender's email address.
+   * @param string $fromName Sender name.
+   * @return AmazonSesClient
    */
-  public function from(string $from, string $from_name = null): AmazonSesClient {
+  public function from(string $from, string $fromName=null): AmazonSesClient {
     $this->from = $from;
-    $this->from_name = $from_name;
+    $this->fromName = $fromName;
     return $this;
   }
 
   /**
-   * Set destination.
+   * Set Destination email address.
+   * @param string $to Destination email address.
+   * @return AmazonSesClient
    */
   public function to($to): AmazonSesClient {
     $this->to = $to;
@@ -83,7 +142,9 @@ class AmazonSesClient {
   }
 
   /**
-   * Set destination.
+   * Set BCC email address.
+   * @param string $bcc BCC email address.
+   * @return AmazonSesClient
    */
   public function bcc($bcc): AmazonSesClient {
     $this->bcc = $bcc;
@@ -91,7 +152,9 @@ class AmazonSesClient {
   }
 
   /**
-   * Set destination.
+   * Set CC email address.
+   * @param string $cc CC email address.
+   * @return AmazonSesClient
    */
   public function cc($cc): AmazonSesClient {
     $this->cc = $cc;
@@ -99,7 +162,9 @@ class AmazonSesClient {
   }
 
   /**
-   * Set up outgoing subject.
+   * Set Subject.
+   * @param string $subject Subject.
+   * @return AmazonSesClient
    */
   public function subject(string $subject): AmazonSesClient {
     $this->subject = $subject;
@@ -107,7 +172,9 @@ class AmazonSesClient {
   }
 
   /**
-   * Set up outgoing messages.
+   * Set Body.
+   * @param string $body Body.
+   * @return AmazonSesClient
    */
   public function message(string $message): AmazonSesClient {
     $this->message = $message;
@@ -115,13 +182,16 @@ class AmazonSesClient {
   }
 
   /**
-   * Set up outgoing messages.
+   * Set the mail body based on XML.
+   * @param string $xmlPath Path of the XML file. Relative path from `application/views/`.
+   * @param array $params (optional) Embedded variables for subject and body text.
+   * @return AmazonSesClient
    */
-  public function messageFromXml(string $path, array $vars = []): AmazonSesClient {
+  public function messageFromXml(string $xmlPath, array $params=[]): AmazonSesClient {
     static $template;
     if (!isset($template))
       $template = new Template();
-    $xml = new \SimpleXMLElement($template->load($path, $vars, 'xml'));
+    $xml = new \SimpleXMLElement($template->load($xmlPath, $params, 'xml'));
     $this
       ->subject((string) $xml->subject)
       ->message(preg_replace('/^(\r\n|\n|\r)|(\r\n|\n|\r)$/', '', (string) $xml->message));
@@ -130,6 +200,7 @@ class AmazonSesClient {
 
   /**
    * Send.
+   * @return array{MessageId: string} Result of email transmission.
    */
   public function send(): \Aws\Result {
     $CI =& get_instance();
@@ -147,10 +218,10 @@ class AmazonSesClient {
     $destination['ToAddresses'] = is_array($this->to) ? $this->to : [$this->to];
     isset($this->cc) && $destination['CcAddresses'] = $this->cc;
     isset($this->bcc) && $destination['BccAddresses'] = $this->bcc;
-    $result = $this->client()->sendEmail([
+    $res = $this->client()->sendEmail([
       'Destination' => $destination,
       'ReplyToAddresses' => [$this->from],
-      'Source' => isset($this->from_name) ? sprintf('%s <%s>', $this->from_name, $this->from) : $this->from,
+      'Source' => isset($this->fromName) ? sprintf('%s <%s>', $this->fromName, $this->from) : $this->from,
       'Message' => [
         'Body' => [
           // 'Html' => [
@@ -167,33 +238,35 @@ class AmazonSesClient {
           'Data' => $this->subject,
         ],
       ],
-      'ConfigurationSetName' => $this->option['configuration'],
+      'ConfigurationSetName' => $this->options['configuration'],
     ]);
     $this->reset();
-    return $result;
+    return $res;
   }
 
   /**
-   * Get SES client object.
+   * Get SES client instance.
+   * @return \Aws\Ses\SesClient SES client instance.
    */
   private function client(): \Aws\Ses\SesClient {
     static $client;
     if (!isset($client))
       $client = new \Aws\Ses\SesClient([
-        'credentials' => $this->option['credentials'],
-        'version' => $this->option['version'],
-        'region'  => $this->option['region'],
+        'credentials' => $this->options['credentials'],
+        'version' => $this->options['version'],
+        'region' => $this->options['region'],
       ]);
     return $client;
   }
 
   /**
-   * Reset option.
+   * Reset options.
+   * @return void
    */
-  private function reset() {
+  private function reset(): void {
     $this->charset = 'UTF-8';
     $this->from = null;
-    $this->from_name = null;
+    $this->fromName = null;
     $this->to = null;
     $this->bcc = null;
     $this->cc = null;

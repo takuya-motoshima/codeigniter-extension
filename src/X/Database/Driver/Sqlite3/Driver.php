@@ -7,6 +7,8 @@
  * class is being used or not.
  */
 namespace X\Database\Driver\Sqlite3;
+
+#[\AllowDynamicProperties]
 class Driver extends \X_DB {
 
 	/**

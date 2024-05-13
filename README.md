@@ -2,16 +2,11 @@
 You can use extended core classes (controllers, models, views) and utility classes in this package.  
 Click [here](CHANGELOG.md) to see the change log.  
 
-There is a sample application in [sample](sample).  
-Please use it as a reference for your development.
+## API Documentation
+[https://takuya-motoshima.github.io/codeigniter-extension/](https://takuya-motoshima.github.io/codeigniter-extension/)
 
-- [codeigniter-extension](#codeigniter-extension)
-  - [Requirements](#requirements)
-  - [Getting Started](#getting-started)
-  - [Usage](#usage)
-  - [Unit testing](#unit-testing)
-  - [Author](#author)
-  - [License](#license)
+## Demonstration
+There is a demo application in [demo/](demo/). Please use it as a reference for your development.
 
 ## Requirements
 - PHP 7.3.0 or later
@@ -20,17 +15,36 @@ Please use it as a reference for your development.
 - php-mbstring
 - php-xml
 - php-imagick  
-    The method to extract the first frame from a GIF ("extractFirstFrameOfGif") in the "\X\Util\ImageHelper" class requires ImageMagick.   
+    The method to extract the first frame from a GIF ("extractFirstFrameOfGif") in the "\X\Util\ImageHelper" class requires ImageMagick.  
     To use this method, install ImageMagick and php-imagick.  
-    The following command is an example installation on my Amazon Linux2 OS.  
-    ```sh
-    sudo yum -y install ImageMagick php-imagick
-    ```
+
+    - For Amazon LInux 2 OS:
+        ```sh
+        sudo yum -y install ImageMagick php-imagick
+        ```
+    - For Amazon LInux 2023 OS:
+        1. Install ImageMagic and PECL.
+            ```sh
+            sudo dnf -y install ImageMagick ImageMagick-devel php-pear.noarch
+            ```
+        1. Install imagick with PECL.
+            ```sh
+            sudo pecl install imagick
+            ```
+        1. Add `imagick.so` link in `/etc/php.ini`.
+            ```sh
+            extension=imagick.so
+            ```
+        1. Restart `php-fpm` and `nginx`.
+            ```sh
+            sudo systemctl restart nginx
+            sudo systemctl restart php-fpm
+            ```
 
 ## Getting Started
 1. Create project.
     ```sh
-    composer create-project takuya-motoshima/codeIgniter-extension myapp
+    composer create-project takuya-motoshima/codeigniter-extension myapp
     ```
 1. Grant write permission to logs, cache, session to WEB server.
     ```sh
@@ -43,7 +57,7 @@ Please use it as a reference for your development.
     ```sh
     sudo systemctl restart nginx
     ```
-1. Build a DB for [create-db.sql](skeleton/create-db.sql) (MySQL or MariaDB).
+1. Build a DB for [init.sql](skeleton/init.sql) (MySQL or MariaDB).
 1. The skeleton uses webpack for front module bundling.  
     The front module is located in ". /client".  
     How to build the front module:  
@@ -67,7 +81,7 @@ Please use it as a reference for your development.
 
 ## Usage
 See [https://codeigniter.com/userguide3/](https://codeigniter.com/userguide3/) for basic usage.  
-- About config (application/config/config.php).
+- About config (`application/config/config.php`).
     <table>
       <thead>
         <tr>
@@ -122,12 +136,12 @@ See [https://codeigniter.com/userguide3/](https://codeigniter.com/userguide3/) f
         ```php
         $route['default_controller'] = 'users/login';
         ```
-    2. Define login session name.  
+    1. Define login session name.  
         application/config/constants.php:
         ```php
         const SESSION_NAME = 'session';
         ```
-    3. Create control over which URLs can be accessed depending on the user's login status.  
+    1. Create control over which URLs can be accessed depending on the user's login status.  
         At the same time, add env loading and error handling in "pre_system".  
 
         application/config/hooks.php:
@@ -140,20 +154,20 @@ See [https://codeigniter.com/userguide3/](https://codeigniter.com/userguide3/) f
             return;
           $CI =& get_instance();
           $meta = AnnotationReader::getAccessibility($CI->router->class, $CI->router->method);
-          $isLogin = !empty($_SESSION[SESSION_NAME]);
-          $currentPath = lcfirst($CI->router->directory ?? '') . lcfirst($CI->router->class) . '/' . $CI->router->method;
-          $defaultPath = '/users/index';
+          $loggedin = !empty($_SESSION[SESSION_NAME]);
+          $current = lcfirst($CI->router->directory ?? '') . lcfirst($CI->router->class) . '/' . $CI->router->method;
+          $default = '/users/index';
           $allowRoles = !empty($meta->allow_role) ? array_map('trim', explode(',', $meta->allow_role)) : null;
           if (!$meta->allow_http)
             throw new \RuntimeException('HTTP access is not allowed');
-          else if ($isLogin && !$meta->allow_login)
-            redirect($defaultPath);
-          else if (!$isLogin && !$meta->allow_logoff)
+          else if ($loggedin && !$meta->allow_login)
+            redirect($default);
+          else if (!$loggedin && !$meta->allow_logoff)
             redirect('/users/login');
-          else if ($isLogin && !empty($allowRoles)) {
+          else if ($loggedin && !empty($allowRoles)) {
             $role = $_SESSION[SESSION_NAME]['role'] ?? '';
-            if (!in_array($role, $allowRoles) && $defaultPath !== $currentPath)
-              redirect($defaultPath);
+            if (!in_array($role, $allowRoles) && $default !== $current)
+              redirect($default);
           }
         };
 
@@ -166,7 +180,7 @@ See [https://codeigniter.com/userguide3/](https://codeigniter.com/userguide3/) f
           });
         };
         ```
-    4. After this, you will need to create controllers, models, and views, see the sample for details.  
+    1. After this, you will need to create controllers, models, and views, see the demo for details.  
 - About Twig Template Engine.  
     This extension package uses the Twig template.  
     See [here](https://twig.symfony.com/doc/3.x/) for how to use Twig.  
@@ -187,87 +201,23 @@ See [https://codeigniter.com/userguide3/](https://codeigniter.com/userguide3/) f
       Who is it?
     {% else %}
     ```
-- To extend form validation.  
-    You can create a new validation rule by creating "application/libraries/AppForm_validation.php" as follows and adding a validation method.
-    ```php
-    use X\Library\FormValidation;
 
-    class AppForm_validation extends FormValidation {
-      public function is_numeric(string $input): bool {
-        if (!is_numeric($input)) {
-          $this->set_message('is_numeric', 'Please enter a numerical value');
-          return false;
-        }
-        return true;
-      }
-    }
-    ```
-
-    The following extended validations are available in the CodeIgniter extension from the start.    
-    <table>
-      <thead>
-        <tr>
-          <th>Rule</th>
-          <th>Parameter</th>
-          <th>Description</th>
-          <th>Example</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>datetime</td>
-          <td>Yes</td>
-          <td>If the value is other than a date, FALSE is returned..</td>
-          <td>datetime[Y-m-d H:i:s]</td>
-        </tr>
-        <tr>
-          <td>hostname</td>
-          <td>No</td>
-          <td>If the value is other than the host name, FALSE is returned.</td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>ipaddress</td>
-          <td>No</td>
-          <td>If the value is other than an IP address, FALSE is returned.</td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>hostname_or_ipaddress</td>
-          <td>No</td>
-          <td>If the value is other than a host name or IP address, FALSE is returned.</td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>unix_username</td>
-          <td>No</td>
-          <td>If the value is other than a Unix username, FALSE is returned.</td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>port</td>
-          <td>No</td>
-          <td>If the value is other than a port number, FALSE is returned.</td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>email</td>
-          <td>No</td>
-          <td>If the value is other than the email suggested in HTML5, FALSE will be returned.<br><a href="https://html.spec.whatwg.org/multipage/input.html#valid-e-mail-address">https://html.spec.whatwg.org/multipage/input.html#valid-e-mail-address</a></td>
-          <td></td>
-        </tr>
-      </tbody>
-    </table>
-
-## Unit testing
+## Testing
 The unit test consists of the following files.  
 - __tests__/*.php: Test Case.
 - phpunit.xml: Test setting fill.
 - phpunit-printer.yml: Test result output format.
 
-Run a test.  
 ```sh
 composer test
+```
+
+## PHPDoc
+Generate PHPDoc in docs/.
+```sh
+#wget https://phpdoc.org/phpDocumentor.phar
+#chmod +x phpDocumentor.phar
+php phpDocumentor.phar run -d src/ --ignore vendor --ignore src/X/Database/Driver/ -t docs/
 ```
 
 ## Author

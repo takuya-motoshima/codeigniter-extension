@@ -3,30 +3,46 @@ namespace X\Composer;
 
 use Composer\Script\Event;
 use Composer\IO\ConsoleIO;
-use X\Util\FileHelper;
+use \X\Util\FileHelper;
 
-const FRAMEWORK = 'vendor/codeigniter/framework';
-const DOCROOT = 'public';
-
+/**
+ * Create a codeigniter-extension project.
+ */
 final class Installer {
+  /**
+   * CodeIgniter directory path.
+   * @var string
+   */
+  const FRAMEWORK = 'vendor/codeigniter/framework';
+
+  /**
+   * The public directory path of the project to be created.
+   * @var string
+   */
+  const DOCROOT = 'public';
+
+  /**
+   * Create a codeigniter-extension project.
+   * @param Event $event Command Event.
+   * @return void
+   */
   public static function run(Event $event) {
     $cwd = getcwd();
-
     $io = $event->getIO();
     $io->write('Preparing the application file.');
-    FileHelper::copyDirectory(FRAMEWORK . '/application', 'application');
+    FileHelper::copyDirectory(self::FRAMEWORK . '/application', 'application');
     FileHelper::copyDirectory('skeleton/application', 'application');
 
     $io->write('Create an entry point (index.php).');
-    FileHelper::copyFile(FRAMEWORK . '/index.php', DOCROOT . '/index.php');
-    FileHelper::copyDirectory('skeleton/public', DOCROOT);
-    FileHelper::replace(DOCROOT . '/index.php', [
-      '$system_path = \'system\';' => '$system_path = \'../' . FRAMEWORK . '/system\';',
+    FileHelper::copyFile(self::FRAMEWORK . '/index.php', self::DOCROOT . '/index.php');
+    FileHelper::copyDirectory('skeleton/public', self::DOCROOT);
+    FileHelper::replace(self::DOCROOT . '/index.php', [
+      '$system_path = \'system\';' => '$system_path = \'../' . self::FRAMEWORK . '/system\';',
       '$application_folder = \'application\';' => '$application_folder = \'../application\';',
     ]);
 
-    $io->write('Copy the sample DB(create-db.sql).');
-    FileHelper::copyFile('skeleton/create-db.sql', 'create-db.sql');
+    $io->write('Copy the sample DB(init.sql).');
+    FileHelper::copyFile('skeleton/init.sql', 'init.sql');
 
     $io->write('Create a config (config.php).');
     FileHelper::replace('application/config/config.php', [
@@ -56,7 +72,7 @@ final class Installer {
     $io->write('Deleting unnecessary files.');
     FileHelper::delete(
       $cwd . '/src',
-      $cwd . '/sample',
+      $cwd . '/demo',
       $cwd . '/screencaps',
       $cwd . '/composer.json.dist',
       $cwd . '/skeleton',
@@ -64,7 +80,6 @@ final class Installer {
       $cwd . '/README.md',
       $cwd . '/LICENSE'
     );
-
     $io->write('Installation is complete.');
     $io->write('See <https://packagist.org/packages/takuya-motoshima/codeigniter-extensions> for details.');
   }

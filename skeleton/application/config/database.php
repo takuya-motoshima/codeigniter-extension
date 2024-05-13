@@ -1,6 +1,4 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
-
 /*
 | -------------------------------------------------------------------
 | DATABASE CONNECTIVITY SETTINGS
@@ -72,27 +70,27 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 */
 $active_group = 'default';
 $query_builder = true;
-$database = 'ci_sample_db';
+$database = 'codeigniter_extension_db';
 $username = 'root';
 $password = '';
 $db['default'] = array(
-	'dsn'	=> '',
-	'hostname' => 'localhost',
-	'username' => $username,
-	'password' => $password,
-	'database' => $database,
-	'dbdriver' => 'mysqli',
-	'dbprefix' => '',
-	'pconnect' => false,
-	'db_debug' => (ENVIRONMENT !== 'production'),
-	'cache_on' => false,
-	'cachedir' => APPPATH . 'cache',
-	'char_set' => 'utf8',
-	'dbcollat' => 'utf8_general_ci',
-	'swap_pre' => '',
-	'encrypt' => false,
-	'compress' => false,
-	'stricton' => false,
-	'failover' => array(),
-	'save_queries' => (ENVIRONMENT !== 'production')
+  'dsn' => '',
+  'hostname' => 'localhost',
+  'username' => $username,
+  'password' => $password,
+  'database' => $database,
+  'dbdriver' => 'mysqli',
+  'dbprefix' => '',
+  'pconnect' => false,
+  'db_debug' => (ENVIRONMENT !== 'production'),
+  'cache_on' => false,
+  'cachedir' => APPPATH . 'cache',
+  'char_set' => 'utf8',
+  'dbcollat' => 'utf8_general_ci',
+  'swap_pre' => '',
+  'encrypt' => false,
+  'compress' => false,
+  'stricton' => false,
+  'failover' => array(),
+  'save_queries' => (ENVIRONMENT !== 'production')
 );

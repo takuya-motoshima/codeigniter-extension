@@ -7,6 +7,8 @@
  * class is being used or not.
  */
 namespace X\Database\Driver\Pdo;
+
+#[\AllowDynamicProperties]
 class Driver extends \X_DB {
 
 	/**

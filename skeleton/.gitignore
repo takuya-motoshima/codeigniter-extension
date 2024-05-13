@@ -47,7 +47,7 @@ sftp-config.json
 *.tar
 *.zip
 
-# Ignore codeIgniter
+# Ignore codeigniter
 !application/logs/
 application/logs/*
 !application/cache/

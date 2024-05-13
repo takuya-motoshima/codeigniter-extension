@@ -5,16 +5,29 @@ use \Aws\Rekognition\Exception\RekognitionException;
 use \X\Util\ImageHelper;
 use \X\Util\Logger;
 
+/**
+ * Amazon Rekognition API Client.
+ */
 class Client {
+  /**
+   * RekognitionClient instance.
+   * @var RekognitionClient
+   */
   private $client;
+
+  /**
+   * Debug mode.
+   * @var bool
+   */
   private $debug;
  
   /**
-   * @param string $options[region]           AWS Region to connect to.The default is "ap-northeast-1".
-   * @param string $options[key]              AWS access key ID.This is required.
-   * @param string $options[secret]           AWS secret access key.This is required.
-   * @param int    $options[connect_timeout]  A float describing the number of seconds to wait while trying to connect to a server. The default is 5 (seconds).
-   * @param bool   $options[debug]            Specify true to output the result of Rekognition to the debug log.The default is false and no debug log is output.
+   * Initialize Amazon Rekognition API client.
+   * @param string $options[region] AWS Region to connect to.The default is "ap-northeast-1".
+   * @param string $options[key] AWS access key ID.This is required.
+   * @param string $options[secret] AWS secret access key.This is required.
+   * @param int $options[connect_timeout] A float describing the number of seconds to wait while trying to connect to a server. The default is 5 (seconds).
+   * @param bool $options[debug] Specify true to output the result of Rekognition to the debug log.The default is false and no debug log is output.
    */
   public function __construct(array $options) {
     $options = array_merge([
@@ -45,15 +58,16 @@ class Client {
   }
 
   /**
-   * @param string $collectionId
+   * Add a collection.
+   * @param string $collectionId Collection ID.
    * @return void
    */
-  public function addCollection(string $collectionId) {
+  public function addCollection(string $collectionId): void {
     try {
-      $response = $this->client->createCollection(['CollectionId' => $collectionId])->toArray();
+      $res = $this->client->createCollection(['CollectionId' => $collectionId])->toArray();
       if ($this->debug)
-        Logger::debug('Response: ', $response);
-      $status = $response['StatusCode'] ?? null;
+        Logger::debug('Response: ', $res);
+      $status = $res['StatusCode'] ?? null;
       if ($status != 200)
         throw new \RuntimeException('Collection could not be created');
     } catch (RekognitionException $e) {
@@ -63,18 +77,19 @@ class Client {
   }
 
   /**
-   * @param string $collectionId
-   * @return void
+   * Get Collection.
+   * @param string $collectionId Collection ID.
+   * @return mixed Collection Data.
    */
   public function getCollection(string $collectionId): ?array {
     try {
-      $response = $this->client->describeCollection(['CollectionId' => $collectionId])->toArray();
+      $res = $this->client->describeCollection(['CollectionId' => $collectionId])->toArray();
       if ($this->debug)
-        Logger::debug('Response: ', $response);
-      $status = $response['@metadata']['statusCode'] ?? null;
+        Logger::debug('Response: ', $res);
+      $status = $res['@metadata']['statusCode'] ?? null;
       if ($status != 200)
         throw new \RuntimeException('Collection getting error');
-      return $response;
+      return $res;
     } catch (RekognitionException $e) {
       if ($e->getAwsErrorCode() !== 'ResourceNotFoundException')
         throw $e;
@@ -83,28 +98,30 @@ class Client {
   }
 
   /**
-   * @return array
+   * Get all collections.
+   * @return string[] List of collection data.
    */
   public function getAllCollections(): array {
-    $response = $this->client->listCollections()->toArray();
+    $res = $this->client->listCollections()->toArray();
     if ($this->debug)
-      Logger::debug('Response: ', $response);
-    $status = $response['@metadata']['statusCode'] ?? null;
+      Logger::debug('Response: ', $res);
+    $status = $res['@metadata']['statusCode'] ?? null;
     if ($status != 200)
       throw new \RuntimeException('Collection getting error');
-    return !empty($response['CollectionIds']) ? $response['CollectionIds'] : [];
+    return !empty($res['CollectionIds']) ? $res['CollectionIds'] : [];
   }
 
   /**
-   * @param string $collectionId
+   * Delete a collection.
+   * @param string $collectionId Collection ID.
    * @return void
    */
-  public function deleteCollection(string $collectionId) {
+  public function deleteCollection(string $collectionId): void {
     try {
-      $response = $this->client->deleteCollection(['CollectionId' => $collectionId])->toArray();
+      $res = $this->client->deleteCollection(['CollectionId' => $collectionId])->toArray();
       if ($this->debug)
-        Logger::debug('Response: ', $response);
-      $status = $response['StatusCode'] ?? null;
+        Logger::debug('Response: ', $res);
+      $status = $res['StatusCode'] ?? null;
       if ($status != 200)
         throw new \RuntimeException('Collection could not be delete');
     } catch (RekognitionException $e) {
@@ -114,28 +131,30 @@ class Client {
   }
 
   /**
-   * @param string $collectionId
-   * @return bool
+   * Check if a collection exists.
+   * @param string $collectionId Collection ID.
+   * @return bool Whether the collection exists or not.
    */
   public function existsCollection(string $collectionId): bool {
     return !empty($this->getCollection($collectionId));
   }
 
   /**
-   * @param string $collectionId
-   * @param string $faceImage
-   * @return string
+   * Add a face to the collection.
+   * @param string $collectionId Collection ID.
+   * @param string $faceImage Data URL, Blob, or path of face images.
+   * @return string Face ID.
    */
   public function addFaceToCollection(string $collectionId, string $faceImage): string {
-    // If the image is a data URL, convert it to a blob.
-    if (ImageHelper::isBase64($faceImage))
-      $faceImage = ImageHelper::convertBase64ToBlob($faceImage);
-    $numberOfFaces = $this->getNumberOfFaces($faceImage);
-    if ($numberOfFaces === 0)
+    if (ImageHelper::isDataURL($faceImage))
+      // If the image is a data URL, convert it to a blob.
+      $faceImage = ImageHelper::dataURL2Blob($faceImage);
+    $faceCount = $this->getNumberOfFaces($faceImage);
+    if ($faceCount === 0)
       throw new \RuntimeException('Face not detected');
-    else if ($numberOfFaces > 1)
+    else if ($faceCount > 1)
       throw new \RuntimeException('Multiple faces can not be registered');
-    $response = $this->client->indexFaces([
+    $res = $this->client->indexFaces([
       'CollectionId' => $collectionId,
       'DetectionAttributes' => [ 'ALL' ],
       'Image' => [
@@ -143,177 +162,184 @@ class Client {
       ]
     ])->toArray();
     if ($this->debug)
-      Logger::debug('Response: ', $response);
-    $status = $response['@metadata']['statusCode'] ?? null;
+      Logger::debug('Response: ', $res);
+    $status = $res['@metadata']['statusCode'] ?? null;
     if ($status != 200)
       throw new \RuntimeException('Collection face registration error');
-    if (empty($response['FaceRecords']))
+    if (empty($res['FaceRecords']))
       throw new \RuntimeException('This image does not include faces');
-    return $response['FaceRecords'][0]['Face']['FaceId'];
+    return $res['FaceRecords'][0]['Face']['FaceId'];
   }
 
   /**
-   * @param string $collectionId
-   * @return array
+   * Get face data from a collection.
+   * @param string $collectionId Collection ID.
+   * @param int $maxResults (optional) Maximum number of face data to retrieve. Default is 4096.
+   * @return array List of face data.
    */
-  public function getAllFacesFromCollection(string $collectionId, int $maxResults = 4096): array {
-    $response = $this->client->listFaces(['CollectionId' => $collectionId, 'MaxResults' => $maxResults ])->toArray();
+  public function getAllFacesFromCollection(string $collectionId, int $maxResults=4096): array {
+    $res = $this->client->listFaces(['CollectionId' => $collectionId, 'MaxResults' => $maxResults ])->toArray();
     if ($this->debug)
-      Logger::debug('Response: ', $response);
-    $status = $response['@metadata']['statusCode'] ?? null;
+      Logger::debug('Response: ', $res);
+    $status = $res['@metadata']['statusCode'] ?? null;
     if ($status != 200)
       throw new \RuntimeException('Collection face list acquisition error');
-    return $response['Faces'];
+    return $res['Faces'];
   }
 
   /**
-   * @param  string $collectionId
-   * @param  string $faceImage
-   * @return array
+   * Get the face data most similar to the face image from the collection.
+   * @param string $collectionId Collection ID.
+   * @param string $faceImage Data URL, Blob, or path of face images.
+   * @param int $threshold (optional) Face match threshold (in percent). Default is 80.
+   * @return array Face data.
    */
-  public function getFaceFromCollectionByImage(string $collectionId, string $faceImage, int $threshold = 80): ?array {
+  public function getFaceFromCollectionByImage(string $collectionId, string $faceImage, int $threshold=80): ?array {
     $maxFaces = 1;
     $detections = $this->getMultipleFacesFromCollectionByImage($collectionId, $faceImage, $threshold, $maxFaces);
     return !empty($detections) ? $detections[0]: null;
   }
 
   /**
-   * @param  string $collectionId
-   * @param  string $faceImage
-   * @return array
+   * Get all face data from the collection that are similar to the face image.
+   * @param string $collectionId Collection ID.
+   * @param string $faceImage Data URL, Blob, or path of face images.
+   * @param int $threshold (optional) Face match threshold (in percent). Default is 80.
+   * @param int $maxResults (optional) Maximum number of face data to retrieve. Default is 4096.
+   * @return array Face data.
    */
-  public function getMultipleFacesFromCollectionByImage(string $collectionId, string $faceImage, int $threshold = 80, int $maxFaces = 4096): array {
-    // If the image is a file path, read it as DataURL.
+  public function getMultipleFacesFromCollectionByImage(string $collectionId, string $faceImage, int $threshold=80, int $maxFaces=4096): array {
     if (\preg_match('/^\//', $faceImage) && \is_file($faceImage))
-      $faceImage = ImageHelper::read($faceImage);
-
-    // If the image is a data URL, convert it to a blob.
-    if (ImageHelper::isBase64($faceImage))
-      $faceImage = ImageHelper::convertBase64ToBlob($faceImage);
-    $numberOfFaces = $this->getNumberOfFaces($faceImage);
-    if ($numberOfFaces === 0)
+      // If the image is a file path, read it as DataURL.
+      $faceImage = ImageHelper::readAsBlob($faceImage);
+    if (ImageHelper::isDataURL($faceImage))
+      // If the image is a data URL, convert it to a blob.
+      $faceImage = ImageHelper::dataURL2Blob($faceImage);
+    $faceCount = $this->getNumberOfFaces($faceImage);
+    if ($faceCount === 0)
       return [];
-    $response = $this->client->searchFacesByImage([
+    $res = $this->client->searchFacesByImage([
       'CollectionId' => $collectionId,
       'FaceMatchThreshold' => $threshold,
       'Image' => [ 'Bytes' => $faceImage],
       'MaxFaces' => $maxFaces
     ])->toArray();
     if ($this->debug)
-      Logger::debug('Response: ', $response);
-    $status = $response['@metadata']['statusCode'] ?? null;
+      Logger::debug('Response: ', $res);
+    $status = $res['@metadata']['statusCode'] ?? null;
     if ($status != 200)
       throw new \RuntimeException('Collection getting error');
-    if (empty($response['FaceMatches']))
+    if (empty($res['FaceMatches']))
       return [];
     $detections = array_map(function(array $faceMatche) {
       return [
         'faceId' => $faceMatche['Face']['FaceId'],
         'similarity' => round($faceMatche['Similarity'], 1)
       ];
-    }, $response['FaceMatches']);
+    }, $res['FaceMatches']);
     return $detections;
   }
 
   /**
-   * @param  string $collectionId
-   * @param  string $faceImage
-   * @return bool
+   * Check if a face exists in the collection.
+   * @param string $collectionId Collection ID.
+   * @param string $faceImage Data URL, Blob, or path of face images.
+   * @param int $threshold (optional) Face match threshold (in percent). Default is 80.
+   * @return bool Whether the face exists in the collection or not.
    */
-  public function existsFaceFromCollection(string $collectionId, string $faceImage, int $threshold = 80): bool {
+  public function existsFaceFromCollection(string $collectionId, string $faceImage, int $threshold=80): bool {
     return !empty($this->getFaceFromCollectionByImage($collectionId, $faceImage, $threshold));
   }
 
   /**
-   * @param  string $collectionId
-   * @param  array  $faceIds
+   * Delete a face from the collection.
+   * @param string $collectionId Collection ID.
+   * @param string[] $faceIds Face ID list.
    * @return void
    */
-  public function deleteFaceFromCollection(string $collectionId, array $faceIds) {
-    $response = $this->client->deleteFaces([ 'CollectionId' => $collectionId, 'FaceIds' => $faceIds ])->toArray();
+  public function deleteFaceFromCollection(string $collectionId, array $faceIds): void {
+    $res = $this->client->deleteFaces([ 'CollectionId' => $collectionId, 'FaceIds' => $faceIds ])->toArray();
     if ($this->debug)
-      Logger::debug('Response: ', $response);
-    $status = $response['@metadata']['statusCode'] ?? null;
+      Logger::debug('Response: ', $res);
+    $status = $res['@metadata']['statusCode'] ?? null;
     if ($status != 200)
       throw new \RuntimeException('Collection face deletion error');
   }
 
   /**
-   * @param  string $baseDir
-   * @return string
+   * Generate collection ID.
+   * @return string Collection ID.
    */
-  public function generateCollectionId(string $baseDir): string {
-    do {
-      $tmp = rtrim($baseDir, '/') . '/' . uniqid(bin2hex(random_bytes(1)));
-    } while(file_exists($tmp));
-    return basename($tmp);
+  public function generateCollectionId(): string {
+    return uniqid(bin2hex(random_bytes(1)));
   }
 
   /**
-   * @param  string $faceImage1
-   * @param  string $faceImage2
-   * @return float
+   * Comparison of faces.
+   * @param string $faceImage1 Data URL, Blob, or path of face images.
+   * @param string $faceImage2 Data URL, Blob, or path of face images.
+   * @return float Similarity rate (rate) of two faces.
    */
   public function compareFaces(string $faceImage1, string $faceImage2): float {
-    // If the image is a file path, read it as DataURL.
     if (\preg_match('/^\//', $faceImage1) && \is_file($faceImage1))
-      $faceImage1 = ImageHelper::read($faceImage1);
-
-    // If the image is a file path, read it as DataURL.
+      // If the image is a file path, read it as DataURL.
+      $faceImage1 = ImageHelper::readAsBlob($faceImage1);
     if (\preg_match('/^\//', $faceImage2) && \is_file($faceImage2))
-      $faceImage2 = ImageHelper::read($faceImage2);
-
-    // If no face is found in the image, the similarity rate returns zero.
+      // If the image is a file path, read it as DataURL.
+      $faceImage2 = ImageHelper::readAsBlob($faceImage2);
     if ($this->getNumberOfFaces($faceImage1) === 0 || $this->getNumberOfFaces($faceImage2) === 0)
+      // If no face is found in the image, the similarity rate returns zero.
       return .0;
 
     // Compare the faces in the two images.
-    $response = $this->client->compareFaces([
+    $res = $this->client->compareFaces([
       'SimilarityThreshold' => 0,
-      'SourceImage' => [ 'Bytes' => ImageHelper::isBase64($faceImage1) ? ImageHelper::convertBase64ToBlob($faceImage1) : $faceImage1 ],
-      'TargetImage' => [ 'Bytes' => ImageHelper::isBase64($faceImage2) ? ImageHelper::convertBase64ToBlob($faceImage2) : $faceImage2 ]
+      'SourceImage' => [ 'Bytes' => ImageHelper::isDataURL($faceImage1) ? ImageHelper::dataURL2Blob($faceImage1) : $faceImage1 ],
+      'TargetImage' => [ 'Bytes' => ImageHelper::isDataURL($faceImage2) ? ImageHelper::dataURL2Blob($faceImage2) : $faceImage2 ]
     ])->toArray();
     if ($this->debug)
-      Logger::debug('Response: ', $response);
-    $status = $response['@metadata']['statusCode'] ?? null;
+      Logger::debug('Response: ', $res);
+    $status = $res['@metadata']['statusCode'] ?? null;
     if ($status != 200)
       throw new \RuntimeException('Calculate similarit error');
-    if (empty($response['FaceMatches']))
+    if (empty($res['FaceMatches']))
       return .0;
-    return round($response['FaceMatches'][0]['Similarity'], 1);
+    return round($res['FaceMatches'][0]['Similarity'], 1);
   }
 
   /**
-   * @param  string      $faceImage
-   * @param  int|integer $threshold
-   * @param  string      $attributes DEFAULT|ALL
-   * @return array
+   * Face detection.
+   * @param string $faceImage Data URL, Blob, or path of face images.
+   * @param int $threshold (optional) Face recognition threshold (percent). Default is 90.
+   * @param 'DEFAULT'|'ALL' (optional) $attributes If 'ALL', more detailed facial information is retrieved. Default is "DEFAULT".
+   * @return array Detected face data.
    */
-  public function detectionFaces(string $faceImage, int $threshold = 90, $attributes = 'DEFAULT'): array {
+  public function detectionFaces(string $faceImage, int $threshold=90, $attributes='DEFAULT'): array {
     // If the image is a file path, read it as DataURL.
     if (\preg_match('/^\//', $faceImage) && \is_file($faceImage))
-      $faceImage = ImageHelper::read($faceImage);
-    $response = $this->client->DetectFaces([
-      'Image' => [ 'Bytes' => ImageHelper::isBase64($faceImage) ? ImageHelper::convertBase64ToBlob($faceImage) : $faceImage ],
+      $faceImage = ImageHelper::readAsBlob($faceImage);
+    $res = $this->client->DetectFaces([
+      'Image' => [ 'Bytes' => ImageHelper::isDataURL($faceImage) ? ImageHelper::dataURL2Blob($faceImage) : $faceImage ],
       'Attributes' => [ $attributes ]])->toArray();
     if ($this->debug)
-      Logger::debug('Response: ', $response);
-    $status = $response['@metadata']['statusCode'] ?? null;
+      Logger::debug('Response: ', $res);
+    $status = $res['@metadata']['statusCode'] ?? null;
     if ($status != 200)
       throw new \RuntimeException('Face detection error');
-    if (empty($response['FaceDetails']))
+    if (empty($res['FaceDetails']))
       return [];
-    return array_filter($response['FaceDetails'], function(array $face) use ($threshold) {
+    return array_filter($res['FaceDetails'], function(array $face) use ($threshold) {
       return $face['Confidence'] >= $threshold;
     });
   }
 
   /**
-   * @param  string      $faceImage
-   * @param  int|integer $threshold
-   * @return int
+   * Get the number of faces in the image.
+   * @param string $faceImage Data URL, Blob, or path of face images.
+   * @param int $threshold (optional) Face recognition threshold (percent). Default is 90.
+   * @return int Number of faces found.
    */
-  public function getNumberOfFaces(string $faceImage, int $threshold = 90): int {
+  public function getNumberOfFaces(string $faceImage, int $threshold=90): int {
     return count($this->detectionFaces($faceImage, $threshold));
   }
 }

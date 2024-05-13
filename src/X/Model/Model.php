@@ -1,26 +1,32 @@
 <?php
 namespace X\Model;
-use X\Util\Loader;
-use X\Util\Logger;
+use \X\Util\Loader;
 
+/**
+ * CI_Model extension.
+ */
+#[\AllowDynamicProperties]
 abstract class Model extends \CI_Model {
   /**
-   * @var string $table
+   * Table name.
+   * @var string
    */
   const TABLE = '';
 
   /**
-   * @var string|string[] $model
+   * Auto-loading model name.
+   * @var string|string[]
    */
   protected $model;
 
   /**
-   * @var string|string[] $library
+   * Auto-loading library name.
+   * @var string|string[]
    */
   protected $library;
 
   /**
-   * Construct.
+   * Initialize Model.
    */
   public function __construct() {
     parent::__construct();
@@ -30,11 +36,10 @@ abstract class Model extends \CI_Model {
 
   /**
    * Get database object.
-   *
-   * @param string $config
-   * @return CI_DB
+   * @param string $config Connection group name. Default is "default".
+   * @return CI_DB CI_DB instance.
    */
-  public static function db(string $config = 'default') {
+  public static function db(string $config='default') {
     static $db;
     if (!isset($db[$config]))
       $db[$config] = Loader::database($config, true);
@@ -42,12 +47,11 @@ abstract class Model extends \CI_Model {
   }
 
   /**
-   * Get database object.
-   *
-   * @param string $config
-   * @return CI_DB
+   * DB connection check
+   * @param string $config Connection group name. Default is "default".
+   * @return bool Whether you could connect to DB or not.
    */
-  public static function is_connect(string $config = 'default'): bool {
+  public static function is_connect(string $config='default'): bool {
     $db = Loader::database($config, true);
     $connected = !empty($db->conn_id);
     $db->close();
@@ -55,28 +59,35 @@ abstract class Model extends \CI_Model {
   }
 
   /**
-   * Get all.
+   * Query result. "array" version.
+   * @return array Search result data.
    */
   public function get_all() {
     return $this->get()->result_array();
   }
 
   /**
-   * Get by id.
+   * Find records matching the ID.
+   * @param int $id ID.
+   * @return array Search result data.
    */
   public function get_by_id(int $id) {
     return $this->where('id', $id)->get()->row_array();
   }
 
   /**
-   * countById.
+   * Get counts matching ID.
+   * @param int $id ID.
+   * @return int Search result count.
    */
   public function count_by_id(int $id): int {
     return $this->where('id', $id)->count_all_results();
   }
 
   /**
-   * Exists by id.
+   * Check if the ID exists.
+   * @param int $id ID.
+   * @return bool Whether the ID exists.
    */
   public function exists_by_id(int $id): bool {
     $count = $this->count_by_id($id);
@@ -85,7 +96,7 @@ abstract class Model extends \CI_Model {
 
   // ----------------------------------------------------------------
   /**
-   * Insert_On_Duplicate_Key_Update
+   * Insert_On_Duplicate_Key_Update.
    * ```php
    * $SampleModel
    *   ->set([
@@ -100,14 +111,12 @@ abstract class Model extends \CI_Model {
    *   ->set('name', 'My Name')
    *   ->insert_on_duplicate_update();
    * ```
-   *
-   * @param   string $table = '' Table to insert into
-   * @param   array|object $set = null an associative array of insert values
-   * @param   bool $escape = null Whether to escape values and identifiers
-   * @param   int  $batch_size = 100 Count of rows to insert at once
-   * @return  int Insert ID
+   * @param string $table (optional) Table name.
+   * @param array|object $set (optional) an associative array of insert values.
+   * @param bool $escape (optional) Whether to escape values and identifiers.
+   * @return int Insert ID.
    */
-  public function insert_on_duplicate_update(string $table = '', $set = null, bool $escape = null): int {
+  public function insert_on_duplicate_update(string $table='', $set=null, bool $escape=null): int {
     if (\method_exists(self::db(), 'isset_qb_from') && !self::db()->isset_qb_from() && empty($table))
       $table = static::TABLE;
     return self::db()->insert_on_duplicate_update($table, $set, $escape);
@@ -123,30 +132,26 @@ abstract class Model extends \CI_Model {
    *   ])
    *   ->insert_on_duplicate_update_batch();
    * ```
-   *
-   * @param   string $table = '' Table to insert into
-   * @param   array|object $set = null an associative array of insert values
-   * @param   bool $escape = null Whether to escape values and identifiers
-   * @param   int  $batch_size = 100 Count of rows to insert at once
-   * @return  int Number of rows inserted or FALSE on failure
+   * @param string $table (optional) Table name.
+   * @param array|object $set (optional) an associative array of insert values.
+   * @param bool $escape (optional) Whether to escape values and identifiers.
+   * @param int $batchSize (optional) Count of rows to insert at once. Default is 100.
+   * @return int Number of rows inserted or false on failure.
    */
-  public function insert_on_duplicate_update_batch(string $table = '', $set = null, bool $escape = null, int $batch_size = 100): int {
+  public function insert_on_duplicate_update_batch(string $table='', $set=null, bool $escape=null, int $batchSize=100): int {
     if (\method_exists(self::db(), 'isset_qb_from') && !self::db()->isset_qb_from() && empty($table))
       $table = static::TABLE;
-    return self::db()->insert_on_duplicate_update_batch($table, $set, $escape, $batch_size);
+    return self::db()->insert_on_duplicate_update_batch($table, $set, $escape, $batchSize);
   }
 
   /**
    * Insert.
-   *
-   * @see CI_DB_query_builder::insert()
-   * @throws RuntimeException
-   * @param   string $table = '' the table to insert data into
-   * @param   array|object $set = null an associative array of insert values
-   * @param   bool $escape = null Whether to escape values and identifiers
-   * @return  int Insert ID
+   * @param string $table (optional) Table name.
+   * @param array|object $set (optional) An associative array of field/value pairs.
+   * @param bool $escape (optional) Whether to escape values and identifiers.
+   * @return int Insert ID.
    */
-  public function insert($table = '', $set = null, $escape = null): int {
+  public function insert($table='', $set=null, $escape=null): int {
     if (\method_exists(self::db(), 'isset_qb_from') && !self::db()->isset_qb_from() && empty($table))
       $table = static::TABLE;
     return self::db()->insert($table, $set, $escape);
@@ -154,73 +159,56 @@ abstract class Model extends \CI_Model {
 
   /**
    * Insert_Batch.
-   *
-   * @see CI_DB_query_builder::insert_batch()
-   * @throws RuntimeException
-   * @param   string $table Table to insert into
-   * @param   array[] $set = null An associative array of insert values
-   * @param   bool $escape = null Whether to escape values and identifiers
-   * @param   int  $batch_size = 100 Count of rows to insert at once
-   * @return  int[] Insert ID
+   * @param string $table Table name.
+   * @param array|object $set (optional) Data to insert.
+   * @param bool $escape (optional) Whether to escape values and identifiers.
+   * @param int $batchSize (optional) Count of rows to insert at once. Default is 100.
+   * @return int[] Insert ID.
    */
-  public function insert_batch($table, $set = null, $escape = null, $batch_size = 100): array {
+  public function insert_batch($table, $set=null, $escape=null, $batchSize=100): array {
     return call_user_func_array([self::db(), __FUNCTION__], func_get_args());
   }
 
   /**
-   * UPDATE.
-   *
-   * @see CI_DB_query_builder::update()
-   * @param   string $table = '' the table to retrieve the results from
-   * @param   array|object $set = null an associative array of update values
-   * @param   string|array $where = null the where key
-   * @param   int $limit = null The LIMIT clause
-   * @return  void
+   * Update.
+   * @param string $table (optional) Table name.
+   * @param array|object $set (optional) An associative array of field/value pairs.
+   * @param string|array $where (optional) The WHERE clause.
+   * @param int $limit (optional) The LIMIT clause.
+   * @return void
    */
-  public function update($table = '', $set = null, $where = null, $limit = null) {
+  public function update($table='', $set=null, $where=null, $limit=null): void {
     if (\method_exists(self::db(), 'isset_qb_from') && !self::db()->isset_qb_from() && empty($table))
       $table = static::TABLE;
-    return self::db()->update($table, $set, $where, $limit);
+    self::db()->update($table, $set, $where, $limit);
   }
 
   /**
    * Update_Batch.
-   *
-   * @see CI_DB_query_builder::update_batch()
-   * @param   string $table the table to retrieve the results from
-   * @param   array $set = null an associative array of update values
-   * @param   string $index = null the where key
-   * @param   int $batch_size = 100 Count of rows to update at once
-   * @return  int number of rows affected
+   * @param string $table Table name.
+   * @param array|object $set (optional) Field name, or an associative array of field/value pairs.
+   * @param string $value (optional)  Field value, if $set is a single field.
+   * @param int $batchSize (optional) Count of rows to update at once. Default is 100.
+   * @return int Number of rows updated or FALSE on failure
    */
-  public function update_batch($table, $set = null, $index = null, $batch_size = 100): int {
+  public function update_batch($table, $set=null, $value=null, $batchSize=100): int {
     return call_user_func_array([self::db(), __FUNCTION__], func_get_args());
   }
 
   /**
    * Execute the query.
-   * Accepts an SQL string as input and returns a result object upon
-   * successful execution of a "read" type query. Returns boolean true
-   * upon successful execution of a "write" type query. Returns boolean
-   * false upon failure, and if the $db_debug variable is set to true
-   * will raise an error.
-   *
-   * @see  CI_DB_driver::query()
-   * @throws RuntimeException
-   * @param   string $sql The SQL statement to execute
-   * @param   array $binds = false An array of binding data
-   * @param   bool $return_object = null Whether to return a result object or not
-   * @return  mixed true for successful “write-type” queries, CI_DB_result instance (method chaining) on “query” success, false on failure
+   * @param string $sql The SQL statement to execute.
+   * @param array|false $binds (optional) An array of binding data.
+   * @param bool $returnObject (optional) Whether to return a result object or not.
+   * @return mixed true for successful "write-type" queries, CI_DB_result instance (method chaining) on "query" success, false on failure.
    */
-  public function query($sql, $binds = false, $return_object = null) {
+  public function query($sql, $binds=false, $returnObject=null) {
     return call_user_func_array([self::db(), __FUNCTION__], func_get_args());
   }
 
   /**
    * Load the result drivers.
-   *
-   * @see \DB_driver::load_rdriver()
-   * @return  string the name of the result class
+   * @return string the name of the result class.
    */
   public function load_rdriver(): string {
     return call_user_func_array([self::db(), __FUNCTION__], func_get_args());
@@ -229,427 +217,364 @@ abstract class Model extends \CI_Model {
   // ----------------------------------------------------------------
   // Override QueryBuilder method
   /**
-   * Select.
-   * Generates the SELECT portion of the query
-   *
-   * @param   string
-   * @param   mixed
-   * @return  CI_DB_query_builder
+   * Generates the SELECT portion of the query.
+   * @param string $select (optional) The SELECT portion of a query.
+   * @param bool $escape (optional) Whether to escape values and identifiers.
+   * @return Model
    */
-  public function select($select = '*', $escape = NULL) {
+  public function select($select='*', $escape=null): Model {
     call_user_func_array([self::db(), __FUNCTION__], func_get_args());
     return $this;
   }
 
   /**
-   * Select Max.
-   * Generates a SELECT MAX(field) portion of a query
-   *
-   * @param   string  the field
-   * @param   string  an alias
-   * @return  CI_DB_query_builder
+   * Generates a SELECT MAX(field) portion of a query.
+   * @param string $select (optional)  Field to compute the maximum of.
+   * @param string $alias (optional) Alias for the resulting value name.
+   * @return Model
    */
-  public function select_max($select = '', $alias = '') {
+  public function select_max($select='', $alias=''): Model {
     call_user_func_array([self::db(), __FUNCTION__], func_get_args());
     return $this;
   }
 
   /**
-   * Select Min.
    * Generates a SELECT MIN(field) portion of a query
-   *
-   * @param   string  the field
-   * @param   string  an alias
-   * @return  CI_DB_query_builder
+   * @param string $select (optional) Field to compute the minimum of.
+   * @param string $alias (optional) Alias for the resulting value name.
+   * @return Model
    */
-  public function select_min($select = '', $alias = '') {
+  public function select_min($select='', $alias=''): Model {
     call_user_func_array([self::db(), __FUNCTION__], func_get_args());
     return $this;
   }
 
   /**
-   * Select Average.
    * Generates a SELECT AVG(field) portion of a query
-   *
-   * @param   string  the field
-   * @param   string  an alias
-   * @return  CI_DB_query_builder
+   * @param string $select (optional) Field to compute the average of.
+   * @param string $alias (optional) Alias for the resulting value name.
+   * @return Model
    */
-  public function select_avg($select = '', $alias = '') {
+  public function select_avg($select='', $alias=''): Model {
     call_user_func_array([self::db(), __FUNCTION__], func_get_args());
     return $this;
   }
 
   /**
-   * Select Sum.
    * Generates a SELECT SUM(field) portion of a query
-   *
-   * @param   string  the field
-   * @param   string  an alias
-   * @return  CI_DB_query_builder
+   * @param string $select (optional) Field to compute the sum of.
+   * @param string $alias (optional) Alias for the resulting value name.
+   * @return Model
    */
-  public function select_sum($select = '', $alias = '') {
+  public function select_sum($select='', $alias=''): Model {
     call_user_func_array([self::db(), __FUNCTION__], func_get_args());
     return $this;
   }
 
   /**
-   * DISTINCT.
-   * Sets a flag which tells the query string compiler to add DISTINCT
-   *
-   * @param   bool    $val
-   * @return  CI_DB_query_builder
+   * Sets a flag which tells the query string compiler to add DISTINCT.
+   * @param bool $val Desired value of the "distinct" flag.
+   * @return Model
    */
-  public function distinct($val = TRUE) {
+  public function distinct($val=true): Model {
     call_user_func_array([self::db(), __FUNCTION__], func_get_args());
     return $this;
   }
 
   /**
-   * From.
    * Generates the FROM portion of the query
-   *
-   * @param   mixed   $from   can be a string or array
-   * @return  CI_DB_query_builder
+   * @param mixed $from Table name(s); string or array.
+   * @return Model
    */
-  public function from($from) {
+  public function from($from): Model {
     call_user_func_array([self::db(), __FUNCTION__], func_get_args());
     return $this;
   }
 
   /**
-   * JOIN.
    * Generates the JOIN portion of the query
-   *
-   * @param   string
-   * @param   string  the join condition
-   * @param   string  the type of join
-   * @param   string  whether not to try to escape identifiers
-   * @return  CI_DB_query_builder
+   * @param string $table Table name.
+   * @param string $cond The JOIN ON condition.
+   * @param string $type (optional) The JOIN type.
+   * @param bool $escape (optional) Whether to escape values and identifiers.
+   * @return Model
    */
-  public function join($table, $cond, $type = '', $escape = NULL) {
+  public function join($table, $cond, $type='', $escape=null): Model {
     call_user_func_array([self::db(), __FUNCTION__], func_get_args());
     return $this;
   }
 
   /**
-   * WHERE.
-   * Generates the WHERE portion of the query.
-   * Separates multiple calls with 'AND'.
-   *
-   * @param   mixed
-   * @param   mixed
-   * @param   bool
-   * @return  CI_DB_query_builder
+   * Generates the WHERE portion of the query. Separates multiple calls with 'AND'.
+   * @param string $key Name of field to compare, or associative array.
+   * @param mixed $value (optional) If a single key, compared to this value.
+   * @param bool $escape (optional) Whether to escape values and identifiers.
+   * @return Model
    */
-  public function where($key, $value = NULL, $escape = NULL) {
+  public function where($key, $value=null, $escape=null): Model {
     call_user_func_array([self::db(), __FUNCTION__], func_get_args());
     return $this;
   }
 
   /**
-   * OR WHERE.
-   * Generates the WHERE portion of the query.
-   * Separates multiple calls with 'OR'.
-   *
-   * @param   mixed
-   * @param   mixed
-   * @param   bool
-   * @return  CI_DB_query_builder
+   * Generates the WHERE portion of the query. Separates multiple calls with 'OR'.
+   * @param string $key  Name of field to compare, or associative array.
+   * @param mixed $value (optional) If a single key, compared to this value.
+   * @param bool $escape (optional) Whether to escape values and identifiers.
+   * @return CI_DB_query_builder
    */
-  public function or_where($key, $value = NULL, $escape = NULL) {
+  public function or_where($key, $value=null, $escape=null): Model {
     call_user_func_array([self::db(), __FUNCTION__], func_get_args());
     return $this;
   }
 
   /**
-   * WHERE IN.
-   * Generates a WHERE field IN('item', 'item') SQL query,
-   * joined with 'AND' if appropriate.
-   *
-   * @param   string  $key    The field to search
-   * @param   array   $values The values searched on
-   * @param   bool    $escape
-   * @return  CI_DB_query_builder
+   * Generates a WHERE field IN('item', 'item') SQL query, joined with 'AND' if appropriate.
+   * @param string $key (optional) The field to search.
+   * @param array $values (optional) The values searched on.
+   * @param bool $escape (optional) Whether to escape values and identifiers.
+   * @return Model
    */
-  public function where_in($key = NULL, $values = NULL, $escape = NULL) {
+  public function where_in($key=null, $values=null, $escape=null): Model {
     call_user_func_array([self::db(), __FUNCTION__], func_get_args());
     return $this;
   }
 
   /**
-   * OR WHERE IN.
-   * Generates a WHERE field IN('item', 'item') SQL query,
-   * joined with 'OR' if appropriate.
-   *
-   * @param   string  $key    The field to search
-   * @param   array   $values The values searched on
-   * @param   bool    $escape
-   * @return  CI_DB_query_builder
+   * Generates a WHERE field IN('item', 'item') SQL query, joined with 'OR' if appropriate.
+   * @param string $key (optional) The field to search.
+   * @param array $values (optional) The values searched on.
+   * @param bool $escape (optional) Whether to escape values and identifiers.
+   * @return Model
    */
-  public function or_where_in($key = NULL, $values = NULL, $escape = NULL) {
+  public function or_where_in($key=null, $values=null, $escape=null): Model {
     call_user_func_array([self::db(), __FUNCTION__], func_get_args());
     return $this;
   }
 
   /**
-   * WHERE NOT IN.
-   * Generates a WHERE field NOT IN('item', 'item') SQL query,
-   * joined with 'AND' if appropriate.
-   *
-   * @param   string  $key    The field to search
-   * @param   array   $values The values searched on
-   * @param   bool    $escape
-   * @return  CI_DB_query_builder
+   * Generates a WHERE field NOT IN('item', 'item') SQL query, joined with 'AND' if appropriate.
+   * @param string $key (optional) The field to search.
+   * @param array $values (optional) The values searched on.
+   * @param bool $escape (optional) Whether to escape values and identifiers.
+   * @return Model
    */
-  public function where_not_in($key = NULL, $values = NULL, $escape = NULL) {
+  public function where_not_in($key=null, $values=null, $escape=null): Model {
     call_user_func_array([self::db(), __FUNCTION__], func_get_args());
     return $this;
   }
 
   /**
-   * OR WHERE NOT IN.
-   * Generates a WHERE field NOT IN('item', 'item') SQL query,
-   * joined with 'OR' if appropriate.
-   *
-   * @param   string  $key    The field to search
-   * @param   array   $values The values searched on
-   * @param   bool    $escape
-   * @return  CI_DB_query_builder
+   * Generates a WHERE field NOT IN('item', 'item') SQL query, joined with 'OR' if appropriate.
+   * @param string $key (optional) The field to search.
+   * @param array $values (optional) The values searched on.
+   * @param bool $escape (optional) Whether to escape values and identifiers.
+   * @return Model
    */
-  public function or_where_not_in($key = NULL, $values = NULL, $escape = NULL) {
+  public function or_where_not_in($key=null, $values=null, $escape=null): Model {
     call_user_func_array([self::db(), __FUNCTION__], func_get_args());
     return $this;
   }
 
   /**
-   * LIKE.
-   * Generates a %LIKE% portion of the query.
-   * Separates multiple calls with 'AND'.
-   *
-   * @param   mixed   $field
-   * @param   string  $match
-   * @param   string  $side
-   * @param   bool    $escape
-   * @return  CI_DB_query_builder
+   * Generates a %LIKE% portion of the query. Separates multiple calls with 'AND'.
+   * @param mixed $field Field name.
+   * @param string $match (optional) Text portion to match.
+   * @param string $side (optional) Which side of the expression to put the ‘%’ wildcard on.
+   * @param bool $escape (optional) Whether to escape values and identifiers.
+   * @return Model
    */
-  public function like($field, $match = '', $side = 'both', $escape = NULL) {
+  public function like($field, $match='', $side='both', $escape=null): Model {
     call_user_func_array([self::db(), __FUNCTION__], func_get_args());
     return $this;
   }
 
   /**
-   * NOT LIKE.
-   * Generates a NOT LIKE portion of the query.
-   * Separates multiple calls with 'AND'.
-   *
-   * @param   mixed   $field
-   * @param   string  $match
-   * @param   string  $side
-   * @param   bool    $escape
-   * @return  CI_DB_query_builder
+   * Generates a NOT LIKE portion of the query. Separates multiple calls with 'AND'.
+   * @param mixed $field Field name.
+   * @param string $match (optional) Text portion to match.
+   * @param string $side (optional) Which side of the expression to put the ‘%’ wildcard on.
+   * @param bool $escape (optional) Whether to escape values and identifiers.
+   * @return Model
    */
-  public function not_like($field, $match = '', $side = 'both', $escape = NULL) {
+  public function not_like($field, $match='', $side='both', $escape=null): Model {
     call_user_func_array([self::db(), __FUNCTION__], func_get_args());
     return $this;
   }
 
   /**
-   * OR LIKE.
-   * Generates a %LIKE% portion of the query.
-   * Separates multiple calls with 'OR'.
-   *
-   * @param   mixed   $field
-   * @param   string  $match
-   * @param   string  $side
-   * @param   bool    $escape
-   * @return  CI_DB_query_builder
+   * Generates a %LIKE% portion of the query. Separates multiple calls with 'OR'.
+   * @param mixed $field Field name.
+   * @param string $match (optional) Text portion to match.
+   * @param string $side (optional) Which side of the expression to put the ‘%’ wildcard on.
+   * @param bool $escape (optional) Whether to escape values and identifiers.
+   * @return Model
    */
-  public function or_like($field, $match = '', $side = 'both', $escape = NULL) {
+  public function or_like($field, $match='', $side='both', $escape=null): Model {
     call_user_func_array([self::db(), __FUNCTION__], func_get_args());
     return $this;
   }
 
   /**
-   * OR NOT LIKE.
-   * Generates a NOT LIKE portion of the query.
-   * Separates multiple calls with 'OR'.
-   *
-   * @param   mixed   $field
-   * @param   string  $match
-   * @param   string  $side
-   * @param   bool    $escape
-   * @return  CI_DB_query_builder
+   * Generates a NOT LIKE portion of the query. Separates multiple calls with 'OR'.
+   * @param mixed $field Field name.
+   * @param string $match (optional) Text portion to match.
+   * @param string $side (optional) Which side of the expression to put the ‘%’ wildcard on.
+   * @param bool $escape (optional) Whether to escape values and identifiers.
+   * @return Model
    */
-  public function or_not_like($field, $match = '', $side = 'both', $escape = NULL) {
+  public function or_not_like($field, $match='', $side='both', $escape=null): Model {
     call_user_func_array([self::db(), __FUNCTION__], func_get_args());
     return $this;
   }
 
   /**
    * Starts a query group.
-   *
-   * @param   string  $not    (Internal use only)
-   * @param   string  $type   (Internal use only)
-   * @return  CI_DB_query_builder
+   * @param string $not (Internal use only).
+   * @param string $type (Internal use only).
+   * @return Model
    */
-  public function group_start($not = '', $type = 'AND ') {
+  public function group_start($not='', $type='AND '): Model {
     call_user_func_array([self::db(), __FUNCTION__], func_get_args());
     return $this;
   }
 
   /**
    * Starts a query group, but ORs the group.
-   *
-   * @return  CI_DB_query_builder
+   * @return Model
    */
-  public function or_group_start() {
+  public function or_group_start(): Model {
     call_user_func_array([self::db(), __FUNCTION__], func_get_args());
     return $this;
   }
 
   /**
    * Starts a query group, but NOTs the group.
-   *
-   * @return  CI_DB_query_builder
+   * @return Model
    */
-  public function not_group_start() {
+  public function not_group_start(): Model {
     call_user_func_array([self::db(), __FUNCTION__], func_get_args());
     return $this;
   }
 
   /**
    * Starts a query group, but OR NOTs the group.
-   *
-   * @return  CI_DB_query_builder
+   * @return Model
    */
-  public function or_not_group_start() {
+  public function or_not_group_start(): Model {
     call_user_func_array([self::db(), __FUNCTION__], func_get_args());
     return $this;
   }
 
   /**
    * Ends a query group.
-   *
-   * @return  CI_DB_query_builder
+   * @return Model
    */
-  public function group_end() {
+  public function group_end(): Model {
     call_user_func_array([self::db(), __FUNCTION__], func_get_args());
     return $this;
   }
 
   /**
    * GROUP BY.
-   *
-   * @param   string  $by
-   * @param   bool    $escape
-   * @return  CI_DB_query_builder
+   * @param string $by Field(s) to group by; string or array.
+   * @param bool $escape (optional) Whether to escape values and identifiers.
+   * @return Model
    */
-  public function group_by($by, $escape = NULL) {
+  public function group_by($by, $escape=null): Model {
     call_user_func_array([self::db(), __FUNCTION__], func_get_args());
     return $this;
   }
 
   /**
-   * HAVING.
-   * Separates multiple calls with 'AND'.
-   *
-   * @param   string  $key
-   * @param   string  $value
-   * @param   bool    $escape
-   * @return  CI_DB_query_builder
+   * HAVING. Separates multiple calls with 'AND'.
+   * @param string $key Identifier (string) or associative array of field/value pairs.
+   * @param string $value Value sought if $key is an identifier.
+   * @param bool $escape (optional) Whether to escape values and identifiers.
+   * @return Model
    */
-  public function having($key, $value = NULL, $escape = NULL) {
+  public function having($key, $value=null, $escape=null): Model {
     call_user_func_array([self::db(), __FUNCTION__], func_get_args());
     return $this;
   }
 
   /**
-   * OR HAVING.
-   * Separates multiple calls with 'OR'.
-   *
-   * @param   string  $key
-   * @param   string  $value
-   * @param   bool    $escape
-   * @return  CI_DB_query_builder
+   * OR HAVING. Separates multiple calls with 'OR'.
+   * @param string $key Identifier (string) or associative array of field/value pairs.
+   * @param string $value Value sought if $key is an identifier.
+   * @param bool $escape (optional) Whether to escape values and identifiers.
+   * @return Model
    */
-  public function or_having($key, $value = NULL, $escape = NULL) {
+  public function or_having($key, $value=null, $escape=null): Model {
     call_user_func_array([self::db(), __FUNCTION__], func_get_args());
     return $this;
   }
 
   /**
    * ORDER BY.
-   *
-   * @param   string  $orderby
-   * @param   string  $direction  ASC, DESC or RANDOM
-   * @param   bool    $escape
-   * @return  CI_DB_query_builder
+   * @param string $orderby Field to order by.
+   * @param string $direction The order requested - ASC, DESC or random.
+   * @param bool $escape (optional) Whether to escape values and identifiers.
+   * @return Model
    */
-  public function order_by($orderby, $direction = '', $escape = NULL) {
+  public function order_by($orderby, $direction='', $escape=null): Model {
     call_user_func_array([self::db(), __FUNCTION__], func_get_args());
     return $this;
   }
 
   /**
    * LIMIT.
-   *
-   * @param   int $value  LIMIT value
-   * @param   int $offset OFFSET value
-   * @return  CI_DB_query_builder
+   * @param int $value Number of rows to limit the results to.
+   * @param int $offset Number of rows to skip.
+   * @return Model
    */
-  public function limit($value, $offset = 0) {
+  public function limit($value, $offset=0): Model {
     call_user_func_array([self::db(), __FUNCTION__], func_get_args());
     return $this;
   }
 
   /**
    * Sets the OFFSET value.
-   *
-   * @param   int $offset OFFSET value
-   * @return  CI_DB_query_builder
+   * @param int $offset Number of rows to skip.
+   * @return Model
    */
-  public function offset($offset) {
+  public function offset($offset): Model {
     call_user_func_array([self::db(), __FUNCTION__], func_get_args());
     return $this;
   }
 
   /**
-   * The "set" function..
    * Allows key/value pairs to be set for inserting or updating
-   *
-   * @param   mixed
-   * @param   string
-   * @param   bool
-   * @return  CI_DB_query_builder
+   * @param mixed $key Field name, or an array of field/value pairs.
+   * @param string $value (optional) Field value, if $key is a single field.
+   * @param bool $escape (optional) Whether to escape values and identifiers.
+   * @return Model
    */
-  public function set($key, $value = '', $escape = NULL) {
+  public function set($key, $value='', $escape=null): Model {
     call_user_func_array([self::db(), __FUNCTION__], func_get_args());
     return $this;
   }
 
   /**
-   * Get SELECT query string.
-   *
-   * @param   string  the table name to select from (optional)
-   * @param   bool    TRUE: resets QB values; FALSE: leave QB values alone
-   * @return  string
+   * Compiles a SELECT statement and returns it as a string.
+   * @param string $table (optional) Table name.
+   * @param bool $reset (optional) Whether to reset the current QB values or not.
+   * @return string The compiled SQL statement as a string.
    */
-  public function get_compiled_select($table = '', $reset = TRUE) {
+  public function get_compiled_select($table='', $reset=true) {
     if (\method_exists(self::db(), 'isset_qb_from') && !self::db()->isset_qb_from() && empty($table))
       $table = static::TABLE;
     return self::db()->get_compiled_select($table, $reset);
   }
 
   /**
-   * Get.
-   *
-   * @param   string  the table
-   * @param   string  the limit clause
-   * @param   string  the offset clause
-   * @return  CI_DB_result
+   * Compiles and runs SELECT statement based on the already called Query Builder methods.
+   * @param string $table (optional) The table to query.
+   * @param string $limit (optional) The LIMIT clause.
+   * @param string $offset (optional) The OFFSET clause.
+   * @return CI_DB_result
    */
-  public function get($table = '', $limit = NULL, $offset = NULL) {
+  public function get($table='', $limit=null, $offset=null) {
     if (\method_exists(self::db(), 'isset_qb_from') && !self::db()->isset_qb_from() && empty($table))
       $table = static::TABLE;
     return self::db()->get($table, $limit, $offset);
@@ -659,54 +584,49 @@ abstract class Model extends \CI_Model {
    * "Count All Results" query.
    * Generates a platform-specific query string that counts all records
    * returned by an Query Builder query.
-   *
-   * @param   string
-   * @param   bool    the reset clause
-   * @return  int
+   * @param string $table (optional) Table name.
+   * @param bool $reset Whether to reset values for SELECTs.
+   * @return int
    */
-  public function count_all_results($table = '', $reset = TRUE) {
+  public function count_all_results($table='', $reset=true) {
     if (\method_exists(self::db(), 'isset_qb_from') && !self::db()->isset_qb_from() && empty($table))
       $table = static::TABLE;
     return self::db()->count_all_results($table, $reset);
   }
 
   /**
-   * Get_Where.
    * Allows the where clause, limit and offset to be added directly.
-   *
-   * @param   string  $table
-   * @param   string  $where
-   * @param   int $limit
-   * @param   int $offset
-   * @return  CI_DB_result
+   * @param string $table (optional) The table(s) to fetch data from; string or array.
+   * @param string $where (optional) The WHERE clause.
+   * @param int $limit (optional) The LIMIT clause.
+   * @param int $offset (optional) The OFFSET clause.
+   * @return CI_DB_result
    */
-  public function get_where($table = '', $where = NULL, $limit = NULL, $offset = NULL) {
+  public function get_where($table='', $where=null, $limit=null, $offset=null) {
     if (\method_exists(self::db(), 'isset_qb_from') && !self::db()->isset_qb_from() && empty($table))
       $table = static::TABLE;
     return self::db()->get_where($table, $where, $limit, $offset);
   }
 
   /**
-   * The "set_insert_batch" function.  Allows key/value pairs to be set for batch inserts.
-   *
-   * @param   mixed
-   * @param   string
-   * @param   bool
-   * @return  CI_DB_query_builder
+   * The "set_insert_batch" function. Allows key/value pairs to be set for batch inserts.
+   * @param mixed $key Field name or an array of field/value pairs.
+   * @param string $value (optional) Field value, if $key is a single field.
+   * @param bool $escape (optional) Whether to escape values and identifiers.
+   * @return Model
    */
-  public function set_insert_batch($key, $value = '', $escape = NULL) {
+  public function set_insert_batch($key, $value='', $escape=null): Model {
     call_user_func_array([self::db(), __FUNCTION__], func_get_args());
     return $this;
   }
 
   /**
    * Get INSERT query string.
-   *
-   * @param   string  the table to insert into
-   * @param   bool    TRUE: reset QB values; FALSE: leave QB values alone
-   * @return  string
+   * @param string $table (optional) Table name.
+   * @param bool $reset (optional) Whether to reset the current QB values or not.
+   * @return string Compiles an INSERT statement and returns it as a string.
    */
-  public function get_compiled_insert($table = '', $reset = TRUE) {
+  public function get_compiled_insert($table='', $reset=true) {
     if (\method_exists(self::db(), 'isset_qb_from') && !self::db()->isset_qb_from() && empty($table))
       $table = static::TABLE;
     return self::db()->get_compiled_insert($table, $reset);
@@ -714,12 +634,11 @@ abstract class Model extends \CI_Model {
 
   /**
    * Replace.
-   *
-   * @param   string  the table to replace data into
-   * @param   array   an associative array of insert values
-   * @return  bool    TRUE on success, FALSE on failure
+   * @param string $table (optional) Table name.
+   * @param array|null $set (optional) An associative array of field/value pairs.
+   * @return bool true on success, false on failure.
    */
-  public function replace($table = '', $set = NULL) {
+  public function replace($table='', $set=null) {
     if (\method_exists(self::db(), 'isset_qb_from') && !self::db()->isset_qb_from() && empty($table))
       $table = static::TABLE;
     return self::db()->replace($table, $set);
@@ -727,38 +646,34 @@ abstract class Model extends \CI_Model {
 
   /**
    * Get UPDATE query string
-   *
-   * @param   string  the table to update
-   * @param   bool    TRUE: reset QB values; FALSE: leave QB values alone
-   * @return  string
+   * @param string $table (optional) Table name.
+   * @param bool $reset (optional) Whether to reset the current QB values or not.
+   * @return string The compiled SQL statement as a string.
    */
-  public function get_compiled_update($table = '', $reset = TRUE) {
-    if (\method_exists(self::db(), 'isset_qb_from') && !self::db()->isset_qb_from() && empty($table)) {
+  public function get_compiled_update($table='', $reset=true) {
+    if (\method_exists(self::db(), 'isset_qb_from') && !self::db()->isset_qb_from() && empty($table))
       $table = static::TABLE;
-    }
     return self::db()->get_compiled_update($table, $reset);
   }
 
   /**
    * The "set_update_batch" function.  Allows key/value pairs to be set for batch updating
-   *
-   * @param   array
-   * @param   string
-   * @param   bool
-   * @return  CI_DB_query_builder
+   * @param array $key Field name or an array of field/value pairs.
+   * @param string $value (optional) Field value, if $key is a single field.
+   * @param bool $escape (optional) Whether to escape values and identifiers.
+   * @return Model
    */
-  public function set_update_batch($key, $index = '', $escape = NULL) {
+  public function set_update_batch($key, $value='', $escape=null): Model {
     call_user_func_array([self::db(), __FUNCTION__], func_get_args());
     return $this;
   }
 
   /**
    * Empty Table.
-   *
-   * @param   string  the table to empty
-   * @return  bool    TRUE on success, FALSE on failure
+   * @param string $table (optional) Table name.
+   * @return bool true on success, false on failure.
    */
-  public function empty_table($table = '') {
+  public function empty_table($table='') {
     if (\method_exists(self::db(), 'isset_qb_from') && !self::db()->isset_qb_from() && empty($table)) {
       $table = static::TABLE;
     }
@@ -766,119 +681,96 @@ abstract class Model extends \CI_Model {
   }
 
   /**
-   * Truncate
-   *
-   * @param   string  the table to truncate
-   * @return  bool    TRUE on success, FALSE on failure
+   * Truncate.
+   * @param string $table (optional) Table name.
+   * @return bool true on success, false on failure.
    */
-  public function truncate($table = '') {
-    if (\method_exists(self::db(), 'isset_qb_from') && !self::db()->isset_qb_from() && empty($table)) {
+  public function truncate($table='') {
+    if (\method_exists(self::db(), 'isset_qb_from') && !self::db()->isset_qb_from() && empty($table))
       $table = static::TABLE;
-    }
     return self::db()->truncate($table);
   }
 
   /**
-   * Get DELETE query string.
-   *
-   * @param   string  the table to delete from
-   * @param   bool    TRUE: reset QB values; FALSE: leave QB values alone
-   * @return  string
+   * Compiles a DELETE statement and returns it as a string.
+   * @param string $table (optional) Table name.
+   * @param bool $reset (optional) Whether to reset the current QB values or not.
+   * @return string The compiled SQL statement as a string.
    */
-  public function get_compiled_delete($table = '', $reset = TRUE) {
-    if (\method_exists(self::db(), 'isset_qb_from') && !self::db()->isset_qb_from() && empty($table)) {
+  public function get_compiled_delete($table='', $reset=true) {
+    if (\method_exists(self::db(), 'isset_qb_from') && !self::db()->isset_qb_from() && empty($table))
       $table = static::TABLE;
-    }
     return self::db()->get_compiled_delete($table, $reset);
   }
 
   /**
    * Delete.
-   *
-   * @param   mixed   the table(s) to delete from. String or array
-   * @param   mixed   the where clause
-   * @param   mixed   the limit clause
-   * @param   bool
-   * @return  mixed
+   * @param string $table (optional) The table(s) to delete from; string or array.
+   * @param string $where (optional) The WHERE clause.
+   * @param int $limit The (optional) LIMIT clause.
+   * @param bool $reset (optional) TRUE to reset the query "write" clause.
+   * @return CI_DB_query_builder instance (method chaining) or FALSE on failure.
    */
-  public function delete($table = '', $where = '', $limit = NULL, $reset_data = TRUE) {
-    if (\method_exists(self::db(), 'isset_qb_from') && !self::db()->isset_qb_from() && empty($table)) {
+  public function delete($table='', $where='', $limit=null, $reset=true) {
+    if (\method_exists(self::db(), 'isset_qb_from') && !self::db()->isset_qb_from() && empty($table))
       $table = static::TABLE;
-    }
-    return self::db()->delete($table, $where, $limit, $reset_data);
+    return self::db()->delete($table, $where, $limit, $reset);
   }
 
   /**
-   * DB Prefix
-   *
-   * Prepends a database prefix if one exists in configuration
-   *
-   * @param   string  the table
-   * @return  string
+   * DB Prefix. Prepends a database prefix if one exists in configuration
+   * @param string $table (optional) The table name to prefix.
+   * @return string The prefixed table name.
    */
-  public function dbprefix($table = '') {
-    if (\method_exists(self::db(), 'isset_qb_from') && !self::db()->isset_qb_from() && empty($table)) {
+  public function dbprefix($table='') {
+    if (\method_exists(self::db(), 'isset_qb_from') && !self::db()->isset_qb_from() && empty($table))
       $table = static::TABLE;
-    }
     return self::db()->dbprefix($table);
   }
 
   /**
-   * Set DB Prefix
-   *
    * Set's the DB Prefix to something new without needing to reconnect
-   *
-   * @param   string  the prefix
-   * @return  string
+   * @param string $prefix The new prefix to use.
+   * @return string The DB prefix in use.
    */
-  public function set_dbprefix($prefix = '') {
+  public function set_dbprefix($prefix='') {
     return call_user_func_array([self::db(), __FUNCTION__], func_get_args());
   }
 
   /**
-   * Start Cache
-   *
-   * Starts QB caching
-   *
-   * @return  CI_DB_query_builder
+   * Starts QB caching.
+   * @return Model
    */
-  public function start_cache() {
+  public function start_cache(): Model {
     call_user_func_array([self::db(), __FUNCTION__], func_get_args());
     return $this;
   }
 
   /**
-   * Stop Cache
-   *
    * Stops QB caching
-   *
-   * @return  CI_DB_query_builder
+   * @return Model
    */
-  public function stop_cache() {
+  public function stop_cache(): Model {
     call_user_func_array([self::db(), __FUNCTION__], func_get_args());
     return $this;
   }
 
   /**
-   * Flush Cache
-   *
-   * Empties the QB cache
-   *
-   * @return  CI_DB_query_builder
+   * Flush Cache.
+   * Empties the QB cache.
+   * @return Model
    */
-  public function flush_cache() {
+  public function flush_cache(): Model {
     call_user_func_array([self::db(), __FUNCTION__], func_get_args());
     return $this;
   }
 
   /**
    * Reset Query Builder values.
-   *
    * Publicly-visible method to reset the QB values.
-   *
-   * @return  CI_DB_query_builder
+   * @return Model
    */
-  public function reset_query() {
+  public function reset_query(): Model {
     call_user_func_array([self::db(), __FUNCTION__], func_get_args());
     return $this;
   }
@@ -887,28 +779,25 @@ abstract class Model extends \CI_Model {
   // Override CI_DB_driver method
   /**
    * Start Transaction.
-   *
-   * @param   bool    $test_mode = FALSE
-   * @return  bool
+   * @param bool $testMode (optional) Test mode flag.
+   * @return bool TRUE on success, FALSE on failure.
    */
-  public function trans_start($test_mode = FALSE) {
+  public function trans_start($testMode=false) {
     return call_user_func_array([self::db(), __FUNCTION__], func_get_args());
   }
 
   /**
    * Begin Transaction.
-   *
-   * @param   bool    $test_mode
-   * @return  bool
+   * @param bool $testMode (optional) Test mode flag.
+   * @return bool TRUE on success, FALSE on failure.
    */
-  public function trans_begin($test_mode = FALSE) {
+  public function trans_begin($testMode=false) {
     return call_user_func_array([self::db(), __FUNCTION__], func_get_args());
   }
 
   /**
    * Complete Transaction.
-   *
-   * @return  bool
+   * @return bool TRUE on success, FALSE on failure.
    */
   public function trans_complete() {
     return call_user_func_array([self::db(), __FUNCTION__], func_get_args());
@@ -916,8 +805,7 @@ abstract class Model extends \CI_Model {
 
   /**
    * Lets you retrieve the transaction flag to determine if it has failed.
-   *
-   * @return  bool
+   * @return bool TRUE if the transaction succeeded, FALSE if it failed.
    */
   public function trans_status() {
     return call_user_func_array([self::db(), __FUNCTION__], func_get_args());
@@ -925,8 +813,7 @@ abstract class Model extends \CI_Model {
 
   /**
    * Commit Transaction.
-   *
-   * @return  bool
+   * @return bool TRUE on success, FALSE on failure.
    */
   public function trans_commit() {
     return call_user_func_array([self::db(), __FUNCTION__], func_get_args());
@@ -934,8 +821,7 @@ abstract class Model extends \CI_Model {
 
   /**
    * Rollback Transaction.
-   *
-   * @return  bool
+   * @return bool TRUE on success, FALSE on failure.
    */
   public function trans_rollback() {
     return call_user_func_array([self::db(), __FUNCTION__], func_get_args());
@@ -943,17 +829,16 @@ abstract class Model extends \CI_Model {
 
   /**
    * Set foreign key check.
-   *
-   * @return  bool
+   * @param bool $enabled Value of foreign_key_checks.
+   * @return bool TRUE on success, FALSE on failure.
    */
-  public function set_foreign_key_checks(bool $toCheck) {
-    return $this->query('SET foreign_key_checks=' . $toCheck ? 1 : 0);
+  public function set_foreign_key_checks(bool $enabled) {
+    return $this->query('SET foreign_key_checks=' . $enabled ? 1 : 0);
   }
 
   /**
    * Returns the last query that was executed.
-   *
-   * @return  string
+   * @return string The last query executed.
    */
   public function last_query() {
     $query = call_user_func_array([self::db(), __FUNCTION__], func_get_args());
@@ -963,94 +848,81 @@ abstract class Model extends \CI_Model {
   }
 
   /**
-   * "Smart" Escape String.
-   * Escapes data based on type.
-   * Sets boolean and null types.
-   *
-   * @param   string
-   * @return  mixed
+   * Escapes input data based on type, including boolean and NULLs.
+   * @param mixed $str The value to escape, or an array of multiple ones.
+   * @return mixed The escaped value(s).
    */
   public function escape($str) {
     return call_user_func_array([self::db(), __FUNCTION__], func_get_args());
   }
 
   /**
-   * Escape String
-   *
-   * @param   string|string[] $str    Input string
-   * @param   bool    $like   Whether or not the string will be used in a LIKE condition
-   * @return  string
+   * Escapes string values.
+   * @param string|string[] $str A string value or array of multiple ones.
+   * @param bool $like (optional) Whether or not the string will be used in a LIKE condition.
+   * @return string The escaped string(s).
    */
-  public function escape_str($str, $like = FALSE) {
+  public function escape_str($str, $like=false) {
     return call_user_func_array([self::db(), __FUNCTION__], func_get_args());
   }
 
   /**
-   * Escape LIKE String.
-   * Calls the individual driver for platform specific escaping for LIKE conditions
-   *
-   * @param   string|string[]
-   * @return  mixed
+   * Escape LIKE strings.
+   * @param string|string[] $str A string value or array of multiple ones.
+   * @return mixed The escaped string(s).
    */
   public function escape_like_str($str) {
     return call_user_func_array([self::db(), __FUNCTION__], func_get_args());
   }
 
   /**
-   * Primary.
-   * Retrieves the primary key. It assumes that the row in the first position is the primary key.
-   *
-   * @param   string  $table  Table name
-   * @return  string
+   * Retrieves the primary key of a table.
+   * @param string $table (optional) Table name.
+   * @return string The primary key name, FALSE if none.
    */
-  public function primary($table = null) {
+  public function primary($table=null) {
     if (empty($table))
       $table = static::TABLE;
     return self::db()->primary($table);
   }
 
   /**
-   * "Count All" query.
-   * Generates a platform-specific query string that counts all records in the specified database.
-   *
-   * @param   string
-   * @return  int
+   * Returns the total number of rows in a table, or 0 if no table was provided.
+   * @param string $table (optional) Table name.
+   * @return int Row count for the specified table.
    */
-  public function count_all($table = '') {
+  public function count_all($table='') {
     if (empty($table))
       $table = static::TABLE;
     return self::db()->count_all($table);
   }
 
   /**
-   * Returns an array of table names.
-   *
-   * @param   string  $constrain_by_prefix = FALSE
-   * @return  array
+   * Gets a list of the tables in the current database.
+   * @param string $constrainByPrefix (optional) TRUE to match table names by the configured dbprefix.
+   * @return array Array of table names or FALSE on failure.
    */
-  public function list_tables($constrain_by_prefix = FALSE) {
+  public function list_tables($constrainByPrefix=false) {
     return call_user_func_array([self::db(), __FUNCTION__], func_get_args());
   }
 
   /**
    * Determine if a particular table exists.
-   *
-   * @param   string  $table
-   * @return  bool
+   * @param string $table (optional) The table name.
+   * @return bool TRUE if that table exists, FALSE if not.
    */
-  public function table_exists($table = null) {
+  public function table_exists($table=null) {
     if (empty($table))
       $table = static::TABLE;
     return self::db()->table_exists($table);
   }
 
   /**
-   * Fetch Field Names.
-   *
-   * @param   string  $table  Table name
-   * @return  array
+   * Gets a list of the field names in a table.
+   * @param string $table (optional) The table name.
+   * @return array Array of field names or FALSE on failure.
    */
-  public function list_fields($table = null) {
+  public function list_fields($table=null) {
     if (empty($table))
       $table = static::TABLE;
     return self::db()->list_fields($table);
@@ -1058,24 +930,22 @@ abstract class Model extends \CI_Model {
 
   /**
    * Determine if a particular field exists.
-   *
-   * @param   string
-   * @param   string
-   * @return  bool
+   * @param string $field The field name.
+   * @param string $table (optional) The table name.
+   * @return bool TRUE if that field exists in that table, FALSE if not
    */
-  public function field_exists($field_name, $table = null) {
+  public function field_exists($field, $table=null) {
     if (empty($table))
       $table = static::TABLE;
-    return self::db()->field_exists($field_name, $table);
+    return self::db()->field_exists($field, $table);
   }
 
   /**
-   * Returns an object with field data.
-   *
-   * @param   string  $table  the table name
-   * @return  array
+   * Gets a list containing field data about a table.
+   * @param string $table (optional) The table name.
+   * @return array Array of field data items or FALSE on failure.
    */
-  public function field_data($table = null) {
+  public function field_data($table=null) {
     if (empty($table))
       $table = static::TABLE;
     return self::db()->field_data($table);
@@ -1083,8 +953,7 @@ abstract class Model extends \CI_Model {
 
   /**
    * Last error.
-   *
-   * @return  array
+   * @return array{code: string|null, message: string|null} Error data.
    */
   public function error() {
     return call_user_func_array([self::db(), __FUNCTION__], func_get_args());
@@ -1092,8 +961,7 @@ abstract class Model extends \CI_Model {
 
   /**
    * Insert ID.
-   *
-   * @return  int
+   * @return int Insert ID.
    */
   public function insert_id() {
     return call_user_func_array([self::insert_id(), __FUNCTION__], func_get_args());
@@ -1101,8 +969,7 @@ abstract class Model extends \CI_Model {
 
   /**
    * Enable Query Caching.
-   *
-   * @return  void
+   * @return void
    */
   public function cache_on() {
     self::db()->cache_on();
@@ -1110,8 +977,7 @@ abstract class Model extends \CI_Model {
 
   /**
    * Disable Query Caching.
-   *
-   * @return  void
+   * @return void
    */
   public function cache_off() {
     self::db()->cache_off();
@@ -1119,19 +985,17 @@ abstract class Model extends \CI_Model {
 
   /**
    * Delete the cache files associated with a particular URI
-   *
-   * @param string  $segment_one First URI segment.
-   * @param string  $segment_two Second URI segment.
-   * @return  bool
+   * @param string $segmentOne First URI segment.
+   * @param string $segmentTwo Second URI segment.
+   * @return void
    */
-  public function cache_delete(string $segment_one = '', string  $segment_two = '') {
-    self::db()->cache_delete($segment_one, $segment_two);
+  public function cache_delete(string $segmentOne='', string  $segmentTwo='') {
+    self::db()->cache_delete($segmentOne, $segmentTwo);
   }
 
   /**
    * Delete All cache files.
-   *
-   * @return  bool
+   * @return void
    */
   public function cache_delete_all() {
     self::db()->cache_delete_all();

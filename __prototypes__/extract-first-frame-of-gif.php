@@ -4,7 +4,7 @@
  * php __prototypes__/extract-first-frame-of-gif.php
  * ```
  */
-$im = new \Imagick(__DIR__ . '/input/sample.gif');
+$im = new \Imagick(__DIR__ . '/input/animated.gif');
 
 // Write the first frame as an image.
 $im = $im->coalesceImages();
