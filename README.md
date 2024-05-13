@@ -10,6 +10,10 @@ There is a demo application in [demo/](demo/). Please use it as a reference for 
 ## Release Notes
 All changes can be found [here](CHANGELOG.md).
 
+- ### [5.0.1] - 2024/5/14
+    ### Changed
+    - Installer program fix. Added process to remove `__prototypes__/`,`__tests__/`,`phpunit-printer.yml`,`phpunit.xml` after installation.
+    - Add `client/package-lock.json` to skeleton.
 - ### [5.0.0] - 2024/5/13
     ### Changed
     - PHP8 support. PHP8 or higher is required.  
