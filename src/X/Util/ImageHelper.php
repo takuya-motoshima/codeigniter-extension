@@ -4,115 +4,140 @@ use \X\Util\FileHelper;
 use \X\Util\Logger;
 use \Intervention\Image\ImageManager;
 
+/**
+ * Image utility.
+ */
 final class ImageHelper {
   /**
-   * Put base64 image.
+   * Write data URL to a file.
    * ```php
    * use \X\Util\ImageHelper;
    *
-   * ImageHelper::putBase64('data:image/png;base64,iVBOR...', '/tmp', 'sample');
-   * ImageHelper::putBase64('data:image/png;base64,iVBOR...', '/tmp/sample.png');
+   * ImageHelper::writeDataURLToFile('data:image/png;base64,iVBOR...', '/tmp', 'sample');
+   * ImageHelper::writeDataURLToFile('data:image/png;base64,iVBOR...', '/tmp/sample.png');
    * ```
+    * @param string $dataURL Image Data URL.
+    * @param string $dir Destination directory or file path. For file paths, the $filename parameter is not required.
+    * @param string|null $filename (optional) File Name. If the file name does not have an extension, the guessed extension is automatically assigned.
+    * @return string Name of the output file.
    */
-  public static function putBase64(string $base64, string $outputDir, ?string $outputName = null): string {
-    if (empty($outputName)) {
-      $outputName = pathinfo($outputDir, PATHINFO_BASENAME);
-      $outputDir =  pathinfo($outputDir, PATHINFO_DIRNAME);
+  public static function writeDataURLToFile(string $dataURL, string $dir, ?string $filename=null): string {
+    if (empty($filename)) {
+      $filename = pathinfo($dir, PATHINFO_BASENAME);
+      $dir =  pathinfo($dir, PATHINFO_DIRNAME);
     }
-    $outputDir = rtrim($outputDir, '/')  . '/';
-    $blob = self::convertBase64ToBlob($base64, $mime);
-    if (empty(pathinfo($outputName, PATHINFO_EXTENSION)))
-      $outputName .= '.' . $mime;
-    FileHelper::makeDirectory($outputDir);
-    file_put_contents($outputDir . $outputName, $blob, LOCK_EX);
-    return $outputName;
+    $dir = rtrim($dir, '/')  . '/';
+    $blob = self::dataURL2Blob($dataURL, $mime);
+    if (empty(pathinfo($filename, PATHINFO_EXTENSION)))
+      $filename .= '.' . $mime;
+    FileHelper::makeDirectory($dir);
+    file_put_contents($dir . $filename, $blob, LOCK_EX);
+    return $filename;
   }
 
   /**
-   * Put blob image.
+   * Write blob to a file.
+   * @param string $blob Image Blob.
+   * @param string $filePath Output file path.
+   * @return void
    */
-  public static function putBlob(string $blob, string $outputPath) {
-    FileHelper::makeDirectory(dirname($outputPath));
-    file_put_contents($outputPath, $blob, LOCK_EX);
+  public static function writeBlobToFile(string $blob, string $filePath): void {
+    FileHelper::makeDirectory(dirname($filePath));
+    file_put_contents($filePath, $blob, LOCK_EX);
   }
 
   /**
    * Copy image.
    * ```php
-   * // /tmp/example.png -> /home/example.png
-   * \X\Util\ImageHelper::copy('/tmp/example.png', '/home');
-   *
-   * // /tmp/old.png -> /home/new.png
-   * \X\Util\ImageHelper::copy('/tmp/old.png', '/home', 'new');
+   * use \X\Util\ImageHelper;
+   * 
+   * ImageHelper::copy('/tmp/example.png', '/home');// => /tmp/example.png -> /home/example.png
+   * ImageHelper::copy('/tmp/old.png', '/home', 'new');// => /tmp/old.png -> /home/new.png
    * ```
+   * @param string $src Source file path.
+   * @param string $dir Destination directory path.
+   * @param string|null $filename (optional) Destination file name. If omitted, the source file name in $src becomes the destination file name.
+   * @return string Output file name.
    */
-  public static function copy(string $inputPath, string $outputDir, string $outputName = null): string {
-    FileHelper::makeDirectory($outputDir);
-    $outputName = empty($outputName) ? basename($inputPath) : $outputName . '.' . pathinfo($inputPath, PATHINFO_EXTENSION);
-    file_put_contents(rtrim($outputDir, '/')  . '/' . $outputName, file_get_contents($inputPath), LOCK_EX);
-    return $outputName;
+  public static function copy(string $src, string $dir, string $filename=null): string {
+    FileHelper::makeDirectory($dir);
+    $filename = empty($filename)
+      ? basename($src)
+      : $filename . '.' . pathinfo($src, PATHINFO_EXTENSION);
+    file_put_contents(rtrim($dir, '/')  . '/' . $filename, file_get_contents($src), LOCK_EX);
+    return $filename;
   }
 
   /**
-   * Read image.
+   * Get the contents of the media file as a blob string.
+   * @param string $filePath File path.
+   * @return string Blob.
    */
-  public static function read(string $inputPath): string {
-    if (!file_exists($inputPath))
-      throw new \RuntimeException('Image file does not exist. Path=' . $inputPath);
-    $fp = fopen($inputPath, 'r');
-    $blob = fread($fp, filesize($inputPath));
+  public static function readAsBlob(string $filePath): string {
+    if (!file_exists($filePath))
+      throw new \RuntimeException('Image file does not exist. Path=' . $filePath);
+    $fp = fopen($filePath, 'r');
+    $blob = fread($fp, filesize($filePath));
     fclose($fp);
     return $blob;
   }
 
   /**
-   * Read image.
+   * Get the contents of the media file as a data URL string.
+   * @param string $filePath File path.
+   * @return string Data URL.
    */
-  public static function readAsBase64(string $inputPath): string {
-    $blob = self::read($inputPath);
-    $mime = mime_content_type($inputPath);
+  public static function readAsDataURL(string $filePath): string {
+    $blob = self::readAsBlob($filePath);
+    $mime = mime_content_type($filePath);
     if ($mime === 'image/svg' || $mime === 'image/svgz')
       $mime = 'image/svg+xml';
     return 'data:' . $mime . ';base64,' . base64_encode($blob);
   }
 
   /**
-   * Resize.
+   * Resize the image.
+   * @param string $src Input file path.
+   * @param string $dest Output file path.
+   * @param int|null $width (optional) Width (pixels) after resizing. If omitted, adjust to height.
+   * @param int|null $height (optional) Height after resizing (pixels). If omitted, matches the width.
+   * @param bool $keepAspectRatio (optional) Whether the aspect ratio of the original image is maintained after resizing. Default is true.
+   * @return void
    */
-  public static function resize(
-    string $inputPath,
-    string $outputPath,
-    ?int $width = null,
-    ?int $height = null,
-    bool $keepAspectRatio = true
-  ) {
+  public static function resize(string $src, string $dest, ?int $width=null, ?int $height=null, bool $keepAspectRatio=true): void {
     $manager = new ImageManager(['driver' => 'gd']);
     $manager
-      ->make($inputPath)
+      ->make($src)
       ->resize($width, $height, function ($constraint) use($keepAspectRatio) {
         if ($keepAspectRatio)
           $constraint->aspectRatio();
       })
-      ->save($outputPath);
+      ->save($dest);
   }
 
   /**
-   * Is Base64.
+   * Check if it is a Data URL.
+   * @param string $dataURL String.
+   * @param string &$mime (optional) If specified, the MIME type detected from the Data URL is set.
+   * @return bool Data URL or not.
    */
-  public static function isBase64(string $base64, &$mime = null): bool {
-    if (!preg_match('/^data:image\/(\w+);base64,/', $base64, $matches))
+  public static function isDataURL(string $dataURL, &$mime=null): bool {
+    if (!preg_match('/^data:image\/(\w+);base64,/', $dataURL, $matches))
       return false;
     $mime = strtolower($matches[1]);
     return true;
   }
 
   /**
-   * Convert Base64 to blob.
+   * Convert Data URL to blob.
+   * @param string $dataURL String.
+   * @param string &$mime (optional) If specified, the MIME type detected from the Data URL is set.
+   * @return string Blob.
    */
-  public static function convertBase64ToBlob(string $base64, &$mime = null): string {
-    if (!self::isBase64($base64, $mime))
+  public static function dataURL2Blob(string $dataURL, &$mime=null): string {
+    if (!self::isDataURL($dataURL, $mime))
       throw new \RuntimeException('Did not match data URI with image data');
-    $blob = base64_decode(substr($base64, strpos($base64, ',') + 1));
+    $blob = base64_decode(substr($dataURL, strpos($dataURL, ',') + 1));
     if ($blob === false)
       throw new \RuntimeException('Base64 decode failed');
     return $blob;
@@ -120,7 +145,6 @@ final class ImageHelper {
 
   /**
    * Extract and save the first frame of the animated GIF.
-   *
    * ```php
    * use \X\Util\ImageHelper;
    *
@@ -130,31 +154,32 @@ final class ImageHelper {
    * // Overwrite sample.gif with the first frame.
    * ImageHelper::extractFirstFrameOfGif('sample.gif');
    * ```
+   * @param string $src Input file path.
+   * @param string|null $dest (optional) Output file path. If omitted, the input file is overwritten.
+   * @return void
    */
-  public static function extractFirstFrameOfGif(string $inputPath, ?string $outputPath = null) {
-    if (!file_exists($inputPath))
-      throw new \RuntimeException('Not found file ' . $inputPath);
-
-    // If the output path is unspecified, overwrite it.
-    if (empty($outputPath))
-      $outputPath = $inputPath;
-    $im = new \Imagick($inputPath);
+  public static function extractFirstFrameOfGif(string $src, ?string $dest=null): void {
+    if (!file_exists($src))
+      throw new \RuntimeException('Not found file ' . $src);
+    if (empty($dest))
+      // If the output path is unspecified, overwrite it.
+      $dest = $src;
+    $im = new \Imagick($src);
     $written = false;
     if ($im->getNumberImages() > 1) {
       // Write the first frame as an image.
       $im = $im->coalesceImages();
       $im->setIteratorIndex(0);
-      $im->writeImage($outputPath);
+      $im->writeImage($dest);
       $written = true;
-    } else if ($outputPath !== $inputPath) {
-      FileHelper::copyFile($inputPath, $outputPath);
+    } else if ($dest !== $src) {
+      FileHelper::copyFile($src, $dest);
       $written = true;
     }
-
-    // The owner of the output destination is the same as the original file.
     if ($written) {
-      chown($outputPath, fileowner($inputPath));
-      chgrp($outputPath, filegroup($inputPath));
+      // The owner of the output destination is the same as the original file.
+      chown($dest, fileowner($src));
+      chgrp($dest, filegroup($src));
     }
 
     // Destroy resources.
@@ -163,20 +188,30 @@ final class ImageHelper {
 
   /**
    * Get the number of GIF frames.
+   * @param string $filePath Input file path.
+   * @return int Number of GIF frames.
    */
-  public static function getNumberOfGifFrames(string $inputPath): int {
-    if (!file_exists($inputPath))
-      throw new \RuntimeException('Not found file ' . $inputPath);
-    $im = new \Imagick($inputPath);
-    $numberOfFrames = $im->getNumberImages();
+  public static function getNumberOfGifFrames(string $filePath): int {
+    if (!file_exists($filePath))
+      throw new \RuntimeException('Not found file ' . $filePath);
+    $im = new \Imagick($filePath);
+    $frameCount = $im->getNumberImages();
     $im->clear();
-    return $numberOfFrames;
+    return $frameCount;
   }
 
   /**
    * Convert PDF to image.
+   * @param string $src Input file path.
+   * @param string $dest Output file path.
+   * @param int|null $options[pageNumber] (optional) Page number to out. Default is null, which outputs all pages. Offset is zero.
+   * @param int $options[xResolution] (optional) The horizontal resolution. Default is 288.
+   * @param int $options[yResolution] (optional) The vertical resolution. Default is 288.
+   * @param int $options[width] (optional) Resize width. Default is no resizing (null).
+   * @param int $options[height] (optional) Resize Height. Default is no resizing (null).
+   * @return void
    */
-  public static function pdf2Image(string $inputPath, string $outputPath, array $options = []): void {
+  public static function pdf2Image(string $src, string $dest, array $options=[]): void {
     try {
       // Initialize options.
       $options = array_merge([
@@ -199,16 +234,16 @@ final class ImageHelper {
       // Reads image from PDF.
       if ($isWriteAllPages) {
         // All pages.
-        $im->readImage($inputPath);
+        $im->readImage($src);
 
         // Get the number of pages.
-        $numberOfPages = $im->getNumberImages(); 
+        $pageCount = $im->getNumberImages(); 
       } else
         // Only the specified page.
-        $im->readImage($inputPath . '[' . $options['pageNumber'] . ']');
+        $im->readImage($src . '[' . $options['pageNumber'] . ']');
 
       // Writes an image.
-      $im->writeImages($outputPath, false);
+      $im->writeImages($dest, false);
 
       // Destroy resources.
       $im->clear();
@@ -216,15 +251,15 @@ final class ImageHelper {
       // Resize the written image.
       if (!empty($options['width']) || !empty($options['height'])) {
         if ($isWriteAllPages) {
-          for ($i=0; $i<$numberOfPages; $i++) {
-            $path = preg_replace('/\.(..*)$/', "-{$i}.$1", $outputPath);
+          for ($i=0; $i<$pageCount; $i++) {
+            $path = preg_replace('/\.(..*)$/', "-{$i}.$1", $dest);
             self::resize($path, $path, $options['width'], $options['height']);
           }
         } else
-          self::resize($outputPath, $outputPath, $options['width'], $options['height']);
+          self::resize($dest, $dest, $options['width'], $options['height']);
       }
     } catch (\Throwable $e) {
-      Logger::error("Error in {$inputPath}'s PDF conversion");
+      Logger::error("Error in {$src}'s PDF conversion");
       throw $e;
     }
   }

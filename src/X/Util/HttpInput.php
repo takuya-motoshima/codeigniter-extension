@@ -2,11 +2,17 @@
 namespace X\Util;
 use \X\Util\Logger;
 
+/**
+ * Assists in processing input data for requests.
+ */
 final class HttpInput {
   /**
    * Fetch an item from the PUT array.
+   * @param mixed|null $index (optional) Index for item to be fetched from $array. Default is null.
+   * @param bool|null $xssClean (optional) Whether to apply XSS filtering. Default is null.
+   * @return mixed PUT data.
    */
-  public static function put($index = NULL, $xss_clean = NULL) {
+  public static function put($index=null, $xssClean=null) {
     $data = file_get_contents('php://input');
     preg_match('/boundary=(.*)$/', $_SERVER['CONTENT_TYPE'], $matches);
     if (!count($matches)) {
@@ -21,7 +27,7 @@ final class HttpInput {
     foreach ($parts as $part) {
       if (empty($part))
         continue;
-      if (strpos($part, 'application/octet-stream') !== FALSE) {
+      if (strpos($part, 'application/octet-stream') !== false) {
         preg_match('/name=\"([^\"]*)\".*stream[\n|\r]+([^\n\r].*)?$/s', $part, $matches);
         $name = $matches[1];
         $value = $matches[2] ?? null;
@@ -40,9 +46,13 @@ final class HttpInput {
   }
 
   /**
-   * Is nested node.
+   * Check for nested nodes.
+   * @param string $name Name attribute.
+   * @param string|null $parentName (optional) Parent node name.
+   * @param string|null $childNames (optional) Child node name.
+   * @return bool Nested node or not.
    */
-  private static function isNestedNode(string $name, ?string &$parentName = null, ?string &$childNames = null): bool {
+  private static function isNestedNode(string $name, ?string &$parentName=null, ?string &$childNames=null): bool {
     if (!preg_match('/^([a-z0-9\-_:\.]+)(\[..*)$/i', $name, $matches))
       return false;
     $parentName = $matches[1];
@@ -52,8 +62,13 @@ final class HttpInput {
 
   /**
    * Set nested node.
+   * @param array $data Request Data.
+   * @param string|null $value Parameter Value.
+   * @param string $parentName Parent node name.
+   * @param string $childNames Child node name.
+   * @return void
    */
-  private static function setNestedNode(array &$data, ?string $value, string $parentName, string $childNames) {
+  private static function setNestedNode(array &$data, ?string $value, string $parentName, string $childNames): void {
     preg_match_all('/\[([a-z0-9\-_:\.]*)\]/i', $childNames, $matches);
     $names = $matches[1];
     array_unshift($names, $parentName);

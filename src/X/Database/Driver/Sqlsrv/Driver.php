@@ -7,6 +7,8 @@
  * class is being used or not.
  */
 namespace X\Database\Driver\Sqlsrv;
+
+#[\AllowDynamicProperties]
 class Driver extends \X_DB {
 
   /**
@@ -82,13 +84,13 @@ class Driver extends \X_DB {
       ? 'UTF-8' : SQLSRV_ENC_CHAR;
 
     $connection = array(
-      'UID'			=> empty($this->username) ? '' : $this->username,
-      'PWD'			=> empty($this->password) ? '' : $this->password,
-      'Database'		=> $this->database,
-      'ConnectionPooling'	=> ($pooling === TRUE) ? 1 : 0,
-      'CharacterSet'		=> $charset,
-      'Encrypt'		=> ($this->encrypt === TRUE) ? 1 : 0,
-      'ReturnDatesAsStrings'	=> 1
+      'UID' => empty($this->username) ? '' : $this->username,
+      'PWD' => empty($this->password) ? '' : $this->password,
+      'Database' => $this->database,
+      'ConnectionPooling' => ($pooling === TRUE) ? 1 : 0,
+      'CharacterSet' => $charset,
+      'Encrypt' => ($this->encrypt === TRUE) ? 1 : 0,
+      'ReturnDatesAsStrings' => 1
     );
 
     // If the username and password are both empty, assume this is a

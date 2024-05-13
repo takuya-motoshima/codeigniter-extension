@@ -5,4 +5,6 @@
  * This class extends the parent result class: X\Database\Result
  */
 namespace X\Database\Driver\Oci8;
+
+#[\AllowDynamicProperties]
 class Result extends \CI_DB_oci8_result{}

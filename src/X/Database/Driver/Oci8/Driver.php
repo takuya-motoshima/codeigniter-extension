@@ -6,6 +6,8 @@
  * permit access to oracle databases
  */
 namespace X\Database\Driver\Oci8;
+
+#[\AllowDynamicProperties]
 class Driver extends \X_DB {
 
 	/**
@@ -95,10 +97,10 @@ class Driver extends \X_DB {
 		parent::__construct($params);
 
 		$valid_dsns = array(
-			'tns'	=> '/^\(DESCRIPTION=(\(.+\)){2,}\)$/', // TNS
+			'tns' => '/^\(DESCRIPTION=(\(.+\)){2,}\)$/', // TNS
 			// Easy Connect string (Oracle 10g+)
-			'ec'	=> '/^(\/\/)?[a-z0-9.:_-]+(:[1-9][0-9]{0,4})?(\/[a-z0-9$_]+)?(:[^\/])?(\/[a-z0-9$_]+)?$/i',
-			'in'	=> '/^[a-z0-9$_]+$/i' // Instance name (defined in tnsnames.ora)
+			'ec' => '/^(\/\/)?[a-z0-9.:_-]+(:[1-9][0-9]{0,4})?(\/[a-z0-9$_]+)?(:[^\/])?(\/[a-z0-9$_]+)?$/i',
+			'in' => '/^[a-z0-9$_]+$/i' // Instance name (defined in tnsnames.ora)
 		);
 
 		/* Space characters don't have any effect when actually

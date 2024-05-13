@@ -1,27 +1,32 @@
 <?php
 namespace X\Util;
 
+/**
+ * URL Utility.
+ */
 final class UrlHelper {
   /**
-   * URL Without FileName.
+   * Remove the filename portion from the URL.
    * ```php
    * use \X\Util\UrlHelper;
    *
-   * UrlHelper::withoutFile('https://abc.com');// "https://abc.com"
-   * UrlHelper::withoutFile('https://abc.com?name=foo');// "https://abc.com"
-   * UrlHelper::withoutFile('https://abc.com/index.html');// "https://abc.com"
-   * UrlHelper::withoutFile('https://abc.com/index.html?name=foo');// "https://abc.com"
-   * UrlHelper::withoutFile('https://abc.com/def/index.html');// "https://abc.com/abc"
-   * UrlHelper::withoutFile('https://abc.com/def/index.html?name=foo');// "http://abc.com/abc"
-   * UrlHelper::withoutFile('//abc.com');// "//abc.com"
-   * UrlHelper::withoutFile('//abc.com/');// "//abc.com"
-   * UrlHelper::withoutFile('//abc.com/index.html');// "//abc.com"
-   * UrlHelper::withoutFile('//abc.com/def/index.html');// "//abc.com/abc"
-   * UrlHelper::withoutFile('//abc.com?name=foo');// "//abc.com"
-   * UrlHelper::withoutFile('//abc.com/?name=foo');// "//abc.com"
-   * UrlHelper::withoutFile('//abc.com/index.html?name=foo');// "//abc.com"
-   * UrlHelper::withoutFile('//abc.com/def/index.html?name=foo');// "//abc.com/abc"
+   * UrlHelper::withoutFile('https://abc.com');// => "https://abc.com"
+   * UrlHelper::withoutFile('https://abc.com?name=foo');// => "https://abc.com"
+   * UrlHelper::withoutFile('https://abc.com/index.html');// => "https://abc.com"
+   * UrlHelper::withoutFile('https://abc.com/index.html?name=foo');// => "https://abc.com"
+   * UrlHelper::withoutFile('https://abc.com/def/index.html');// => "https://abc.com/abc"
+   * UrlHelper::withoutFile('https://abc.com/def/index.html?name=foo');// => "http://abc.com/abc"
+   * UrlHelper::withoutFile('//abc.com');// => "//abc.com"
+   * UrlHelper::withoutFile('//abc.com/');// => "//abc.com"
+   * UrlHelper::withoutFile('//abc.com/index.html');// => "//abc.com"
+   * UrlHelper::withoutFile('//abc.com/def/index.html');// => "//abc.com/abc"
+   * UrlHelper::withoutFile('//abc.com?name=foo');// => "//abc.com"
+   * UrlHelper::withoutFile('//abc.com/?name=foo');// => "//abc.com"
+   * UrlHelper::withoutFile('//abc.com/index.html?name=foo');// => "//abc.com"
+   * UrlHelper::withoutFile('//abc.com/def/index.html?name=foo');// => "//abc.com/abc"
    * ```
+   * @param string $url URL.
+   * @return string URL with filenames stripped.
    */
   public static function withoutFile(string $url): string {
     $url = rtrim(strtok($url, '?'), '/');
@@ -37,7 +42,7 @@ final class UrlHelper {
   }
 
   /**
-   * URL home url
+   * Extract only the protocol and origin from the URL.
    * ```php
    * use \X\Util\UrlHelper;
    *
@@ -56,6 +61,8 @@ final class UrlHelper {
    * UrlHelper::domain('//abc.com/index.html?name=foo');// "//abc.com"
    * UrlHelper::domain('//abc.com/def/index.html?name=foo');// "//abc.com"
    * ```
+   * @param string $url URL.
+   * @return string Protocol and origin taken from the URL.
    */
   public static function domain(string $url): string {
     $url = rtrim(strtok($url, '?'), '/');

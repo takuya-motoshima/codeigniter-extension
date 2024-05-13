@@ -1,10 +1,16 @@
 <?php
 namespace X\Library;
-use \X\Util\Logger;
 use \X\Util\Validation;
 
+/**
+ * CI_Form_validation extension.
+ */
 abstract class FormValidation extends \CI_Form_validation {
-  function __construct($rules = []) {
+  /**
+   * Initialize FormValidation.
+   * @param array $rules (optional) Validation Rules.
+   */
+  function __construct($rules=[]) {
     parent::__construct($rules);
   }
 
@@ -14,14 +20,14 @@ abstract class FormValidation extends \CI_Form_validation {
   * $this->form_validation
   *   ->set_data(['datetime' => '2021-02-03 17:46:00'])
   *   ->set_rules('datetime', 'datetime', 'required|datetime[Y-m-d H:i:s]');
-  * if (!$this->form_validation->run()) {
-  *   // Input error.
-  *   ;
   * ```
+   * @param string $value Input value.
+   * @param string $format Date Format.
+   * @return bool Check Results.
   */
-  public function datetime(string $input, string $format): bool {
-    $input = str_replace(['-', '/'], '-', $input);
-    if (date($format, strtotime($input)) == $input)
+  public function datetime(string $value, string $format): bool {
+    $value = str_replace(['-', '/'], '-', $value);
+    if (date($format, strtotime($value)) == $value)
       return true;
     $this->set_message('datetime', "The {field} field must have format $format.");
     return false;
@@ -29,9 +35,11 @@ abstract class FormValidation extends \CI_Form_validation {
 
   /**
    * Check if it is a host name.
+   * @param string $value Input value.
+   * @return bool Check Results.
    */
-  public function hostname(string $input): bool {
-    if (Validation::hostname($input))
+  public function hostname(string $value): bool {
+    if (Validation::hostname($value))
       return true;
     $this->set_message('hostname', 'The {field} field must contain a valid host name.');
     return false;
@@ -39,9 +47,11 @@ abstract class FormValidation extends \CI_Form_validation {
 
   /**
    * Check if it is an IP.
+   * @param string $value Input value.
+   * @return bool Check Results.
    */
-  public function ipaddress(string $input): bool {
-    if (Validation::ipaddress($input))
+  public function ipaddress(string $value): bool {
+    if (Validation::ipaddress($value))
       return true;
     $this->set_message('ipaddress', 'The {field} field must contain a valid ip address.');
     return false;
@@ -49,9 +59,11 @@ abstract class FormValidation extends \CI_Form_validation {
 
   /**
    * Check if it is IP or CIDR format.
+   * @param string $value Input value.
+   * @return bool Check Results.
    */
-  public function ipaddress_or_cidr(string $input): bool {
-    if (Validation::ipaddress_or_cidr($input))
+  public function ipaddress_or_cidr(string $value): bool {
+    if (Validation::ipaddress_or_cidr($value))
       return true;
     $this->set_message('ipaddress_or_cidr', 'The {field} field must contain a valid ip address or CIDR.');
     return false;
@@ -59,9 +71,11 @@ abstract class FormValidation extends \CI_Form_validation {
 
   /**
    * Check if it is a host name or IP.
+   * @param string $value Input value.
+   * @return bool Check Results.
    */
-  public function hostname_or_ipaddress(string $input): bool {
-    if (Validation::hostname_or_ipaddress($input))
+  public function hostname_or_ipaddress(string $value): bool {
+    if (Validation::hostname_or_ipaddress($value))
       return true;
     $this->set_message('hostname_or_ipaddress', 'The {field} field must contain a valid host name or ip address.');
     return false;
@@ -69,9 +83,11 @@ abstract class FormValidation extends \CI_Form_validation {
 
   /**
    * Check if it is a unix user name.
+   * @param string $value Input value.
+   * @return bool Check Results.
    */
-  public function unix_username(string $input): bool {
-    if (Validation::unix_username($input))
+  public function unix_username(string $value): bool {
+    if (Validation::unix_username($value))
       return true;
     $this->set_message('unix_username', 'The {field} field must contain a valid UNIX username.');
     return false;
@@ -79,9 +95,11 @@ abstract class FormValidation extends \CI_Form_validation {
 
   /**
    * Check if it is a port number.
+   * @param string $value Input value.
+   * @return bool Check Results.
    */
-  public function port(string $input): bool {
-    if (Validation::port($input))
+  public function port(string $value): bool {
+    if (Validation::port($value))
       return true;
     $this->set_message('port', 'The {field} field must contain a valid port number.');
     return false;
@@ -91,9 +109,11 @@ abstract class FormValidation extends \CI_Form_validation {
    * Check if it is an e-mail.
    * The verification method uses the regular expression proposed in the HTML5 specification.
    * https://html.spec.whatwg.org/multipage/input.html#valid-e-mail-address
+   * @param string $value Input value.
+   * @return bool Check Results.
    */
-  public function email(string $input): bool {
-    if (Validation::email($input))
+  public function email(string $value): bool {
+    if (Validation::email($value))
       return true;
     $this->set_message('email', 'The {field} field must contain a valid email address.');
     return false;
@@ -101,9 +121,12 @@ abstract class FormValidation extends \CI_Form_validation {
 
   /**
    * Check if it is a file (directory) path.
+   * @param string $value Input value.
+   * @param mixed $denyLeadingSlash Whether leading slashes are allowed or not.
+   * @return bool Check Results.
    */
-  public function is_path(string $input, $denyLeadingSlash = false): bool {
-    if (Validation::is_path($input, filter_var($denyLeadingSlash, FILTER_VALIDATE_BOOLEAN)))
+  public function is_path(string $value, $denyLeadingSlash=false): bool {
+    if (Validation::is_path($value, filter_var($denyLeadingSlash, FILTER_VALIDATE_BOOLEAN)))
       return true;
     $this->set_message('is_path', 'The {field} field must contain a valid directory path.');
     return false;

@@ -1,7 +1,21 @@
 <?php
 namespace X\Constant;
 
-define('X_APP_PATH', preg_replace('/[^\/]+$/', '', __DIR__));
+/**
+ * Production Environment.
+ * @var string
+ */
+
 const ENV_PRODUCTION = 'production';
+
+/**
+ * Test Environment.
+ * @var string
+ */
 const ENV_TESTING = 'testing';
+
+/**
+ * Development environment.
+ * @var string
+ */
 const ENV_DEVELOPMENT = 'development';

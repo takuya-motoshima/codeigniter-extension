@@ -1,5 +1,8 @@
 <?php
-use X\Util\Logger;
 namespace X\Hook;
+use \X\Util\Logger;
 
+/**
+ * Authentication Hook class.
+ */
 class Authenticate {}

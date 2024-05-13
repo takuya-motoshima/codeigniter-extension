@@ -2,20 +2,27 @@
 namespace X\Util;
 use \X\Util\Logger;
 
+/**
+ * Session Helper.
+ */
 final class SessionHelper {
   /**
-   * Deserialization.
+   * Unserialize the session.
+   * @param string $session Serialized session data.
+   * @return array Unserialized session data.
    */
   public static function unserialize(string $session) {
     $unserialized = [];
-    $vars = preg_split('/([a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*)\|/', $session, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
-    for($i=0; $vars[$i]; $i++)
-      $unserialized[$vars[$i++]] = unserialize($vars[$i]);
+    $params = preg_split('/([a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*)\|/', $session, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
+    for($i=0; $params[$i]; $i++)
+      $unserialized[$params[$i++]] = unserialize($params[$i]);
     return $unserialized;
   }
 
   /**
-   * When session.serialize_handler is "php"
+   * Unserialize the session. When session.serialize_handler is "php"
+   * @param string $session Serialized session data.
+   * @return array Unserialized session data.
    */
   public static function unserializePhp(string $session): array {
     $unserialized = [];
@@ -35,7 +42,9 @@ final class SessionHelper {
   }
 
   /**
-   * When session.serialize_handler is "php_binary".
+   * Unserialize the session. When session.serialize_handler is "php_binary".
+   * @param string $session Serialized session data.
+   * @return array Unserialized session data.
    */
   public static function unserializePhpBinary(string $session): array {
     $unserialized = [];

@@ -7,6 +7,9 @@
  * class is being used or not.
  */
 namespace X\Database\Driver\Mysqli;
+use \X\Util\Logger;
+
+#[\AllowDynamicProperties]
 class Driver extends \X_DB {
 
   /**
@@ -460,7 +463,7 @@ class Driver extends \X_DB {
     if ( ! empty($this->_mysqli->connect_errno))
     {
       return array(
-        'code'    => $this->_mysqli->connect_errno,
+        'code' => $this->_mysqli->connect_errno,
         'message' => $this->_mysqli->connect_error
       );
     }

@@ -2,66 +2,59 @@
 namespace X\Util;
 use MathieuViossat\Util\ArrayToTextTable;
 
+/**
+ * Array utility.
+ */
 final class ArrayHelper {
   /**
-   * Searches and returns the value of the specified key from the array
+   * Searches for a value by key from an array.
    * ```php
    * use \X\Util\ArrayHelper;
    *
-   * // Search from a simple array
-   * $arr = [
+   * // Search from a simple array.
+   * ArrayHelper::searchArrayByKey('France', [
    *   'France' => 'Paris',
-   *   'India' => 'Mumbai',
    *   'UK' => 'London',
    *   'USA' => 'New York'
-   * ];
+   * ]);// => Paris
    * 
-   * ArrayHelper::searchArrayByKey('France', $arr);
-   * // Paris
-   * 
-   * // Search from nested array
-   * $nested = [
+   * // Search from nested array.
+   * ArrayHelper::searchArrayByKey('USA', [
    *   'cities' => [
    *     'France' => 'Paris',
-   *     'India' => 'Mumbai',
    *     'UK' => 'London',
    *     'USA' => 'New York'
    *   ]
-   * ];
+   * ]);// => New York
    * ```
-   * 
-   * ArrayHelper::searchArrayByKey('USA', $nested);
-   * // New York
-   * @param  string $needle
-   * @param  array $haystack
-   * @return mixed
+   * @param string $needle Key of the array to search.
+   * @param array $arr Array.
+   * @return mixed|null The value of the array found.
    */
   public static function searchArrayByKey(string $needle, array $arr) {
-    foreach (new \RecursiveIteratorIterator(new \RecursiveArrayIterator($arr)) as $key => $value) {
+    foreach (new \RecursiveIteratorIterator(new \RecursiveArrayIterator($arr)) as $key => $value)
       if ($needle === $key)
         return $value;
-    }
     return null;
   }
 
   /**
-   * Returns an array with the keys of the array initialized to 0,1,2 ...
-   *
-   * @param  array $arr
-   * @return array
+   * Reset array keys (0,1,2...).
+   * @param array $arr Array.
+   * @return array Array.
    */
-  public static function resetArrayKeys(array $arr):array {
+  public static function resetArrayKeys(array $arr): array {
     return array_values($arr);
   }
 
   /**
-   * Returns a unique value from an array
-   *
-   * @param  array $arr
-   * @return mixed
+   * Randomly takes elements out of an array. The array passed as an argument is also modified.
+   * @param array &$arr Array.
+   * @return mixed Array elements.
    */
   public static function getRandomValue(array &$arr) {
-    if (empty($arr)) return null;
+    if (empty($arr))
+      return null;
     $key = array_rand($arr, 1);
     $value = $arr[$key];
     unset($arr[$key]);
@@ -69,54 +62,43 @@ final class ArrayHelper {
   }
 
   /**
-   * Group associative arrays by key..
-   * 
+   * Grouping of associative arrays by specified key.
    * ```php
    * use \X\Util\ArrayHelper;
-   *
-   * $foods = [
-   *   ['name' => 'Apple',       'category' => 'fruits'],
-   *   ['name' => 'Strawberry',  'category' => 'fruits'],
-   *   ['name' => 'Tomato',      'category' => 'vegetables'],
-   *   ['name' => 'Carot',       'category' => 'vegetables'],
-   *   ['name' => 'water',       'category' => 'drink'],
-   *   ['name' => 'beer',        'category' => 'drink'],
-   * ];
    * 
+   * $foods = [
+   *   ['name' => 'Apple', 'category' => 'fruits'],
+   *   ['name' => 'Strawberry', 'category' => 'fruits'],
+   *   ['name' => 'Tomato', 'category' => 'vegetables'],
+   *   ['name' => 'Carot', 'category' => 'vegetables'],
+   * ];
    * ArrayHelper::grouping($foods, 'category');
    * // [
    * //   'fruits' => [
-   * //     ['name' => 'Apple',       'category' => 'fruits'],
-   * //     ['name' => 'Strawberry',  'category' => 'fruits']
+   * //     ['name' => 'Apple', 'category' => 'fruits'],
+   * //     ['name' => 'Strawberry', 'category' => 'fruits']
    * //   ],
    * //   'vegetables' => [
-   * //     ['name' => 'Tomato',      'category' => 'vegetables'],
-   * //     ['name' => 'Carot',       'category' => 'vegetables']
+   * //     ['name' => 'Tomato', 'category' => 'vegetables'],
+   * //     ['name' => 'Carot', 'category' => 'vegetables']
    * //   ],
-   * //   'drink' => [
-   * //     ['name' => 'water',       'category' => 'drink'],
-   * //     ['name' => 'beer',        'category' => 'drink']
-   * //   ]
    * // ]
    * ```
-   *
-   * @param  array  $arr      Arrays you want to group.
-   * @param  string $groupkey Group key.
-   * @return array            Grouped arrays.
+   * @param array $arr Array.
+   * @param string $groupBy Group key.
+   * @return array Grouped arrays.
    */
-  public static function grouping(array $arr, string $groupkey): array {
-    return array_reduce($arr, function (array $groups, array $row) use ($groupkey) {
-      $groups[$row[$groupkey]][] = $row;
+  public static function grouping(array $arr, string $groupBy): array {
+    return array_reduce($arr, function (array $groups, array $row) use ($groupBy) {
+      $groups[$row[$groupBy]][] = $row;
       return $groups;
     }, []);
   }
 
-
   /**
    * Returns true if the subscript is an array starting from 0.
-   * 
-   * @param  array   $arr Array
-   * @return boolean      Returns true for vector arrays
+   * @param array $arr Array.
+   * @return bool Returns true for vector arrays.
    */
   public static function isVector(array $arr): bool {
     return array_values($arr) === $arr;
@@ -124,7 +106,6 @@ final class ArrayHelper {
 
   /**
    * Returns an array as a tabular string.
-   * 
    * ```php
    * use \X\Util\ArrayHelper;
    * 
@@ -140,8 +121,7 @@ final class ArrayHelper {
    * │ Jim       │ Parker   │ Jim.Parker@xyz.com  │
    * └───────────┴──────────┴─────────────────────┘
    * ```
-   * 
-   * @param  array  $arr Array
+   * @param array $arr Array.
    * @return string Returns a tabular string.
    */
   public static function toTable(array $arr): string {
@@ -188,10 +168,10 @@ final class ArrayHelper {
     * //     [name] => Derek Emmanuel
     * //     [email] => derekemmanuel@gmail.com
     * // )
-    *
-    * @param  array $arr
-    * @param  string[] $includeKey
-    * @return array
+    * ```
+    * @param array $arr Array.
+    * @param mixed ...$includeKey Key of the array element to be retrieved.
+    * @return array Array.
     */
   public static function filteringElements(array $arr, ...$includeKey):array {
     if (empty($arr))
