@@ -1,7 +1,7 @@
 {
   "description" : "The CodeIgniter Application with Composer",
   "require": {
-    "php": "^7.0",
+    "php": "^8.0",
     "takuya-motoshima/codeigniter-extension": "dev-master",
     "vlucas/phpdotenv": "^5.3"
   },

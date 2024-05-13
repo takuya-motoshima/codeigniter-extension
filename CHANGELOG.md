@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-<!-- ## [5.0.0] - 2024/5/13
+## [5.0.0] - 2024/5/13
 ### Changed
 - PHP8 support. PHP8 or higher is required.  
     To support PHP8, extend the core class of codeigniter-extension in your application.  
@@ -15,8 +15,7 @@ All notable changes to this project will be documented in this file.
     |AppRouter.php|`class AppRouter extends \X\Core\Router {}`|
     |AppURI.php|`class AppURI extends \X\Core\URI {}`|
 
-    [https://github.com/bcit-ci/CodeIgniter/pull/6173](https://github.com/bcit-ci/CodeIgniter/pull/6173) was very helpful.
-- Delete `\X\Constant\Environment`. -->
+    <!-- [https://github.com/bcit-ci/CodeIgniter/pull/6173](https://github.com/bcit-ci/CodeIgniter/pull/6173) was very helpful. -->
 
 ## [4.2.0] - 2024/5/13
 ### Changed

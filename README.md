@@ -1,12 +1,14 @@
 # codeigniter-extension
-You can use extended core classes (controllers, models, views) and utility classes in this package.  
-Click [here](CHANGELOG.md) to see the change log.  
+You can use extended core classes (controllers, models, views) and utility classes in this package.
 
 ## API Documentation
-[https://takuya-motoshima.github.io/codeigniter-extension/](https://takuya-motoshima.github.io/codeigniter-extension/)
+API documentation is [here](https://takuya-motoshima.github.io/codeigniter-extension/).
 
 ## Demonstration
 There is a demo application in [demo/](demo/). Please use it as a reference for your development.
+
+## Change log
+Click [here](CHANGELOG.md) to see the change log.
 
 ## Requirements
 - PHP 7.3.0 or later
@@ -15,7 +17,7 @@ There is a demo application in [demo/](demo/). Please use it as a reference for 
 - php-mbstring
 - php-xml
 - php-imagick  
-    The method to extract the first frame from a GIF ("extractFirstFrameOfGif") in the "\X\Util\ImageHelper" class requires ImageMagick.  
+    The method to extract the first frame from a GIF (`extractFirstFrameOfGif`) in the `\X\Util\ImageHelper` class requires ImageMagick.  
     To use this method, install ImageMagick and php-imagick.  
 
     - For Amazon LInux 2 OS:
@@ -52,21 +54,21 @@ There is a demo application in [demo/](demo/). Please use it as a reference for 
     sudo chown -R nginx:nginx public/upload application/{logs,cache,session}
     ```
 1. Set up a web server (nginx).  
-    If you are using Nginx, copy [nginx.sample.conf](nginx.sample.conf) to "/etc/nginx/conf.d/sample.conf".  
+    If you are using Nginx, copy [nginx.sample.conf](nginx.sample.conf) to `/etc/nginx/conf.d/sample.conf`.  
     Restart Nginx.  
     ```sh
     sudo systemctl restart nginx
     ```
 1. Build a DB for [init.sql](skeleton/init.sql) (MySQL or MariaDB).
 1. The skeleton uses webpack for front module bundling.  
-    The front module is located in ". /client".  
+    The front module is located in `./client`.  
     How to build the front module:  
     ```sh
     cd client
     npm run build
     ```
-1. Open "http://{public IP of the server}:3000/" in a browser and the following screen will appear.  
-    **NOTE**: You can log in with the username "robin@example.com" and password "password".  
+1. Open `http://{public IP of the server}:3000/` in a browser and the following screen will appear.  
+    **NOTE**: You can log in with the username `robin@example.com` and password `password`.  
     <p align="left">
       <img alt="sign-in.png" src="https://raw.githubusercontent.com/takuya-motoshima/codeigniter-extension/master/screencaps/sign-in.png" width="45%">
       <img alt="list-of-users.png" src="https://raw.githubusercontent.com/takuya-motoshima/codeigniter-extension/master/screencaps/list-of-users.png" width="45%">
@@ -142,7 +144,7 @@ See [https://codeigniter.com/userguide3/](https://codeigniter.com/userguide3/) f
         const SESSION_NAME = 'session';
         ```
     1. Create control over which URLs can be accessed depending on the user's login status.  
-        At the same time, add env loading and error handling in "pre_system".  
+        At the same time, add env loading and error handling in `pre_system`.  
 
         application/config/hooks.php:
         ```php
