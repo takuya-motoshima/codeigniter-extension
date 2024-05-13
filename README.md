@@ -7,8 +7,43 @@ API documentation is [here](https://takuya-motoshima.github.io/codeigniter-exten
 ## Demonstration
 There is a demo application in [demo/](demo/). Please use it as a reference for your development.
 
-## Change log
-Click [here](CHANGELOG.md) to see the change log.
+## Release Notes
+All changes can be found [here](CHANGELOG.md).
+
+- ### [5.0.0] - 2024/5/13
+    ### Changed
+    - PHP8 support. PHP8 or higher is required.  
+        To support PHP8, extend the core class of codeigniter-extension in your application.  
+        |application/core/|PHP|
+        |--|--|
+        |AppController.php|`abstract class AppController extends \X\Controller\Controller {}`|
+        |AppController.php|`abstract class AppController extends \X\Controller\Controller {}`|
+        |AppInput.php|`class AppInput extends \X\Library\Input {}`|
+        |AppLoader.php|`class AppLoader extends \X\Core\Loader {}`|
+        |AppModel.php|`abstract class AppModel extends \X\Model\Model {}`|
+        |AppRouter.php|`class AppRouter extends \X\Core\Router {}`|
+        |AppURI.php|`class AppURI extends \X\Core\URI {}`|
+
+        <!-- [https://github.com/bcit-ci/CodeIgniter/pull/6173](https://github.com/bcit-ci/CodeIgniter/pull/6173) was very helpful. -->
+- ## [4.2.0] - 2024/5/13
+    ### Changed
+    - Removed the `$baseDir` argument from the `generateCollectionId` method of the `X\Rekognition\Client` class.
+    - Deprecated methods `message_from_template`, `message_from_xml`, `set_mailtype` and `attachment_cid` have been removed from the `\X\Util\EMail` class.  
+        Please use `messageFromTemplate`, `messageFromXml`, `setMailType` and `attachmentCid` instead.
+    - Changed to appropriate method name.
+        |before|after|
+        |--|--|
+        |ImageHelper::putBase64|ImageHelper::writeDataURLToFile|
+        |ImageHelper::putBlob|ImageHelper::writeBlobToFile|
+        |ImageHelper::readAsBase64|ImageHelper::readAsDataURL|
+        |ImageHelper::isBase64|ImageHelper::isDataURL|
+        |ImageHelper::convertBase64ToBlob|ImageHelper::dataURL2Blob|
+        |ImageHelper::read|ImageHelper::readAsBlob|
+        |VideoHelper::putBase64|VideoHelper::writeDataURLToFile|
+        |VideoHelper::isBase64|VideoHelper::isDataURL|
+        |VideoHelper::convertBase64ToBlob|VideoHelper::dataURL2Blob|
+
+
 
 ## Requirements
 - PHP 7.3.0 or later
