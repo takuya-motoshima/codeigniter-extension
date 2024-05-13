@@ -1,12 +1,14 @@
 # codeigniter-extension
-You can use extended core classes (controllers, models, views) and utility classes in this package.  
-Click [here](CHANGELOG.md) to see the change log.  
+You can use extended core classes (controllers, models, views) and utility classes in this package.
 
 ## API Documentation
-[https://takuya-motoshima.github.io/codeigniter-extension/](https://takuya-motoshima.github.io/codeigniter-extension/)
+API documentation is [here](https://takuya-motoshima.github.io/codeigniter-extension/).
 
 ## Demonstration
 There is a demo application in [demo/](demo/). Please use it as a reference for your development.
+
+## Change log
+Click [here](CHANGELOG.md) to see the change log.
 
 ## Requirements
 - PHP 7.3.0 or later
