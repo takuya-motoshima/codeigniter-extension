@@ -13,7 +13,6 @@ All notable changes to this project will be documented in this file.
     |application/core/|PHP|
     |--|--|
     |AppController.php|`abstract class AppController extends \X\Controller\Controller {}`|
-    |AppController.php|`abstract class AppController extends \X\Controller\Controller {}`|
     |AppInput.php|`class AppInput extends \X\Library\Input {}`|
     |AppLoader.php|`class AppLoader extends \X\Core\Loader {}`|
     |AppModel.php|`abstract class AppModel extends \X\Model\Model {}`|

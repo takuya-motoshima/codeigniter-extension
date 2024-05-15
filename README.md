@@ -21,7 +21,6 @@ All changes can be found [here](CHANGELOG.md).
         |application/core/|PHP|
         |--|--|
         |AppController.php|`abstract class AppController extends \X\Controller\Controller {}`|
-        |AppController.php|`abstract class AppController extends \X\Controller\Controller {}`|
         |AppInput.php|`class AppInput extends \X\Library\Input {}`|
         |AppLoader.php|`class AppLoader extends \X\Core\Loader {}`|
         |AppModel.php|`abstract class AppModel extends \X\Model\Model {}`|
@@ -46,8 +45,6 @@ All changes can be found [here](CHANGELOG.md).
         |VideoHelper::putBase64|VideoHelper::writeDataURLToFile|
         |VideoHelper::isBase64|VideoHelper::isDataURL|
         |VideoHelper::convertBase64ToBlob|VideoHelper::dataURL2Blob|
-
-
 
 ## Requirements
 - PHP 7.3.0 or later
