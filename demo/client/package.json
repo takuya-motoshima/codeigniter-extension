@@ -17,7 +17,7 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "axios": "^0.21.1",
+    "axios": "^1.12.0",
     "axios-cookiejar-support": "^1.0.1",
     "chart.js": "^2.9.4",
     "chartjs-plugin-piechart-outlabels": "^0.1.4",
