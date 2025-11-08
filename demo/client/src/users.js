@@ -1,11 +1,11 @@
-import '~/pages/users.css';
+import '~/users.css';
 import hbs from 'handlebars-extd';
 import selectAll from '~/shared/selectAll';
 import Datatable from '~/shared/Datatable';
 import Toast from '~/shared/Toast';
 import Dialog from '~/shared/Dialog';
 import UserApi from '~/api/UserApi';
-import UserModal from '~/pages/UserModal';
+import UserModal from '~/UserModal';
 
 function initTable() {
   userTable = new Datatable(ref.userTable, {

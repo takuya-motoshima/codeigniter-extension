@@ -1,7 +1,7 @@
 <?php
 /**
  * ```sh
- * php __prototypes__/get-number-of-gif-frames.php
+ * php prototypes/get-number-of-gif-frames.php
  * ```
  */
 $im = new \Imagick(__DIR__ . '/input/animated.gif');

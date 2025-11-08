@@ -13,7 +13,7 @@
   <link href="/build/theme/css/style.bundle.css" rel="stylesheet" type="text/css" />
   <!--end::Global Stylesheets Bundle-->
   <!--begin::Custom Stylesheets(used by this application)-->
-  <link rel="stylesheet" href="/build/docs.css" type="text/css" >
+  <link rel="stylesheet" href="/build/app.css" type="text/css" >
   <!--end::Custom Stylesheets-->
 </head>
 <body id="kt_body" class="app-blank app-blank bgi-size-cover bgi-position-center bgi-no-repeat" style="background-image: url('/build/theme/media/auth/bg7-dark.jpg');">

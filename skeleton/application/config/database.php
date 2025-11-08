@@ -70,9 +70,9 @@
 */
 $active_group = 'default';
 $query_builder = true;
-$database = 'codeigniter_extension_db';
+$database = 'sample_db';
 $username = 'root';
-$password = '';
+$password = 'password';
 $db['default'] = array(
   'dsn' => '',
   'hostname' => 'localhost',

@@ -1,4 +1,4 @@
-import '~/pages/editPersonal.css';
+import '~/editPersonal.css';
 import selectAll from '~/shared/selectAll';
 import Validation from '~/shared/Validation';
 import Toast from '~/shared/Toast';

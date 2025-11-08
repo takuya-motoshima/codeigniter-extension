@@ -1,4 +1,4 @@
-import '~/pages/login.css';
+import '~/login.css';
 import selectAll from '~/shared/selectAll';
 import Dialog from '~/shared/Dialog';
 import Validation from '~/shared/Validation';

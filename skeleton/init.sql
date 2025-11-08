@@ -1,5 +1,5 @@
-CREATE DATABASE IF NOT EXISTS `codeigniter_extension_db` DEFAULT CHARACTER SET utf8mb4;
-USE `codeigniter_extension_db`;
+CREATE DATABASE IF NOT EXISTS `sample_db` DEFAULT CHARACTER SET utf8mb4;
+USE `sample_db`;
 
 DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (

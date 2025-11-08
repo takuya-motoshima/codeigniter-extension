@@ -14,11 +14,10 @@ module.exports = {
     ]
   },
   entry: {
-    docs: './src/pages/docs.js',
-    'login': './src/pages/login.js',
-    'users': './src/pages/users.js',
-    'userlogs': './src/pages/userlogs.js',
-    'editPersonal': './src/pages/editPersonal.js',
+    app: './src/app.js',
+    login: './src/login.js',
+    users: './src/users.js',
+    editPersonal: './src/editPersonal.js',
   },
   output: {
     path: path.resolve(__dirname, '../public/build'),

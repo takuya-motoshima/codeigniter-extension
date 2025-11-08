@@ -2,7 +2,7 @@
 
 Start the server.
 ```sh
-cd __prototypes__/rest/
+cd prototypes/rest/
 php -S localhost:9000
 ```
 Send a request to the server from another terminal.

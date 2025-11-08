@@ -1,269 +1,361 @@
-# codeigniter-extension
-You can use extended core classes (controllers, models, views) and utility classes in this package.
+# CodeIgniter Extension
 
-## API Documentation
-API documentation is [here](https://takuya-motoshima.github.io/codeigniter-extension/).
+[日本語](README_ja.md) | [Changelog](CHANGELOG.md) | [変更履歴](CHANGELOG_ja.md)
 
-## Demonstration
-There is a demo application in [demo/](demo/). Please use it as a reference for your development.
+An enhanced CodeIgniter 3 package providing extended core classes (controllers, models, views) and utility classes.
 
-## Release Notes
-All changes can be found [here](CHANGELOG.md).
+## Table of Contents
 
-- ### [5.0.1] - 2024/5/14
-    ### Changed
-    - Installer program fix. Added process to remove `__prototypes__/`,`__tests__/`,`phpunit-printer.yml`,`phpunit.xml` after installation.
-    - Add `client/package-lock.json` to skeleton.
-- ### [5.0.0] - 2024/5/13
-    ### Changed
-    - PHP8 support. PHP8 or higher is required.  
-        To support PHP8, extend the core class of codeigniter-extension in your application.  
-        |application/core/|PHP|
-        |--|--|
-        |AppController.php|`abstract class AppController extends \X\Controller\Controller {}`|
-        |AppInput.php|`class AppInput extends \X\Library\Input {}`|
-        |AppLoader.php|`class AppLoader extends \X\Core\Loader {}`|
-        |AppModel.php|`abstract class AppModel extends \X\Model\Model {}`|
-        |AppRouter.php|`class AppRouter extends \X\Core\Router {}`|
-        |AppURI.php|`class AppURI extends \X\Core\URI {}`|
+- [Features](#features)
+- [Requirements](#requirements)
+- [Installation](#installation)
+- [Quick Start](#quick-start)
+- [Configuration](#configuration)
+- [Usage Examples](#usage-examples)
+- [Testing](#testing)
+- [Documentation](#documentation)
+- [License](#license)
 
-        <!-- [https://github.com/bcit-ci/CodeIgniter/pull/6173](https://github.com/bcit-ci/CodeIgniter/pull/6173) was very helpful. -->
-- ## [4.2.0] - 2024/5/13
-    ### Changed
-    - Removed the `$baseDir` argument from the `generateCollectionId` method of the `X\Rekognition\Client` class.
-    - Deprecated methods `message_from_template`, `message_from_xml`, `set_mailtype` and `attachment_cid` have been removed from the `\X\Util\EMail` class.  
-        Please use `messageFromTemplate`, `messageFromXml`, `setMailType` and `attachmentCid` instead.
-    - Changed to appropriate method name.
-        |before|after|
-        |--|--|
-        |ImageHelper::putBase64|ImageHelper::writeDataURLToFile|
-        |ImageHelper::putBlob|ImageHelper::writeBlobToFile|
-        |ImageHelper::readAsBase64|ImageHelper::readAsDataURL|
-        |ImageHelper::isBase64|ImageHelper::isDataURL|
-        |ImageHelper::convertBase64ToBlob|ImageHelper::dataURL2Blob|
-        |ImageHelper::read|ImageHelper::readAsBlob|
-        |VideoHelper::putBase64|VideoHelper::writeDataURLToFile|
-        |VideoHelper::isBase64|VideoHelper::isDataURL|
-        |VideoHelper::convertBase64ToBlob|VideoHelper::dataURL2Blob|
+## Features
+
+### Core Extensions
+- **Enhanced Controllers** - JSON response, template rendering, access control
+- **Advanced Models** - Query caching, batch operations, helper methods
+- **Enhanced Router** - Annotation-based access control
+
+### Utility Classes
+- **Image Processing** - Resize, crop, format conversion, GIF frame extraction, PDF to image
+- **Video Processing** - Video file manipulation and conversion
+- **File Operations** - Advanced file and directory operations with locking
+- **CSV Handling** - Import/export utilities
+- **Email** - Template-based emails, Amazon SES integration
+- **REST Client** - HTTP client for API integrations
+- **Security** - Encryption/decryption, IP validation
+- **Validation** - Custom rules (hostname, IP, CIDR, datetime, paths)
+- **Session Management** - Database-backed sessions with custom columns
+- **Logging** - Enhanced logging with context
+- **Template Engine** - Twig integration with session variables
+
+### AWS Integration
+- **Amazon Rekognition** - Face detection, comparison, and analysis
+- **Amazon SES** - Reliable email delivery service
 
 ## Requirements
-- PHP 7.3.0 or later
-- Composer
-- php-gd
-- php-mbstring
-- php-xml
-- php-imagick  
-    The method to extract the first frame from a GIF (`extractFirstFrameOfGif`) in the `\X\Util\ImageHelper` class requires ImageMagick.  
-    To use this method, install ImageMagick and php-imagick.  
 
-    - For Amazon LInux 2 OS:
-        ```sh
-        sudo yum -y install ImageMagick php-imagick
-        ```
-    - For Amazon LInux 2023 OS:
-        1. Install ImageMagic and PECL.
-            ```sh
-            sudo dnf -y install ImageMagick ImageMagick-devel php-pear.noarch
-            ```
-        1. Install imagick with PECL.
-            ```sh
-            sudo pecl install imagick
-            ```
-        1. Add `imagick.so` link in `/etc/php.ini`.
-            ```sh
-            extension=imagick.so
-            ```
-        1. Restart `php-fpm` and `nginx`.
-            ```sh
-            sudo systemctl restart nginx
-            sudo systemctl restart php-fpm
-            ```
+- **PHP** 7.3.0 or later
+- **Composer**
+- **PHP Extensions:**
+  - php-gd
+  - php-mbstring
+  - php-xml
+  - php-imagick (optional, for GIF operations)
 
-## Getting Started
-1. Create project.
-    ```sh
-    composer create-project takuya-motoshima/codeigniter-extension myapp
-    ```
-1. Grant write permission to logs, cache, session to WEB server.
-    ```sh
-    sudo chmod -R 755 public/upload application/{logs,cache,session}
-    sudo chown -R nginx:nginx public/upload application/{logs,cache,session}
-    ```
-1. Set up a web server (nginx).  
-    If you are using Nginx, copy [nginx.sample.conf](nginx.sample.conf) to `/etc/nginx/conf.d/sample.conf`.  
-    Restart Nginx.  
-    ```sh
-    sudo systemctl restart nginx
-    ```
-1. Build a DB for [init.sql](skeleton/init.sql) (MySQL or MariaDB).
-1. The skeleton uses webpack for front module bundling.  
-    The front module is located in `./client`.  
-    How to build the front module:  
-    ```sh
-    cd client
-    npm run build
-    ```
-1. Open `http://{public IP of the server}:3000/` in a browser and the following screen will appear.  
-    **NOTE**: You can log in with the username `robin@example.com` and password `password`.  
-    <p align="left">
-      <img alt="sign-in.png" src="https://raw.githubusercontent.com/takuya-motoshima/codeigniter-extension/master/screencaps/sign-in.png" width="45%">
-      <img alt="list-of-users.png" src="https://raw.githubusercontent.com/takuya-motoshima/codeigniter-extension/master/screencaps/list-of-users.png" width="45%">
-    </p>
-    <p align="left">
-      <img alt="update-user.png" src="https://raw.githubusercontent.com/takuya-motoshima/codeigniter-extension/master/screencaps/update-user.png" width="45%">
-      <img alt="personal-settings.png" src="https://raw.githubusercontent.com/takuya-motoshima/codeigniter-extension/master/screencaps/personal-settings.png" width="45%">
-    </p>
-    <p align="left">
-      <img alt="page-not-found.png" src="https://raw.githubusercontent.com/takuya-motoshima/codeigniter-extension/master/screencaps/page-not-found.png" width="45%">
-    </p>
+### Optional: ImageMagick Installation
 
-## Usage
-See [https://codeigniter.com/userguide3/](https://codeigniter.com/userguide3/) for basic usage.  
-- About config (`application/config/config.php`).
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Before</th>
-          <th>After</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>base_url</td>
-          <td></td>
-          <td>if (!empty($_SERVER['HTTP_HOST'])) $config['base_url'] = '//' . $_SERVER['HTTP_HOST'] . str_replace(basename($_SERVER['SCRIPT_NAME']), '', $_SERVER['SCRIPT_NAME']);</td>
-        </tr>
-        <tr>
-          <td>enable_hooks</td>
-          <td>FALSE</td>
-          <td>TRUE</td>
-        </tr>
-        <tr>
-          <td>permitted_uri_chars</td>
-          <td>a-z 0-9~%.:_\-</td>
-          <td>a-z 0-9~%.:_\-,</td>
-        </tr>
-        <tr>
-          <td>sess_save_path</td>
-          <td>NULL</td>
-          <td>APPPATH . 'session';</td>
-        </tr>
-        <tr>
-          <td>cookie_httponly</td>
-          <td>FALSE</td>
-          <td>TRUE</td>
-        </tr>
-        <tr>
-          <td>composer_autoload</td>
-          <td>FALSE</td>
-          <td>realpath(APPPATH . '../vendor/autoload.php');</td>
-        </tr>
-        <tr>
-          <td>index_page</td>
-          <td>index.php</td>
-          <td></td>
-        </tr>
-      </tbody>
-    </table>
-- Control of accessible URLs.  
-    1. Define a controller to be executed when the root URL is accessed.  
-        In the example below, the login page is set to open when the root URL is accessed.  
+Required for `extractFirstFrameOfGif` method in `\X\Util\ImageHelper`.
 
-        application/config/routes.php:
-        ```php
-        $route['default_controller'] = 'users/login';
-        ```
-    1. Define login session name.  
-        application/config/constants.php:
-        ```php
-        const SESSION_NAME = 'session';
-        ```
-    1. Create control over which URLs can be accessed depending on the user's login status.  
-        At the same time, add env loading and error handling in `pre_system`.  
+**Amazon Linux 2:**
+```sh
+sudo yum -y install ImageMagick php-imagick
+```
 
-        application/config/hooks.php:
-        ```php
-        use \X\Annotation\AnnotationReader;
-        use \X\Util\Logger;
+**Amazon Linux 2023:**
+```sh
+# Install ImageMagick and PECL
+sudo dnf -y install ImageMagick ImageMagick-devel php-pear.noarch
 
-        $hook['post_controller_constructor'] = function() {
-          if (is_cli())
-            return;
-          $CI =& get_instance();
-          $meta = AnnotationReader::getAccessibility($CI->router->class, $CI->router->method);
-          $loggedin = !empty($_SESSION[SESSION_NAME]);
-          $current = lcfirst($CI->router->directory ?? '') . lcfirst($CI->router->class) . '/' . $CI->router->method;
-          $default = '/users/index';
-          $allowRoles = !empty($meta->allow_role) ? array_map('trim', explode(',', $meta->allow_role)) : null;
-          if (!$meta->allow_http)
-            throw new \RuntimeException('HTTP access is not allowed');
-          else if ($loggedin && !$meta->allow_login)
-            redirect($default);
-          else if (!$loggedin && !$meta->allow_logoff)
-            redirect('/users/login');
-          else if ($loggedin && !empty($allowRoles)) {
-            $role = $_SESSION[SESSION_NAME]['role'] ?? '';
-            if (!in_array($role, $allowRoles) && $default !== $current)
-              redirect($default);
-          }
-        };
+# Install imagick extension
+sudo pecl install imagick
+echo "extension=imagick.so" | sudo tee -a /etc/php.ini
 
-        $hook['pre_system'] = function () {
-          $dotenv = Dotenv\Dotenv::createImmutable(ENV_DIR);
-          $dotenv->load();
-          set_exception_handler(function ($e) {
-            Logger::error($e);
-            show_error($e->getMessage(), 500);
-          });
-        };
-        ```
-    1. After this, you will need to create controllers, models, and views, see the demo for details.  
-- About Twig Template Engine.  
-    This extension package uses the Twig template.  
-    See [here](https://twig.symfony.com/doc/3.x/) for how to use Twig.  
+# Restart services
+sudo systemctl restart nginx php-fpm
+```
 
-    In addition, the session of the logged-in user is automatically set in the template variable.  
-    This is useful, for example, when displaying the login username on the screen. 
+## Installation
 
-    PHP: 
-    ```php
-    $_SESSION['user'] = ['name' => 'John Smith'];
-    ```
+Create a new project using Composer:
 
-    HTML: 
-    ```html
-    {% if session.user is not empty %}
-      Hello {{session.user.name}}!
-    {% endif %}
-      Who is it?
-    {% else %}
-    ```
+```sh
+composer create-project takuya-motoshima/codeigniter-extension myapp
+cd myapp
+```
+
+## Quick Start
+
+### 1. Set Permissions
+
+```sh
+sudo chmod -R 755 public/upload application/{logs,cache,session}
+sudo chown -R nginx:nginx public/upload application/{logs,cache,session}
+```
+
+### 2. Configure Web Server
+
+Copy the Nginx configuration:
+
+```sh
+sudo cp nginx.sample.conf /etc/nginx/conf.d/myapp.conf
+sudo systemctl restart nginx
+```
+
+### 3. Set Up Database
+
+Import the database schema:
+
+```sh
+mysql -u root -p your_database < skeleton/init.sql
+```
+
+### 4. Build Frontend Assets
+
+```sh
+cd client
+npm install
+npm run build
+```
+
+### 5. Access Application
+
+Open `http://{your-server-ip}:3000/` in your browser.
+
+**Default Credentials:**
+- Email: `robin@example.com`
+- Password: `password`
+
+### Screenshots
+
+<p align="left">
+  <img alt="Sign In" src="https://raw.githubusercontent.com/takuya-motoshima/codeigniter-extension/master/screencaps/sign-in.png" width="45%">
+  <img alt="User List" src="https://raw.githubusercontent.com/takuya-motoshima/codeigniter-extension/master/screencaps/list-of-users.png" width="45%">
+</p>
+
+## Configuration
+
+### Basic Config (`application/config/config.php`)
+
+<table>
+  <thead>
+    <tr>
+      <th>Setting</th>
+      <th>Default</th>
+      <th>Recommended</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>base_url</td>
+      <td><em>empty</em></td>
+      <td>if (!empty($_SERVER['HTTP_HOST'])) $config['base_url'] = '//' . $_SERVER['HTTP_HOST'] . str_replace(basename($_SERVER['SCRIPT_NAME']), '', $_SERVER['SCRIPT_NAME']);</td>
+    </tr>
+    <tr>
+      <td>enable_hooks</td>
+      <td>FALSE</td>
+      <td>TRUE</td>
+    </tr>
+    <tr>
+      <td>permitted_uri_chars</td>
+      <td>a-z 0-9~%.:_\-</td>
+      <td>a-z 0-9~%.:_\-,</td>
+    </tr>
+    <tr>
+      <td>sess_save_path</td>
+      <td>NULL</td>
+      <td>APPPATH . 'session';</td>
+    </tr>
+    <tr>
+      <td>cookie_httponly</td>
+      <td>FALSE</td>
+      <td>TRUE</td>
+    </tr>
+    <tr>
+      <td>composer_autoload</td>
+      <td>FALSE</td>
+      <td>realpath(APPPATH . '../vendor/autoload.php');</td>
+    </tr>
+    <tr>
+      <td>index_page</td>
+      <td>index.php</td>
+      <td><em>empty</em></td>
+    </tr>
+  </tbody>
+</table>
+
+### Access Control Setup
+
+#### 1. Define Default Route
+
+In `application/config/routes.php`:
+
+```php
+$route['default_controller'] = 'users/login';
+```
+
+#### 2. Set Session Constant
+
+In `application/config/constants.php`:
+
+```php
+const SESSION_NAME = 'session';
+```
+
+#### 3. Configure Hooks
+
+In `application/config/hooks.php`:
+
+```php
+use \X\Annotation\AnnotationReader;
+use \X\Util\Logger;
+
+$hook['post_controller_constructor'] = function() {
+  if (is_cli()) return;
+
+  $CI =& get_instance();
+  $meta = AnnotationReader::getAccessibility($CI->router->class, $CI->router->method);
+  $loggedin = !empty($_SESSION[SESSION_NAME]);
+
+  if (!$meta->allow_http)
+    throw new \RuntimeException('HTTP access is not allowed');
+  else if ($loggedin && !$meta->allow_login)
+    redirect('/users/index');
+  else if (!$loggedin && !$meta->allow_logoff)
+    redirect('/users/login');
+};
+
+$hook['pre_system'] = function () {
+  $dotenv = Dotenv\Dotenv::createImmutable(ENV_DIR);
+  $dotenv->load();
+  set_exception_handler(function ($e) {
+    Logger::error($e);
+    show_error($e->getMessage(), 500);
+  });
+};
+```
+
+## Usage Examples
+
+### Controllers
+
+```php
+use \X\Annotation\Access;
+
+class Users extends AppController {
+  /**
+   * @Access(allow_login=true, allow_logoff=false, allow_role="admin")
+   */
+  public function index() {
+    $users = $this->UserModel->get()->result_array();
+    parent::set('users', $users)->view('users/index');
+  }
+
+  /**
+   * @Access(allow_http=true)
+   */
+  public function api() {
+    $data = ['message' => 'Success'];
+    parent::set($data)->json();
+  }
+}
+```
+
+### Models
+
+```php
+class UserModel extends AppModel {
+  const TABLE = 'user';
+
+  public function getActiveUsers() {
+    return $this
+      ->where('active', 1)
+      ->order_by('name', 'ASC')
+      ->get()
+      ->result_array();
+  }
+}
+```
+
+### Twig Templates
+
+Session variables are automatically available:
+
+```php
+// PHP
+$_SESSION['user'] = ['name' => 'John Smith', 'role' => 'admin'];
+```
+
+```twig
+{# Template #}
+{% if session.user is defined %}
+  <p>Welcome, {{ session.user.name }}!</p>
+  {% if session.user.role == 'admin' %}
+    <a href="/admin">Admin Panel</a>
+  {% endif %}
+{% endif %}
+```
+
+### Using Utilities
+
+```php
+// Image processing
+use \X\Util\ImageHelper;
+ImageHelper::resize('/path/to/image.jpg', '/path/to/output.jpg', 800, 600);
+
+// File operations
+use \X\Util\FileHelper;
+FileHelper::makeDirectory('/path/to/dir', 0755);
+
+// Encryption
+use \X\Util\Cipher;
+$encrypted = Cipher::encrypt('secret data', 'encryption-key');
+
+// REST client
+use \X\Util\RestClient;
+$client = new RestClient(['base_url' => 'https://api.example.com']);
+$response = $client->get('/users');
+```
 
 ## Testing
-The unit test consists of the following files.  
-- __tests__/*.php: Test Case.
-- phpunit.xml: Test setting fill.
-- phpunit-printer.yml: Test result output format.
+
+Run unit tests:
 
 ```sh
 composer test
 ```
 
-## PHPDoc
-Generate PHPDoc in docs/.
+Test files are located in:
+- `__tests__/*.php` - Test cases
+- `phpunit.xml` - Configuration
+- `phpunit-printer.yml` - Output format
+
+## Documentation
+
+- **[API Documentation](https://takuya-motoshima.github.io/codeigniter-extension/)** - Complete API reference
+- **[Demo Application](demo/)** - Full working example
+- **[Changelog](CHANGELOG.md)** - Version history and changes
+- **[CodeIgniter 3 Guide](https://codeigniter.com/userguide3/)** - Official framework documentation
+
+### Generate PHPDoc
+
 ```sh
-#wget https://phpdoc.org/phpDocumentor.phar
-#chmod +x phpDocumentor.phar
+# Download phpDocumentor (one-time)
+wget https://phpdoc.org/phpDocumentor.phar
+chmod +x phpDocumentor.phar
+
+# Generate docs
 php phpDocumentor.phar run -d src/ --ignore vendor --ignore src/X/Database/Driver/ -t docs/
 ```
 
-## Author
-**Takuya Motoshima**
+## Contributing
 
-* [github/takuya-motoshima](https://github.com/takuya-motoshima)
-* [twitter/TakuyaMotoshima](https://twitter.com/TakuyaMotoshima)
-* [facebook/takuya.motoshima.7](https://www.facebook.com/takuya.motoshima.7)
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## Author
+
+**Takuya Motoshima**
+- GitHub: [@takuya-motoshima](https://github.com/takuya-motoshima)
+- Twitter: [@TakuyaMotoshima](https://x.com/takuya_motech)
+- Facebook: [takuya.motoshima.7](https://www.facebook.com/takuya.motoshima.7)
 
 ## License
-[MIT](LICENSE)
+
+[MIT License](LICENSE)

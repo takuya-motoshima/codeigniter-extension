@@ -74,7 +74,7 @@ final class Installer {
       $cwd . '/CHANGELOG.md',
       $cwd . '/LICENSE',
       $cwd . '/README.md',
-      $cwd . '/__prototypes__',
+      $cwd . '/prototypes',
       $cwd . '/__tests__',
       $cwd . '/composer.json.dist',
       $cwd . '/demo',
